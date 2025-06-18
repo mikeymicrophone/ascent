@@ -149,6 +149,8 @@ GEM
       zeitwerk (>= 2.6.18, < 3.0)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
+    literal (1.8.1)
+      zeitwerk
     logger (1.7.0)
     loofah (2.24.1)
       crass (~> 1.0.2)
@@ -198,6 +200,12 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
+    phlex (2.3.1)
+      zeitwerk (~> 2.7)
+    phlex-rails (2.3.1)
+      phlex (~> 2.3.0)
+      railties (>= 7.1, < 9)
+      zeitwerk (~> 2.7)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -407,7 +415,10 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
+  literal
   pg (~> 1.1)
+  phlex
+  phlex-rails
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.2)
