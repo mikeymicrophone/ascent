@@ -111,6 +111,9 @@ GEM
       tzinfo
     factory_bot (6.5.4)
       activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.0)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
     fugit (1.11.1)
@@ -312,6 +315,12 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    shoulda (4.0.0)
+      shoulda-context (~> 2.0)
+      shoulda-matchers (~> 4.0)
+    shoulda-context (2.0.0)
+    shoulda-matchers (4.5.1)
+      activesupport (>= 4.2.0)
     solid_cable (3.0.8)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -393,7 +402,7 @@ DEPENDENCIES
   brakeman
   capybara
   debug
-  factory_bot
+  factory_bot_rails
   faker
   importmap-rails
   jbuilder
@@ -405,6 +414,7 @@ DEPENDENCIES
   rspec-rails
   rubocop-rails-omakase
   selenium-webdriver
+  shoulda
   solid_cable
   solid_cache
   solid_queue

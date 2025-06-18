@@ -18,6 +18,10 @@ gem "stimulus-rails"
 gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+# Use Phlex for view components [https://github.com/phlex-rb/phlex]
+gem "phlex"
+gem "phlex-rails"
+gem "literal"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -47,7 +51,8 @@ group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
   gem 'rspec-rails'
-  gem 'factory_bot'
+  gem 'factory_bot_rails'
+  gem 'shoulda'
   gem 'faker'
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
