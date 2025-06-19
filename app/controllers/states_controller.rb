@@ -2,8 +2,8 @@ class StatesController < ApplicationController
   before_action :set_state, only: %i[ show edit update destroy ]
 
   def index
-    states = State.all
-    render Views::States::IndexView.new(states: states, notice: notice)
+    @states = State.all
+    render Views::States::IndexView.new(states: @states, notice: notice)
   end
 
   def show
@@ -11,8 +11,8 @@ class StatesController < ApplicationController
   end
 
   def new
-    state = State.new
-    render Views::States::NewView.new(state: state)
+    @state = State.new
+    render Views::States::NewView.new(state: @state)
   end
 
   def edit
@@ -20,12 +20,12 @@ class StatesController < ApplicationController
   end
 
   def create
-    state = State.new(state_params)
+    @state = State.new(state_params)
 
-    if state.save
-      redirect_to state, notice: "State was successfully created."
+    if @state.save
+      redirect_to @state, notice: "State was successfully created."
     else
-      render Views::States::NewView.new(state: state), status: :unprocessable_entity
+      render Views::States::NewView.new(state: @state), status: :unprocessable_entity
     end
   end
 

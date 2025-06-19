@@ -2,6 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚨 READ FIRST: Conventions Directory
+
+**Before starting ANY work, check the relevant convention file:**
+
+- **CSS/Styling** → `doc/llm-assistant/conventions/css-tailwind.md` (UNIQUE approach!)
+- **Ruby/Rails/Phlex** → `doc/llm-assistant/conventions/ruby-rails.md`
+- **JavaScript** → `doc/llm-assistant/conventions/javascript-stimulus.md`
+- **Database** → `doc/llm-assistant/conventions/database-postgresql.md`
+
+See `doc/llm-assistant/README.md` for complete navigation guide.
+
 ## Common Development Commands
 
 ### Development Server
@@ -55,14 +66,22 @@ Key Phlex patterns:
 - Template named arguments should match variable names
 
 ### CSS Architecture
-Unique four-layer Tailwind approach using semantic classnames:
+⚠️ **CRITICAL: CUSTOM CSS APPROACH** ⚠️
+This project uses a unique four-layer Tailwind approach. **DO NOT** use standard CSS or inline Tailwind classes.
 
-1. **Layout Layer** - Flex, positioning, responsive design
-2. **Spacing/Size Layer** - Element spacing, sizing, responsive
-3. **Typography/Colors Layer** - Fonts, colors via CSS variables
-4. **State Layer** - Hover, focus, active states
+**BEFORE writing ANY CSS, read `doc/llm-assistant/conventions/css-tailwind.md`**
 
-**Critical**: Apply Tailwind classes using `@apply` directive, never directly in markup. Use semantic classnames and IDs.
+Quick summary:
+1. **Layout Layer** (`app/assets/tailwind/layout/`) - Flex, positioning, responsive design
+2. **Spacing/Size Layer** (`app/assets/tailwind/sizing/`) - Element spacing, sizing, responsive
+3. **Typography/Colors Layer** (`app/assets/tailwind/typography/`, `colors/`) - Fonts, colors via CSS variables
+4. **State Layer** (`app/assets/tailwind/situation/`) - Hover, focus, active states
+
+**Critical Rules**:
+- Use semantic classnames in HTML (e.g., `main-navigation`, `nav-link`)
+- Apply Tailwind classes using `@apply` directive in CSS files
+- Never put Tailwind classes directly in markup
+- Colors must use CSS variables defined in `tailwind/variables/colors.css` files
 
 ### Testing Strategy
 - Write tests before implementation when possible

@@ -2,8 +2,8 @@ class CountriesController < ApplicationController
   before_action :set_country, only: %i[ show edit update destroy ]
 
   def index
-    countries = Country.all
-    render Views::Countries::IndexView.new(countries: countries, notice: notice)
+    @countries = Country.all
+    render Views::Countries::IndexView.new(countries: @countries, notice: notice)
   end
 
   def show
@@ -11,8 +11,8 @@ class CountriesController < ApplicationController
   end
 
   def new
-    country = Country.new
-    render Views::Countries::NewView.new(country: country)
+    @country = Country.new
+    render Views::Countries::NewView.new(country: @country)
   end
 
   def edit
@@ -20,12 +20,12 @@ class CountriesController < ApplicationController
   end
 
   def create
-    country = Country.new(country_params)
+    @country = Country.new(country_params)
 
-    if country.save
-      redirect_to country, notice: "Country was successfully created."
+    if @country.save
+      redirect_to @country, notice: "Country was successfully created."
     else
-      render Views::Countries::NewView.new(country: country), status: :unprocessable_entity
+      render Views::Countries::NewView.new(country: @country), status: :unprocessable_entity
     end
   end
 
