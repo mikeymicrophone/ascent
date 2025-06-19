@@ -7,25 +7,25 @@ class Views::<%= controller_class_name %>::ShowView < Views::Base
   end
 
   def view_template(&)
-    div(class: "md:w-2/3 w-full") do
+    div(class: "scaffold-show-container scaffold <%= singular_table_name %>-show", id: dom_id(@<%= singular_table_name %>, :show)) do
       render_notice if @notice.present?
       
-      h1(class: "font-bold text-4xl") { "Showing <%= human_name.downcase %>" }
+      h1(class: "scaffold-title") { "Showing <%= human_name.downcase %>" }
       
       render Components::<%= class_name %>Partial.new(<%= singular_table_name %>: @<%= singular_table_name %>)
       
-      div(class: "mt-6 space-x-2") do
+      div(class: "scaffold-show-actions scaffold-show-actions-spacing") do
         link_to "Edit this <%= human_name.downcase %>", 
                 edit_<%= singular_route_name %>_path(@<%= singular_table_name %>),
-                class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium"
+                class: "scaffold-button--secondary"
         link_to "Back to <%= human_name.pluralize.downcase %>", 
                 <%= plural_route_name %>_path,
-                class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium"
+                class: "scaffold-button--secondary scaffold-show-action-spacing"
         button_to "Destroy this <%= human_name.downcase %>", 
                   @<%= singular_table_name %>,
                   method: :delete,
-                  form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2",
-                  class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                  form_class: "scaffold-inline-block scaffold-show-action-spacing",
+                  class: "scaffold-button--danger",
                   data: { turbo_confirm: "Are you sure?" }
       end
     end
@@ -34,7 +34,7 @@ class Views::<%= controller_class_name %>::ShowView < Views::Base
   private
 
   def render_notice
-    p(class: "py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block", id: "notice") do
+    p(class: "scaffold-notice-success scaffold-notice-spacing scaffold-notice-text scaffold-rounded scaffold-inline-block", id: "notice") do
       @notice
     end
   end

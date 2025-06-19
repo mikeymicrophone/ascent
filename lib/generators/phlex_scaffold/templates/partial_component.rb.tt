@@ -6,13 +6,13 @@ class Components::<%= class_name %>Partial < Components::Base
   end
 
   def view_template(&)
-    div(id: dom_id(@<%= singular_table_name %>), class: "p-4 bg-white rounded-lg shadow") do
+    div(id: dom_id(@<%= singular_table_name %>), class: "scaffold-partial-card scaffold-partial-padding scaffold-partial-background scaffold <%= singular_table_name %>-partial") do
 <% display_attributes.each_with_index do |attribute, index| -%>
       <% if index == 0 -%>
-      h3(class: "font-semibold text-lg mb-2") { @<%= singular_table_name %>.<%= attribute.column_name %> }
+      h3(class: "scaffold-partial-title scaffold-partial-title-spacing") { @<%= singular_table_name %>.<%= attribute.column_name %> }
       <% else -%>
-      div(class: "mb-2") do
-        span(class: "font-medium") { "<%= attribute.human_name %>:" }
+      div(class: "scaffold-partial-content-spacing") do
+        span(class: "scaffold-field-label") { "<%= attribute.human_name %>:" }
         whitespace
         <% if attribute.field_type == :text || attribute.field_type == :textarea -%>
         div(class: "mt-1") { simple_format(@<%= singular_table_name %>.<%= attribute.column_name %>) }

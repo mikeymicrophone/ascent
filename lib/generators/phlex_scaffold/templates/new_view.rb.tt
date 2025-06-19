@@ -6,15 +6,15 @@ class Views::<%= controller_class_name %>::NewView < Views::Base
   end
 
   def view_template(&)
-    div(class: "md:w-2/3 w-full") do
-      h1(class: "font-bold text-4xl mb-6") { "New <%= human_name.downcase %>" }
+    div(class: "scaffold-show-container scaffold <%= singular_table_name %>-new", id: dom_id(@<%= singular_table_name %>, :new)) do
+      h1(class: "scaffold-title scaffold-show-actions-spacing") { "New <%= human_name.downcase %>" }
       
       render Components::<%= class_name %>Form.new(<%= singular_table_name %>: @<%= singular_table_name %>)
       
-      div(class: "mt-6") do
+      div(class: "scaffold-show-actions-spacing") do
         link_to "Back to <%= human_name.pluralize.downcase %>", 
                 <%= plural_route_name %>_path,
-                class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium"
+                class: "scaffold-button--secondary"
       end
     end
   end

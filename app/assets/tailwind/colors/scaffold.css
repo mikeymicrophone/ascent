@@ -1,0 +1,43 @@
+/* Scaffold Colors Classes - Layer 3: Colors using CSS variables */
+
+/* Button Colors */
+.scaffold-button-primary {
+  @apply bg-blue-600 text-white;
+}
+
+.scaffold-button-secondary {
+  @apply bg-gray-100;
+}
+
+.scaffold-button-danger {
+  @apply bg-red-600 text-white;
+}
+
+/* Card/Partial Colors */
+.scaffold-partial-background {
+  @apply bg-white;
+}
+
+/* Notice Colors */
+.scaffold-notice-success {
+  @apply bg-green-50 text-green-500;
+}
+
+/* Form Input Colors - Base */
+.scaffold-input-border-default {
+  @apply border-gray-400;
+}
+
+.scaffold-input-border-error {
+  @apply border-red-400;
+}
+
+/* Form Error Colors */
+.scaffold-error-background {
+  @apply bg-red-50 text-red-500;
+}
+
+/* List Divider Colors */
+.scaffold-divider {
+  @apply divide-gray-200;
+}

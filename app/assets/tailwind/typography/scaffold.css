@@ -1,0 +1,48 @@
+/* Scaffold Typography Classes - Layer 3: Fonts, text styling */
+
+/* Headings */
+.scaffold-title {
+  @apply font-bold text-4xl;
+}
+
+.scaffold-partial-title {
+  @apply font-semibold text-lg;
+}
+
+/* Labels and Text */
+.scaffold-label {
+  @apply block font-medium;
+}
+
+.scaffold-field-label {
+  @apply font-medium;
+}
+
+/* Button Text */
+.scaffold-button-text {
+  @apply font-medium;
+}
+
+/* Notice Text */
+.scaffold-notice-text {
+  @apply font-medium;
+}
+
+/* Empty State Text */
+.scaffold-empty-text {
+  @apply text-center;
+}
+
+/* Form Error Text */
+.scaffold-error-title {
+  @apply font-medium;
+}
+
+/* Input Text */
+.scaffold-input-base {
+  @apply block shadow-sm rounded-md border;
+}
+
+.scaffold-checkbox-base {
+  @apply block shadow-sm rounded-md border order-first;
+}

@@ -1,0 +1,69 @@
+/* Scaffold Spacing & Size Classes - Layer 2: Element spacing, sizing, responsive */
+
+/* Index View Spacing */
+.scaffold-index-spacing {
+  @apply space-y-5;
+}
+
+.scaffold-index-item-spacing {
+  @apply pb-5 sm:pb-0;
+}
+
+.scaffold-index-actions-spacing {
+  @apply space-x-2 space-y-2;
+}
+
+/* Show View Spacing */
+.scaffold-show-actions-spacing {
+  @apply mt-6 space-x-2;
+}
+
+.scaffold-show-action-spacing {
+  @apply mt-2 sm:mt-0 sm:ml-2;
+}
+
+/* Form Spacing */
+.scaffold-form-field-spacing {
+  @apply my-5;
+}
+
+.scaffold-form-input-spacing {
+  @apply mt-2;
+}
+
+/* Button Spacing */
+.scaffold-button-padding {
+  @apply px-3.5 py-2.5;
+}
+
+/* Partial/Card Spacing */
+.scaffold-partial-padding {
+  @apply p-4;
+}
+
+.scaffold-partial-content-spacing {
+  @apply mb-2;
+}
+
+.scaffold-partial-title-spacing {
+  @apply mb-2;
+}
+
+/* Notice Spacing */
+.scaffold-notice-spacing {
+  @apply py-2 px-3 mb-5;
+}
+
+/* Empty State Spacing */
+.scaffold-empty-spacing {
+  @apply my-10;
+}
+
+/* Form Input Sizing */
+.scaffold-input-size {
+  @apply w-full;
+}
+
+.scaffold-checkbox-size {
+  @apply h-5 w-5;
+}

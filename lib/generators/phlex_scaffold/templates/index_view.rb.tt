@@ -7,36 +7,36 @@ class Views::<%= controller_class_name %>::IndexView < Views::Base
   end
 
   def view_template(&)
-    div(class: "w-full") do
+    div(class: "scaffold-index-container scaffold <%= plural_table_name %>-index", id: dom_id("<%= plural_table_name %>", :index)) do
       render_notice if @notice.present?
       
-      div(class: "flex justify-between items-center") do
-        h1(class: "font-bold text-4xl") { "<%= human_name.pluralize %>" }
+      div(class: "scaffold-index-header") do
+        h1(class: "scaffold-title") { "<%= human_name.pluralize %>" }
         link_to "New <%= human_name.downcase %>", 
                 new_<%= singular_route_name %>_path,
-                class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium"
+                class: "scaffold-button--primary"
       end
 
-      div(id: "<%= plural_table_name %>", class: "min-w-full divide-y divide-gray-200 space-y-5") do
+      div(id: "<%= plural_table_name %>", class: "scaffold-index-list scaffold-divider scaffold-index-spacing") do
         if @<%= plural_table_name %>.any?
           @<%= plural_table_name %>.each do |<%= singular_table_name %>|
-            div(class: "flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0") do
+            div(class: "scaffold-index-item scaffold-index-item-spacing", id: dom_id(<%= singular_table_name %>, :list_item)) do
               render Components::<%= class_name %>Partial.new(<%= singular_table_name %>: <%= singular_table_name %>)
               
-              div(class: "w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2") do
+              div(class: "scaffold-index-actions scaffold-index-actions-spacing") do
                 link_to "Show", <%= singular_table_name %>,
-                        class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium"
+                        class: "scaffold-button--secondary"
                 link_to "Edit", edit_<%= singular_route_name %>_path(<%= singular_table_name %>),
-                        class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium"
+                        class: "scaffold-button--secondary"
                 button_to "Destroy", <%= singular_table_name %>,
                           method: :delete,
-                          class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                          class: "scaffold-button--danger",
                           data: { turbo_confirm: "Are you sure?" }
               end
             end
           end
         else
-          p(class: "text-center my-10") { "No <%= human_name.downcase.pluralize %> found." }
+          p(class: "scaffold-empty-text scaffold-empty-spacing") { "No <%= human_name.downcase.pluralize %> found." }
         end
       end
     end
@@ -45,7 +45,7 @@ class Views::<%= controller_class_name %>::IndexView < Views::Base
   private
 
   def render_notice
-    p(class: "py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block", id: "notice") do
+    p(class: "scaffold-notice-success scaffold-notice-spacing scaffold-notice-text scaffold-rounded scaffold-inline-block", id: "notice") do
       @notice
     end
   end

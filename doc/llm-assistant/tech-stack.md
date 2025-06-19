@@ -57,14 +57,6 @@ app/views/
 2. **Mobile-First Design** - Use Tailwind's responsive utilities starting from mobile
 3. **Rails Conventions** - Follow Rails patterns and conventions unless explicitly overridden
 
-## Anti-Patterns to Avoid
-
-- Don't mix ERB templates with Phlex components
-- Avoid inline styles - use Tailwind utilities
-- Don't create overly complex Stimulus controllers
-- Avoid bypassing Rails conventions without good reason
-- Don't create deeply nested component hierarchies
-
 ## Related Documentation
 
 - [Ruby/Rails Conventions](conventions/ruby-rails.md)

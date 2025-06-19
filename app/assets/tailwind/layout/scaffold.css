@@ -1,0 +1,63 @@
+/* Scaffold Layout Classes - Layer 1: Layout, Flex, Positioning, Responsive */
+
+/* Index View Layout */
+.scaffold-index-container {
+  @apply w-full;
+}
+
+.scaffold-index-header {
+  @apply flex justify-between items-center;
+}
+
+.scaffold-index-list {
+  @apply min-w-full divide-y divide-gray-200;
+}
+
+.scaffold-index-item {
+  @apply flex flex-col sm:flex-row justify-between items-center;
+}
+
+.scaffold-index-actions {
+  @apply w-full sm:w-auto flex flex-col sm:flex-row;
+}
+
+/* Show View Layout */
+.scaffold-show-container {
+  @apply md:w-2/3 w-full;
+}
+
+.scaffold-show-actions {
+  @apply flex flex-wrap;
+}
+
+/* Form Layout */
+.scaffold-form-container {
+  @apply contents;
+}
+
+.scaffold-form-field {
+  @apply block;
+}
+
+.scaffold-form-field--checkbox {
+  @apply flex items-center gap-2;
+}
+
+/* Partial/Card Layout */
+.scaffold-partial-card {
+  @apply rounded-lg shadow;
+}
+
+/* Button Group Layout */
+.scaffold-button-group {
+  @apply inline-flex flex-wrap;
+}
+
+/* Responsive Helpers */
+.scaffold-responsive-full {
+  @apply w-full sm:w-auto;
+}
+
+.scaffold-responsive-center {
+  @apply text-center;
+}

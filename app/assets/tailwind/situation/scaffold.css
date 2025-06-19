@@ -1,0 +1,74 @@
+/* Scaffold State Classes - Layer 4: Hover, focus, active states */
+
+/* Button Hover States */
+.scaffold-button-primary:hover {
+  @apply bg-blue-500;
+}
+
+.scaffold-button-secondary:hover {
+  @apply bg-gray-50;
+}
+
+.scaffold-button-danger:hover {
+  @apply bg-red-500;
+}
+
+/* Form Input Focus States */
+.scaffold-input-focus-default {
+  @apply focus:outline-blue-600;
+}
+
+.scaffold-input-focus-error {
+  @apply focus:outline-red-600;
+}
+
+/* Interactive States */
+.scaffold-clickable {
+  @apply cursor-pointer;
+}
+
+.scaffold-inline-block {
+  @apply inline-block;
+}
+
+.scaffold-block {
+  @apply block;
+}
+
+/* Display Utilities */
+.scaffold-rounded {
+  @apply rounded-md;
+}
+
+/* Combined Classes for Common Patterns */
+.scaffold-button {
+  @apply scaffold-button-padding scaffold-rounded scaffold-button-text scaffold-responsive-full scaffold-responsive-center scaffold-inline-block;
+}
+
+.scaffold-button--primary {
+  @apply scaffold-button scaffold-button-primary;
+}
+
+.scaffold-button--secondary {
+  @apply scaffold-button scaffold-button-secondary;
+}
+
+.scaffold-button--danger {
+  @apply scaffold-button scaffold-button-danger scaffold-clickable;
+}
+
+.scaffold-input {
+  @apply scaffold-input-base scaffold-input-size scaffold-input-spacing scaffold-input-border-default scaffold-input-focus-default;
+}
+
+.scaffold-input--error {
+  @apply scaffold-input scaffold-input-border-error scaffold-input-focus-error;
+}
+
+.scaffold-checkbox {
+  @apply scaffold-checkbox-base scaffold-checkbox-size scaffold-input-border-default scaffold-input-focus-default;
+}
+
+.scaffold-checkbox--error {
+  @apply scaffold-checkbox scaffold-input-border-error scaffold-input-focus-error;
+}
