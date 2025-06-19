@@ -1,0 +1,37 @@
+:root {
+  --nav-bg: theme('colors.white');
+  --nav-border: theme('colors.gray.200');
+  --nav-shadow: theme('colors.gray.100');
+  --brand-color: theme('colors.gray.900');
+  --brand-hover: theme('colors.blue.600');
+  --nav-link-color: theme('colors.gray.600');
+  --nav-link-hover-bg: theme('colors.gray.50');
+  --nav-link-hover-color: theme('colors.blue.600');
+  --nav-link-active-bg: theme('colors.blue.50');
+  --nav-link-active-color: theme('colors.blue.600');
+}
+
+:root {
+  /* Link colors */
+  --link-color: theme('colors.blue.600');
+  --link-hover: theme('colors.blue.800');
+
+  /* Button colors */
+  --btn-primary-bg: theme('colors.blue.600');
+  --btn-primary-hover: theme('colors.blue.700');
+  --btn-secondary-bg: theme('colors.gray.600');
+  --btn-secondary-hover: theme('colors.gray.700');
+  --btn-danger-bg: theme('colors.red.600');
+  --btn-danger-hover: theme('colors.red.700');
+
+  /* Form colors */
+  --input-border: theme('colors.gray.300');
+  --input-focus-border: theme('colors.blue.500');
+  --input-focus-ring: theme('colors.blue.500');
+  --input-error-border: theme('colors.red.500');
+
+  /* Card colors */
+  --card-bg: theme('colors.white');
+  --card-border: theme('colors.gray.200');
+  --card-shadow: theme('colors.gray.100');
+}

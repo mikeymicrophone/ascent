@@ -1,30 +1,3 @@
-/* Components Colors - Layer 3: Colors using CSS variables */
-
-:root {
-  /* Link colors */
-  --link-color: theme('colors.blue.600');
-  --link-hover: theme('colors.blue.800');
-  
-  /* Button colors */
-  --btn-primary-bg: theme('colors.blue.600');
-  --btn-primary-hover: theme('colors.blue.700');
-  --btn-secondary-bg: theme('colors.gray.600');
-  --btn-secondary-hover: theme('colors.gray.700');
-  --btn-danger-bg: theme('colors.red.600');
-  --btn-danger-hover: theme('colors.red.700');
-  
-  /* Form colors */
-  --input-border: theme('colors.gray.300');
-  --input-focus-border: theme('colors.blue.500');
-  --input-focus-ring: theme('colors.blue.500');
-  --input-error-border: theme('colors.red.500');
-  
-  /* Card colors */
-  --card-bg: theme('colors.white');
-  --card-border: theme('colors.gray.200');
-  --card-shadow: theme('colors.gray.100');
-}
-
 /* Link styles */
 .link {
   color: var(--link-color);
