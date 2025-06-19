@@ -34,6 +34,14 @@ YearSeeder.seed
 puts "\n🗳️ Seeding elections..."
 ElectionSeeder.seed
 
+# Seed people (no dependencies)
+puts "\n👥 Seeding people..."
+PersonSeeder.seed
+
+# Seed candidacies (depends on people and elections)
+puts "\n🏃 Seeding candidacies..."
+CandidacySeeder.seed
+
 puts "\n✅ Seed process completed!"
 puts "📊 Summary:"
 puts "   Countries: #{Country.count}"
@@ -42,3 +50,5 @@ puts "   Positions: #{Position.count}"
 puts "   Offices: #{Office.count}"
 puts "   Years: #{Year.count}"
 puts "   Elections: #{Election.count}"
+puts "   People: #{Person.count}"
+puts "   Candidacies: #{Candidacy.count}"

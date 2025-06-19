@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_19_212147) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_19_213233) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "candidacies", force: :cascade do |t|
+    t.bigint "person_id", null: false
+    t.bigint "election_id", null: false
+    t.string "status"
+    t.date "announcement_date"
+    t.string "party_affiliation"
+    t.text "platform_summary"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["election_id"], name: "index_candidacies_on_election_id"
+    t.index ["person_id"], name: "index_candidacies_on_person_id"
+  end
 
   create_table "cities", force: :cascade do |t|
     t.string "name"
@@ -56,6 +69,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_212147) do
     t.index ["position_id"], name: "index_offices_on_position_id"
   end
 
+  create_table "people", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "middle_name"
+    t.string "email"
+    t.date "birth_date"
+    t.text "bio"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "positions", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -83,6 +107,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_212147) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "candidacies", "elections"
+  add_foreign_key "candidacies", "people"
   add_foreign_key "cities", "states"
   add_foreign_key "elections", "offices"
   add_foreign_key "elections", "years"
