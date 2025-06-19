@@ -10,7 +10,7 @@ class Views::Countries::NewView < Views::ApplicationView
     div(class: "scaffold country-new", id: dom_id(@country, :new)) do
       h1 { "New country" }
       
-      render Views::Countries::CountryForm.new(country: @country)
+      Views::Countries::CountryForm(country: @country)
       
       div do
         link_to "Back to countries", 

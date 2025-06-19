@@ -10,7 +10,7 @@ class Views::Countries::EditView < Views::ApplicationView
     div(class: "scaffold country-edit", id: dom_id(@country, :edit)) do
       h1 { "Editing country" }
       
-      render Views::Countries::CountryForm.new(country: @country)
+      Views::Countries::CountryForm(country: @country)
       
       div do
         link_to "Show this country", 
