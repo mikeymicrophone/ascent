@@ -10,6 +10,8 @@ class Views::Components::Navigation < Views::ApplicationView
           link_to "Countries", countries_path, class: nav_link_class(countries_path)
           link_to "States", states_path, class: nav_link_class(states_path)
           link_to "Cities", cities_path, class: nav_link_class(cities_path)
+          link_to "Positions", positions_path, class: nav_link_class(positions_path)
+          link_to "Offices", offices_path, class: nav_link_class(offices_path)
         end
       end
     end

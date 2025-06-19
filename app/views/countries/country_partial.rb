@@ -19,5 +19,6 @@ class Views::Countries::CountryPartial < Views::ApplicationView
         whitespace
         div(class: "mt-1") { simple_format(@country.description) }
       end
+    end
   end
 end

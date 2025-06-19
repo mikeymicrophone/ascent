@@ -18,7 +18,17 @@ StateSeeder.seed([
   Rails.root.join('db/seeds/data/canadian_provinces.yml')
 ])
 
+# Seed positions (no dependencies)
+puts "\n🏢 Seeding positions..."
+PositionSeeder.seed
+
+# Seed offices (depends on positions and jurisdictions)
+puts "\n🏛️ Seeding offices..."
+OfficeSeeder.seed
+
 puts "\n✅ Seed process completed!"
 puts "📊 Summary:"
 puts "   Countries: #{Country.count}"
 puts "   States: #{State.count}"
+puts "   Positions: #{Position.count}"
+puts "   Offices: #{Office.count}"

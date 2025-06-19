@@ -1,0 +1,49 @@
+- title: "President"
+  description: "The chief executive officer of a country, responsible for implementing and enforcing laws, leading the executive branch, and serving as commander-in-chief of the armed forces."
+  is_executive: true
+  term_length_years: 4
+
+- title: "Governor"
+  description: "The chief executive officer of a state or province, responsible for implementing state laws, overseeing state agencies, and serving as the ceremonial head of state."
+  is_executive: true
+  term_length_years: 4
+
+- title: "Mayor"
+  description: "The chief executive officer of a city or town, responsible for municipal administration, implementing local ordinances, and representing the community."
+  is_executive: true
+  term_length_years: 4
+
+- title: "Senator"
+  description: "A member of the upper house of a legislature, typically representing larger geographic areas and serving longer terms than representatives."
+  is_executive: false
+  term_length_years: 6
+
+- title: "Representative"
+  description: "A member of the lower house of a legislature, representing specific districts and serving as the direct voice of constituents in the legislative process."
+  is_executive: false
+  term_length_years: 2
+
+- title: "Council Member"
+  description: "An elected member of a city or town council, responsible for creating local policies, approving budgets, and representing constituent interests at the municipal level."
+  is_executive: false
+  term_length_years: 4
+
+- title: "Attorney General"
+  description: "The chief legal officer responsible for representing the government in legal matters, overseeing law enforcement agencies, and providing legal counsel to government officials."
+  is_executive: true
+  term_length_years: 4
+
+- title: "Secretary of State"
+  description: "An official responsible for overseeing elections, maintaining public records, and often serving as the chief administrative officer for state government."
+  is_executive: true
+  term_length_years: 4
+
+- title: "Treasurer"
+  description: "The chief financial officer responsible for managing public funds, overseeing investments, and ensuring fiscal accountability for government operations."
+  is_executive: true
+  term_length_years: 4
+
+- title: "Sheriff"
+  description: "The chief law enforcement officer for a county, responsible for maintaining public safety, operating detention facilities, and serving legal processes."
+  is_executive: true
+  term_length_years: 4
