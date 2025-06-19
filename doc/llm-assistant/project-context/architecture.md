@@ -98,6 +98,49 @@ Links a Person to an Election as a candidate:
 - `party_affiliation` - Political party affiliation (optional)
 - `platform_summary` - Brief summary of the candidate's platform
 
+### Voter Model (Devise Authentication)
+
+Represents authenticated users who can rate candidates and participate in elections:
+
+- `email` - Email address for authentication (Devise)
+- `first_name` - Voter's first name
+- `last_name` - Voter's last name
+- `birth_date` - Date of birth for eligibility verification
+- `is_verified` - Boolean indicating if voter identity is verified
+- Devise modules: database_authenticatable, registerable, recoverable, rememberable, validatable
+
+### Registration Model
+
+Tracks voter jurisdiction history to handle voter mobility:
+
+- `voter_id` - References Voter
+- `jurisdiction_type` - Polymorphic type (Country, State, City)
+- `jurisdiction_id` - Polymorphic ID referencing the specific jurisdiction
+- `registered_at` - Date/time of registration
+- `status` - Registration status (active, inactive, moved, suspended)
+- `notes` - Additional context about this registration
+
+### Rating Model
+
+Represents voter ratings of candidates on the 0-500 "mountain" scale:
+
+- `voter_id` - References Voter
+- `candidacy_id` - References Candidacy
+- `rating` - Integer rating from 0-500
+- `baseline` - Integer baseline threshold from 0-500 (determines approval)
+- Automatic archiving on updates for historical analysis
+
+### RatingArchive Model
+
+Historical archive of all rating changes for transparency and analysis:
+
+- `voter_id` - References Voter
+- `candidacy_id` - References Candidacy
+- `rating` - Historical rating value (0-500)
+- `baseline` - Historical baseline value (0-500)
+- `archived_at` - Timestamp when this rating was archived
+- `reason` - Description of what changed
+
 ## Key Architectural Decisions
 
 ### Polymorphic Jurisdictions
@@ -109,14 +152,31 @@ Using separate models for each jurisdiction type with polymorphic associations a
 
 ### Hierarchical Design
 The model hierarchy flows from broad to specific:
-- Jurisdictions (Country � State � City/Town, plus Organizations)
+- Jurisdictions (Country → State → City/Town, plus Organizations)
 - Positions (generic roles like "Mayor")
 - Offices (Position within a specific Jurisdiction)
 - Elections (Office in a specific Year)
 - Candidacies (Person running in a specific Election)
+- Voters (Authenticated users with Registration history)
+- Ratings (Voter preferences for Candidacies with archival)
 
 ### Mock and Historical Elections
 The Election model supports both mock elections for education and historical simulations for research, aligning with the platform's educational mission described in the PRD.
+
+### Approval Voting Implementation
+The Rating system implements the core approval voting mechanism:
+- **0-500 Scale**: Each voter rates candidates on a 0-500 scale representing their preference intensity
+- **Baseline Threshold**: Voters set a baseline (0-500) that determines which candidates they "approve"
+- **Vote Allocation**: Candidates rated at or above the voter's baseline receive the voter's approval
+- **Historical Tracking**: All rating changes are archived for transparency and analysis
+- **Eligibility Enforcement**: Voters can only rate candidates in elections where they're jurisdictionally eligible
+
+### Voter Mobility Support
+The Registration system handles real-world voter mobility:
+- **Registration History**: Complete timeline of voter jurisdiction changes
+- **Single Active Registration**: Voters can only have one active registration at a time
+- **Eligibility Rules**: Hierarchical eligibility (city voters can vote in state/country elections)
+- **Status Tracking**: Active, inactive, moved, suspended registration statuses
 
 ### Custom Generator Enhancement
 

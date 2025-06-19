@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_19_213233) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_19_215119) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -89,6 +89,43 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_213233) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rating_archives", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.bigint "candidacy_id", null: false
+    t.integer "rating"
+    t.integer "baseline"
+    t.datetime "archived_at"
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["candidacy_id"], name: "index_rating_archives_on_candidacy_id"
+    t.index ["voter_id"], name: "index_rating_archives_on_voter_id"
+  end
+
+  create_table "ratings", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.bigint "candidacy_id", null: false
+    t.integer "rating"
+    t.integer "baseline"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["candidacy_id"], name: "index_ratings_on_candidacy_id"
+    t.index ["voter_id"], name: "index_ratings_on_voter_id"
+  end
+
+  create_table "registrations", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.string "jurisdiction_type", null: false
+    t.bigint "jurisdiction_id", null: false
+    t.datetime "registered_at"
+    t.string "status"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["jurisdiction_type", "jurisdiction_id"], name: "index_registrations_on_jurisdiction"
+    t.index ["voter_id"], name: "index_registrations_on_voter_id"
+  end
+
   create_table "states", force: :cascade do |t|
     t.string "name"
     t.string "code"
@@ -96,6 +133,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_213233) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_states_on_country_id"
+  end
+
+  create_table "voters", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "first_name"
+    t.string "last_name"
+    t.date "birth_date"
+    t.boolean "is_verified"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_voters_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_voters_on_reset_password_token", unique: true
   end
 
   create_table "years", force: :cascade do |t|
@@ -113,5 +166,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_213233) do
   add_foreign_key "elections", "offices"
   add_foreign_key "elections", "years"
   add_foreign_key "offices", "positions"
+  add_foreign_key "rating_archives", "candidacies"
+  add_foreign_key "rating_archives", "voters"
+  add_foreign_key "ratings", "candidacies"
+  add_foreign_key "ratings", "voters"
+  add_foreign_key "registrations", "voters"
   add_foreign_key "states", "countries"
 end

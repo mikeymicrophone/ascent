@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :ratings
+  resources :registrations
+  resources :voters
+  devise_for :voters
   resources :candidacies
   resources :people
   resources :elections
