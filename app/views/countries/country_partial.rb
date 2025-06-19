@@ -8,17 +8,16 @@ class Views::Countries::CountryPartial < Views::ApplicationView
 
   def view_template(&)
     div(id: dom_id(@country), class: "country-partial") do
-            h3 { @country.name }
-                  div do
+      h3 { @country.name }
+      div do
         span { "Code:" }
         whitespace
-                span { @country.code }
-              end
-                  div do
+        span { @country.code }
+      end
+      div do
         span { "Description:" }
         whitespace
-                div(class: "mt-1") { simple_format(@country.description) }
-              end
-          end
+        div(class: "mt-1") { simple_format(@country.description) }
+      end
   end
 end

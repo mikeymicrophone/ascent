@@ -6,22 +6,23 @@ class Views::<%= controller_class_name %>::<%= class_name %>Partial < Views::App
   def view_template(&)
     div(id: dom_id(@<%= singular_table_name %>), class: "<%= singular_table_name %>-partial") do
 <% display_attributes.each_with_index do |attribute, index| -%>
-      <% if index == 0 -%>
+<% if index == 0 -%>
       h3 { @<%= singular_table_name %>.<%= attribute.column_name %> }
-      <% else -%>
+<% else -%>
       div do
         span { "<%= attribute.human_name %>:" }
         whitespace
-        <% if attribute.field_type == :text || attribute.field_type == :textarea -%>
+<% if attribute.field_type == :text || attribute.field_type == :textarea -%>
         div(class: "mt-1") { simple_format(@<%= singular_table_name %>.<%= attribute.column_name %>) }
-        <% elsif attribute.reference? || attribute.foreign_key? -%>
-        <% association_name = attribute.reference? ? attribute.singular_name : attribute.singular_name -%>
-        link_to @<%= singular_table_name %>.<%= association_name %>.name, @<%= singular_table_name %>.<%= association_name %>, class: "link"
-        <% else -%>
+<% elsif attribute.reference? || attribute.foreign_key? -%>
+<% association_name = attribute.reference? ? attribute.singular_name : attribute.singular_name -%>
+<% model_class_name = association_name.downcase -%>
+        link_to @<%= singular_table_name %>.<%= association_name %>.name, @<%= singular_table_name %>.<%= association_name %>, class: "link <%= model_class_name %>"
+<% else -%>
         span { @<%= singular_table_name %>.<%= attribute.column_name %> }
-        <% end -%>
+<% end -%>
       end
-      <% end -%>
+<% end -%>
 <% end -%>
     end
   end

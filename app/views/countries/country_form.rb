@@ -12,20 +12,20 @@ class Views::Countries::CountryForm < Views::ApplicationView
       div do
         form.label :name
         form.text_field :name,
-                                        class: input_classes(@country.errors[:name])
+                        class: input_classes(@country.errors[:name])
       end
 
       div do
         form.label :code
         form.text_field :code,
-                                        class: input_classes(@country.errors[:code])
+                        class: input_classes(@country.errors[:code])
       end
 
       div do
         form.label :description
         form.textarea :description,
-                                        rows: 4,
-                                        class: input_classes(@country.errors[:description])
+                        rows: 4,
+                        class: input_classes(@country.errors[:description])
       end
 
       div do

@@ -10,13 +10,13 @@ class Views::States::StateForm < Views::ApplicationView
       div do
         form.label :name
         form.text_field :name,
-                                        class: input_classes(@state.errors[:name])
+                        class: input_classes(@state.errors[:name])
       end
 
       div do
         form.label :code
         form.text_field :code,
-                                        class: input_classes(@state.errors[:code])
+                        class: input_classes(@state.errors[:code])
       end
 
       div do

@@ -10,11 +10,11 @@ class Views::Cities::CityForm < Views::ApplicationView
       div do
         form.label :name
         form.text_field :name,
-                                        class: input_classes(@city.errors[:name])
+                        class: input_classes(@city.errors[:name])
       end
 
       div do
-                        form.label :state_id, "State"
+        form.label :state_id, "State"
         form.collection_select :state_id, 
                                ::State.all, 
                                :id, 
