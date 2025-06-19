@@ -1,0 +1,16 @@
+/* Components Typography - Layer 3: Font properties */
+
+/* Link typography */
+.link {
+  @apply font-medium no-underline;
+}
+
+/* Button typography */
+.primary {
+  @apply font-semibold;
+}
+
+.secondary,
+.danger {
+  @apply font-medium;
+}

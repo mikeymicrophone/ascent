@@ -1,0 +1,41 @@
+/* Components Spacing & Size - Layer 2: Element spacing and sizing */
+
+/* Scaffold containers */
+.scaffold {
+  @apply p-8 rounded-lg;
+}
+
+/* Partial containers */
+.country-partial,
+.state-partial,
+.city-partial {
+  @apply p-6 mb-4 rounded-lg;
+}
+
+/* Button spacing */
+.primary {
+  @apply px-6 py-3 rounded-md;
+}
+
+.secondary,
+.danger {
+  @apply px-4 py-2 rounded-md text-sm;
+}
+
+/* Form input spacing */
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+textarea, 
+select {
+  @apply px-3 py-2 rounded-md text-sm;
+}
+
+/* Form input focus ring */
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus, 
+textarea:focus, 
+select:focus {
+  @apply ring-2 ring-offset-1;
+}

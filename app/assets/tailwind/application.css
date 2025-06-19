@@ -3,13 +3,25 @@
 /* Scaffold CSS - Four Layer Architecture */
 /* Layer 1: Layout */
 @import "./layout/scaffold.css";
+@import "./layout/navigation.css";
+@import "./layout/components.css";
 
 /* Layer 2: Spacing/Size */
 @import "./sizing/scaffold.css";
+@import "./sizing/navigation.css";
+@import "./sizing/components.css";
 
 /* Layer 3: Typography & Colors */
 @import "./typography/scaffold.css";
+@import "./typography/navigation.css";
+@import "./typography/components.css";
+
+/* Layer 3: Colors */
 @import "./colors/scaffold.css";
+@import "./colors/navigation.css";
+@import "./colors/components.css";
 
 /* Layer 4: State */
 @import "./situation/scaffold.css";
+@import "./situation/navigation.css";
+@import "./situation/components.css";

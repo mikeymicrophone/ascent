@@ -1,0 +1,18 @@
+/* Navigation States - Layer 4: Hover, focus, active states */
+
+.brand-link {
+  @apply transition-colors duration-200;
+}
+
+.brand-link:hover {
+  color: var(--brand-hover);
+}
+
+.nav-link {
+  @apply transition-all duration-200;
+}
+
+.nav-link:hover {
+  background-color: var(--nav-link-hover-bg);
+  color: var(--nav-link-hover-color);
+}
