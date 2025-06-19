@@ -1,0 +1,40 @@
+states:
+  - code: "AL"
+    name: "Alabama"
+    country_code: "US"
+  
+  - code: "AK"
+    name: "Alaska"
+    country_code: "US"
+  
+  - code: "AZ"
+    name: "Arizona"
+    country_code: "US"
+  
+  - code: "AR"
+    name: "Arkansas"
+    country_code: "US"
+  
+  - code: "CA"
+    name: "California"
+    country_code: "US"
+  
+  - code: "CO"
+    name: "Colorado"
+    country_code: "US"
+  
+  - code: "CT"
+    name: "Connecticut"
+    country_code: "US"
+  
+  - code: "DE"
+    name: "Delaware"
+    country_code: "US"
+  
+  - code: "FL"
+    name: "Florida"
+    country_code: "US"
+  
+  - code: "GA"
+    name: "Georgia"
+    country_code: "US"

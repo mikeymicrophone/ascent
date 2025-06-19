@@ -1,0 +1,20 @@
+countries:
+  - code: "US"
+    name: "United States"
+    description: "Federal democratic republic in North America"
+  
+  - code: "CA"
+    name: "Canada"
+    description: "Federal parliamentary democracy in North America"
+  
+  - code: "UK"
+    name: "United Kingdom"
+    description: "Constitutional monarchy in Europe"
+  
+  - code: "AU"
+    name: "Australia"
+    description: "Federal parliamentary constitutional monarchy in Oceania"
+  
+  - code: "DE"
+    name: "Germany"
+    description: "Federal republic in Central Europe"

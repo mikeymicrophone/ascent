@@ -5,7 +5,7 @@ class Views::<%= controller_class_name %>::IndexView < Views::ApplicationView
   end
 
   def view_template(&)
-    div(class: "scaffold <%= plural_table_name %>-index", id: dom_id(<%= class_name %>, :index)) do
+    div(class: "scaffold <%= plural_table_name %>-index", id: "index_<%= plural_table_name %>") do
       render_notice if @notice.present?
       
       div do
