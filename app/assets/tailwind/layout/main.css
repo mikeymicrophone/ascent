@@ -1,0 +1,36 @@
+/* Main Content Layout - Layer 1: Layout techniques and positioning */
+
+.main-content {
+  @apply container mx-auto;
+}
+
+/* Ensure main content doesn't overlap with fixed navigation */
+body {
+  @apply pt-32; /* Default for when navigation wraps */
+}
+
+/* Responsive body padding adjustments */
+@media (min-width: 1025px) {
+  body {
+    @apply pt-20; /* Single line navigation on large screens */
+  }
+}
+
+/* Intermediate widths - reduced padding for smaller nav */
+@media (max-width: 1024px) and (min-width: 769px) {
+  body {
+    @apply pt-24; /* Reduced padding with smaller nav links */
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    @apply pt-28; /* Vertical navigation on mobile/tablet */
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    @apply pt-20; /* Compact navigation on small mobile */
+  }
+}

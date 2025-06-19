@@ -6,11 +6,13 @@
 /* Layer 1: Layout */
 @import "./layout/scaffold.css";
 @import "./layout/navigation.css";
+@import "./layout/main.css";
 @import "./layout/components.css";
 
 /* Layer 2: Spacing/Size */
 @import "./sizing/scaffold.css";
 @import "./sizing/navigation.css";
+@import "./sizing/main.css";
 @import "./sizing/components.css";
 
 /* Layer 3: Typography & Colors */

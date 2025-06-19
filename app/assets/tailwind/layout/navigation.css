@@ -7,26 +7,26 @@
 }
 
 .nav-container {
-  @apply flex items-center justify-between;
+  @apply flex items-center justify-between flex-wrap;
   @apply w-full max-w-6xl mx-auto;
 }
 
 .nav-brand {
-  @apply flex items-center;
+  @apply flex items-center flex-shrink-0;
 }
 
 .nav-links {
-  @apply flex items-center;
+  @apply flex items-center flex-wrap;
 }
 
 /* Responsive layout adjustments */
 @media (max-width: 768px) {
+  .nav-container {
+    @apply flex-col items-start;
+  }
+  
   .nav-links {
-    @apply flex-wrap;
+    @apply w-full justify-start;
   }
 }
 
-/* Body layout adjustment for fixed navigation */
-body {
-  @apply pt-20;
-}
