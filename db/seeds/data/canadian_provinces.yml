@@ -1,0 +1,40 @@
+states:
+  - code: "AB"
+    name: "Alberta"
+    country_code: "CA"
+  
+  - code: "BC"
+    name: "British Columbia"
+    country_code: "CA"
+  
+  - code: "MB"
+    name: "Manitoba"
+    country_code: "CA"
+  
+  - code: "NB"
+    name: "New Brunswick"
+    country_code: "CA"
+  
+  - code: "NL"
+    name: "Newfoundland and Labrador"
+    country_code: "CA"
+  
+  - code: "NS"
+    name: "Nova Scotia"
+    country_code: "CA"
+  
+  - code: "ON"
+    name: "Ontario"
+    country_code: "CA"
+  
+  - code: "PE"
+    name: "Prince Edward Island"
+    country_code: "CA"
+  
+  - code: "QC"
+    name: "Quebec"
+    country_code: "CA"
+  
+  - code: "SK"
+    name: "Saskatchewan"
+    country_code: "CA"

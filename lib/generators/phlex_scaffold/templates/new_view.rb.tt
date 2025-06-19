@@ -1,0 +1,19 @@
+class Views::<%= controller_class_name %>::NewView < Views::ApplicationView
+  def initialize(<%= singular_table_name %>:)
+    @<%= singular_table_name %> = <%= singular_table_name %>
+  end
+
+  def view_template(&)
+    div(class: "scaffold <%= singular_table_name %>-new", id: dom_id(@<%= singular_table_name %>, :new)) do
+      h1 { "New <%= human_name.downcase %>" }
+      
+      Views::<%= controller_class_name %>::<%= class_name %>Form(<%= singular_table_name %>: @<%= singular_table_name %>)
+      
+      div do
+        link_to "Back to <%= human_name.pluralize.downcase %>", 
+                <%= plural_route_name %>_path,
+                class: "secondary"
+      end
+    end
+  end
+end

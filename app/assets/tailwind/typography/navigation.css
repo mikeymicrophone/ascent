@@ -1,0 +1,11 @@
+/* Navigation Typography - Layer 3: Fonts and text properties */
+
+.brand-link {
+  @apply font-bold;
+  @apply no-underline;
+}
+
+.nav-link {
+  @apply font-medium;
+  @apply no-underline;
+}

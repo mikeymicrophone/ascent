@@ -1,0 +1,82 @@
+/* Scaffold Spacing & Size Classes - Layer 2: Element spacing, sizing, responsive */
+
+.scaffold {
+  /* Index View Spacing */
+  &[class*="-index"] {
+    & > div:last-child {
+      @apply space-y-5;
+      
+      & > div {
+        @apply pb-5 sm:pb-0;
+        
+        & > div:last-child {
+          @apply space-x-2 space-y-2;
+        }
+      }
+    }
+  }
+  
+  /* Show View Spacing */
+  &[class*="-show"],
+  &[class*="-new"],
+  &[class*="-edit"] {
+    & > div:last-child {
+      @apply mt-6 space-x-2;
+      
+      & > * + * {
+        @apply mt-2 sm:mt-0 sm:ml-2;
+      }
+    }
+  }
+  
+  /* Form Spacing */
+  form {
+    & > div {
+      @apply my-5;
+      
+      input,
+      textarea,
+      select {
+        @apply mt-2 w-full;
+      }
+      
+      input[type="checkbox"] {
+        @apply h-5 w-5;
+      }
+      
+      label {
+        @apply mb-2;
+      }
+    }
+  }
+  
+  /* Button Spacing */
+  button,
+  a[class*="button"],
+  input[type="submit"] {
+    @apply px-3.5 py-2.5;
+  }
+  
+  /* Partial/Card Spacing */
+  [class*="-partial"] {
+    @apply p-4;
+    
+    h3 {
+      @apply mb-2;
+    }
+    
+    & > div {
+      @apply mb-2;
+    }
+  }
+  
+  /* Notice Spacing */
+  #notice {
+    @apply py-2 px-3 mb-5;
+  }
+  
+  /* Empty State Spacing */
+  p:only-child {
+    @apply my-10;
+  }
+}

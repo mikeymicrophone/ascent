@@ -1,0 +1,18 @@
+.main-navigation {
+  background-color: var(--nav-bg);
+  border-color: var(--nav-border);
+  @apply shadow-sm;
+}
+
+.brand-link {
+  color: var(--brand-color);
+}
+
+.nav-link {
+  color: var(--nav-link-color);
+}
+
+.nav-link.active {
+  background-color: var(--nav-link-active-bg);
+  color: var(--nav-link-active-color);
+}

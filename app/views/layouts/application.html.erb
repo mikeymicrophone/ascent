@@ -23,7 +23,8 @@
   </head>
 
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <%= render Views::Components::Navigation.new %>
+    <main class="container mx-auto mt-8 px-5">
       <%= yield %>
     </main>
   </body>

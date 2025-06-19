@@ -1,0 +1,31 @@
+/* Scaffold State Classes - Layer 4: Interactive states and utilities */
+
+.scaffold {
+  /* Interactive cursor states */
+  button,
+  input[type="submit"],
+  a[class*="button"] {
+    @apply cursor-pointer;
+    
+    &.danger {
+      @apply cursor-pointer;
+    }
+  }
+  
+  /* Display utilities */
+  form {
+    @apply contents;
+  }
+  
+  /* Rounded utilities */
+  #notice,
+  #error_explanation {
+    @apply rounded-md;
+  }
+  
+  button,
+  input[type="submit"],
+  a[class*="button"] {
+    @apply rounded-md text-center inline-block w-full sm:w-auto;
+  }
+}

@@ -1,9 +1,54 @@
 # This file should ensure the existence of records required to run the application in every environment (production,
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+
+# Load all seeder classes
+Dir[Rails.root.join('db/seeds/*.rb')].each { |f| require f }
+
+puts "🌱 Starting seed process..."
+
+# Seed countries first (no dependencies)
+puts "\n📍 Seeding countries..."
+CountrySeeder.seed(Rails.root.join('db/seeds/data/countries.yml'))
+
+# Seed states (depends on countries)
+puts "\n🏛️ Seeding states..."
+StateSeeder.seed([
+  Rails.root.join('db/seeds/data/us_states.yml'),
+  Rails.root.join('db/seeds/data/canadian_provinces.yml')
+])
+
+# Seed positions (no dependencies)
+puts "\n🏢 Seeding positions..."
+PositionSeeder.seed
+
+# Seed offices (depends on positions and jurisdictions)
+puts "\n🏛️ Seeding offices..."
+OfficeSeeder.seed
+
+# Seed years (no dependencies)
+puts "\n📅 Seeding years..."
+YearSeeder.seed
+
+# Seed elections (depends on offices and years)
+puts "\n🗳️ Seeding elections..."
+ElectionSeeder.seed
+
+# Seed people (no dependencies)
+puts "\n👥 Seeding people..."
+PersonSeeder.seed
+
+# Seed candidacies (depends on people and elections)
+puts "\n🏃 Seeding candidacies..."
+CandidacySeeder.seed
+
+puts "\n✅ Seed process completed!"
+puts "📊 Summary:"
+puts "   Countries: #{Country.count}"
+puts "   States: #{State.count}"
+puts "   Positions: #{Position.count}"
+puts "   Offices: #{Office.count}"
+puts "   Years: #{Year.count}"
+puts "   Elections: #{Election.count}"
+puts "   People: #{Person.count}"
+puts "   Candidacies: #{Candidacy.count}"

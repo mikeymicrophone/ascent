@@ -1,0 +1,52 @@
+/* Components States - Layer 4: Hover, focus, active states */
+
+/* Link states */
+.link {
+  @apply transition-colors duration-200;
+}
+
+.link:hover {
+  color: var(--link-hover);
+  @apply underline;
+}
+
+/* Button states */
+.primary,
+.secondary,
+.danger {
+  @apply transition-all duration-200 cursor-pointer;
+}
+
+.primary:hover {
+  background-color: var(--btn-primary-hover);
+}
+
+.secondary:hover {
+  background-color: var(--btn-secondary-hover);
+}
+
+.danger:hover {
+  background-color: var(--btn-danger-hover);
+}
+
+/* Form input states */
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+textarea, 
+select {
+  @apply transition-all duration-200;
+}
+
+/* Card hover states */
+.country-partial,
+.state-partial,
+.city-partial {
+  @apply transition-shadow duration-200;
+}
+
+.country-partial:hover,
+.state-partial:hover,
+.city-partial:hover {
+  @apply shadow-md;
+}

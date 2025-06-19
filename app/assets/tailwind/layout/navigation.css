@@ -1,0 +1,32 @@
+/* Navigation Layout - Layer 1: Layout techniques and responsive design */
+
+.main-navigation {
+  @apply fixed top-0 left-0 right-0;
+  @apply flex;
+  z-index: 50;
+}
+
+.nav-container {
+  @apply flex items-center justify-between;
+  @apply w-full max-w-6xl mx-auto;
+}
+
+.nav-brand {
+  @apply flex items-center;
+}
+
+.nav-links {
+  @apply flex items-center;
+}
+
+/* Responsive layout adjustments */
+@media (max-width: 768px) {
+  .nav-links {
+    @apply flex-wrap;
+  }
+}
+
+/* Body layout adjustment for fixed navigation */
+body {
+  @apply pt-20;
+}

@@ -1,0 +1,38 @@
+class Views::<%= controller_class_name %>::ShowView < Views::ApplicationView
+  def initialize(<%= singular_table_name %>:, notice: nil)
+    @<%= singular_table_name %> = <%= singular_table_name %>
+    @notice = notice
+  end
+
+  def view_template(&)
+    div(class: "scaffold <%= singular_table_name %>-show", id: dom_id(@<%= singular_table_name %>, :show)) do
+      render_notice if @notice.present?
+      
+      h1 { "Showing <%= human_name.downcase %>" }
+      
+      Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: @<%= singular_table_name %>)
+      
+      div do
+        link_to "Edit this <%= human_name.downcase %>", 
+                edit_<%= singular_route_name %>_path(@<%= singular_table_name %>),
+                class: "secondary"
+        link_to "Back to <%= human_name.pluralize.downcase %>", 
+                <%= plural_route_name %>_path,
+                class: "secondary"
+        button_to "Destroy this <%= human_name.downcase %>", 
+                  @<%= singular_table_name %>,
+                  method: :delete,
+                  class: "danger",
+                  data: { turbo_confirm: "Are you sure?" }
+      end
+    end
+  end
+
+  private
+
+  def render_notice
+    p(id: "notice") do
+      @notice
+    end
+  end
+end

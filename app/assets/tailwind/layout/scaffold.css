@@ -1,0 +1,53 @@
+/* Scaffold Layout Classes - Layer 1: Layout, Flex, Positioning, Responsive */
+
+.scaffold {
+  @apply w-full;
+  
+  /* Index View Layout */
+  &[class*="-index"] {
+    & > div:first-child {
+      @apply flex justify-between items-center;
+    }
+    
+    & > div:last-child {
+      @apply min-w-full divide-y divide-gray-200;
+      
+      & > div {
+        @apply flex flex-col sm:flex-row justify-between items-center;
+        
+        & > div:last-child {
+          @apply w-full sm:w-auto flex flex-col sm:flex-row;
+        }
+      }
+    }
+  }
+  
+  /* Show/New/Edit View Layout */
+  &[class*="-show"],
+  &[class*="-new"],
+  &[class*="-edit"] {
+    @apply md:w-2/3 w-full;
+    
+    & > div:last-child {
+      @apply flex flex-wrap;
+    }
+  }
+  
+  /* Form Layout */
+  form {
+    @apply contents;
+    
+    & > div {
+      @apply block;
+      
+      &:has(input[type="checkbox"]) {
+        @apply flex items-center gap-2;
+      }
+    }
+  }
+  
+  /* Partial/Card Layout - when scaffold contains a card */
+  [class*="-partial"] {
+    @apply rounded-lg shadow;
+  }
+}

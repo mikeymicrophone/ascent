@@ -1,0 +1,50 @@
+class Views::<%= controller_class_name %>::IndexView < Views::ApplicationView
+  def initialize(<%= plural_table_name %>:, notice: nil)
+    @<%= plural_table_name %> = <%= plural_table_name %>
+    @notice = notice
+  end
+
+  def view_template(&)
+    div(class: "scaffold <%= plural_table_name %>-index", id: "index_<%= plural_table_name %>") do
+      render_notice if @notice.present?
+      
+      div do
+        h1 { "<%= human_name.pluralize %>" }
+        link_to "New <%= human_name.downcase %>", 
+                new_<%= singular_route_name %>_path,
+                class: "primary"
+      end
+
+      div(id: "<%= plural_table_name %>") do
+        if @<%= plural_table_name %>.any?
+          @<%= plural_table_name %>.each do |<%= singular_table_name %>|
+            div(id: dom_id(<%= singular_table_name %>, :list_item)) do
+              Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: <%= singular_table_name %>)
+              
+              div do
+                link_to "Show", <%= singular_table_name %>,
+                        class: "secondary"
+                link_to "Edit", edit_<%= singular_route_name %>_path(<%= singular_table_name %>),
+                        class: "secondary"
+                button_to "Destroy", <%= singular_table_name %>,
+                          method: :delete,
+                          class: "danger",
+                          data: { turbo_confirm: "Are you sure?" }
+              end
+            end
+          end
+        else
+          p { "No <%= human_name.downcase.pluralize %> found." }
+        end
+      end
+    end
+  end
+
+  private
+
+  def render_notice
+    p(id: "notice") do
+      @notice
+    end
+  end
+end

@@ -1,10 +1,10 @@
 /*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
+ * Four-layer CSS architecture with semantic classnames and Tailwind @apply
+ * 
+ * Layer 1: Layout techniques (flex, positioning, responsive)
+ * Layer 2: Spacing and sizing (padding, margin, width, height)
+ * Layer 3: Typography and colors (fonts, colors via CSS variables)
+ * Layer 4: State (hover, focus, active)
  */
+
+
