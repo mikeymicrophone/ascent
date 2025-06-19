@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-class Views::<%= controller_class_name %>::ShowView < Views::Base
+class Views::<%= controller_class_name %>::ShowView < Views::ApplicationView
   def initialize(<%= singular_table_name %>:, notice: nil)
     @<%= singular_table_name %> = <%= singular_table_name %>
     @notice = notice
@@ -12,7 +10,7 @@ class Views::<%= controller_class_name %>::ShowView < Views::Base
       
       h1 { "Showing <%= human_name.downcase %>" }
       
-      render Components::<%= class_name %>Partial.new(<%= singular_table_name %>: @<%= singular_table_name %>)
+      Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: @<%= singular_table_name %>)
       
       div do
         link_to "Edit this <%= human_name.downcase %>", 

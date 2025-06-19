@@ -55,10 +55,10 @@ class PhlexScaffoldGenerator < Rails::Generators::NamedBase
     end
     
     # Create form component
-    template "form_component.rb.tt", File.join("app/views/components", "#{singular_name}_form.rb")
+    template "form_component.rb.tt", File.join("app/views", controller_file_path, "#{singular_name}_form.rb")
     
     # Create partial component
-    template "partial_component.rb.tt", File.join("app/views/components", "#{singular_name}_partial.rb")
+    template "partial_component.rb.tt", File.join("app/views", controller_file_path, "#{singular_name}_partial.rb")
   end
 
   def controller_actions

@@ -1,13 +1,11 @@
-# frozen_string_literal: true
-
-class Views::<%= controller_class_name %>::IndexView < Views::Base
+class Views::<%= controller_class_name %>::IndexView < Views::ApplicationView
   def initialize(<%= plural_table_name %>:, notice: nil)
     @<%= plural_table_name %> = <%= plural_table_name %>
     @notice = notice
   end
 
   def view_template(&)
-    div(class: "scaffold <%= plural_table_name %>-index", id: dom_id("<%= plural_table_name %>", :index_of)) do
+    div(class: "scaffold <%= plural_table_name %>-index", id: dom_id(<%= class_name %>, :index)) do
       render_notice if @notice.present?
       
       div do
@@ -21,7 +19,7 @@ class Views::<%= controller_class_name %>::IndexView < Views::Base
         if @<%= plural_table_name %>.any?
           @<%= plural_table_name %>.each do |<%= singular_table_name %>|
             div(id: dom_id(<%= singular_table_name %>, :list_item)) do
-              render Components::<%= class_name %>Partial.new(<%= singular_table_name %>: <%= singular_table_name %>)
+              Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: <%= singular_table_name %>)
               
               div do
                 link_to "Show", <%= singular_table_name %>,

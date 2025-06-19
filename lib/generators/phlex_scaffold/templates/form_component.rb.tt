@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-class Components::<%= class_name %>Form < Components::Base
+class Views::<%= controller_class_name %>::<%= class_name %>Form < Views::ApplicationView
   def initialize(<%= singular_table_name %>:)
     @<%= singular_table_name %> = <%= singular_table_name %>
   end
