@@ -5,7 +5,7 @@ class Views::Offices::OfficePartial < Views::ApplicationView
 
   def view_template(&)
     div(id: dom_id(@office), class: "office-partial") do
-      h3 { @office.position_id }
+      h3 { @office.position.title }
       div do
         span { "Jurisdiction:" }
         whitespace

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_19_202241) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_19_212147) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -28,6 +28,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_202241) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "elections", force: :cascade do |t|
+    t.bigint "office_id", null: false
+    t.bigint "year_id", null: false
+    t.date "election_date"
+    t.string "status"
+    t.text "description"
+    t.boolean "is_mock"
+    t.boolean "is_historical"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["office_id"], name: "index_elections_on_office_id"
+    t.index ["year_id"], name: "index_elections_on_year_id"
   end
 
   create_table "offices", force: :cascade do |t|
@@ -60,7 +74,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_202241) do
     t.index ["country_id"], name: "index_states_on_country_id"
   end
 
+  create_table "years", force: :cascade do |t|
+    t.integer "year"
+    t.boolean "is_even_year"
+    t.boolean "is_presidential_year"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "cities", "states"
+  add_foreign_key "elections", "offices"
+  add_foreign_key "elections", "years"
   add_foreign_key "offices", "positions"
   add_foreign_key "states", "countries"
 end

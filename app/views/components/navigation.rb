@@ -12,6 +12,8 @@ class Views::Components::Navigation < Views::ApplicationView
           link_to "Cities", cities_path, class: nav_link_class(cities_path)
           link_to "Positions", positions_path, class: nav_link_class(positions_path)
           link_to "Offices", offices_path, class: nav_link_class(offices_path)
+          link_to "Years", years_path, class: nav_link_class(years_path)
+          link_to "Elections", elections_path, class: nav_link_class(elections_path)
         end
       end
     end

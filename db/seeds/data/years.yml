@@ -1,0 +1,49 @@
+- year: 2020
+  is_even_year: true
+  is_presidential_year: true
+  description: "Presidential election year with heightened political activity and record voter turnout."
+
+- year: 2021
+  is_even_year: false
+  is_presidential_year: false
+  description: "Off-year elections including gubernatorial races in Virginia and New Jersey."
+
+- year: 2022
+  is_even_year: true
+  is_presidential_year: false
+  description: "Midterm elections with all House seats and one-third of Senate seats up for election."
+
+- year: 2023
+  is_even_year: false
+  is_presidential_year: false
+  description: "Off-year elections focusing on local races and special elections."
+
+- year: 2024
+  is_even_year: true
+  is_presidential_year: true
+  description: "Presidential election year with full federal election cycle."
+
+- year: 2025
+  is_even_year: false
+  is_presidential_year: false
+  description: "Off-year elections including gubernatorial races in Virginia and New Jersey."
+
+- year: 2026
+  is_even_year: true
+  is_presidential_year: false
+  description: "Midterm elections with significant congressional and gubernatorial races."
+
+- year: 2027
+  is_even_year: false
+  is_presidential_year: false
+  description: "Off-year elections with focus on local and state-level positions."
+
+- year: 2028
+  is_even_year: true
+  is_presidential_year: true
+  description: "Next presidential election cycle with full federal elections."
+
+- year: 2030
+  is_even_year: true
+  is_presidential_year: false
+  description: "Midterm elections coinciding with post-census redistricting effects."

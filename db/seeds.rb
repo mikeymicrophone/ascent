@@ -26,9 +26,19 @@ PositionSeeder.seed
 puts "\n🏛️ Seeding offices..."
 OfficeSeeder.seed
 
+# Seed years (no dependencies)
+puts "\n📅 Seeding years..."
+YearSeeder.seed
+
+# Seed elections (depends on offices and years)
+puts "\n🗳️ Seeding elections..."
+ElectionSeeder.seed
+
 puts "\n✅ Seed process completed!"
 puts "📊 Summary:"
 puts "   Countries: #{Country.count}"
 puts "   States: #{State.count}"
 puts "   Positions: #{Position.count}"
 puts "   Offices: #{Office.count}"
+puts "   Years: #{Year.count}"
+puts "   Elections: #{Election.count}"

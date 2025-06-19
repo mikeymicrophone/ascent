@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :elections
+  resources :years
   resources :offices
   resources :positions
   resources :cities
