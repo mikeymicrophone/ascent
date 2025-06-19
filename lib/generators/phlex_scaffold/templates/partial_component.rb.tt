@@ -1,0 +1,27 @@
+# frozen_string_literal: true
+
+class Components::<%= class_name %>Partial < Components::Base
+  def initialize(<%= singular_table_name %>:)
+    @<%= singular_table_name %> = <%= singular_table_name %>
+  end
+
+  def view_template(&)
+    div(id: dom_id(@<%= singular_table_name %>), class: "p-4 bg-white rounded-lg shadow") do
+<% display_attributes.each_with_index do |attribute, index| -%>
+      <% if index == 0 -%>
+      h3(class: "font-semibold text-lg mb-2") { @<%= singular_table_name %>.<%= attribute.column_name %> }
+      <% else -%>
+      div(class: "mb-2") do
+        span(class: "font-medium") { "<%= attribute.human_name %>:" }
+        whitespace
+        <% if attribute.field_type == :text || attribute.field_type == :textarea -%>
+        div(class: "mt-1") { simple_format(@<%= singular_table_name %>.<%= attribute.column_name %>) }
+        <% else -%>
+        span { @<%= singular_table_name %>.<%= attribute.column_name %> }
+        <% end -%>
+      end
+      <% end -%>
+<% end -%>
+    end
+  end
+end

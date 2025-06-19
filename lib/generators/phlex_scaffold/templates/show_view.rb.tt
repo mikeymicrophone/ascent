@@ -1,0 +1,41 @@
+# frozen_string_literal: true
+
+class Views::<%= controller_class_name %>::ShowView < Views::Base
+  def initialize(<%= singular_table_name %>:, notice: nil)
+    @<%= singular_table_name %> = <%= singular_table_name %>
+    @notice = notice
+  end
+
+  def view_template(&)
+    div(class: "md:w-2/3 w-full") do
+      render_notice if @notice.present?
+      
+      h1(class: "font-bold text-4xl") { "Showing <%= human_name.downcase %>" }
+      
+      render Components::<%= class_name %>Partial.new(<%= singular_table_name %>: @<%= singular_table_name %>)
+      
+      div(class: "mt-6 space-x-2") do
+        link_to "Edit this <%= human_name.downcase %>", 
+                edit_<%= singular_route_name %>_path(@<%= singular_table_name %>),
+                class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium"
+        link_to "Back to <%= human_name.pluralize.downcase %>", 
+                <%= plural_route_name %>_path,
+                class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium"
+        button_to "Destroy this <%= human_name.downcase %>", 
+                  @<%= singular_table_name %>,
+                  method: :delete,
+                  form_class: "sm:inline-block mt-2 sm:mt-0 sm:ml-2",
+                  class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer",
+                  data: { turbo_confirm: "Are you sure?" }
+      end
+    end
+  end
+
+  private
+
+  def render_notice
+    p(class: "py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block", id: "notice") do
+      @notice
+    end
+  end
+end

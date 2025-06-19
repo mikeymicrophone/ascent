@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+class Views::<%= controller_class_name %>::NewView < Views::Base
+  def initialize(<%= singular_table_name %>:)
+    @<%= singular_table_name %> = <%= singular_table_name %>
+  end
+
+  def view_template(&)
+    div(class: "md:w-2/3 w-full") do
+      h1(class: "font-bold text-4xl mb-6") { "New <%= human_name.downcase %>" }
+      
+      render Components::<%= class_name %>Form.new(<%= singular_table_name %>: @<%= singular_table_name %>)
+      
+      div(class: "mt-6") do
+        link_to "Back to <%= human_name.pluralize.downcase %>", 
+                <%= plural_route_name %>_path,
+                class: "rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium"
+      end
+    end
+  end
+end

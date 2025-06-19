@@ -1,0 +1,81 @@
+# frozen_string_literal: true
+
+class Components::<%= class_name %>Form < Components::Base
+  def initialize(<%= singular_table_name %>:)
+    @<%= singular_table_name %> = <%= singular_table_name %>
+  end
+
+  def view_template(&)
+    form_with(model: @<%= singular_table_name %>, class: "contents") do |form|
+      render_errors if @<%= singular_table_name %>.errors.any?
+      
+<% form_attributes.each do |attribute| -%>
+<% if attribute.password_digest? -%>
+      div(class: "my-5") do
+        form.label :password, class: "block font-medium mb-2"
+        form.password_field :password, 
+                            class: input_classes(@<%= singular_table_name %>.errors[:password])
+      end
+
+      div(class: "my-5") do
+        form.label :password_confirmation, class: "block font-medium mb-2"
+        form.password_field :password_confirmation,
+                            class: input_classes(@<%= singular_table_name %>.errors[:password_confirmation])
+      end
+<% elsif attribute.attachments? -%>
+      div(class: "my-5") do
+        form.label :<%= attribute.column_name %>, class: "block font-medium mb-2"
+        form.<%= attribute.field_type %> :<%= attribute.column_name %>,
+                                        multiple: true,
+                                        class: input_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
+      end
+<% else -%>
+      div(class: <%= attribute.field_type == :checkbox ? '"my-5 flex items-center gap-2"' : '"my-5"' %>) do
+        form.label :<%= attribute.column_name %>, class: "block font-medium mb-2"
+<% if attribute.field_type == :textarea || attribute.field_type == :text_area -%>
+        form.<%= attribute.field_type %> :<%= attribute.column_name %>,
+                                        rows: 4,
+                                        class: input_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
+<% elsif attribute.field_type == :checkbox || attribute.field_type == :check_box -%>
+        form.<%= attribute.field_type %> :<%= attribute.column_name %>,
+                                        class: checkbox_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
+<% else -%>
+        form.<%= attribute.field_type %> :<%= attribute.column_name %>,
+                                        class: input_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
+<% end -%>
+      end
+<% end -%>
+
+<% end -%>
+      div(class: "inline") do
+        form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer"
+      end
+    end
+  end
+
+  private
+
+  def render_errors
+    div(id: "error_explanation", class: "bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3") do
+      h2 { "#{pluralize(@<%= singular_table_name %>.errors.count, 'error')} prohibited this <%= singular_table_name %> from being saved:" }
+      
+      ul(class: "list-disc ml-6") do
+        @<%= singular_table_name %>.errors.each do |error|
+          li { error.full_message }
+        end
+      end
+    end
+  end
+
+  def input_classes(errors)
+    base_classes = "block shadow-sm rounded-md border px-3 py-2 mt-2 w-full"
+    error_classes = errors.any? ? "border-red-400 focus:outline-red-600" : "border-gray-400 focus:outline-blue-600"
+    "#{base_classes} #{error_classes}"
+  end
+
+  def checkbox_classes(errors)
+    base_classes = "block shadow-sm rounded-md border order-first h-5 w-5"
+    error_classes = errors.any? ? "border-red-400 focus:outline-red-600" : "border-gray-400 focus:outline-blue-600"
+    "#{base_classes} #{error_classes}"
+  end
+end
