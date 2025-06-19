@@ -13,7 +13,7 @@ class Views::Countries::ShowView < Views::ApplicationView
       
       h1 { "Showing country" }
       
-      render Views::CountryPartial.new(country: @country)
+      render Views::Countries::CountryPartial.new(country: @country)
       
       div do
         link_to "Edit this country", 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::CountryForm < Views::ApplicationView
+class Views::Countries::CountryForm < Views::ApplicationView
   def initialize(country:)
     @country = country
   end
