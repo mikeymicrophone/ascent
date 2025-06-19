@@ -2,14 +2,14 @@
 
 /* Scaffold CSS - Four Layer Architecture */
 /* Layer 1: Layout */
-@import "layout/scaffold.css";
+@import "./layout/scaffold.css";
 
 /* Layer 2: Spacing/Size */
-@import "sizing/scaffold.css";
+@import "./sizing/scaffold.css";
 
 /* Layer 3: Typography & Colors */
-@import "typography/scaffold.css";
-@import "colors/scaffold.css";
+@import "./typography/scaffold.css";
+@import "./colors/scaffold.css";
 
 /* Layer 4: State */
-@import "situation/scaffold.css";
+@import "./situation/scaffold.css";

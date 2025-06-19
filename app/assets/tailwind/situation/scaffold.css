@@ -1,27 +1,5 @@
 /* Scaffold State Classes - Layer 4: Hover, focus, active states */
 
-/* Button Hover States */
-.scaffold-button-primary:hover {
-  @apply bg-blue-500;
-}
-
-.scaffold-button-secondary:hover {
-  @apply bg-gray-50;
-}
-
-.scaffold-button-danger:hover {
-  @apply bg-red-500;
-}
-
-/* Form Input Focus States */
-.scaffold-input-focus-default {
-  @apply focus:outline-blue-600;
-}
-
-.scaffold-input-focus-error {
-  @apply focus:outline-red-600;
-}
-
 /* Interactive States */
 .scaffold-clickable {
   @apply cursor-pointer;
@@ -35,40 +13,68 @@
   @apply block;
 }
 
-/* Display Utilities */
 .scaffold-rounded {
   @apply rounded-md;
 }
 
-/* Combined Classes for Common Patterns */
+/* Button Components with Nested States */
 .scaffold-button {
-  @apply scaffold-button-padding scaffold-rounded scaffold-button-text scaffold-responsive-full scaffold-responsive-center scaffold-inline-block;
+  @apply px-3.5 py-2.5 rounded-md font-medium w-full sm:w-auto text-center inline-block;
+  
+  &--primary {
+    @apply bg-blue-600 text-white;
+    
+    &:hover {
+      @apply bg-blue-500;
+    }
+  }
+  
+  &--secondary {
+    @apply bg-gray-100;
+    
+    &:hover {
+      @apply bg-gray-50;
+    }
+  }
+  
+  &--danger {
+    @apply bg-red-600 text-white cursor-pointer;
+    
+    &:hover {
+      @apply bg-red-500;
+    }
+  }
 }
 
-.scaffold-button--primary {
-  @apply scaffold-button scaffold-button-primary;
-}
-
-.scaffold-button--secondary {
-  @apply scaffold-button scaffold-button-secondary;
-}
-
-.scaffold-button--danger {
-  @apply scaffold-button scaffold-button-danger scaffold-clickable;
-}
-
+/* Form Input Components with Nested States */
 .scaffold-input {
-  @apply scaffold-input-base scaffold-input-size scaffold-input-spacing scaffold-input-border-default scaffold-input-focus-default;
-}
-
-.scaffold-input--error {
-  @apply scaffold-input scaffold-input-border-error scaffold-input-focus-error;
+  @apply block shadow-sm rounded-md border px-3 py-2 mt-2 w-full border-gray-400;
+  
+  &:focus {
+    @apply outline-blue-600;
+  }
+  
+  &--error {
+    @apply border-red-400;
+    
+    &:focus {
+      @apply outline-red-600;
+    }
+  }
 }
 
 .scaffold-checkbox {
-  @apply scaffold-checkbox-base scaffold-checkbox-size scaffold-input-border-default scaffold-input-focus-default;
-}
-
-.scaffold-checkbox--error {
-  @apply scaffold-checkbox scaffold-input-border-error scaffold-input-focus-error;
+  @apply block shadow-sm rounded-md border order-first h-5 w-5 border-gray-400;
+  
+  &:focus {
+    @apply outline-blue-600;
+  }
+  
+  &--error {
+    @apply border-red-400;
+    
+    &:focus {
+      @apply outline-red-600;
+    }
+  }
 }
