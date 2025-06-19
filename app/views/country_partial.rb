@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Components::CountryPartial < Views::Components::Base
-  include Phlex::Rails::Helpers::DOMID
-  include Phlex::Rails::Helpers::SimpleFormat
+class Views::CountryPartial < Views::ApplicationView
   
   def initialize(country:)
     @country = country

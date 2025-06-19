@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Countries::ShowView < Views::Base
-  include Phlex::Rails::Helpers::DOMID
-  include Phlex::Rails::Helpers::LinkTo
-  include Phlex::Rails::Helpers::ButtonTo
-  include Phlex::Rails::Helpers::Flash
+class Views::Countries::ShowView < Views::ApplicationView
   
   def initialize(country:, notice: nil)
     @country = country
@@ -17,7 +13,7 @@ class Views::Countries::ShowView < Views::Base
       
       h1 { "Showing country" }
       
-      render Views::Components::CountryPartial.new(country: @country)
+      render Views::CountryPartial.new(country: @country)
       
       div do
         link_to "Edit this country", 

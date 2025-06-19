@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Countries::IndexView < Views::Base
-  include Phlex::Rails::Helpers::DOMID
-  include Phlex::Rails::Helpers::LinkTo
-  include Phlex::Rails::Helpers::ButtonTo
-  include Phlex::Rails::Helpers::Flash
+class Views::Countries::IndexView < Views::ApplicationView
   
   def initialize(countries:, notice: nil)
     @countries = countries
@@ -26,7 +22,7 @@ class Views::Countries::IndexView < Views::Base
         if @countries.any?
           @countries.each do |country|
             div(id: dom_id(country, :list_item)) do
-              render Views::Components::CountryPartial.new(country: country)
+              render Views::CountryPartial.new(country: country)
               
               div do
                 link_to "Show", country,

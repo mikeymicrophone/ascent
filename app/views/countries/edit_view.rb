@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Countries::EditView < Views::Base
-  include Phlex::Rails::Helpers::DOMID
-  include Phlex::Rails::Helpers::LinkTo
-  include Phlex::Rails::Helpers::ButtonTo
-  include Phlex::Rails::Helpers::Flash
+class Views::Countries::EditView < Views::ApplicationView
   
   def initialize(country:)
     @country = country
@@ -14,7 +10,7 @@ class Views::Countries::EditView < Views::Base
     div(class: "scaffold country-edit", id: dom_id(@country, :edit)) do
       h1 { "Editing country" }
       
-      render Components::CountryForm.new(country: @country)
+      render Views::CountryForm.new(country: @country)
       
       div do
         link_to "Show this country", 

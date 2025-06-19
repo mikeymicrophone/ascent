@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Components::CountryForm < Components::Base
-  include Phlex::Rails::Helpers::DOMID
-  include Phlex::Rails::Helpers::FormWith
+class Views::CountryForm < Views::ApplicationView
   def initialize(country:)
     @country = country
   end
