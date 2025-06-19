@@ -1,80 +1,31 @@
-/* Scaffold State Classes - Layer 4: Hover, focus, active states */
+/* Scaffold State Classes - Layer 4: Interactive states and utilities */
 
-/* Interactive States */
-.scaffold-clickable {
-  @apply cursor-pointer;
-}
-
-.scaffold-inline-block {
-  @apply inline-block;
-}
-
-.scaffold-block {
-  @apply block;
-}
-
-.scaffold-rounded {
-  @apply rounded-md;
-}
-
-/* Button Components with Nested States */
-.scaffold-button {
-  @apply px-3.5 py-2.5 rounded-md font-medium w-full sm:w-auto text-center inline-block;
-  
-  &--primary {
-    @apply bg-blue-600 text-white;
+.scaffold {
+  /* Interactive cursor states */
+  button,
+  input[type="submit"],
+  a[class*="button"] {
+    @apply cursor-pointer;
     
-    &:hover {
-      @apply bg-blue-500;
+    &.danger {
+      @apply cursor-pointer;
     }
   }
   
-  &--secondary {
-    @apply bg-gray-100;
-    
-    &:hover {
-      @apply bg-gray-50;
-    }
+  /* Display utilities */
+  form {
+    @apply contents;
   }
   
-  &--danger {
-    @apply bg-red-600 text-white cursor-pointer;
-    
-    &:hover {
-      @apply bg-red-500;
-    }
-  }
-}
-
-/* Form Input Components with Nested States */
-.scaffold-input {
-  @apply block shadow-sm rounded-md border px-3 py-2 mt-2 w-full border-gray-400;
-  
-  &:focus {
-    @apply outline-blue-600;
+  /* Rounded utilities */
+  #notice,
+  #error_explanation {
+    @apply rounded-md;
   }
   
-  &--error {
-    @apply border-red-400;
-    
-    &:focus {
-      @apply outline-red-600;
-    }
-  }
-}
-
-.scaffold-checkbox {
-  @apply block shadow-sm rounded-md border order-first h-5 w-5 border-gray-400;
-  
-  &:focus {
-    @apply outline-blue-600;
-  }
-  
-  &--error {
-    @apply border-red-400;
-    
-    &:focus {
-      @apply outline-red-600;
-    }
+  button,
+  input[type="submit"],
+  a[class*="button"] {
+    @apply rounded-md text-center inline-block w-full sm:w-auto;
   }
 }

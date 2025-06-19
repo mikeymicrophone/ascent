@@ -1,43 +1,82 @@
 /* Scaffold Colors Classes - Layer 3: Colors using CSS variables */
 
-/* Button Colors */
-.scaffold-button-primary {
-  @apply bg-blue-600 text-white;
-}
-
-.scaffold-button-secondary {
-  @apply bg-gray-100;
-}
-
-.scaffold-button-danger {
-  @apply bg-red-600 text-white;
-}
-
-/* Card/Partial Colors */
-.scaffold-partial-background {
-  @apply bg-white;
-}
-
-/* Notice Colors */
-.scaffold-notice-success {
-  @apply bg-green-50 text-green-500;
-}
-
-/* Form Input Colors - Base */
-.scaffold-input-border-default {
-  @apply border-gray-400;
-}
-
-.scaffold-input-border-error {
-  @apply border-red-400;
-}
-
-/* Form Error Colors */
-.scaffold-error-background {
-  @apply bg-red-50 text-red-500;
-}
-
-/* List Divider Colors */
-.scaffold-divider {
-  @apply divide-gray-200;
+.scaffold {
+  /* Button Colors */
+  button,
+  input[type="submit"],
+  a[class*="button"] {
+    &.primary {
+      @apply bg-blue-600 text-white;
+      
+      &:hover {
+        @apply bg-blue-500;
+      }
+    }
+    
+    &.secondary {
+      @apply bg-gray-100;
+      
+      &:hover {
+        @apply bg-gray-50;
+      }
+    }
+    
+    &.danger {
+      @apply bg-red-600 text-white;
+      
+      &:hover {
+        @apply bg-red-500;
+      }
+    }
+  }
+  
+  /* Card/Partial Colors */
+  [class*="-partial"] {
+    @apply bg-white;
+  }
+  
+  /* Notice Colors */
+  #notice {
+    @apply bg-green-50 text-green-500;
+  }
+  
+  /* Form Input Colors */
+  input,
+  textarea,
+  select {
+    @apply border-gray-400;
+    
+    &:focus {
+      @apply outline-blue-600;
+    }
+    
+    &.error {
+      @apply border-red-400;
+      
+      &:focus {
+        @apply outline-red-600;
+      }
+    }
+  }
+  
+  input[type="checkbox"] {
+    @apply border-gray-400;
+    
+    &:focus {
+      @apply outline-blue-600;
+    }
+    
+    &.error {
+      @apply border-red-400;
+      
+      &:focus {
+        @apply outline-red-600;
+      }
+    }
+  }
+  
+  /* Form Error Colors */
+  #error_explanation {
+    @apply bg-red-50 text-red-500;
+  }
 }

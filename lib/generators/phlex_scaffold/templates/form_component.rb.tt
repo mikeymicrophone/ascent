@@ -6,32 +6,32 @@ class Components::<%= class_name %>Form < Components::Base
   end
 
   def view_template(&)
-    form_with(model: @<%= singular_table_name %>, class: "scaffold-form-container scaffold <%= singular_table_name %>-form", id: dom_id(@<%= singular_table_name %>, :form)) do |form|
+    form_with(model: @<%= singular_table_name %>, id: dom_id(@<%= singular_table_name %>, :form)) do |form|
       render_errors if @<%= singular_table_name %>.errors.any?
       
 <% form_attributes.each do |attribute| -%>
 <% if attribute.password_digest? -%>
-      div(class: "scaffold-form-field-spacing") do
-        form.label :password, class: "scaffold-label scaffold-form-field-spacing"
+      div do
+        form.label :password
         form.password_field :password, 
                             class: input_classes(@<%= singular_table_name %>.errors[:password])
       end
 
-      div(class: "scaffold-form-field-spacing") do
-        form.label :password_confirmation, class: "scaffold-label scaffold-form-field-spacing"
+      div do
+        form.label :password_confirmation
         form.password_field :password_confirmation,
                             class: input_classes(@<%= singular_table_name %>.errors[:password_confirmation])
       end
 <% elsif attribute.attachments? -%>
-      div(class: "scaffold-form-field-spacing") do
-        form.label :<%= attribute.column_name %>, class: "scaffold-label scaffold-form-field-spacing"
+      div do
+        form.label :<%= attribute.column_name %>
         form.<%= attribute.field_type %> :<%= attribute.column_name %>,
                                         multiple: true,
                                         class: input_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
       end
 <% else -%>
-      div(class: <%= attribute.field_type == :checkbox ? '"scaffold-form-field-spacing scaffold-form-field--checkbox"' : '"scaffold-form-field-spacing"' %>) do
-        form.label :<%= attribute.column_name %>, class: "scaffold-label scaffold-form-field-spacing"
+      div do
+        form.label :<%= attribute.column_name %>
 <% if attribute.field_type == :textarea || attribute.field_type == :text_area -%>
         form.<%= attribute.field_type %> :<%= attribute.column_name %>,
                                         rows: 4,
@@ -47,8 +47,8 @@ class Components::<%= class_name %>Form < Components::Base
 <% end -%>
 
 <% end -%>
-      div(class: "scaffold-inline-block") do
-        form.submit class: "scaffold-button--primary scaffold-clickable"
+      div do
+        form.submit class: "primary"
       end
     end
   end
@@ -56,7 +56,7 @@ class Components::<%= class_name %>Form < Components::Base
   private
 
   def render_errors
-    div(id: "error_explanation", class: "scaffold-error-background scaffold-notice-spacing scaffold-error-title scaffold-rounded scaffold-form-field-spacing") do
+    div(id: "error_explanation") do
       h2 { "#{pluralize(@<%= singular_table_name %>.errors.count, 'error')} prohibited this <%= singular_table_name %> from being saved:" }
       
       ul(class: "list-disc ml-6") do
@@ -68,10 +68,10 @@ class Components::<%= class_name %>Form < Components::Base
   end
 
   def input_classes(errors)
-    errors.any? ? "scaffold-input--error" : "scaffold-input"
+    errors.any? ? "error" : ""
   end
 
   def checkbox_classes(errors)
-    errors.any? ? "scaffold-checkbox--error" : "scaffold-checkbox"
+    errors.any? ? "error" : ""
   end
 end

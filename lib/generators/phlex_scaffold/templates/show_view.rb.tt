@@ -7,25 +7,24 @@ class Views::<%= controller_class_name %>::ShowView < Views::Base
   end
 
   def view_template(&)
-    div(class: "scaffold-show-container scaffold <%= singular_table_name %>-show", id: dom_id(@<%= singular_table_name %>, :show)) do
+    div(class: "scaffold <%= singular_table_name %>-show", id: dom_id(@<%= singular_table_name %>, :show)) do
       render_notice if @notice.present?
       
-      h1(class: "scaffold-title") { "Showing <%= human_name.downcase %>" }
+      h1 { "Showing <%= human_name.downcase %>" }
       
       render Components::<%= class_name %>Partial.new(<%= singular_table_name %>: @<%= singular_table_name %>)
       
-      div(class: "scaffold-show-actions scaffold-show-actions-spacing") do
+      div do
         link_to "Edit this <%= human_name.downcase %>", 
                 edit_<%= singular_route_name %>_path(@<%= singular_table_name %>),
-                class: "scaffold-button--secondary"
+                class: "secondary"
         link_to "Back to <%= human_name.pluralize.downcase %>", 
                 <%= plural_route_name %>_path,
-                class: "scaffold-button--secondary scaffold-show-action-spacing"
+                class: "secondary"
         button_to "Destroy this <%= human_name.downcase %>", 
                   @<%= singular_table_name %>,
                   method: :delete,
-                  form_class: "scaffold-inline-block scaffold-show-action-spacing",
-                  class: "scaffold-button--danger",
+                  class: "danger",
                   data: { turbo_confirm: "Are you sure?" }
       end
     end
@@ -34,7 +33,7 @@ class Views::<%= controller_class_name %>::ShowView < Views::Base
   private
 
   def render_notice
-    p(class: "scaffold-notice-success scaffold-notice-spacing scaffold-notice-text scaffold-rounded scaffold-inline-block", id: "notice") do
+    p(id: "notice") do
       @notice
     end
   end

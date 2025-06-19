@@ -1,48 +1,56 @@
 /* Scaffold Typography Classes - Layer 3: Fonts, text styling */
 
-/* Headings */
-.scaffold-title {
-  @apply font-bold text-4xl;
-}
-
-.scaffold-partial-title {
-  @apply font-semibold text-lg;
-}
-
-/* Labels and Text */
-.scaffold-label {
-  @apply block font-medium;
-}
-
-.scaffold-field-label {
-  @apply font-medium;
-}
-
-/* Button Text */
-.scaffold-button-text {
-  @apply font-medium;
-}
-
-/* Notice Text */
-.scaffold-notice-text {
-  @apply font-medium;
-}
-
-/* Empty State Text */
-.scaffold-empty-text {
-  @apply text-center;
-}
-
-/* Form Error Text */
-.scaffold-error-title {
-  @apply font-medium;
-}
-
-/* Input Text */
-.scaffold-input-base {
-  @apply block shadow-sm rounded-md border;
-}
-
-.scaffold-checkbox-base {
-  @apply block shadow-sm rounded-md border order-first;
+.scaffold {
+  /* Headings */
+  h1 {
+    @apply font-bold text-4xl;
+  }
+  
+  h3 {
+    @apply font-semibold text-lg;
+  }
+  
+  /* Labels and Text */
+  label {
+    @apply block font-medium;
+  }
+  
+  span {
+    @apply font-medium;
+  }
+  
+  /* Button Text */
+  button,
+  input[type="submit"],
+  a[class*="button"] {
+    @apply font-medium;
+  }
+  
+  /* Notice Text */
+  #notice {
+    @apply font-medium;
+  }
+  
+  /* Empty State Text */
+  p:only-child {
+    @apply text-center;
+  }
+  
+  /* Form Error Text */
+  #error_explanation {
+    h2 {
+      @apply font-medium;
+    }
+  }
+  
+  /* Input Base Styling */
+  input,
+  textarea,
+  select {
+    @apply block shadow-sm rounded-md border px-3 py-2;
+  }
+  
+  input[type="checkbox"] {
+    @apply block shadow-sm rounded-md border order-first;
+  }
 }

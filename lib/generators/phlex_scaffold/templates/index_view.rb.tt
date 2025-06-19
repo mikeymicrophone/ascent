@@ -7,36 +7,36 @@ class Views::<%= controller_class_name %>::IndexView < Views::Base
   end
 
   def view_template(&)
-    div(class: "scaffold-index-container scaffold <%= plural_table_name %>-index", id: dom_id("<%= plural_table_name %>", :index)) do
+    div(class: "scaffold <%= plural_table_name %>-index", id: dom_id("<%= plural_table_name %>", :index_of)) do
       render_notice if @notice.present?
       
-      div(class: "scaffold-index-header") do
-        h1(class: "scaffold-title") { "<%= human_name.pluralize %>" }
+      div do
+        h1 { "<%= human_name.pluralize %>" }
         link_to "New <%= human_name.downcase %>", 
                 new_<%= singular_route_name %>_path,
-                class: "scaffold-button--primary"
+                class: "primary"
       end
 
-      div(id: "<%= plural_table_name %>", class: "scaffold-index-list scaffold-divider scaffold-index-spacing") do
+      div(id: "<%= plural_table_name %>") do
         if @<%= plural_table_name %>.any?
           @<%= plural_table_name %>.each do |<%= singular_table_name %>|
-            div(class: "scaffold-index-item scaffold-index-item-spacing", id: dom_id(<%= singular_table_name %>, :list_item)) do
+            div(id: dom_id(<%= singular_table_name %>, :list_item)) do
               render Components::<%= class_name %>Partial.new(<%= singular_table_name %>: <%= singular_table_name %>)
               
-              div(class: "scaffold-index-actions scaffold-index-actions-spacing") do
+              div do
                 link_to "Show", <%= singular_table_name %>,
-                        class: "scaffold-button--secondary"
+                        class: "secondary"
                 link_to "Edit", edit_<%= singular_route_name %>_path(<%= singular_table_name %>),
-                        class: "scaffold-button--secondary"
+                        class: "secondary"
                 button_to "Destroy", <%= singular_table_name %>,
                           method: :delete,
-                          class: "scaffold-button--danger",
+                          class: "danger",
                           data: { turbo_confirm: "Are you sure?" }
               end
             end
           end
         else
-          p(class: "scaffold-empty-text scaffold-empty-spacing") { "No <%= human_name.downcase.pluralize %> found." }
+          p { "No <%= human_name.downcase.pluralize %> found." }
         end
       end
     end
@@ -45,7 +45,7 @@ class Views::<%= controller_class_name %>::IndexView < Views::Base
   private
 
   def render_notice
-    p(class: "scaffold-notice-success scaffold-notice-spacing scaffold-notice-text scaffold-rounded scaffold-inline-block", id: "notice") do
+    p(id: "notice") do
       @notice
     end
   end
