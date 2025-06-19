@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Views::Countries::EditView < Views::Base
+  include Phlex::Rails::Helpers::DOMID
+  include Phlex::Rails::Helpers::LinkTo
+  include Phlex::Rails::Helpers::ButtonTo
+  include Phlex::Rails::Helpers::Flash
+  
   def initialize(country:)
     @country = country
   end
