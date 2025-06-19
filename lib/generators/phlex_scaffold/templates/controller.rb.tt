@@ -2,8 +2,8 @@ class <%= controller_class_name %>Controller < ApplicationController
   before_action :set_<%= singular_table_name %>, only: %i[ show edit update destroy ]
 
   def index
-    <%= plural_table_name %> = <%= class_name %>.all
-    render Views::<%= controller_class_name %>::IndexView.new(<%= plural_table_name %>: <%= plural_table_name %>, notice: notice)
+    @<%= plural_table_name %> = <%= class_name %>.all
+    render Views::<%= controller_class_name %>::IndexView.new(<%= plural_table_name %>: @<%= plural_table_name %>, notice: notice)
   end
 
   def show
@@ -11,8 +11,8 @@ class <%= controller_class_name %>Controller < ApplicationController
   end
 
   def new
-    <%= singular_table_name %> = <%= class_name %>.new
-    render Views::<%= controller_class_name %>::NewView.new(<%= singular_table_name %>: <%= singular_table_name %>)
+    @<%= singular_table_name %> = <%= class_name %>.new
+    render Views::<%= controller_class_name %>::NewView.new(<%= singular_table_name %>: @<%= singular_table_name %>)
   end
 
   def edit
@@ -20,12 +20,12 @@ class <%= controller_class_name %>Controller < ApplicationController
   end
 
   def create
-    <%= singular_table_name %> = <%= class_name %>.new(<%= "#{singular_table_name}_params" %>)
+    @<%= singular_table_name %> = <%= class_name %>.new(<%= "#{singular_table_name}_params" %>)
 
-    if <%= singular_table_name %>.save
-      redirect_to <%= singular_table_name %>, notice: <%= %("#{human_name} was successfully created.") %>
+    if @<%= singular_table_name %>.save
+      redirect_to @<%= singular_table_name %>, notice: <%= %("#{human_name} was successfully created.") %>
     else
-      render Views::<%= controller_class_name %>::NewView.new(<%= singular_table_name %>: <%= singular_table_name %>), status: :unprocessable_entity
+      render Views::<%= controller_class_name %>::NewView.new(<%= singular_table_name %>: @<%= singular_table_name %>), status: :unprocessable_entity
     end
   end
 
