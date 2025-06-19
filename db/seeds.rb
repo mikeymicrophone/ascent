@@ -54,6 +54,10 @@ RegistrationSeeder.seed
 puts "\n⭐ Seeding ratings..."
 RatingSeeder.seed
 
+# Seed voter election baselines (depends on voters, elections, and ratings)
+puts "\n🎯 Seeding voter election baselines..."
+VoterElectionBaselineSeeder.seed
+
 puts "\n✅ Seed process completed!"
 puts "📊 Summary:"
 puts "   Countries: #{Country.count}"
@@ -68,3 +72,4 @@ puts "   Voters: #{Voter.count}"
 puts "   Registrations: #{Registration.count}"
 puts "   Ratings: #{Rating.count}"
 puts "   Rating Archives: #{RatingArchive.count}"
+puts "   Voter Election Baselines: #{VoterElectionBaseline.count}"

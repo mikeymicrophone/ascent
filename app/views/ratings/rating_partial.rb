@@ -16,11 +16,6 @@ class Views::Ratings::RatingPartial < Views::ApplicationView
         whitespace
         span { @rating.rating }
       end
-      div do
-        span { "Baseline:" }
-        whitespace
-        span { @rating.baseline }
-      end
     end
   end
 end

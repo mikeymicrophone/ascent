@@ -127,8 +127,16 @@ Represents voter ratings of candidates on the 0-500 "mountain" scale:
 - `voter_id` - References Voter
 - `candidacy_id` - References Candidacy
 - `rating` - Integer rating from 0-500
-- `baseline` - Integer baseline threshold from 0-500 (determines approval)
 - Automatic archiving on updates for historical analysis
+
+### VoterElectionBaseline Model
+
+Manages per-election baseline thresholds for each voter:
+
+- `voter_id` - References Voter
+- `election_id` - References Election
+- `baseline` - Integer baseline threshold from 0-500 (determines approval for all candidacies in election)
+- Updated on separate schedule from ratings to prevent manipulation
 
 ### RatingArchive Model
 
@@ -137,7 +145,6 @@ Historical archive of all rating changes for transparency and analysis:
 - `voter_id` - References Voter
 - `candidacy_id` - References Candidacy
 - `rating` - Historical rating value (0-500)
-- `baseline` - Historical baseline value (0-500)
 - `archived_at` - Timestamp when this rating was archived
 - `reason` - Description of what changed
 
@@ -159,6 +166,7 @@ The model hierarchy flows from broad to specific:
 - Candidacies (Person running in a specific Election)
 - Voters (Authenticated users with Registration history)
 - Ratings (Voter preferences for Candidacies with archival)
+- VoterElectionBaselines (Per-election baseline thresholds)
 
 ### Mock and Historical Elections
 The Election model supports both mock elections for education and historical simulations for research, aligning with the platform's educational mission described in the PRD.
@@ -166,8 +174,9 @@ The Election model supports both mock elections for education and historical sim
 ### Approval Voting Implementation
 The Rating system implements the core approval voting mechanism:
 - **0-500 Scale**: Each voter rates candidates on a 0-500 scale representing their preference intensity
-- **Baseline Threshold**: Voters set a baseline (0-500) that determines which candidates they "approve"
-- **Vote Allocation**: Candidates rated at or above the voter's baseline receive the voter's approval
+- **Per-Election Baselines**: Voters set one baseline per election (0-500) that determines which candidates they "approve"
+- **Vote Allocation**: Candidates rated at or above the voter's election baseline receive the voter's approval
+- **Separate Update Schedules**: Baselines updated independently from ratings to prevent last-minute manipulation
 - **Historical Tracking**: All rating changes are archived for transparency and analysis
 - **Eligibility Enforcement**: Voters can only rate candidates in elections where they're jurisdictionally eligible
 

@@ -19,6 +19,7 @@ class Views::Components::Navigation < Views::ApplicationView
           link_to "Voters", voters_path, class: nav_link_class(voters_path)
           link_to "Registrations", registrations_path, class: nav_link_class(registrations_path)
           link_to "Ratings", ratings_path, class: nav_link_class(ratings_path)
+          link_to "Baselines", voter_election_baselines_path, class: nav_link_class(voter_election_baselines_path)
         end
       end
     end

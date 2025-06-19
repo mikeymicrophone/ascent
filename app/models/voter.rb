@@ -7,6 +7,7 @@ class Voter < ApplicationRecord
   has_many :registrations, dependent: :destroy
   has_many :jurisdictions, through: :registrations
   has_many :ratings, dependent: :destroy
+  has_many :voter_election_baselines, dependent: :destroy
   
   validates :first_name, presence: true
   validates :last_name, presence: true

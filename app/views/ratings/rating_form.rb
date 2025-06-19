@@ -30,13 +30,7 @@ class Views::Ratings::RatingForm < Views::ApplicationView
       div do
         form.label :rating
         form.number_field :rating,
-                                        class: input_classes(@rating.errors[:rating])
-      end
-
-      div do
-        form.label :baseline
-        form.number_field :baseline,
-                                        class: input_classes(@rating.errors[:baseline])
+                          class: input_classes(@rating.errors[:rating])
       end
 
       div do

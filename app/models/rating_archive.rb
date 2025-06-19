@@ -3,7 +3,6 @@ class RatingArchive < ApplicationRecord
   belongs_to :candidacy
   
   validates :rating, presence: true, inclusion: { in: 0..500 }
-  validates :baseline, presence: true, inclusion: { in: 0..500 }
   validates :archived_at, presence: true
   validates :reason, presence: true
   
@@ -15,11 +14,7 @@ class RatingArchive < ApplicationRecord
     (rating / 500.0 * 100).round(1)
   end
   
-  def baseline_percentage
-    (baseline / 500.0 * 100).round(1)
-  end
-  
-  def was_approved?
+  def was_approved?(baseline)
     rating >= baseline
   end
 end

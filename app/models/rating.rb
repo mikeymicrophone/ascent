@@ -3,20 +3,18 @@ class Rating < ApplicationRecord
   belongs_to :candidacy
   
   validates :rating, presence: true, inclusion: { in: 0..500 }
-  validates :baseline, presence: true, inclusion: { in: 0..500 }
   validates :voter_id, uniqueness: { scope: :candidacy_id, message: "can only rate each candidacy once" }
   validate :voter_eligible_for_election
   
   before_update :archive_previous_rating
   
-  scope :approved, ->(baseline_threshold = nil) { 
-    threshold = baseline_threshold || :baseline
-    where("rating >= #{threshold.is_a?(Symbol) ? threshold : threshold}")
-  }
-  scope :above_baseline, -> { where("rating >= baseline") }
-  scope :below_baseline, -> { where("rating < baseline") }
+  scope :above_baseline, ->(baseline) { where("rating >= ?", baseline) }
+  scope :below_baseline, ->(baseline) { where("rating < ?", baseline) }
+  scope :for_election, ->(election) { joins(:candidacy).where(candidacies: { election: election }) }
   
-  def approved?
+  def approved?(baseline = nil)
+    baseline ||= voter_baseline_for_election
+    return false unless baseline
     rating >= baseline
   end
   
@@ -28,8 +26,8 @@ class Rating < ApplicationRecord
     (rating / 500.0 * 100).round(1)
   end
   
-  def baseline_percentage
-    (baseline / 500.0 * 100).round(1)
+  def voter_baseline_for_election
+    voter.voter_election_baselines.find_by(election: candidacy.election)&.baseline
   end
   
   private
@@ -41,22 +39,14 @@ class Rating < ApplicationRecord
   end
   
   def archive_previous_rating
-    if rating_changed? || baseline_changed?
+    if rating_changed?
       RatingArchive.create!(
         voter: voter,
         candidacy: candidacy,
         rating: rating_was || rating,
-        baseline: baseline_was || baseline,
         archived_at: Time.current,
-        reason: build_archive_reason
+        reason: "Updated rating: #{rating_was} → #{rating}"
       )
     end
-  end
-  
-  def build_archive_reason
-    changes_desc = []
-    changes_desc << "rating: #{rating_was} → #{rating}" if rating_changed?
-    changes_desc << "baseline: #{baseline_was} → #{baseline}" if baseline_changed?
-    "Updated: #{changes_desc.join(', ')}"
   end
 end

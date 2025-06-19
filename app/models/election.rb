@@ -3,6 +3,7 @@ class Election < ApplicationRecord
   belongs_to :year
   has_many :candidacies, dependent: :destroy
   has_many :candidates, through: :candidacies, source: :person
+  has_many :voter_election_baselines, dependent: :destroy
   
   validates :status, presence: true, inclusion: { in: %w[upcoming active completed cancelled] }
   validates :is_mock, inclusion: { in: [true, false] }

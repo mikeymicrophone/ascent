@@ -21,12 +21,13 @@ class Candidacy < ApplicationRecord
     ratings.average(:rating)&.round(1)
   end
   
-  def approval_count
-    ratings.above_baseline.count
+  def approval_count(baseline = nil)
+    return 0 unless baseline
+    ratings.above_baseline(baseline).count
   end
   
-  def approval_percentage
-    return 0 if ratings.count == 0
-    (approval_count.to_f / ratings.count * 100).round(1)
+  def approval_percentage(baseline = nil)
+    return 0 if ratings.count == 0 || baseline.nil?
+    (approval_count(baseline).to_f / ratings.count * 100).round(1)
   end
 end

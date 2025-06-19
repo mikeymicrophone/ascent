@@ -38,21 +38,17 @@ class RatingSeeder
                      .limit(8)
     
     us_voters.each do |voter|
-      # Set a baseline for this voter (varies by voter preference)
-      baseline = rand(200..350)
-      
       presidential_candidacies.each do |candidacy|
         next unless voter.eligible_for_election?(candidacy.election)
         
         # Create realistic rating distribution
-        rating = generate_realistic_rating(candidacy, baseline)
+        rating = generate_realistic_rating(candidacy)
         
         Rating.find_or_create_by(
           voter: voter,
           candidacy: candidacy
         ) do |r|
           r.rating = rating
-          r.baseline = baseline
         end
       end
     end
@@ -69,15 +65,13 @@ class RatingSeeder
       eligible_voters = find_eligible_voters_for_candidacy(candidacy).limit(3)
       
       eligible_voters.each do |voter|
-        baseline = rand(220..320)
-        rating = generate_realistic_rating(candidacy, baseline)
+        rating = generate_realistic_rating(candidacy)
         
         Rating.find_or_create_by(
           voter: voter,
           candidacy: candidacy
         ) do |r|
           r.rating = rating
-          r.baseline = baseline
         end
       end
     end
@@ -94,15 +88,13 @@ class RatingSeeder
       eligible_voters = find_eligible_voters_for_candidacy(candidacy).limit(2)
       
       eligible_voters.each do |voter|
-        baseline = rand(250..400)
-        rating = generate_realistic_rating(candidacy, baseline)
+        rating = generate_realistic_rating(candidacy)
         
         Rating.find_or_create_by(
           voter: voter,
           candidacy: candidacy
         ) do |r|
           r.rating = rating
-          r.baseline = baseline
         end
       end
     end
@@ -115,16 +107,11 @@ class RatingSeeder
     ratings_to_update.each do |rating|
       # Update rating to trigger archiving
       old_rating = rating.rating
-      old_baseline = rating.baseline
       
       # Simulate rating change over time
       new_rating = [old_rating + rand(-50..50), 0].max.clamp(0, 500)
-      new_baseline = [old_baseline + rand(-20..20), 0].max.clamp(0, 500)
       
-      rating.update!(
-        rating: new_rating,
-        baseline: new_baseline
-      )
+      rating.update!(rating: new_rating)
     end
   end
   
@@ -173,7 +160,7 @@ class RatingSeeder
     end
   end
   
-  def self.generate_realistic_rating(candidacy, baseline)
+  def self.generate_realistic_rating(candidacy)
     # Generate realistic ratings based on party affiliation and baseline
     base_preference = case candidacy.party_affiliation&.downcase
     when "democratic"
@@ -190,15 +177,10 @@ class RatingSeeder
       rand(100..400)
     end
     
-    # Add some variance and ensure rating makes sense relative to baseline
+    # Add some variance to make ratings more realistic
     variance = rand(-80..80)
     final_rating = (base_preference + variance).clamp(0, 500)
     
-    # Ensure some logical consistency with baseline
-    if rand < 0.3 # 30% chance of rating being close to baseline
-      final_rating = baseline + rand(-50..50)
-    end
-    
-    final_rating.clamp(0, 500)
+    final_rating
   end
 end
