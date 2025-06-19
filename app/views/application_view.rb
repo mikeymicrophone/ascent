@@ -10,4 +10,5 @@ class Views::ApplicationView < Phlex::HTML
   include Phlex::Rails::Helpers::FormWith
   include Phlex::Rails::Helpers::SimpleFormat
   include Phlex::Rails::Helpers::Pluralize
+  include Phlex::Rails::Helpers::CurrentPage
 end
