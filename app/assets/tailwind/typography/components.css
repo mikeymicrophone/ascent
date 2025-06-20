@@ -27,6 +27,43 @@
   @apply font-medium;
 }
 
+/* Offices preview typography */
+.office-position {
+  @apply font-normal;
+}
+
+/* Elections preview typography */
+.status-indicator {
+  @apply font-medium;
+}
+
+.election-date {
+  @apply font-normal;
+}
+
+/* Candidates preview typography */
+.candidate-party {
+  @apply font-normal;
+}
+
+/* Results preview typography */
+.results-title {
+  @apply font-medium;
+}
+
+.result-rank {
+  @apply font-medium;
+}
+
+.result-votes {
+  @apply font-normal;
+}
+
+.no-results,
+.results-placeholder {
+  @apply font-normal;
+}
+
 /* Button typography */
 .primary {
   @apply font-semibold;

@@ -2,7 +2,7 @@ class CitiesController < ApplicationController
   before_action :set_city, only: %i[ show edit update destroy ]
 
   def index
-    cities_scope = City.includes(:state)
+    cities_scope = City.includes(:state, offices: :elections)
     
     # Filter by state if provided
     if params[:state_id].present?

@@ -50,6 +50,99 @@
   @apply block;
 }
 
+/* Offices preview */
+.offices-preview {
+  @apply block;
+}
+
+.office-preview-item {
+  @apply flex items-center;
+}
+
+.office-position {
+  @apply inline;
+}
+
+.offices-view-all {
+  @apply block;
+}
+
+/* Elections preview */
+.elections-preview {
+  @apply block;
+}
+
+.election-preview-item {
+  @apply block;
+}
+
+.election-status {
+  @apply flex items-center;
+}
+
+.status-indicator {
+  @apply inline-flex items-center;
+}
+
+.election-date {
+  @apply inline;
+}
+
+.elections-view-all {
+  @apply block;
+}
+
+/* Candidates preview */
+.candidates-preview {
+  @apply block;
+}
+
+.candidate-preview-item {
+  @apply flex items-center;
+}
+
+.candidate-party {
+  @apply inline;
+}
+
+.candidates-view-all {
+  @apply block;
+}
+
+/* Results preview */
+.results-preview {
+  @apply block;
+}
+
+.results-summary {
+  @apply block;
+}
+
+.results-title {
+  @apply block;
+}
+
+.result-preview-item {
+  @apply flex items-center;
+}
+
+.result-rank {
+  @apply inline-flex;
+}
+
+.result-votes {
+  @apply inline;
+}
+
+.results-view-all {
+  @apply block;
+}
+
+.no-results,
+.results-placeholder {
+  @apply block;
+}
+
 /* Button layout */
 .primary,
 .secondary,

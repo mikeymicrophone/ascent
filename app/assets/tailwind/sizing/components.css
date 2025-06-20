@@ -63,6 +63,103 @@
   @apply mb-4 text-sm;
 }
 
+/* Offices preview */
+.offices-preview {
+  @apply space-y-1;
+}
+
+.office-preview-item {
+  @apply py-1 gap-1;
+}
+
+.office-position {
+  @apply text-sm;
+}
+
+.offices-view-all {
+  @apply mt-3 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
+/* Elections preview */
+.elections-preview {
+  @apply space-y-2;
+}
+
+.election-preview-item {
+  @apply py-1;
+}
+
+.election-status {
+  @apply gap-2 mt-1;
+}
+
+.status-indicator {
+  @apply px-2 py-1 rounded-full text-xs;
+}
+
+.election-date {
+  @apply text-sm;
+}
+
+.elections-view-all {
+  @apply mt-3 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
+/* Candidates preview */
+.candidates-preview {
+  @apply space-y-1;
+}
+
+.candidate-preview-item {
+  @apply py-1 gap-1;
+}
+
+.candidate-party {
+  @apply text-sm;
+}
+
+.candidates-view-all {
+  @apply mt-3 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
+/* Results preview */
+.results-preview {
+  @apply space-y-2;
+}
+
+.results-summary {
+  @apply mb-3;
+}
+
+.results-title {
+  @apply text-base;
+}
+
+.result-preview-item {
+  @apply py-1 gap-2;
+}
+
+.result-rank {
+  @apply w-6 text-sm;
+}
+
+.result-votes {
+  @apply text-sm;
+}
+
+.results-view-all {
+  @apply mt-3 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
+.no-results,
+.results-placeholder {
+  @apply py-2 text-sm;
+}
+
 /* Button spacing */
 .primary {
   @apply px-6 py-3 rounded-md;

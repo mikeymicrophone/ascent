@@ -27,31 +27,11 @@ class Views::States::StatePartial < Views::ApplicationView
   private
 
   def render_expandable_cities
-    div(class: "expandable-section", data: { controller: "expandable-section" }) do
-      button(
-        class: "expandable-header",
-        data: { 
-          action: "click->expandable-section#toggle",
-          expandable_section_target: "toggle"
-        }
-      ) do
-        div(class: "expandable-title") do
-          span { "Cities" }
-          whitespace
-          span(class: "expandable-count") { "(#{@state.cities.count})" }
-        end
-        div(class: "expandable-icon") do
-          span(data: { expandable_section_target: "icon" }) { "▶" }
-        end
-      end
-      
-      div(
-        class: "expandable-content",
-        data: { expandable_section_target: "content" },
-        style: "display: none;"
-      ) do
-        render_cities_preview
-      end
+    render Views::Components::ExpandableSection.new(
+      title: "Cities",
+      count: @state.cities.count
+    ) do
+      render_cities_preview
     end
   end
 

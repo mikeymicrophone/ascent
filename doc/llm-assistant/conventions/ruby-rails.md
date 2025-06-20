@@ -4,6 +4,7 @@
 - You can access the application at http://ascent.test
 - Server restarts are usually only needed after adding a gem, editing files in the config folder, or updating files in lib.
 - I will try to stay logged in on your browser to simplify the devise situation.
+- Remember to review the development log as the fastest way to review context.
 - When browsing results in an error, this is a hint about something that could become part of the test suite, and it should be noted in testing.md in the test prospectus section.
 
 ## Testing

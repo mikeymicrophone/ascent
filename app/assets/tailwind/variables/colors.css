@@ -42,4 +42,14 @@
   
   /* Text colors */
   --text-muted: theme('colors.gray.500');
+
+  /* Status colors */
+  --status-bg: theme('colors.gray.100');
+  --status-text: theme('colors.gray.700');
+  --status-active-bg: theme('colors.green.100');
+  --status-active-text: theme('colors.green.800');
+  --status-upcoming-bg: theme('colors.blue.100');
+  --status-upcoming-text: theme('colors.blue.800');
+  --status-completed-bg: theme('colors.gray.100');
+  --status-completed-text: theme('colors.gray.600');
 }

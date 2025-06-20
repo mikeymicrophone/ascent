@@ -69,11 +69,65 @@ select.error {
   color: var(--text-muted);
 }
 
+/* Offices preview colors */
+.office-position {
+  color: var(--text-muted);
+}
+
+/* Elections preview colors */
+.election-date {
+  color: var(--text-muted);
+}
+
+.status-indicator {
+  background-color: var(--status-bg);
+  color: var(--status-text);
+}
+
+.status-active {
+  background-color: var(--status-active-bg);
+  color: var(--status-active-text);
+}
+
+.status-upcoming {
+  background-color: var(--status-upcoming-bg);
+  color: var(--status-upcoming-text);
+}
+
+.status-completed {
+  background-color: var(--status-completed-bg);
+  color: var(--status-completed-text);
+}
+
+/* Candidates preview colors */
+.candidate-party {
+  color: var(--text-muted);
+}
+
+/* Results preview colors */
+.results-title {
+  color: var(--text-muted);
+}
+
+.result-rank {
+  color: var(--text-muted);
+}
+
+.result-votes {
+  color: var(--text-muted);
+}
+
+.no-results,
+.results-placeholder {
+  color: var(--text-muted);
+}
+
 /* Card styles */
 .scaffold,
 .country-partial,
 .state-partial,
-.city-partial {
+.city-partial,
+.election-partial {
   background-color: var(--card-bg);
   border-color: var(--card-border);
   @apply border shadow-sm;
