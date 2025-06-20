@@ -14,8 +14,14 @@ class VoterSeeder
           password: "password123", # Default password for seeding
           password_confirmation: "password123"
         )
-        # No email confirmation needed for basic seeding
-        voter.save!
+        begin
+          voter.skip_confirmation!
+          voter.save!
+          voter.confirm
+        rescue => e
+          puts "ERROR: #{e.class} - #{e.message}"
+          puts e.backtrace.first(5)
+        end
       end
     end
     
