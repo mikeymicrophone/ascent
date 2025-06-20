@@ -34,29 +34,37 @@ class MountainsController < ApplicationController
   end
 
   def simulate
-    # Generate random candidacies with diverse backgrounds
+    # Generate random candidacies with diverse backgrounds using SmartFactory
     candidate_count = rand(5..15)
     candidate_types = [:young_candidate, :experienced_politician, :business_leader, 
-                      :community_activist, :educator_candidate, :veteran_candidate]
+                      :community_activist, :educator, :veteran]
     
     candidate_count.times do
-      # Mix of candidate types for realistic diversity
+      # Mix of candidate types for realistic diversity with intelligent reuse
       person_type = candidate_types.sample
       candidacy_traits = [:democrat, :republican, :independent, :green].sample
       
-      person = FactoryBot.create(person_type)
-      FactoryBot.create(:candidacy, candidacy_traits, person: person, election: @election)
+      # Use SmartFactory for people (low reuse for diversity)
+      person = SmartFactory.create_for_mountain_simulation(:person, [person_type])
+      
+      # Use SmartFactory for candidacies (very low reuse - each should be unique)
+      SmartFactory.create_for_mountain_simulation(:candidacy, [candidacy_traits], 
+                                                  person: person, election: @election)
     end
 
     # Create realistic ratings with varied patterns
     @election.candidacies.reload.each do |candidacy|
       # Use different rating patterns for more realistic mountain visualization
-      rating_type = [:realistic_rating, :polarized_rating, :moderate_rating].sample
-      FactoryBot.create(rating_type, candidacy: candidacy, voter: @voter)
+      rating_type = [:high_variance, :polarized, :moderate].sample
+      
+      # Ratings should never be reused (each voter rates each candidate once)
+      SmartFactory.create_for_mountain_simulation(:rating, [rating_type], 
+                                                  candidacy: candidacy, voter: @voter)
     end
 
-    # Create realistic baseline for voter
-    FactoryBot.create(:realistic_baseline, election: @election, voter: @voter)
+    # Create realistic baseline for voter (high reuse - voters often have similar standards)
+    SmartFactory.create_for_mountain_simulation(:voter_election_baseline, [:realistic_distribution],
+                                                election: @election, voter: @voter)
 
     redirect_to mountain_path(@election, voter_id: @voter.id), notice: 'Simulation data generated successfully!'
   end
