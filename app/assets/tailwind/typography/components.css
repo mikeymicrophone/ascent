@@ -5,6 +5,28 @@
   @apply font-medium no-underline;
 }
 
+/* Expandable sections typography */
+.expandable-header {
+  @apply font-medium text-left;
+}
+
+.expandable-count {
+  @apply font-normal;
+}
+
+.expandable-icon {
+  @apply text-center select-none;
+}
+
+/* Cities preview typography */
+.filter-info {
+  @apply font-medium;
+}
+
+.view-all {
+  @apply font-medium;
+}
+
 /* Button typography */
 .primary {
   @apply font-semibold;

@@ -2,7 +2,7 @@ class StatesController < ApplicationController
   before_action :set_state, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @states = pagy(State.all)
+    @pagy, @states = pagy(State.includes(:cities).all)
     render Views::States::IndexView.new(states: @states, pagy: @pagy, notice: notice)
   end
 

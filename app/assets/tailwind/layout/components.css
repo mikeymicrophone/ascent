@@ -12,6 +12,44 @@
   @apply block;
 }
 
+/* Expandable sections */
+.expandable-section {
+  @apply block;
+}
+
+.expandable-header {
+  @apply flex items-center justify-between w-full;
+}
+
+.expandable-title {
+  @apply flex items-center;
+}
+
+.expandable-icon {
+  @apply flex-shrink-0;
+}
+
+.expandable-content {
+  @apply block;
+}
+
+/* Cities preview */
+.cities-preview {
+  @apply block;
+}
+
+.city-preview-item {
+  @apply block;
+}
+
+.cities-view-all {
+  @apply block;
+}
+
+.filter-info {
+  @apply block;
+}
+
 /* Button layout */
 .primary,
 .secondary,

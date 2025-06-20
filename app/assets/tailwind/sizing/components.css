@@ -12,6 +12,57 @@
   @apply p-6 mb-4 rounded-lg;
 }
 
+/* Expandable sections */
+.expandable-section {
+  @apply mt-4;
+}
+
+.expandable-header {
+  @apply p-3 rounded-t-md;
+}
+
+.expandable-section.expanded .expandable-header {
+  @apply rounded-t-md;
+}
+
+.expandable-section:not(.expanded) .expandable-header {
+  @apply rounded-md;
+}
+
+.expandable-title {
+  @apply gap-2;
+}
+
+.expandable-icon {
+  @apply w-4 h-4;
+}
+
+.expandable-content {
+  @apply p-3 rounded-b-md;
+}
+
+.expandable-count {
+  @apply text-sm;
+}
+
+/* Cities preview */
+.cities-preview {
+  @apply space-y-1;
+}
+
+.city-preview-item {
+  @apply py-1;
+}
+
+.cities-view-all {
+  @apply mt-3 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
+.filter-info {
+  @apply mb-4 text-sm;
+}
+
 /* Button spacing */
 .primary {
   @apply px-6 py-3 rounded-md;

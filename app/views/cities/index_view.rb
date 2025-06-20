@@ -1,8 +1,9 @@
 class Views::Cities::IndexView < Views::ApplicationView
-  def initialize(cities:, pagy: nil, notice: nil)
+  def initialize(cities:, pagy: nil, notice: nil, filtered_state: nil)
     @cities = cities
     @pagy = pagy
     @notice = notice
+    @filtered_state = filtered_state
   end
 
   def view_template(&)
@@ -10,7 +11,23 @@ class Views::Cities::IndexView < Views::ApplicationView
       render_notice if @notice.present?
       
       div do
-        h1 { "Cities" }
+        h1 do
+          if @filtered_state
+            "Cities in #{@filtered_state.name}"
+          else
+            "Cities"
+          end
+        end
+        
+        if @filtered_state
+          div(class: "filter-info") do
+            span { "Showing cities in " }
+            link_to @filtered_state.name, @filtered_state, class: "link state"
+            span { " - " }
+            link_to "View all cities", cities_path, class: "link view-all"
+          end
+        end
+        
         link_to "New city", 
                 new_city_path,
                 class: "primary"

@@ -43,6 +43,32 @@ select.error {
   border-color: var(--input-error-border);
 }
 
+/* Expandable section colors */
+.expandable-header {
+  background-color: var(--expandable-header-bg);
+  border-color: var(--expandable-border);
+  @apply border;
+}
+
+.expandable-content {
+  background-color: var(--expandable-content-bg);
+  border-color: var(--expandable-border);
+  @apply border border-t-0;
+}
+
+.expandable-count {
+  color: var(--text-muted);
+}
+
+.expandable-icon {
+  color: var(--text-muted);
+}
+
+/* Cities preview colors */
+.filter-info {
+  color: var(--text-muted);
+}
+
 /* Card styles */
 .scaffold,
 .country-partial,

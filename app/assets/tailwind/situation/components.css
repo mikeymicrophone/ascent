@@ -38,6 +38,25 @@ select {
   @apply transition-all duration-200;
 }
 
+/* Expandable section states */
+.expandable-header {
+  @apply transition-all duration-200 cursor-pointer;
+}
+
+.expandable-header:hover {
+  @apply shadow-sm;
+  background-color: var(--card-bg);
+}
+
+.expandable-header:focus {
+  @apply outline-none ring-2 ring-offset-1;
+  --tw-ring-color: var(--input-focus-ring);
+}
+
+.expandable-content {
+  @apply transition-all duration-200;
+}
+
 /* Card hover states */
 .country-partial,
 .state-partial,
