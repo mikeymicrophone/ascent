@@ -32,15 +32,7 @@ class Views::Cities::CityPartial < Views::ApplicationView
       title: "Offices",
       count: @city.offices.count
     ) do
-      Views::Components::ItemPreview(
-        items: @city.offices,
-        limit: 3,
-        container_class: "offices-preview",
-        item_class: "office-preview-item",
-        view_all_class: "offices-view-all",
-        view_all_text: "View all #{@city.offices.count} offices",
-        view_all_path: offices_path(jurisdiction_type: "City", jurisdiction_id: @city.id)
-      ) do |office|
+      Views::Components::ItemPreview(@city, :offices, 3) do |office|
         link_to office.name, office, class: "link office"
         span(class: "office-position") { " (#{office.position.title})" }
       end
@@ -52,15 +44,7 @@ class Views::Cities::CityPartial < Views::ApplicationView
       title: "Active Elections",
       count: elections.count
     ) do
-      Views::Components::ItemPreview(
-        items: elections,
-        limit: 3,
-        container_class: "elections-preview",
-        item_class: "election-preview-item",
-        view_all_class: "elections-view-all",
-        view_all_text: "View all #{elections.count} elections",
-        view_all_path: elections_path(jurisdiction_type: "City", jurisdiction_id: @city.id)
-      ) do |election|
+      Views::Components::ItemPreview(@city, :active_elections, 3) do |election|
         link_to election.name, election, class: "link election"
         div(class: "election-status") do
           span(class: "status-indicator status-#{election.status}") { election.status.capitalize }

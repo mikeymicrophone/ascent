@@ -56,15 +56,7 @@ class Views::Elections::ElectionPartial < Views::ApplicationView
       title: "Candidates",
       count: @election.candidates.count
     ) do
-      Views::Components::ItemPreview(
-        items: @election.candidates,
-        limit: 5,
-        container_class: "candidates-preview",
-        item_class: "candidate-preview-item",
-        view_all_class: "candidates-view-all",
-        view_all_text: "View all #{@election.candidates.count} candidates",
-        view_all_path: @election
-      ) do |candidate|
+      Views::Components::ItemPreview(@election, :candidacies, 5) do |candidate|
         link_to candidate.name, candidate, class: "link candidate"
         if candidate.respond_to?(:party_affiliation) && candidate.party_affiliation.present?
           span(class: "candidate-party") { " (#{candidate.party_affiliation})" }

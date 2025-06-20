@@ -31,15 +31,7 @@ class Views::States::StatePartial < Views::ApplicationView
       title: "Cities",
       count: @state.cities.count
     ) do
-      Views::Components::ItemPreview(
-        items: @state.cities,
-        limit: 5,
-        container_class: "cities-preview",
-        item_class: "city-preview-item",
-        view_all_class: "cities-view-all",
-        view_all_text: "View all #{@state.cities.count} cities",
-        view_all_path: cities_path(state_id: @state.id)
-      ) do |city|
+      Views::Components::ItemPreview(@state, :cities, 5) do |city|
         link_to city.name, city, class: "link city"
       end
     end
