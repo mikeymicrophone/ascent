@@ -1,0 +1,77 @@
+/* Mountain Interface States & Interactions */
+
+.rating-dot {
+  @apply transition-all duration-200;
+}
+
+.rating-dot:hover {
+  @apply scale-125;
+  @apply shadow-lg;
+  @apply z-10;
+}
+
+.candidate-column:hover {
+  @apply bg-gray-50;
+  @apply rounded;
+}
+
+.election-card:hover {
+  @apply shadow-md;
+  @apply border-gray-300;
+}
+
+.btn-primary:hover {
+  @apply bg-blue-700;
+  @apply border-blue-700;
+}
+
+.btn-secondary:hover {
+  @apply bg-gray-700;
+  @apply border-gray-700;
+}
+
+.btn-tertiary:hover {
+  @apply bg-gray-50;
+  @apply border-gray-400;
+}
+
+/* Focus states for accessibility */
+.rating-dot:focus {
+  @apply outline-none;
+  @apply ring-2 ring-blue-500;
+  @apply ring-offset-2;
+}
+
+.candidate-column:focus-within {
+  @apply bg-gray-50;
+  @apply rounded;
+}
+
+/* Active states */
+.rating-dot:active {
+  @apply scale-110;
+}
+
+/* Disabled states */
+.rating-dot.disabled {
+  @apply opacity-50;
+  @apply cursor-not-allowed;
+}
+
+.rating-dot.disabled:hover {
+  @apply scale-100;
+  @apply shadow-none;
+}
+
+/* Loading states */
+.mountain-chart.loading {
+  @apply opacity-75;
+}
+
+.mountain-chart.loading::after {
+  content: 'Loading...';
+  @apply absolute inset-0;
+  @apply flex items-center justify-center;
+  @apply bg-white/75;
+  @apply text-gray-600;
+}

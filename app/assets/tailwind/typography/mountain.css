@@ -1,0 +1,69 @@
+/* Mountain Interface Typography */
+
+.page-title {
+  @apply text-3xl font-bold;
+  @apply mb-4;
+}
+
+.page-description {
+  @apply text-lg text-gray-600;
+  @apply mb-8;
+}
+
+.election-title {
+  @apply text-xl font-semibold;
+  @apply mb-2;
+}
+
+.election-meta p {
+  @apply text-sm text-gray-600;
+}
+
+.voter-info p {
+  @apply text-base;
+  @apply mb-1;
+}
+
+.no-baseline {
+  @apply text-orange-600;
+  @apply font-medium;
+}
+
+.candidate-name {
+  @apply text-sm font-medium;
+  @apply text-center;
+  @apply leading-tight;
+}
+
+.party-affiliation {
+  @apply text-xs;
+  @apply font-medium;
+}
+
+.rating-value {
+  @apply text-xs;
+  @apply font-mono;
+}
+
+.no-rating {
+  @apply text-xs;
+  @apply italic;
+}
+
+.axis-label {
+  @apply text-xs;
+  @apply font-mono;
+}
+
+.baseline-label {
+  @apply text-xs;
+  @apply font-medium;
+}
+
+.edit-instructions {
+  @apply text-base;
+  @apply mb-6;
+  @apply p-4;
+  @apply bg-blue-50;
+  @apply rounded-lg;
+}

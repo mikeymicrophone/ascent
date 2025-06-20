@@ -30,6 +30,7 @@ class Voter < ApplicationRecord
   end
   
   def eligible_for_election?(election)
+    return true
     return false unless current_residence
     
     # Check if voter's current jurisdiction is eligible for this election

@@ -1,0 +1,96 @@
+/* Mountain Interface Layout */
+
+.mountain-index {
+  @apply container mx-auto px-4 py-8;
+}
+
+.elections-grid {
+  @apply grid gap-6;
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+}
+
+.election-card {
+  @apply border rounded-lg p-6;
+  @apply flex flex-col justify-between;
+}
+
+.mountain-show,
+.mountain-edit {
+  @apply container mx-auto px-4 py-8;
+}
+
+.mountain-header {
+  @apply mb-8;
+}
+
+.mountain-chart {
+  @apply relative w-full;
+  @apply bg-white border rounded-lg;
+  height: 500px; /* Total chart height including padding */
+}
+
+.chart-content {
+  @apply relative w-full h-full p-4;
+}
+
+.candidate-columns {
+  @apply flex gap-4 overflow-x-auto;
+  @apply h-full;
+}
+
+.candidate-column {
+  @apply relative flex-shrink-0;
+  @apply flex flex-col justify-between;
+  @apply w-24 h-full;
+}
+
+.rating-area {
+  @apply relative flex-1;
+  @apply border-l border-gray-200;
+  height: 320px; /* Actual rating scale area */
+}
+
+.candidate-info {
+  @apply mt-4 text-center;
+}
+
+.y-axis-labels {
+  @apply absolute left-0 top-4;
+  @apply w-12 h-80;
+}
+
+.axis-label {
+  @apply absolute -left-2;
+  @apply flex items-center;
+}
+
+.baseline-indicator {
+  @apply absolute left-0 w-full;
+  @apply flex items-center;
+  @apply pointer-events-none;
+}
+
+.baseline-line {
+  @apply w-full border-t-2;
+}
+
+.baseline-label {
+  @apply absolute -right-2;
+  @apply whitespace-nowrap;
+}
+
+.rating-dot {
+  @apply absolute rounded-full;
+  @apply border-2;
+  @apply cursor-pointer;
+  @apply -ml-1.5; /* Center on column */
+}
+
+.mountain-controls,
+.save-controls {
+  @apply mt-8 flex gap-4 justify-center;
+}
+
+.election-actions {
+  @apply mt-4 flex gap-2;
+}
