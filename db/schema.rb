@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_19_220529) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -133,6 +133,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_220529) do
     t.index ["country_id"], name: "index_states_on_country_id"
   end
 
+  create_table "voter_election_baseline_archives", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.bigint "election_id", null: false
+    t.integer "baseline", null: false
+    t.datetime "archived_at", null: false
+    t.string "reason", null: false
+    t.integer "previous_baseline"
+    t.integer "new_baseline"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["archived_at"], name: "index_voter_election_baseline_archives_on_archived_at"
+    t.index ["election_id"], name: "index_voter_election_baseline_archives_on_election_id"
+    t.index ["voter_id", "election_id"], name: "index_baseline_archives_on_voter_and_election"
+    t.index ["voter_id"], name: "index_voter_election_baseline_archives_on_voter_id"
+  end
+
   create_table "voter_election_baselines", force: :cascade do |t|
     t.bigint "voter_id", null: false
     t.bigint "election_id", null: false
@@ -189,6 +205,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_220529) do
   add_foreign_key "ratings", "voters"
   add_foreign_key "residences", "voters"
   add_foreign_key "states", "countries"
+  add_foreign_key "voter_election_baseline_archives", "elections"
+  add_foreign_key "voter_election_baseline_archives", "voters"
   add_foreign_key "voter_election_baselines", "elections"
   add_foreign_key "voter_election_baselines", "voters"
 end
