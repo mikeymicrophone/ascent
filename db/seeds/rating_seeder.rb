@@ -24,12 +24,12 @@ class RatingSeeder
     us_states = us_country.states if us_country
     us_cities = City.joins(:state).where(states: { country: us_country }) if us_country
     
-    us_voters = Voter.joins(:registrations)
-                     .where(registrations: { status: "active" })
+    us_voters = Voter.joins(:residences)
+                     .where(residences: { status: "active" })
                      .where(
-                       "(registrations.jurisdiction_type = 'Country' AND registrations.jurisdiction_id = ?) OR " +
-                       "(registrations.jurisdiction_type = 'State' AND registrations.jurisdiction_id IN (?)) OR " +
-                       "(registrations.jurisdiction_type = 'City' AND registrations.jurisdiction_id IN (?))",
+                       "(residences.jurisdiction_type = 'Country' AND residences.jurisdiction_id = ?) OR " +
+                       "(residences.jurisdiction_type = 'State' AND residences.jurisdiction_id IN (?)) OR " +
+                       "(residences.jurisdiction_type = 'City' AND residences.jurisdiction_id IN (?))",
                        us_country&.id || 0,
                        us_states&.pluck(:id) || [],
                        us_cities&.pluck(:id) || []
@@ -124,12 +124,12 @@ class RatingSeeder
       country_states = office_jurisdiction.states
       country_cities = City.joins(:state).where(states: { country: office_jurisdiction })
       
-      Voter.joins(:registrations)
-           .where(registrations: { status: "active" })
+      Voter.joins(:residences)
+           .where(residences: { status: "active" })
            .where(
-             "(registrations.jurisdiction_type = 'Country' AND registrations.jurisdiction_id = ?) OR " +
-             "(registrations.jurisdiction_type = 'State' AND registrations.jurisdiction_id IN (?)) OR " +
-             "(registrations.jurisdiction_type = 'City' AND registrations.jurisdiction_id IN (?))",
+             "(residences.jurisdiction_type = 'Country' AND residences.jurisdiction_id = ?) OR " +
+             "(residences.jurisdiction_type = 'State' AND residences.jurisdiction_id IN (?)) OR " +
+             "(residences.jurisdiction_type = 'City' AND residences.jurisdiction_id IN (?))",
              office_jurisdiction.id,
              country_states.pluck(:id),
              country_cities.pluck(:id)
@@ -137,21 +137,21 @@ class RatingSeeder
            .distinct
     when State
       # State elections: voters registered in that state (directly or via cities)
-      Voter.joins(:registrations)
-           .where(registrations: { status: "active" })
+      Voter.joins(:residences)
+           .where(residences: { status: "active" })
            .where(
-             "(registrations.jurisdiction_type = 'State' AND registrations.jurisdiction_id = ?) OR " +
-             "(registrations.jurisdiction_type = 'City' AND registrations.jurisdiction_id IN (?))",
+             "(residences.jurisdiction_type = 'State' AND residences.jurisdiction_id = ?) OR " +
+             "(residences.jurisdiction_type = 'City' AND residences.jurisdiction_id IN (?))",
              office_jurisdiction.id,
              office_jurisdiction.cities.pluck(:id)
            )
            .distinct
     when City
       # City elections: voters registered in that city
-      Voter.joins(:registrations)
-           .where(registrations: { status: "active" })
+      Voter.joins(:residences)
+           .where(residences: { status: "active" })
            .where(
-             "registrations.jurisdiction_type = 'City' AND registrations.jurisdiction_id = ?",
+             "residences.jurisdiction_type = 'City' AND residences.jurisdiction_id = ?",
              office_jurisdiction.id
            )
            .distinct
