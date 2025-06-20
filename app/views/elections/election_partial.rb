@@ -52,37 +52,33 @@ class Views::Elections::ElectionPartial < Views::ApplicationView
   private
 
   def render_expandable_candidates
-    render Views::Components::ExpandableSection.new(
+    Views::Components::ExpandableSection(
       title: "Candidates",
       count: @election.candidates.count
     ) do
-      render_candidates_preview
+      Views::Components::ItemPreview(
+        items: @election.candidates,
+        limit: 5,
+        container_class: "candidates-preview",
+        item_class: "candidate-preview-item",
+        view_all_class: "candidates-view-all",
+        view_all_text: "View all #{@election.candidates.count} candidates",
+        view_all_path: @election
+      ) do |candidate|
+        link_to candidate.name, candidate, class: "link candidate"
+        if candidate.respond_to?(:party_affiliation) && candidate.party_affiliation.present?
+          span(class: "candidate-party") { " (#{candidate.party_affiliation})" }
+        end
+      end
     end
   end
 
   def render_expandable_results
-    render Views::Components::ExpandableSection.new(
+    Views::Components::ExpandableSection(
       title: "Results",
       count: "#{@election.candidates.count} candidates"
     ) do
       render_results_preview
-    end
-  end
-
-  def render_candidates_preview
-    render Views::Components::ItemPreview.new(
-      items: @election.candidates,
-      limit: 5,
-      container_class: "candidates-preview",
-      item_class: "candidate-preview-item",
-      view_all_class: "candidates-view-all",
-      view_all_text: "View all #{@election.candidates.count} candidates",
-      view_all_path: @election
-    ) do |candidate|
-      link_to candidate.name, candidate, class: "link candidate"
-      if candidate.respond_to?(:party_affiliation) && candidate.party_affiliation.present?
-        span(class: "candidate-party") { " (#{candidate.party_affiliation})" }
-      end
     end
   end
 
