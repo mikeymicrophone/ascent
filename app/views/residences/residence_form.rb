@@ -18,9 +18,10 @@ class Views::Residences::ResidenceForm < Views::ApplicationView
       end
 
       div do
+        form.hidden_field :jurisdiction_type, value: "City"
         form.label :jurisdiction_id, "Jurisdiction"
         form.collection_select :jurisdiction_id, 
-                               ::Jurisdiction.all, 
+                               ::City.all, 
                                :id, 
                                :name,
                                { prompt: "Select a jurisdiction" },
@@ -30,20 +31,20 @@ class Views::Residences::ResidenceForm < Views::ApplicationView
       div do
         form.label :registered_at
         form.datetime_field :registered_at,
-                                        class: input_classes(@residence.errors[:registered_at])
+                            class: input_classes(@residence.errors[:registered_at])
       end
 
       div do
         form.label :status
         form.text_field :status,
-                                        class: input_classes(@residence.errors[:status])
+                        class: input_classes(@residence.errors[:status])
       end
 
       div do
         form.label :notes
         form.textarea :notes,
-                                        rows: 4,
-                                        class: input_classes(@residence.errors[:notes])
+                      rows: 4,
+                      class: input_classes(@residence.errors[:notes])
       end
 
       div do
