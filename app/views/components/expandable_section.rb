@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 class Views::Components::ExpandableSection < Views::ApplicationView
-  def initialize(title:, count: nil, expanded: false, &block)
+  def initialize(title:, count: nil, expanded: false)
     @title = title
     @count = count
     @expanded = expanded
-    @content_block = block
   end
 
-  def view_template(&)
+  def view_template(&block)
     div(class: "expandable-section", data: { controller: "expandable-section" }) do
       button(
         class: "expandable-header",
@@ -35,9 +34,7 @@ class Views::Components::ExpandableSection < Views::ApplicationView
         data: { expandable_section_target: "content" },
         style: (@expanded ? "" : "display: none;")
       ) do
-        if @content_block
-          instance_eval(&@content_block)
-        end
+        yield if block
       end
     end
   end

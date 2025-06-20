@@ -6,8 +6,7 @@ class Views::Components::ItemPreview < Views::ApplicationView
     item_class:,
     view_all_class:,
     view_all_text: nil,
-    view_all_path: nil,
-    &item_renderer
+    view_all_path: nil
   )
     @items = items
     @limit = limit
@@ -16,23 +15,22 @@ class Views::Components::ItemPreview < Views::ApplicationView
     @view_all_class = view_all_class
     @view_all_text = view_all_text
     @view_all_path = view_all_path
-    @item_renderer = item_renderer
   end
 
-  def view_template(&)
+  def view_template(&block)
     div(class: @container_class) do
-      render_items
+      render_items(&block)
       render_view_all_link if should_show_view_all?
     end
   end
 
   private
 
-  def render_items
+  def render_items(&block)
     items_to_show = @items.respond_to?(:limit) ? @items.limit(@limit) : @items.first(@limit)
     items_to_show.each do |item|
       div(class: @item_class) do
-        @item_renderer.call(item)
+        yield(item) if block
       end
     end
   end
