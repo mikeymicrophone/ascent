@@ -2,8 +2,8 @@ class CitiesController < ApplicationController
   before_action :set_city, only: %i[ show edit update destroy ]
 
   def index
-    @cities = City.all
-    render Views::Cities::IndexView.new(cities: @cities, notice: notice)
+    @pagy, @cities = pagy(City.all)
+    render Views::Cities::IndexView.new(cities: @cities, pagy: @pagy, notice: notice)
   end
 
   def show

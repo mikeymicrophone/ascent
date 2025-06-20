@@ -2,8 +2,8 @@ class ElectionsController < ApplicationController
   before_action :set_election, only: %i[ show edit update destroy ]
 
   def index
-    @elections = Election.all
-    render Views::Elections::IndexView.new(elections: @elections, notice: notice)
+    @pagy, @elections = pagy(Election.all)
+    render Views::Elections::IndexView.new(elections: @elections, pagy: @pagy, notice: notice)
   end
 
   def show

@@ -1,6 +1,7 @@
 class Views::Ratings::IndexView < Views::ApplicationView
-  def initialize(ratings:, notice: nil)
+  def initialize(ratings:, pagy: nil, notice: nil)
     @ratings = ratings
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::Ratings::IndexView < Views::ApplicationView
           p { "No ratings found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

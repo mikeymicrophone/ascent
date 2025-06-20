@@ -1,6 +1,7 @@
 class Views::Residences::IndexView < Views::ApplicationView
-  def initialize(residences:, notice: nil)
+  def initialize(residences:, pagy: nil, notice: nil)
     @residences = residences
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::Residences::IndexView < Views::ApplicationView
           p { "No residences found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

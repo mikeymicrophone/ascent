@@ -1,6 +1,7 @@
 class Views::Elections::IndexView < Views::ApplicationView
-  def initialize(elections:, notice: nil)
+  def initialize(elections:, pagy: nil, notice: nil)
     @elections = elections
+    @pagy = pagy
     @notice = notice
   end
 
@@ -40,6 +41,8 @@ class Views::Elections::IndexView < Views::ApplicationView
           p { "No elections found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

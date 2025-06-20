@@ -1,6 +1,7 @@
 class Views::Candidacies::IndexView < Views::ApplicationView
-  def initialize(candidacies:, notice: nil)
+  def initialize(candidacies:, pagy: nil, notice: nil)
     @candidacies = candidacies
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::Candidacies::IndexView < Views::ApplicationView
           p { "No candidacies found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

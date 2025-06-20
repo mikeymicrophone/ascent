@@ -39,7 +39,7 @@ class Views::States::IndexView < Views::ApplicationView
         end
       end
 
-      render Views::Components::Pagination.new(pagy: @pagy) if @pagy
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

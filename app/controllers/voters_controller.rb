@@ -2,8 +2,8 @@ class VotersController < ApplicationController
   before_action :set_voter, only: %i[ show edit update destroy ]
 
   def index
-    @voters = Voter.all
-    render Views::Voters::IndexView.new(voters: @voters, notice: notice)
+    @pagy, @voters = pagy(Voter.all)
+    render Views::Voters::IndexView.new(voters: @voters, pagy: @pagy, notice: notice)
   end
 
   def show

@@ -2,8 +2,8 @@ class ResidencesController < ApplicationController
   before_action :set_residence, only: %i[ show edit update destroy ]
 
   def index
-    @residences = Residence.all
-    render Views::Residences::IndexView.new(residences: @residences, notice: notice)
+    @pagy, @residences = pagy(Residence.all)
+    render Views::Residences::IndexView.new(residences: @residences, pagy: @pagy, notice: notice)
   end
 
   def show

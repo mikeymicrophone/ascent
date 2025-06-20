@@ -2,8 +2,8 @@ class CandidaciesController < ApplicationController
   before_action :set_candidacy, only: %i[ show edit update destroy ]
 
   def index
-    @candidacies = Candidacy.all
-    render Views::Candidacies::IndexView.new(candidacies: @candidacies, notice: notice)
+    @pagy, @candidacies = pagy(Candidacy.all)
+    render Views::Candidacies::IndexView.new(candidacies: @candidacies, pagy: @pagy, notice: notice)
   end
 
   def show

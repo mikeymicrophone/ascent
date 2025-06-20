@@ -2,8 +2,8 @@ class VoterElectionBaselinesController < ApplicationController
   before_action :set_voter_election_baseline, only: %i[ show edit update destroy ]
 
   def index
-    @voter_election_baselines = VoterElectionBaseline.all
-    render Views::VoterElectionBaselines::IndexView.new(voter_election_baselines: @voter_election_baselines, notice: notice)
+    @pagy, @voter_election_baselines = pagy(VoterElectionBaseline.all)
+    render Views::VoterElectionBaselines::IndexView.new(voter_election_baselines: @voter_election_baselines, pagy: @pagy, notice: notice)
   end
 
   def show

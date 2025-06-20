@@ -2,8 +2,8 @@ class RatingsController < ApplicationController
   before_action :set_rating, only: %i[ show edit update destroy ]
 
   def index
-    @ratings = Rating.all
-    render Views::Ratings::IndexView.new(ratings: @ratings, notice: notice)
+    @pagy, @ratings = pagy(Rating.all)
+    render Views::Ratings::IndexView.new(ratings: @ratings, pagy: @pagy, notice: notice)
   end
 
   def show

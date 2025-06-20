@@ -2,8 +2,8 @@ class CountriesController < ApplicationController
   before_action :set_country, only: %i[ show edit update destroy ]
 
   def index
-    @countries = Country.all
-    render Views::Countries::IndexView.new(countries: @countries, notice: notice)
+    @pagy, @countries = pagy(Country.all)
+    render Views::Countries::IndexView.new(countries: @countries, pagy: @pagy, notice: notice)
   end
 
   def show

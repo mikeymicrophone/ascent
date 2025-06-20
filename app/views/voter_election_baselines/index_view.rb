@@ -1,6 +1,7 @@
 class Views::VoterElectionBaselines::IndexView < Views::ApplicationView
-  def initialize(voter_election_baselines:, notice: nil)
+  def initialize(voter_election_baselines:, pagy: nil, notice: nil)
     @voter_election_baselines = voter_election_baselines
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::VoterElectionBaselines::IndexView < Views::ApplicationView
           p { "No voter election baselines found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

@@ -1,6 +1,7 @@
 class Views::Offices::IndexView < Views::ApplicationView
-  def initialize(offices:, notice: nil)
+  def initialize(offices:, pagy: nil, notice: nil)
     @offices = offices
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::Offices::IndexView < Views::ApplicationView
           p { "No offices found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

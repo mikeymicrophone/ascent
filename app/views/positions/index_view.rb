@@ -1,6 +1,7 @@
 class Views::Positions::IndexView < Views::ApplicationView
-  def initialize(positions:, notice: nil)
+  def initialize(positions:, pagy: nil, notice: nil)
     @positions = positions
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::Positions::IndexView < Views::ApplicationView
           p { "No positions found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

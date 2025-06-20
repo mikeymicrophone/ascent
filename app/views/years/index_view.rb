@@ -1,6 +1,7 @@
 class Views::Years::IndexView < Views::ApplicationView
-  def initialize(years:, notice: nil)
+  def initialize(years:, pagy: nil, notice: nil)
     @years = years
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::Years::IndexView < Views::ApplicationView
           p { "No years found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 
