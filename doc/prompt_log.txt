@@ -317,3 +317,69 @@ I think I found it and put it in @app/assets/tailwind/plugins/pagy.tailwind.css
 
 
 Now we can add pagination to all indexes and to the generator.
+
+
+I'd like to begin displaying associated data.  For example, a state partial could display a few cities, in a
+component that could be expanded to show more, and support sorting and pinning in the future.  Cities could
+have a link to a filtered list of their elections.  I believe that a decent amount of this code can be
+generalized - but to begin let's just get it to work.  Please propose 4-8 additions to our interface that
+can explore various approaches to interface enhancement, leveraging AR associations.
+
+
+Write the plan to an architecture doc and I'll edit it a little
+
+
+This is a good plan.  To generate sufficient data we'll want to be able to make lots of voters.  I think the
+hangup is probably trying to make them confirmed.  See if you can incorporate a call to #confirm after the
+record is saved.
+
+
+ok the seed has been repaired and run.  You can use both seeds and factories, as well as the simulate
+pattern for controllers, while building out these interfaces.  Your browser is ready to go.  Please remember
+the conventions for tailwind.
+
+
+The server is already running, you can access it at http://ascent.test
+
+
+Check the dev log for why my city wasn't saved
+
+
+Is that an issue with our phlex scaffold generator?
+
+
+Proceed with the next steps in interface enhancement
+
+
+No need to make one-off scripts like this when you have factories and seeds
+
+
+The best place to access the site is http://ascent.test (that way we don't share cookies with other projects
+on localhost)
+
+
+You're opening pages without any way to look at them.  You could look at the development log though.
+
+
+Refactor expandable-section into a component.  We can probably reuse the same component for all of the
+expandable sections that we currently have.  It may be useful to pass it a hash of hashes to fill out the
+exact terminology and content for the various elements.  You can replace one of the expandables before you
+try to generalize it for all three.  Think hard
+
+
+Now please make a reusable component for the preview that the expandables render.
+
+
+Something about these changes has made it so that the expandable body is not present in the result markup.
+Also, remember to use the Phlex::Kit syntax.
+
+
+[Image #1] [Image #2] Something about this https://github.com/mikeymicrophone/ascent/commit/a1c3b0324f8073d7
+ef26b21a6f8878df27aebc2e#diff-e038bbfbfbeefcfcd7fb33d81844068eea1040cc8d911e9f875b46f8784d8fdf change caused
+the content block to disappear.  I think it may be intended to be used with yield as on
+https://www.phlex.fun/components/yielding.html  Think hard!
+
+
+Write a quick explainer on this to our phlex docs - and include the link to that yield page.
+
+
