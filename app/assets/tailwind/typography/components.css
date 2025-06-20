@@ -64,6 +64,15 @@
   @apply font-normal;
 }
 
+/* Candidacies preview typography */
+.candidacy-office {
+  @apply font-normal;
+}
+
+.candidacy-party {
+  @apply font-normal;
+}
+
 /* Button typography */
 .primary {
   @apply font-semibold;

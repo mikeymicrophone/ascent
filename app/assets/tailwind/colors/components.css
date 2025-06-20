@@ -122,12 +122,22 @@ select.error {
   color: var(--text-muted);
 }
 
+/* Candidacies preview colors */
+.candidacy-office {
+  color: var(--text-muted);
+}
+
+.candidacy-party {
+  color: var(--text-muted);
+}
+
 /* Card styles */
 .scaffold,
 .country-partial,
 .state-partial,
 .city-partial,
-.election-partial {
+.election-partial,
+.person-partial {
   background-color: var(--card-bg);
   border-color: var(--card-border);
   @apply border shadow-sm;

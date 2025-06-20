@@ -143,6 +143,35 @@
   @apply block;
 }
 
+/* Candidacies preview */
+.candidacies-preview {
+  @apply block;
+}
+
+.candidacy-preview-item {
+  @apply block;
+}
+
+.candidacy-header {
+  @apply flex items-center;
+}
+
+.candidacy-office {
+  @apply inline;
+}
+
+.candidacy-details {
+  @apply flex items-center;
+}
+
+.candidacy-party {
+  @apply inline;
+}
+
+.candidacies-view-all {
+  @apply block;
+}
+
 /* Button layout */
 .primary,
 .secondary,

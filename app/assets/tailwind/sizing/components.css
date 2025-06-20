@@ -160,6 +160,36 @@
   @apply py-2 text-sm;
 }
 
+/* Candidacies preview */
+.candidacies-preview {
+  @apply space-y-3;
+}
+
+.candidacy-preview-item {
+  @apply py-2;
+}
+
+.candidacy-header {
+  @apply gap-1 mb-1;
+}
+
+.candidacy-office {
+  @apply text-sm;
+}
+
+.candidacy-details {
+  @apply gap-2;
+}
+
+.candidacy-party {
+  @apply text-sm;
+}
+
+.candidacies-view-all {
+  @apply mt-3 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
 /* Button spacing */
 .primary {
   @apply px-6 py-3 rounded-md;
