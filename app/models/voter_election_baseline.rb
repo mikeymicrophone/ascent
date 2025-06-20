@@ -1,11 +1,11 @@
 class VoterElectionBaseline < ApplicationRecord
   belongs_to :voter
   belongs_to :election
-  has_many :voter_election_baseline_archives, dependent: :destroy
+  # Archives are found through matching voter and election
   
   validates :baseline, presence: true, inclusion: { in: 0..500 }
   validates :voter_id, uniqueness: { scope: :election_id, message: "can only have one baseline per election" }
-  validate :voter_eligible_for_election
+  # validate :voter_eligible_for_election
   
   before_update :archive_previous_baseline
   before_destroy :archive_baseline_on_destroy

@@ -6,7 +6,7 @@ class VoterElectionBaselineArchive < ApplicationRecord
   validates :archived_at, presence: true
   validates :reason, presence: true
   validates :previous_baseline, inclusion: { in: 0..500 }
-  validates :new_baseline, inclusion: { in: 0..500 }
+  validates :new_baseline, inclusion: { in: 0..500 }, allow_nil: true
   
   scope :recent, -> { order(archived_at: :desc) }
   scope :for_voter, ->(voter) { where(voter: voter) }
