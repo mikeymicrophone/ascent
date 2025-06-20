@@ -1,0 +1,63 @@
+/* Mountain Interface Sizing */
+
+.mountain-chart {
+  @apply p-4;
+  min-height: 500px;
+}
+
+.candidate-column {
+  @apply p-2;
+  min-width: 80px;
+}
+
+.rating-dot {
+  @apply w-3 h-3;
+}
+
+.y-axis-labels {
+  @apply pl-2;
+}
+
+.axis-label span {
+  @apply text-xs;
+  @apply w-8 text-right;
+}
+
+.baseline-label {
+  @apply px-2 py-1;
+  @apply text-xs;
+}
+
+.election-card {
+  @apply min-h-48;
+}
+
+.candidate-info {
+  @apply px-1;
+}
+
+.candidate-name {
+  @apply mb-1;
+}
+
+.party-affiliation,
+.rating-value,
+.no-rating {
+  @apply mb-1;
+}
+
+/* Responsive sizing */
+@media (max-width: 767px) {
+  .candidate-column {
+    @apply w-20;
+    min-width: 60px;
+  }
+  
+  .rating-dot {
+    @apply w-2 h-2;
+  }
+  
+  .mountain-chart {
+    @apply p-2;
+  }
+}

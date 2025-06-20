@@ -1,6 +1,7 @@
 class Views::People::IndexView < Views::ApplicationView
-  def initialize(people:, notice: nil)
+  def initialize(people:, pagy: nil, notice: nil)
     @people = people
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::People::IndexView < Views::ApplicationView
           p { "No people found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

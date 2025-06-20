@@ -1,6 +1,7 @@
 class Views::<%= controller_class_name %>::IndexView < Views::ApplicationView
-  def initialize(<%= plural_table_name %>:, notice: nil)
+  def initialize(<%= plural_table_name %>:, pagy: nil, notice: nil)
     @<%= plural_table_name %> = <%= plural_table_name %>
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::<%= controller_class_name %>::IndexView < Views::ApplicationView
           p { "No <%= human_name.downcase.pluralize %> found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

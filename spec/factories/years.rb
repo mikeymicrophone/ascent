@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :year do
-    year { 1 }
-    is_even_year { false }
-    is_presidential_year { false }
-    description { "MyText" }
+    sequence(:year) { |n| 2020 + n }
+    is_even_year { year.even? }
+    is_presidential_year { year % 4 == 0 }
+    description { "Election year #{year}" }
   end
 end

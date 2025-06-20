@@ -2,8 +2,8 @@ class PeopleController < ApplicationController
   before_action :set_person, only: %i[ show edit update destroy ]
 
   def index
-    @people = Person.all
-    render Views::People::IndexView.new(people: @people, notice: notice)
+    @pagy, @people = pagy(Person.all)
+    render Views::People::IndexView.new(people: @people, pagy: @pagy, notice: notice)
   end
 
   def show

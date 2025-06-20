@@ -1,6 +1,7 @@
 class Views::Elections::IndexView < Views::ApplicationView
-  def initialize(elections:, notice: nil)
+  def initialize(elections:, pagy: nil, notice: nil)
     @elections = elections
+    @pagy = pagy
     @notice = notice
   end
 
@@ -22,6 +23,9 @@ class Views::Elections::IndexView < Views::ApplicationView
               Views::Elections::ElectionPartial(election: election)
               
               div do
+                button_to("Simulate Data", simulate_mountain_path(election), 
+                  method: :post, class: "btn-secondary", form: { style: "display: inline;" })
+                whitespace
                 link_to "Show", election,
                         class: "secondary"
                 link_to "Edit", edit_election_path(election),
@@ -37,6 +41,8 @@ class Views::Elections::IndexView < Views::ApplicationView
           p { "No elections found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

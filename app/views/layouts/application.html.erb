@@ -23,8 +23,8 @@
   </head>
 
   <body>
-    <%= render Views::Components::Navigation.new %>
-    <main class="container mx-auto mt-8 px-5">
+    <%= render Views::Components::Navigation.new(current_voter: current_voter) %>
+    <main class="main-content">
       <%= yield %>
     </main>
   </body>

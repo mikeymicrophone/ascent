@@ -21,7 +21,30 @@
   @apply text-xl;
 }
 
+.devise-links {
+  @apply flex items-center gap-4;
+}
+
+.voter-greeting {
+  @apply text-sm font-medium;
+}
+
 /* Responsive spacing adjustments */
+/* Intermediate widths - reduce padding when navigation starts wrapping */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .nav-container {
+    @apply px-4 py-3;
+  }
+  
+  .nav-links {
+    @apply gap-4;
+  }
+  
+  .nav-link {
+    @apply px-2 py-1.5;
+  }
+}
+
 @media (max-width: 768px) {
   .nav-container {
     @apply px-4 py-3;
@@ -38,6 +61,14 @@
   .brand-link {
     @apply text-lg;
   }
+  
+  .devise-links {
+    @apply gap-2;
+  }
+  
+  .voter-greeting {
+    @apply text-xs;
+  }
 }
 
 @media (max-width: 640px) {
@@ -47,5 +78,13 @@
   
   .nav-link {
     @apply px-2 py-1 text-xs;
+  }
+  
+  .devise-links {
+    @apply gap-1;
+  }
+  
+  .voter-greeting {
+    @apply hidden; /* Hide greeting on very small screens */
   }
 }

@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  resources :voter_election_baselines
+  resources :ratings
+
+  devise_for :voters
+  resources :voters
+  resources :residences
   resources :candidacies
   resources :people
   resources :elections
@@ -8,6 +14,12 @@ Rails.application.routes.draw do
   resources :cities
   resources :states
   resources :countries
+
+  resources :mountains, only: [:index, :show, :edit, :update] do
+    member do
+      post :simulate
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

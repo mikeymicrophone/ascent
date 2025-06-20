@@ -2,8 +2,8 @@ class OfficesController < ApplicationController
   before_action :set_office, only: %i[ show edit update destroy ]
 
   def index
-    @offices = Office.all
-    render Views::Offices::IndexView.new(offices: @offices, notice: notice)
+    @pagy, @offices = pagy(Office.all)
+    render Views::Offices::IndexView.new(offices: @offices, pagy: @pagy, notice: notice)
   end
 
   def show

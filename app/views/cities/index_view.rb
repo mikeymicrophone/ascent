@@ -1,6 +1,7 @@
 class Views::Cities::IndexView < Views::ApplicationView
-  def initialize(cities:, notice: nil)
+  def initialize(cities:, pagy: nil, notice: nil)
     @cities = cities
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::Cities::IndexView < Views::ApplicationView
           p { "No cities found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

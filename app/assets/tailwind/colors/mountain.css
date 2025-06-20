@@ -1,0 +1,96 @@
+/* Mountain Interface Colors */
+
+.mountain-chart {
+  @apply bg-white;
+  @apply border-gray-300;
+}
+
+.election-card {
+  @apply bg-white;
+  @apply border-gray-200;
+}
+
+.candidate-column {
+  @apply bg-transparent;
+}
+
+.rating-area {
+  @apply border-gray-200;
+}
+
+/* Rating dot states */
+.rating-dot.approved {
+  @apply bg-green-500;
+  @apply border-green-600;
+}
+
+.rating-dot.disapproved {
+  @apply bg-red-500;
+  @apply border-red-600;
+}
+
+.rating-dot.unrated {
+  @apply bg-gray-300;
+  @apply border-gray-400;
+}
+
+/* Baseline styling */
+.baseline-line {
+  @apply border-blue-500;
+}
+
+.baseline-label {
+  @apply bg-blue-50;
+  @apply text-blue-700;
+  @apply border border-blue-200;
+  @apply rounded;
+}
+
+/* Party affiliation colors */
+.party-democratic {
+  @apply text-blue-600;
+}
+
+.party-republican {
+  @apply text-red-600;
+}
+
+.party-independent {
+  @apply text-gray-600;
+}
+
+.party-green {
+  @apply text-green-600;
+}
+
+.party-other {
+  @apply text-purple-600;
+}
+
+/* Button styling */
+.btn-primary {
+  @apply bg-blue-600;
+  @apply text-white;
+  @apply border-blue-600;
+}
+
+.btn-secondary {
+  @apply bg-gray-600;
+  @apply text-white;
+  @apply border-gray-600;
+}
+
+.btn-tertiary {
+  @apply bg-white;
+  @apply text-gray-700;
+  @apply border-gray-300;
+}
+
+/* Axis labels */
+.axis-label {
+  @apply text-gray-600;
+}
+
+.y-axis-labels {
+  @apply text-gray-500;
+}

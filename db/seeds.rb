@@ -42,6 +42,22 @@ PersonSeeder.seed
 puts "\n🏃 Seeding candidacies..."
 CandidacySeeder.seed
 
+# Seed voters (no dependencies)
+puts "\n🗳️ Seeding voters..."
+VoterSeeder.seed
+
+# Seed residences (depends on voters and jurisdictions)
+puts "\n🏠 Seeding residences..."
+ResidenceSeeder.seed
+
+# Seed ratings (depends on voters and candidacies)
+puts "\n⭐ Seeding ratings..."
+RatingSeeder.seed
+
+# Seed voter election baselines (depends on voters, elections, and ratings)
+puts "\n🎯 Seeding voter election baselines..."
+VoterElectionBaselineSeeder.seed
+
 puts "\n✅ Seed process completed!"
 puts "📊 Summary:"
 puts "   Countries: #{Country.count}"
@@ -52,3 +68,8 @@ puts "   Years: #{Year.count}"
 puts "   Elections: #{Election.count}"
 puts "   People: #{Person.count}"
 puts "   Candidacies: #{Candidacy.count}"
+puts "   Voters: #{Voter.count}"
+puts "   Registrations: #{Registration.count}"
+puts "   Ratings: #{Rating.count}"
+puts "   Rating Archives: #{RatingArchive.count}"
+puts "   Voter Election Baselines: #{VoterElectionBaseline.count}"

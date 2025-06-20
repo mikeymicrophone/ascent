@@ -1,6 +1,7 @@
 class Views::States::IndexView < Views::ApplicationView
-  def initialize(states:, notice: nil)
+  def initialize(states:, pagy: nil, notice: nil)
     @states = states
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::States::IndexView < Views::ApplicationView
           p { "No states found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

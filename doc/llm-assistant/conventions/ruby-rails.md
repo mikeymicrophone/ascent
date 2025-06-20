@@ -1,7 +1,13 @@
 # Ruby on Rails Conventions
 
+## Browsing
+- You can access the application at http://ascent.test
+- Server restarts are usually only needed after adding a gem, editing files in the config folder, or updating files in lib.
+- I will try to stay logged in on your browser to simplify the devise situation.
+- When browsing results in an error, this is a hint about something that could become part of the test suite, and it should be noted in testing.md in the test prospectus section.
+
 ## Testing
-- Whenever possible, the tests should be written before the implementation
+- Whenever possible, the tests should be written before the implementation *ignore for today*
 - Use Rspec for testing
 - Use FactoryBot for factories
 - Use Shoulda Matchers for matchers

@@ -2,8 +2,8 @@ class <%= controller_class_name %>Controller < ApplicationController
   before_action :set_<%= singular_table_name %>, only: %i[ show edit update destroy ]
 
   def index
-    @<%= plural_table_name %> = <%= class_name %>.all
-    render Views::<%= controller_class_name %>::IndexView.new(<%= plural_table_name %>: @<%= plural_table_name %>, notice: notice)
+    @pagy, @<%= plural_table_name %> = pagy(<%= class_name %>.all)
+    render Views::<%= controller_class_name %>::IndexView.new(<%= plural_table_name %>: @<%= plural_table_name %>, pagy: @pagy, notice: notice)
   end
 
   def show

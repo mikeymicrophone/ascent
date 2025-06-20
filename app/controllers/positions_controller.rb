@@ -2,8 +2,8 @@ class PositionsController < ApplicationController
   before_action :set_position, only: %i[ show edit update destroy ]
 
   def index
-    @positions = Position.all
-    render Views::Positions::IndexView.new(positions: @positions, notice: notice)
+    @pagy, @positions = pagy(Position.all)
+    render Views::Positions::IndexView.new(positions: @positions, pagy: @pagy, notice: notice)
   end
 
   def show

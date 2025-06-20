@@ -2,8 +2,9 @@
 
 class Views::Countries::IndexView < Views::ApplicationView
   
-  def initialize(countries:, notice: nil)
+  def initialize(countries:, pagy: nil, notice: nil)
     @countries = countries
+    @pagy = pagy
     @notice = notice
   end
 
@@ -40,6 +41,8 @@ class Views::Countries::IndexView < Views::ApplicationView
           p { "No countries found." }
         end
       end
+
+      Views::Components::Pagination(pagy: @pagy) if @pagy
     end
   end
 

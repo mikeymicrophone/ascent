@@ -6,24 +6,35 @@
 /* Layer 1: Layout */
 @import "./layout/scaffold.css";
 @import "./layout/navigation.css";
+@import "./layout/main.css";
 @import "./layout/components.css";
+@import "./layout/mountain.css";
 
 /* Layer 2: Spacing/Size */
 @import "./sizing/scaffold.css";
 @import "./sizing/navigation.css";
+@import "./sizing/main.css";
 @import "./sizing/components.css";
+@import "./sizing/mountain.css";
 
 /* Layer 3: Typography & Colors */
 @import "./typography/scaffold.css";
 @import "./typography/navigation.css";
 @import "./typography/components.css";
+@import "./typography/mountain.css";
 
 /* Layer 3: Colors */
 @import "./colors/scaffold.css";
 @import "./colors/navigation.css";
 @import "./colors/components.css";
+@import "./colors/mountain.css";
 
 /* Layer 4: State */
 @import "./situation/scaffold.css";
 @import "./situation/navigation.css";
 @import "./situation/components.css";
+@import "./situation/mountain.css";
+
+/* Layer 5: Plugins */
+@import "./plugins/pagy.tailwind.css";
+

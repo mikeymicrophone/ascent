@@ -24,6 +24,8 @@
 
 ### View Layer - Phlex
 - Use Phlex components instead of ERB templates
+- Components inherit from Views::ApplicationView
+- Kits are used to simplify rendering of components
 - Create reusable components in `app/views/components/`
 - Follow Phlex naming conventions (PascalCase classes)
 - Prefer composition over inheritance for components
