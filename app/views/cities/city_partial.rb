@@ -46,47 +46,35 @@ class Views::Cities::CityPartial < Views::ApplicationView
   end
 
   def render_offices_preview
-    div(class: "offices-preview") do
-      # Show first 3 offices
-      @city.offices.limit(3).each do |office|
-        div(class: "office-preview-item") do
-          link_to office.name, office, class: "link office"
-          span(class: "office-position") { " (#{office.position.title})" }
-        end
-      end
-      
-      # Show "View All" link if there are more than 3 offices
-      if @city.offices.count > 3
-        div(class: "offices-view-all") do
-          link_to "View all #{@city.offices.count} offices", 
-                  offices_path(jurisdiction_type: "City", jurisdiction_id: @city.id), 
-                  class: "link view-all"
-        end
-      end
+    render Views::Components::ItemPreview.new(
+      items: @city.offices,
+      limit: 3,
+      container_class: "offices-preview",
+      item_class: "office-preview-item",
+      view_all_class: "offices-view-all",
+      view_all_text: "View all #{@city.offices.count} offices",
+      view_all_path: offices_path(jurisdiction_type: "City", jurisdiction_id: @city.id)
+    ) do |office|
+      link_to office.name, office, class: "link office"
+      span(class: "office-position") { " (#{office.position.title})" }
     end
   end
 
   def render_elections_preview(elections)
-    div(class: "elections-preview") do
-      # Show first 3 elections
-      elections.first(3).each do |election|
-        div(class: "election-preview-item") do
-          link_to election.name, election, class: "link election"
-          div(class: "election-status") do
-            span(class: "status-indicator status-#{election.status}") { election.status.capitalize }
-            if election.election_date
-              span(class: "election-date") { " - #{election.election_date.strftime("%B %d, %Y")}" }
-            end
-          end
-        end
-      end
-      
-      # Show "View All" link if there are more than 3 elections  
-      if elections.count > 3
-        div(class: "elections-view-all") do
-          link_to "View all #{elections.count} elections", 
-                  elections_path(jurisdiction_type: "City", jurisdiction_id: @city.id), 
-                  class: "link view-all"
+    render Views::Components::ItemPreview.new(
+      items: elections,
+      limit: 3,
+      container_class: "elections-preview",
+      item_class: "election-preview-item",
+      view_all_class: "elections-view-all",
+      view_all_text: "View all #{elections.count} elections",
+      view_all_path: elections_path(jurisdiction_type: "City", jurisdiction_id: @city.id)
+    ) do |election|
+      link_to election.name, election, class: "link election"
+      div(class: "election-status") do
+        span(class: "status-indicator status-#{election.status}") { election.status.capitalize }
+        if election.election_date
+          span(class: "election-date") { " - #{election.election_date.strftime("%B %d, %Y")}" }
         end
       end
     end

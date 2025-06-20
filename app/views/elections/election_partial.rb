@@ -70,24 +70,18 @@ class Views::Elections::ElectionPartial < Views::ApplicationView
   end
 
   def render_candidates_preview
-    div(class: "candidates-preview") do
-      # Show first 5 candidates
-      @election.candidates.limit(5).each do |candidate|
-        div(class: "candidate-preview-item") do
-          link_to candidate.name, candidate, class: "link candidate"
-          if candidate.respond_to?(:party_affiliation) && candidate.party_affiliation.present?
-            span(class: "candidate-party") { " (#{candidate.party_affiliation})" }
-          end
-        end
-      end
-      
-      # Show "View All" link if there are more than 5 candidates
-      if @election.candidates.count > 5
-        div(class: "candidates-view-all") do
-          link_to "View all #{@election.candidates.count} candidates", 
-                  @election, 
-                  class: "link view-all"
-        end
+    render Views::Components::ItemPreview.new(
+      items: @election.candidates,
+      limit: 5,
+      container_class: "candidates-preview",
+      item_class: "candidate-preview-item",
+      view_all_class: "candidates-view-all",
+      view_all_text: "View all #{@election.candidates.count} candidates",
+      view_all_path: @election
+    ) do |candidate|
+      link_to candidate.name, candidate, class: "link candidate"
+      if candidate.respond_to?(:party_affiliation) && candidate.party_affiliation.present?
+        span(class: "candidate-party") { " (#{candidate.party_affiliation})" }
       end
     end
   end

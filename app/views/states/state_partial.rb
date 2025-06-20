@@ -36,23 +36,16 @@ class Views::States::StatePartial < Views::ApplicationView
   end
 
   def render_cities_preview
-    div(class: "cities-preview") do
-      # Show first 5 cities
-      cities_to_show = @state.cities.limit(5)
-      cities_to_show.each do |city|
-        div(class: "city-preview-item") do
-          link_to city.name, city, class: "link city"
-        end
-      end
-      
-      # Show "View All" link if there are more than 5 cities
-      if @state.cities.count > 5
-        div(class: "cities-view-all") do
-          link_to "View all #{@state.cities.count} cities", 
-                  cities_path(state_id: @state.id), 
-                  class: "link view-all"
-        end
-      end
+    render Views::Components::ItemPreview.new(
+      items: @state.cities,
+      limit: 5,
+      container_class: "cities-preview",
+      item_class: "city-preview-item",
+      view_all_class: "cities-view-all",
+      view_all_text: "View all #{@state.cities.count} cities",
+      view_all_path: cities_path(state_id: @state.id)
+    ) do |city|
+      link_to city.name, city, class: "link city"
     end
   end
 end
