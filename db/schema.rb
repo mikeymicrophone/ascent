@@ -111,7 +111,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_220529) do
     t.index ["voter_id"], name: "index_ratings_on_voter_id"
   end
 
-  create_table "registrations", force: :cascade do |t|
+  create_table "residences", force: :cascade do |t|
     t.bigint "voter_id", null: false
     t.string "jurisdiction_type", null: false
     t.bigint "jurisdiction_id", null: false
@@ -120,8 +120,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_220529) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["jurisdiction_type", "jurisdiction_id"], name: "index_registrations_on_jurisdiction"
-    t.index ["voter_id"], name: "index_registrations_on_voter_id"
+    t.index ["jurisdiction_type", "jurisdiction_id"], name: "index_residences_on_jurisdiction"
+    t.index ["voter_id"], name: "index_residences_on_voter_id"
   end
 
   create_table "states", force: :cascade do |t|
@@ -187,7 +187,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_220529) do
   add_foreign_key "rating_archives", "voters"
   add_foreign_key "ratings", "candidacies"
   add_foreign_key "ratings", "voters"
-  add_foreign_key "registrations", "voters"
+  add_foreign_key "residences", "voters"
   add_foreign_key "states", "countries"
   add_foreign_key "voter_election_baselines", "elections"
   add_foreign_key "voter_election_baselines", "voters"

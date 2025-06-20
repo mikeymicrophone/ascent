@@ -46,9 +46,9 @@ CandidacySeeder.seed
 puts "\n🗳️ Seeding voters..."
 VoterSeeder.seed
 
-# Seed registrations (depends on voters and jurisdictions)
-puts "\n📋 Seeding registrations..."
-RegistrationSeeder.seed
+# Seed residences (depends on voters and jurisdictions)
+puts "\n🏠 Seeding residences..."
+ResidenceSeeder.seed
 
 # Seed ratings (depends on voters and candidacies)
 puts "\n⭐ Seeding ratings..."

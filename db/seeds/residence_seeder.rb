@@ -1,17 +1,17 @@
-class RegistrationSeeder
+class ResidenceSeeder
   def self.seed
-    # Create realistic voter registration patterns showing mobility
-    create_college_student_registrations
-    create_professional_relocation_registrations
-    create_retirement_move_registrations
-    create_stable_long_term_registrations
+    # Create realistic voter residence patterns showing mobility
+    create_college_student_residences
+    create_professional_relocation_residences
+    create_retirement_move_residences
+    create_stable_long_term_residences
     
-    puts "Seeded #{Registration.count} registrations"
+    puts "Seeded #{Residence.count} residences"
   end
   
   private
   
-  def self.create_college_student_registrations
+  def self.create_college_student_residences
     # Student who moved from home state to college state
     student = Voter.find_by(email: "emily.johnson@email.com")
     return unless student
@@ -21,28 +21,28 @@ class RegistrationSeeder
     
     return unless california && new_york
     
-    # Original registration in California (home state)
-    Registration.find_or_create_by(
+    # Original residence in California (home state)
+    Residence.find_or_create_by(
       voter: student,
       jurisdiction: california,
       status: "inactive"
-    ) do |reg|
-      reg.registered_at = 5.years.ago
-      reg.notes = "Original voter registration in home state"
+    ) do |res|
+      res.registered_at = 5.years.ago
+      res.notes = "Original voter residence in home state"
     end
     
-    # Current registration in New York (college state)
-    Registration.find_or_create_by(
+    # Current residence in New York (college state)
+    Residence.find_or_create_by(
       voter: student,
       jurisdiction: new_york,
       status: "active"
-    ) do |reg|
-      reg.registered_at = 2.years.ago
-      reg.notes = "Moved for college, established residence"
+    ) do |res|
+      res.registered_at = 2.years.ago
+      res.notes = "Moved for college, established residence"
     end
   end
   
-  def self.create_professional_relocation_registrations
+  def self.create_professional_relocation_residences
     # Professional who moved for job opportunities
     professional = Voter.find_by(email: "michael.chen@email.com")
     return unless professional
@@ -52,28 +52,28 @@ class RegistrationSeeder
     
     return unless florida && california
     
-    # Original registration in Florida
-    Registration.find_or_create_by(
+    # Original residence in Florida
+    Residence.find_or_create_by(
       voter: professional,
       jurisdiction: florida,
       status: "moved"
-    ) do |reg|
-      reg.registered_at = 8.years.ago
-      reg.notes = "First job out of college"
+    ) do |res|
+      res.registered_at = 8.years.ago
+      res.notes = "First job out of college"
     end
     
-    # Current registration in California
-    Registration.find_or_create_by(
+    # Current residence in California
+    Residence.find_or_create_by(
       voter: professional,
       jurisdiction: california,
       status: "active"
-    ) do |reg|
-      reg.registered_at = 3.years.ago
-      reg.notes = "Relocated for senior position at tech company"
+    ) do |res|
+      res.registered_at = 3.years.ago
+      res.notes = "Relocated for senior position at tech company"
     end
   end
   
-  def self.create_retirement_move_registrations
+  def self.create_retirement_move_residences
     # Retiree who moved to different state
     retiree = Voter.find_by(email: "robert.davis@email.com")
     return unless retiree
@@ -83,28 +83,28 @@ class RegistrationSeeder
     
     return unless georgia && florida
     
-    # Long-term registration in Georgia
-    Registration.find_or_create_by(
+    # Long-term residence in Georgia
+    Residence.find_or_create_by(
       voter: retiree,
       jurisdiction: georgia,
       status: "moved"
-    ) do |reg|
-      reg.registered_at = 25.years.ago
-      reg.notes = "Career and family life in Georgia"
+    ) do |res|
+      res.registered_at = 25.years.ago
+      res.notes = "Career and family life in Georgia"
     end
     
-    # Current registration in Florida
-    Registration.find_or_create_by(
+    # Current residence in Florida
+    Residence.find_or_create_by(
       voter: retiree,
       jurisdiction: florida,
       status: "active"
-    ) do |reg|
-      reg.registered_at = 1.year.ago
-      reg.notes = "Retirement relocation for weather and taxes"
+    ) do |res|
+      res.registered_at = 1.year.ago
+      res.notes = "Retirement relocation for weather and taxes"
     end
   end
   
-  def self.create_stable_long_term_registrations
+  def self.create_stable_long_term_residences
     # Voters who have stayed in the same jurisdiction
     stable_voters = [
       "david.thompson.voter@email.com",
@@ -121,17 +121,17 @@ class RegistrationSeeder
       
       next unless voter && state
       
-      Registration.find_or_create_by(
+      Residence.find_or_create_by(
         voter: voter,
         jurisdiction: state,
         status: "active"
-      ) do |reg|
-        reg.registered_at = rand(15..30).years.ago
-        reg.notes = "Long-term resident, stable registration"
+      ) do |res|
+        res.registered_at = rand(15..30).years.ago
+        res.notes = "Long-term resident, stable residence"
       end
     end
     
-    # Also create some city-level registrations
+    # Also create some city-level residences
     cities = City.limit(5)
     remaining_voters = Voter.where.not(
       email: stable_voters + [
@@ -145,13 +145,13 @@ class RegistrationSeeder
       city = cities[index]
       next unless city
       
-      Registration.find_or_create_by(
+      Residence.find_or_create_by(
         voter: voter,
         jurisdiction: city,
         status: "active"
-      ) do |reg|
-        reg.registered_at = rand(2..10).years.ago
-        reg.notes = "City-level registration"
+      ) do |res|
+        res.registered_at = rand(2..10).years.ago
+        res.notes = "City-level residence"
       end
     end
   end

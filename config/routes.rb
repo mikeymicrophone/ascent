@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   devise_for :voters
   resources :voters
-  # resources :registrations
+  resources :residences
   resources :candidacies
   resources :people
   resources :elections

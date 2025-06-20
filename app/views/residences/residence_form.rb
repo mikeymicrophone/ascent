@@ -1,11 +1,11 @@
-class Views::Registrations::RegistrationForm < Views::ApplicationView
-  def initialize(registration:)
-    @registration = registration
+class Views::Residences::ResidenceForm < Views::ApplicationView
+  def initialize(residence:)
+    @residence = residence
   end
 
   def view_template(&)
-    form_with(model: @registration, id: dom_id(@registration, :form)) do |form|
-      render_errors if @registration.errors.any?
+    form_with(model: @residence, id: dom_id(@residence, :form)) do |form|
+      render_errors if @residence.errors.any?
       
       div do
         form.label :voter_id, "Voter"
@@ -14,7 +14,7 @@ class Views::Registrations::RegistrationForm < Views::ApplicationView
                                :id, 
                                :name,
                                { prompt: "Select a voter" },
-                               { class: input_classes(@registration.errors[:voter_id]) }
+                               { class: input_classes(@residence.errors[:voter_id]) }
       end
 
       div do
@@ -24,26 +24,26 @@ class Views::Registrations::RegistrationForm < Views::ApplicationView
                                :id, 
                                :name,
                                { prompt: "Select a jurisdiction" },
-                               { class: input_classes(@registration.errors[:jurisdiction_id]) }
+                               { class: input_classes(@residence.errors[:jurisdiction_id]) }
       end
 
       div do
         form.label :registered_at
         form.datetime_field :registered_at,
-                                        class: input_classes(@registration.errors[:registered_at])
+                                        class: input_classes(@residence.errors[:registered_at])
       end
 
       div do
         form.label :status
         form.text_field :status,
-                                        class: input_classes(@registration.errors[:status])
+                                        class: input_classes(@residence.errors[:status])
       end
 
       div do
         form.label :notes
         form.textarea :notes,
                                         rows: 4,
-                                        class: input_classes(@registration.errors[:notes])
+                                        class: input_classes(@residence.errors[:notes])
       end
 
       div do
@@ -56,10 +56,10 @@ class Views::Registrations::RegistrationForm < Views::ApplicationView
 
   def render_errors
     div(id: "error_explanation") do
-      h2 { "#{pluralize(@registration.errors.count, 'error')} prohibited this registration from being saved:" }
+      h2 { "#{pluralize(@residence.errors.count, 'error')} prohibited this residence from being saved:" }
       
       ul(class: "list-disc ml-6") do
-        @registration.errors.each do |error|
+        @residence.errors.each do |error|
           li { error.full_message }
         end
       end

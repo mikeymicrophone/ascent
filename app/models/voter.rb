@@ -4,8 +4,8 @@ class Voter < ApplicationRecord
   devise :database_authenticatable, :confirmable, :registerable,
          :recoverable, :rememberable, :validatable, :trackable
   
-  has_many :registrations, dependent: :destroy
-  has_many :jurisdictions, through: :registrations
+  has_many :residences, dependent: :destroy
+  has_many :jurisdictions, through: :residences
   has_many :ratings, dependent: :destroy
   has_many :voter_election_baselines, dependent: :destroy
   
@@ -21,20 +21,20 @@ class Voter < ApplicationRecord
     full_name
   end
   
-  def current_registration
-    registrations.where(status: 'active').first
+  def current_residence
+    residences.where(status: 'active').first
   end
   
-  def registration_history
-    registrations.order(registered_at: :desc)
+  def residence_history
+    residences.order(registered_at: :desc)
   end
   
   def eligible_for_election?(election)
-    return false unless current_registration
+    return false unless current_residence
     
     # Check if voter's current jurisdiction is eligible for this election
     office_jurisdiction = election.office.jurisdiction
-    voter_jurisdiction = current_registration.jurisdiction
+    voter_jurisdiction = current_residence.jurisdiction
     
     # Direct match
     return true if voter_jurisdiction == office_jurisdiction

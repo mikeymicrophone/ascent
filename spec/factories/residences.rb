@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :registration do
+  factory :residence do
     voter { nil }
     jurisdiction { nil }
     registered_at { "2025-06-19 17:50:42" }
