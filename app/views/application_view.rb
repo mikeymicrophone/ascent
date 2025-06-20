@@ -11,6 +11,8 @@ class Views::ApplicationView < Phlex::HTML
   include Phlex::Rails::Helpers::SimpleFormat
   include Phlex::Rails::Helpers::Pluralize
   include Phlex::Rails::Helpers::CurrentPage
+  include Phlex::Rails::Helpers::Request
 
   include Devise::Controllers::Helpers
+  include Pagy::Frontend
 end

@@ -1,6 +1,7 @@
 class Views::States::IndexView < Views::ApplicationView
-  def initialize(states:, notice: nil)
+  def initialize(states:, pagy: nil, notice: nil)
     @states = states
+    @pagy = pagy
     @notice = notice
   end
 
@@ -37,6 +38,8 @@ class Views::States::IndexView < Views::ApplicationView
           p { "No states found." }
         end
       end
+
+      render_pagination if @pagy&.pages&.> 1
     end
   end
 
@@ -45,6 +48,20 @@ class Views::States::IndexView < Views::ApplicationView
   def render_notice
     p(id: "notice") do
       @notice
+    end
+  end
+
+  def render_pagination
+    div(class: "pagination-container") do
+      # Page info
+      div(class: "pagination-info") do
+        raw pagy_info(@pagy).html_safe
+      end
+      
+      # Navigation links
+      div(class: "pagination-nav") do
+        raw pagy_nav(@pagy).html_safe
+      end
     end
   end
 end

@@ -27,6 +27,9 @@ gem "superform"
 # Use Devise for authentication [https://github.com/heartcombo/devise]
 gem "devise"
 
+# Pagination [https://github.com/ddnexus/pagy]
+gem "pagy"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
@@ -55,6 +58,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'shoulda'
   gem 'faker'
+  gem 'rails-controller-testing'
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
