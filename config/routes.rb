@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
   resources :voter_election_baselines
   resources :ratings
-  resources :registrations
+
   devise_for :voters
   resources :voters
+  # resources :registrations
   resources :candidacies
   resources :people
   resources :elections

@@ -1,8 +1,8 @@
 class Voter < ApplicationRecord
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+  # :registerable, :lockable, :timeoutable, :trackable and :omniauthable
+  devise :database_authenticatable, :confirmable, :registerable,
+         :recoverable, :rememberable, :validatable, :trackable
   
   has_many :registrations, dependent: :destroy
   has_many :jurisdictions, through: :registrations
@@ -11,7 +11,7 @@ class Voter < ApplicationRecord
   
   validates :first_name, presence: true
   validates :last_name, presence: true
-  validates :is_verified, inclusion: { in: [true, false] }
+  # validates :is_verified, inclusion: { in: [true, false] }
   
   def full_name
     [first_name, last_name].compact.join(' ')

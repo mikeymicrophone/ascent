@@ -21,7 +21,7 @@ class Views::Components::Navigation < Views::ApplicationView
           link_to "People", people_path, class: nav_link_class(people_path)
           link_to "Candidacies", candidacies_path, class: nav_link_class(candidacies_path)
           link_to "Voters", voters_path, class: nav_link_class(voters_path)
-          link_to "Registrations", registrations_path, class: nav_link_class(registrations_path)
+          # link_to "Registrations", registrations_path, class: nav_link_class(registrations_path)
           link_to "Ratings", ratings_path, class: nav_link_class(ratings_path)
           link_to "Baselines", voter_election_baselines_path, class: nav_link_class(voter_election_baselines_path)
           render Views::Components::DeviseLinks.new(current_voter: @current_voter)
