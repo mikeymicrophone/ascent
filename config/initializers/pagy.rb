@@ -62,6 +62,10 @@ Pagy::DEFAULT[:limit] = 25
 
 # Frontend Extras
 
+# Tailwind extra: Add nav, nav_js and combo_nav_js helpers and templates for Tailwind pagination
+# See https://ddnexus.github.io/pagy/docs/extras/tailwind
+# require 'pagy/extras/tailwind' # Using custom Tailwind CSS instead
+
 # Bootstrap extra: Add nav, nav_js and combo_nav_js helpers and templates for Bootstrap pagination
 # See https://ddnexus.github.io/pagy/docs/extras/bootstrap
 # require 'pagy/extras/bootstrap'

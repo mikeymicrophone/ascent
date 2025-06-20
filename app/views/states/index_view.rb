@@ -39,7 +39,7 @@ class Views::States::IndexView < Views::ApplicationView
         end
       end
 
-      render_pagination if @pagy&.pages&.> 1
+      render Views::Components::Pagination.new(pagy: @pagy) if @pagy
     end
   end
 
@@ -48,20 +48,6 @@ class Views::States::IndexView < Views::ApplicationView
   def render_notice
     p(id: "notice") do
       @notice
-    end
-  end
-
-  def render_pagination
-    div(class: "pagination-container") do
-      # Page info
-      div(class: "pagination-info") do
-        raw pagy_info(@pagy).html_safe
-      end
-      
-      # Navigation links
-      div(class: "pagination-nav") do
-        raw pagy_nav(@pagy).html_safe
-      end
     end
   end
 end

@@ -34,3 +34,7 @@
 @import "./situation/navigation.css";
 @import "./situation/components.css";
 @import "./situation/mountain.css";
+
+/* Layer 5: Plugins */
+@import "./plugins/pagy.tailwind.css";
+
