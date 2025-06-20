@@ -23,7 +23,7 @@
   </head>
 
   <body>
-    <%= render Views::Components::Navigation.new %>
+    <%= render Views::Components::Navigation.new(current_voter: current_voter) %>
     <main class="main-content">
       <%= yield %>
     </main>
