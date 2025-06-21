@@ -19,9 +19,8 @@ class Views::Components::DeviseLinks < Views::ApplicationView
     span(class: "voter-greeting") { "Hello, #{@current_voter.first_name}" }
     link_to "Profile", edit_voter_path(@current_voter), class: "nav-link"
     link_to "Sign Out", destroy_voter_session_path, 
-            method: :delete, 
             class: "nav-link",
-            data: { "turbo-method": :delete }
+            data: { turbo_method: :delete }
   end
 
   def unauthenticated_links

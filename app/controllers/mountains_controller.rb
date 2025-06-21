@@ -103,7 +103,7 @@ class MountainsController < ApplicationController
 
   def calculate_position(rating)
     # Convert 0-500 rating to CSS position (inverted for top-origin)
-    Views::Mountains::YAxisLabels.new.calculate_label_position(rating)
+    Views::Mountains.calculate_label_position(rating)
   end
 
   def current_voter
