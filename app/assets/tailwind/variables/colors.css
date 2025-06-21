@@ -34,4 +34,64 @@
   --card-bg: theme('colors.white');
   --card-border: theme('colors.gray.200');
   --card-shadow: theme('colors.gray.100');
+
+  /* Expandable section colors */
+  --expandable-header-bg: theme('colors.gray.50');
+  --expandable-content-bg: theme('colors.white');
+  --expandable-border: theme('colors.gray.200');
+  
+  /* Text colors */
+  --text-muted: theme('colors.gray.500');
+
+  /* Status colors */
+  --status-bg: theme('colors.gray.100');
+  --status-text: theme('colors.gray.700');
+  --status-active-bg: theme('colors.green.100');
+  --status-active-text: theme('colors.green.800');
+  --status-upcoming-bg: theme('colors.blue.100');
+  --status-upcoming-text: theme('colors.blue.800');
+  --status-completed-bg: theme('colors.gray.100');
+  --status-completed-text: theme('colors.gray.600');
+  --status-participated-bg: theme('colors.purple.100');
+  --status-participated-text: theme('colors.purple.800');
+  --status-partial-bg: theme('colors.yellow.100');
+  --status-partial-text: theme('colors.yellow.800');
+  --status-baseline-only-bg: theme('colors.orange.100');
+  --status-baseline-only-text: theme('colors.orange.800');
+  --status-registered-bg: theme('colors.cyan.100');
+  --status-registered-text: theme('colors.cyan.800');
+  
+  /* Office holder colors */
+  --current-holder-bg: theme('colors.blue.50');
+  --current-holder-border: theme('colors.blue.200');
+  --current-holder-party: theme('colors.gray.600');
+  
+  /* Election timeline colors */
+  --election-timeline-border: theme('colors.gray.200');
+  --election-meta: theme('colors.gray.500');
+  --winner-indicator: theme('colors.yellow.500');
+  
+  /* Voter stats colors */
+  --stat-label: theme('colors.gray.600');
+  --stat-value: theme('colors.gray.900');
+  
+  /* Hierarchical navigation colors */
+  --breadcrumb-bg: theme('colors.gray.50');
+  --breadcrumb-border: theme('colors.gray.200');
+  --breadcrumb-link: theme('colors.blue.600');
+  --breadcrumb-link-hover: theme('colors.blue.800');
+  --breadcrumb-current: theme('colors.gray.900');
+  --breadcrumb-separator: theme('colors.gray.400');
+  
+  /* Quick stats colors */
+  --quick-stats-bg: theme('colors.blue.50');
+  --quick-stats-border: theme('colors.blue.200');
+  --quick-stats-value: theme('colors.blue.700');
+  --quick-stats-label: theme('colors.blue.600');
+  
+  /* Geographic summary colors */
+  --geo-summary-bg: theme('colors.green.50');
+  --geo-summary-border: theme('colors.green.200');
+  --geo-summary-value: theme('colors.green.700');
+  --geo-summary-label: theme('colors.green.600');
 }

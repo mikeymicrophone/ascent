@@ -11,7 +11,7 @@ Enhance existing partial components to display associated data with expandable s
 - **Features**: 
   - Collapsible section with toggle functionality
   - Quick city count ("12 cities")
-  - Link to filtered cities index (`/cities?state_id=X`)
+  - Link to filtered cities index (`states/:state_id/cities`)
   - City names as links to individual city pages
 
 ### 2. **City Partial Enhancement: Elections & Offices**
@@ -20,7 +20,7 @@ Enhance existing partial components to display associated data with expandable s
 - **Features**:
   - Show upcoming/active elections in this jurisdiction
   - Display office types available (Mayor, City Council, etc.)
-  - Link to filtered elections (`/elections?jurisdiction_type=City&jurisdiction_id=X`)
+  - Link to filtered elections (`states/:state_id/cities/:city_id/elections`)
   - Election status indicators (Active, Upcoming, Completed)
 
 ### 3. **Election Partial Enhancement: Candidates & Results**

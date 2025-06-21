@@ -1,0 +1,200 @@
+# Major US Cities by State
+- name: "Los Angeles"
+  state_code: "CA"
+  population: 3979576
+
+- name: "San Francisco"
+  state_code: "CA"
+  population: 873965
+
+- name: "San Diego"
+  state_code: "CA"
+  population: 1386932
+
+- name: "Sacramento"
+  state_code: "CA"
+  population: 524943
+
+- name: "Oakland"
+  state_code: "CA"
+  population: 440646
+
+- name: "New York City"
+  state_code: "NY"
+  population: 8336817
+
+- name: "Buffalo"
+  state_code: "NY"
+  population: 255805
+
+- name: "Rochester"
+  state_code: "NY"
+  population: 206284
+
+- name: "Syracuse"
+  state_code: "NY"
+  population: 144170
+
+- name: "Albany"
+  state_code: "NY"
+  population: 97279
+
+- name: "Chicago"
+  state_code: "IL"
+  population: 2693976
+
+- name: "Aurora"
+  state_code: "IL"
+  population: 197899
+
+- name: "Rockford"
+  state_code: "IL"
+  population: 148278
+
+- name: "Joliet"
+  state_code: "IL"
+  population: 147433
+
+- name: "Naperville"
+  state_code: "IL"
+  population: 147122
+
+- name: "Houston"
+  state_code: "TX"
+  population: 2320268
+
+- name: "San Antonio"
+  state_code: "TX"
+  population: 1547253
+
+- name: "Dallas"
+  state_code: "TX"
+  population: 1304379
+
+- name: "Austin"
+  state_code: "TX"
+  population: 961855
+
+- name: "Fort Worth"
+  state_code: "TX"
+  population: 918915
+
+- name: "Phoenix"
+  state_code: "AZ"
+  population: 1608139
+
+- name: "Tucson"
+  state_code: "AZ"
+  population: 548073
+
+- name: "Mesa"
+  state_code: "AZ"
+  population: 504258
+
+- name: "Chandler"
+  state_code: "AZ"
+  population: 275987
+
+- name: "Glendale"
+  state_code: "AZ"
+  population: 248325
+
+- name: "Philadelphia"
+  state_code: "PA"
+  population: 1584064
+
+- name: "Pittsburgh"
+  state_code: "PA"
+  population: 300286
+
+- name: "Allentown"
+  state_code: "PA"
+  population: 125845
+
+- name: "Erie"
+  state_code: "PA"
+  population: 94831
+
+- name: "Reading"
+  state_code: "PA"
+  population: 87879
+
+- name: "Jacksonville"
+  state_code: "FL"
+  population: 949611
+
+- name: "Miami"
+  state_code: "FL"
+  population: 442241
+
+- name: "Tampa"
+  state_code: "FL"
+  population: 387050
+
+- name: "Orlando"
+  state_code: "FL"
+  population: 307573
+
+- name: "St. Petersburg"
+  state_code: "FL"
+  population: 258308
+
+- name: "Denver"
+  state_code: "CO"
+  population: 715522
+
+- name: "Colorado Springs"
+  state_code: "CO"
+  population: 478961
+
+- name: "Aurora"
+  state_code: "CO"
+  population: 386261
+
+- name: "Fort Collins"
+  state_code: "CO"
+  population: 169810
+
+- name: "Lakewood"
+  state_code: "CO"
+  population: 155984
+
+- name: "Seattle"
+  state_code: "WA"
+  population: 737015
+
+- name: "Spokane"
+  state_code: "WA"
+  population: 228989
+
+- name: "Tacoma"
+  state_code: "WA"
+  population: 219346
+
+- name: "Vancouver"
+  state_code: "WA"
+  population: 183741
+
+- name: "Bellevue"
+  state_code: "WA"
+  population: 151854
+
+- name: "Boston"
+  state_code: "MA"
+  population: 695506
+
+- name: "Worcester"
+  state_code: "MA"
+  population: 206518
+
+- name: "Springfield"
+  state_code: "MA"
+  population: 155929
+
+- name: "Cambridge"
+  state_code: "MA"
+  population: 118403
+
+- name: "Lowell"
+  state_code: "MA"
+  population: 115554

@@ -43,11 +43,234 @@ select.error {
   border-color: var(--input-error-border);
 }
 
+/* Expandable section colors */
+.expandable-header {
+  background-color: var(--expandable-header-bg);
+  border-color: var(--expandable-border);
+  @apply border;
+}
+
+.expandable-content {
+  background-color: var(--expandable-content-bg);
+  border-color: var(--expandable-border);
+  @apply border border-t-0;
+}
+
+.expandable-count {
+  color: var(--text-muted);
+}
+
+.expandable-icon {
+  color: var(--text-muted);
+}
+
+/* Cities preview colors */
+.filter-info {
+  color: var(--text-muted);
+}
+
+/* Offices preview colors */
+.office-position {
+  color: var(--text-muted);
+}
+
+/* Elections preview colors */
+.election-date {
+  color: var(--text-muted);
+}
+
+.status-indicator {
+  background-color: var(--status-bg);
+  color: var(--status-text);
+}
+
+.status-active {
+  background-color: var(--status-active-bg);
+  color: var(--status-active-text);
+}
+
+.status-upcoming {
+  background-color: var(--status-upcoming-bg);
+  color: var(--status-upcoming-text);
+}
+
+.status-completed {
+  background-color: var(--status-completed-bg);
+  color: var(--status-completed-text);
+}
+
+.status-participated {
+  background-color: var(--status-participated-bg);
+  color: var(--status-participated-text);
+}
+
+.status-partial {
+  background-color: var(--status-partial-bg);
+  color: var(--status-partial-text);
+}
+
+.status-baseline-only {
+  background-color: var(--status-baseline-only-bg);
+  color: var(--status-baseline-only-text);
+}
+
+.status-registered {
+  background-color: var(--status-registered-bg);
+  color: var(--status-registered-text);
+}
+
+/* Candidates preview colors */
+.candidate-party {
+  color: var(--text-muted);
+}
+
+/* Results preview colors */
+.results-title {
+  color: var(--text-muted);
+}
+
+.result-rank {
+  color: var(--text-muted);
+}
+
+.result-votes {
+  color: var(--text-muted);
+}
+
+.no-results,
+.results-placeholder {
+  color: var(--text-muted);
+}
+
+/* Candidacies preview colors */
+.candidacy-office {
+  color: var(--text-muted);
+}
+
+.candidacy-party {
+  color: var(--text-muted);
+}
+
+/* Voting activity preview colors */
+.voting-office {
+  color: var(--text-muted);
+}
+
+.voting-participation {
+  color: var(--text-muted);
+}
+
+.voting-baseline {
+  color: var(--text-muted);
+}
+
+/* Office holder colors */
+.current-holder-section {
+  background-color: var(--current-holder-bg);
+  border-color: var(--current-holder-border);
+}
+
+.current-holder-party {
+  color: var(--current-holder-party);
+}
+
+/* Election timeline colors */
+.election-timeline-item {
+  border-color: var(--election-timeline-border);
+}
+
+.election-meta,
+.election-date,
+.schedule-label {
+  color: var(--election-meta);
+}
+
+.winner-indicator {
+  color: var(--winner-indicator);
+}
+
+/* Voter stats colors */
+.stat-label {
+  color: var(--stat-label);
+}
+
+.stat-value {
+  color: var(--stat-value);
+}
+
+/* Hierarchical navigation colors */
+.hierarchical-navigation {
+  background-color: var(--breadcrumb-bg);
+  border-color: var(--breadcrumb-border);
+}
+
+.breadcrumb-chain {
+  background-color: var(--breadcrumb-bg);
+  border-color: var(--breadcrumb-border);
+}
+
+.breadcrumb-link {
+  color: var(--breadcrumb-link);
+}
+
+.breadcrumb-link:hover {
+  color: var(--breadcrumb-link-hover);
+}
+
+.breadcrumb-current {
+  color: var(--breadcrumb-current);
+}
+
+.breadcrumb-separator {
+  color: var(--breadcrumb-separator);
+}
+
+/* Quick stats colors */
+.quick-stats {
+  background-color: var(--quick-stats-bg);
+  border-color: var(--quick-stats-border);
+}
+
+.stat-item .stat-value {
+  color: var(--quick-stats-value);
+}
+
+.stat-item .stat-label {
+  color: var(--quick-stats-label);
+}
+
+/* Geographic summary colors */
+.geographic-summary {
+  background-color: var(--geo-summary-bg);
+  border-color: var(--geo-summary-border);
+}
+
+.summary-value {
+  color: var(--geo-summary-value);
+}
+
+.summary-label {
+  color: var(--geo-summary-label);
+}
+
+/* Children preview */
+.child-item {
+  border-color: var(--expandable-border);
+}
+
+.child-name {
+  color: var(--breadcrumb-link);
+}
+
 /* Card styles */
 .scaffold,
 .country-partial,
 .state-partial,
-.city-partial {
+.city-partial,
+.election-partial,
+.person-partial,
+.voter-partial,
+.office-partial {
   background-color: var(--card-bg);
   border-color: var(--card-border);
   @apply border shadow-sm;

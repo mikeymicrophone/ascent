@@ -9,11 +9,15 @@ Rails.application.routes.draw do
   resources :people
   resources :elections
   resources :years
-  resources :offices
+  resources :offices do
+    resources :elections, only: [:index]
+  end
   resources :positions
   resources :cities
   resources :states
-  resources :countries
+  resources :countries do
+    resources :states, only: [:index]
+  end
 
   resources :mountains, only: [:index, :show, :edit, :update] do
     member do

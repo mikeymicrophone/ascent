@@ -5,6 +5,87 @@
   @apply font-medium no-underline;
 }
 
+/* Expandable sections typography */
+.expandable-header {
+  @apply font-medium text-left;
+}
+
+.expandable-count {
+  @apply font-normal;
+}
+
+.expandable-icon {
+  @apply text-center select-none;
+}
+
+/* Cities preview typography */
+.filter-info {
+  @apply font-medium;
+}
+
+.view-all {
+  @apply font-medium;
+}
+
+/* Offices preview typography */
+.office-position {
+  @apply font-normal;
+}
+
+/* Elections preview typography */
+.status-indicator {
+  @apply font-medium;
+}
+
+.election-date {
+  @apply font-normal;
+}
+
+/* Candidates preview typography */
+.candidate-party {
+  @apply font-normal;
+}
+
+/* Results preview typography */
+.results-title {
+  @apply font-medium;
+}
+
+.result-rank {
+  @apply font-medium;
+}
+
+.result-votes {
+  @apply font-normal;
+}
+
+.no-results,
+.results-placeholder {
+  @apply font-normal;
+}
+
+/* Candidacies preview typography */
+.candidacy-office {
+  @apply font-normal;
+}
+
+.candidacy-party {
+  @apply font-normal;
+}
+
+/* Voting activity preview typography */
+.voting-office {
+  @apply font-normal;
+}
+
+.voting-participation {
+  @apply font-medium;
+}
+
+.voting-baseline {
+  @apply font-normal;
+}
+
 /* Button typography */
 .primary {
   @apply font-semibold;
@@ -12,5 +93,93 @@
 
 .secondary,
 .danger {
+  @apply font-medium;
+}
+
+/* Office holder typography */
+.current-holder-name {
+  @apply font-semibold;
+}
+
+.current-holder-details,
+.current-holder-party {
+  @apply font-normal;
+}
+
+/* Election timeline typography */
+.election-name {
+  @apply font-medium;
+}
+
+.election-meta,
+.election-date,
+.schedule-label {
+  @apply font-normal;
+}
+
+.election-today {
+  @apply font-semibold;
+}
+
+.days-until {
+  @apply font-normal;
+}
+
+/* Election results typography */
+.result-rank {
+  @apply font-semibold;
+}
+
+.candidate-name {
+  @apply font-medium;
+}
+
+.candidate-party,
+.vote-count {
+  @apply font-normal;
+}
+
+/* Voter stats typography */
+.stat-label {
+  @apply font-medium;
+}
+
+.stat-value {
+  @apply font-semibold;
+}
+
+/* Hierarchical navigation typography */
+.breadcrumb-link {
+  @apply font-medium no-underline;
+}
+
+.breadcrumb-current {
+  @apply font-semibold;
+}
+
+.breadcrumb-separator {
+  @apply font-normal;
+}
+
+/* Quick stats typography */
+.quick-stats .stat-value {
+  @apply font-bold;
+}
+
+.quick-stats .stat-label {
+  @apply font-medium;
+}
+
+/* Geographic summary typography */
+.summary-value {
+  @apply font-bold;
+}
+
+.summary-label {
+  @apply font-normal;
+}
+
+/* Children preview typography */
+.child-name {
   @apply font-medium;
 }

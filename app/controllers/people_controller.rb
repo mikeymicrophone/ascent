@@ -2,7 +2,8 @@ class PeopleController < ApplicationController
   before_action :set_person, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @people = pagy(Person.all)
+    people_scope = Person.includes(candidacies: [election: [office: :position]])
+    @pagy, @people = pagy(people_scope)
     render Views::People::IndexView.new(people: @people, pagy: @pagy, notice: notice)
   end
 
@@ -45,7 +46,7 @@ class PeopleController < ApplicationController
   private
 
   def set_person
-    @person = Person.find(params[:id])
+    @person = Person.includes(candidacies: [election: [office: :position]]).find(params[:id])
   end
 
   def person_params
