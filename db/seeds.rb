@@ -34,6 +34,18 @@ GovernanceTypeSeeder.seed
 puts "\n🎯 Seeding areas of concern..."
 AreaOfConcernSeeder.seed
 
+# Seed topics (no dependencies)
+puts "\n📋 Seeding topics..."
+TopicSeeder.seed
+
+# Seed issues (depends on topics)
+puts "\n⚠️ Seeding issues..."
+IssueSeeder.seed
+
+# Seed approaches (depends on issues)
+puts "\n💡 Seeding approaches..."
+ApproachSeeder.seed
+
 # Seed governing bodies (depends on governance types and jurisdictions)
 puts "\n🏛️ Seeding governing bodies..."
 GoverningBodySeeder.seed
@@ -82,6 +94,9 @@ puts "   Cities: #{City.count}"
 puts "   Positions: #{Position.count}"
 puts "   Governance Types: #{GovernanceType.count}"
 puts "   Areas of Concern: #{AreaOfConcern.count}"
+puts "   Topics: #{Topic.count}"
+puts "   Issues: #{Issue.count}"
+puts "   Approaches: #{Approach.count}"
 puts "   Governing Bodies: #{GoverningBody.count}"
 puts "   Offices: #{Office.count}"
 puts "   Years: #{Year.count}"
