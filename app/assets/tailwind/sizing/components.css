@@ -321,3 +321,76 @@ select:focus {
 .stat-value {
   @apply text-sm;
 }
+
+/* Hierarchical navigation spacing */
+.hierarchical-navigation {
+  @apply mt-4 mb-4 p-4 rounded-lg border;
+}
+
+.breadcrumb-chain {
+  @apply p-3 rounded-md border;
+}
+
+.breadcrumb-item {
+  @apply gap-2;
+}
+
+.breadcrumb-separator {
+  @apply mx-2 text-sm;
+}
+
+.quick-stats {
+  @apply mt-2 p-2 rounded border text-xs;
+}
+
+.stats-row {
+  @apply gap-3;
+}
+
+.stat-item {
+  @apply gap-1;
+}
+
+.stat-value,
+.stat-label {
+  @apply text-xs;
+}
+
+/* Drill down section spacing */
+.drill-down-content {
+  @apply space-y-4;
+}
+
+.children-preview {
+  @apply space-y-2;
+}
+
+.child-item {
+  @apply p-2 border-l-2 pl-3 gap-2;
+}
+
+.children-view-all {
+  @apply mt-3 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
+/* Geographic summary spacing */
+.geographic-summary {
+  @apply p-3 rounded border;
+}
+
+.summary-grid {
+  @apply grid grid-cols-2 gap-3 mt-2;
+}
+
+.summary-stat {
+  @apply text-center;
+}
+
+.summary-value {
+  @apply text-lg;
+}
+
+.summary-label {
+  @apply text-xs;
+}

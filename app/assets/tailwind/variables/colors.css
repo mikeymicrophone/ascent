@@ -74,4 +74,24 @@
   /* Voter stats colors */
   --stat-label: theme('colors.gray.600');
   --stat-value: theme('colors.gray.900');
+  
+  /* Hierarchical navigation colors */
+  --breadcrumb-bg: theme('colors.gray.50');
+  --breadcrumb-border: theme('colors.gray.200');
+  --breadcrumb-link: theme('colors.blue.600');
+  --breadcrumb-link-hover: theme('colors.blue.800');
+  --breadcrumb-current: theme('colors.gray.900');
+  --breadcrumb-separator: theme('colors.gray.400');
+  
+  /* Quick stats colors */
+  --quick-stats-bg: theme('colors.blue.50');
+  --quick-stats-border: theme('colors.blue.200');
+  --quick-stats-value: theme('colors.blue.700');
+  --quick-stats-label: theme('colors.blue.600');
+  
+  /* Geographic summary colors */
+  --geo-summary-bg: theme('colors.green.50');
+  --geo-summary-border: theme('colors.green.200');
+  --geo-summary-value: theme('colors.green.700');
+  --geo-summary-label: theme('colors.green.600');
 }

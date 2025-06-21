@@ -9,6 +9,10 @@ class Views::Countries::CountryPartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@country), class: "country-partial") do
       h3 { @country.name }
+      
+      # Hierarchical navigation
+      Views::Components::HierarchicalNavigation(current_object: @country)
+      
       div do
         span { "Code:" }
         whitespace

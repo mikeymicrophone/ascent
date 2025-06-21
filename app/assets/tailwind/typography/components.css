@@ -147,3 +147,39 @@
 .stat-value {
   @apply font-semibold;
 }
+
+/* Hierarchical navigation typography */
+.breadcrumb-link {
+  @apply font-medium no-underline;
+}
+
+.breadcrumb-current {
+  @apply font-semibold;
+}
+
+.breadcrumb-separator {
+  @apply font-normal;
+}
+
+/* Quick stats typography */
+.quick-stats .stat-value {
+  @apply font-bold;
+}
+
+.quick-stats .stat-label {
+  @apply font-medium;
+}
+
+/* Geographic summary typography */
+.summary-value {
+  @apply font-bold;
+}
+
+.summary-label {
+  @apply font-normal;
+}
+
+/* Children preview typography */
+.child-name {
+  @apply font-medium;
+}

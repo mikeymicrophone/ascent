@@ -15,7 +15,9 @@ Rails.application.routes.draw do
   resources :positions
   resources :cities
   resources :states
-  resources :countries
+  resources :countries do
+    resources :states, only: [:index]
+  end
 
   resources :mountains, only: [:index, :show, :edit, :update] do
     member do

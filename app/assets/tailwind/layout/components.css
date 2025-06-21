@@ -289,3 +289,81 @@ select {
 .stat-value {
   @apply block;
 }
+
+/* Hierarchical navigation layout */
+.hierarchical-navigation {
+  @apply block;
+}
+
+.breadcrumb-chain {
+  @apply flex items-center flex-wrap;
+}
+
+.breadcrumb-item {
+  @apply flex items-center;
+}
+
+.breadcrumb-link,
+.breadcrumb-current {
+  @apply inline;
+}
+
+.breadcrumb-separator {
+  @apply inline;
+}
+
+.quick-stats {
+  @apply block;
+}
+
+.stats-row {
+  @apply flex items-center flex-wrap;
+}
+
+.stat-item {
+  @apply flex items-center;
+}
+
+.stat-value,
+.stat-label {
+  @apply inline;
+}
+
+/* Drill down section layout */
+.drill-down-content {
+  @apply block;
+}
+
+.children-preview {
+  @apply block;
+}
+
+.child-item {
+  @apply flex items-center;
+}
+
+.child-name {
+  @apply inline;
+}
+
+.children-view-all {
+  @apply block;
+}
+
+/* Geographic summary layout */
+.geographic-summary {
+  @apply block;
+}
+
+.summary-grid {
+  @apply grid;
+}
+
+.summary-stat {
+  @apply block;
+}
+
+.summary-value,
+.summary-label {
+  @apply block;
+}

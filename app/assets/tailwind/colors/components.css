@@ -198,6 +198,70 @@ select.error {
   color: var(--stat-value);
 }
 
+/* Hierarchical navigation colors */
+.hierarchical-navigation {
+  background-color: var(--breadcrumb-bg);
+  border-color: var(--breadcrumb-border);
+}
+
+.breadcrumb-chain {
+  background-color: var(--breadcrumb-bg);
+  border-color: var(--breadcrumb-border);
+}
+
+.breadcrumb-link {
+  color: var(--breadcrumb-link);
+}
+
+.breadcrumb-link:hover {
+  color: var(--breadcrumb-link-hover);
+}
+
+.breadcrumb-current {
+  color: var(--breadcrumb-current);
+}
+
+.breadcrumb-separator {
+  color: var(--breadcrumb-separator);
+}
+
+/* Quick stats colors */
+.quick-stats {
+  background-color: var(--quick-stats-bg);
+  border-color: var(--quick-stats-border);
+}
+
+.stat-item .stat-value {
+  color: var(--quick-stats-value);
+}
+
+.stat-item .stat-label {
+  color: var(--quick-stats-label);
+}
+
+/* Geographic summary colors */
+.geographic-summary {
+  background-color: var(--geo-summary-bg);
+  border-color: var(--geo-summary-border);
+}
+
+.summary-value {
+  color: var(--geo-summary-value);
+}
+
+.summary-label {
+  color: var(--geo-summary-label);
+}
+
+/* Children preview */
+.child-item {
+  border-color: var(--expandable-border);
+}
+
+.child-name {
+  color: var(--breadcrumb-link);
+}
+
 /* Card styles */
 .scaffold,
 .country-partial,
