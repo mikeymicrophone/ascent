@@ -30,6 +30,10 @@ PositionSeeder.seed
 puts "\n⚖️ Seeding governance types..."
 GovernanceTypeSeeder.seed
 
+# Seed areas of concern (no dependencies)
+puts "\n🎯 Seeding areas of concern..."
+AreaOfConcernSeeder.seed
+
 # Seed offices (depends on positions and jurisdictions)
 puts "\n🏛️ Seeding offices..."
 OfficeSeeder.seed
@@ -73,6 +77,7 @@ puts "   States: #{State.count}"
 puts "   Cities: #{City.count}"
 puts "   Positions: #{Position.count}"
 puts "   Governance Types: #{GovernanceType.count}"
+puts "   Areas of Concern: #{AreaOfConcern.count}"
 puts "   Offices: #{Office.count}"
 puts "   Years: #{Year.count}"
 puts "   Elections: #{Election.count}"

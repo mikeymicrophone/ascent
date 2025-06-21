@@ -16,3 +16,13 @@
   background-color: var(--nav-link-active-bg);
   color: var(--nav-link-active-color);
 }
+
+/* Dropdown Colors */
+.nav-group-header {
+  color: var(--nav-group-label-color);
+}
+
+.nav-group-content {
+  background-color: var(--dropdown-bg);
+  border: 1px solid var(--dropdown-border);
+}
