@@ -39,6 +39,19 @@ class Views::Components::Navigation < Views::ApplicationView
             end
           end
           
+          # Policy dropdown
+          div(class: "nav-group", data: { controller: "dropdown" }) do
+            div(class: "nav-group-header", data: { action: "click->dropdown#toggle" }) do
+              span { "Policy" }
+              span(class: "nav-group-arrow") { "▼" }
+            end
+            div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
+              link_to "Topics", topics_path, class: nav_link_class(topics_path)
+              link_to "Issues", issues_path, class: nav_link_class(issues_path)
+              link_to "Approaches", approaches_path, class: nav_link_class(approaches_path)
+            end
+          end
+          
           # Elections dropdown
           div(class: "nav-group", data: { controller: "dropdown" }) do
             div(class: "nav-group-header", data: { action: "click->dropdown#toggle" }) do

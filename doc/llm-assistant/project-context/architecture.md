@@ -196,29 +196,8 @@ The project includes a custom `PhlexScaffoldGenerator` (`lib/generators/phlex_sc
 - Form and Partial components with Tailwind styling
 - Model and route generation
 
-### Planned Enhancements
 
-**Testing Integration**
-- RSpec controller and model specs with realistic test scenarios
-- FactoryBot factories with descriptive, politically-relevant data
-- System tests for complete CRUD workflows
 
-**Convention Alignment**
-- Service object generation for complex business logic
-- View helper generation for markup encapsulation  
-- Enhanced error handling and flash message patterns
-
-**CSS/Styling Improvements**
-- Semantic CSS class generation instead of direct Tailwind
-- Corresponding CSS files with @apply directives
-- Better component organization (UI vs domain separation)
-
-**Documentation Generation**
-- Inline code documentation
-- README updates for new resources
-- Generator options for election-specific scaffolds (mock, historical, binding)
-
-This generator system will accelerate development while ensuring all generated code follows project conventions and produces emotionally satisfying, production-ready code.
 
 ## Governance & Policy Models
 
@@ -253,20 +232,43 @@ Represents different policy domains that governing bodies address:
 - `category` - High-level grouping (infrastructure, social, economic, environmental)
 - `scope` - Geographic or functional scope this area typically covers
 
-### Policy Model
+### Topic
+
+This is a general pattern of interaction, like "taxes" or "education". It can be a topic of discussion, a policy area, or a general issue.
+
+- `title` - Topic title (e.g., "Affordable Housing Initiative")
+- `description` - Detailed description of the topic
+
+### Issue Model
+
+This is a particular unsolved problem, like "affordable housing" or "poor education". It is a specific instance of a topic.
+
+- `title` - Issue title (e.g., "Affordable Housing Initiative")
+- `description` - Detailed description of the issue
+- `topic_id` - References Topic
+
+### Approach
+
+This is a specific solution to an issue, like "affordable housing initiative" or "poor education initiative". It is a specific instance of an issue.
+
+- `title` - Approach title (e.g., "Affordable Housing Initiative")
+- `description` - Detailed description of the approach
+- `issue_id` - References Issue
+
+### Policy
 
 Join table connecting GoverningBodies to AreasOfConcern, representing actual policies:
 
 - `governing_body_id` - References GoverningBody
 - `area_of_concern_id` - References AreaOfConcern
+- `approach_id` - References Approach
 - `title` - Policy title/name
 - `description` - Policy summary and intent
 - `status` - Policy status (proposed, active, repealed, under_review)
 - `enacted_date` - When policy was enacted
 - `expiration_date` - When policy expires (if applicable)
-- `priority_level` - Importance level (high, medium, low)
 
-### OfficialCode Model
+### OfficialCode
 
 Represents specific legal implementations and enforcement mechanisms:
 
@@ -280,48 +282,13 @@ Represents specific legal implementations and enforcement mechanisms:
 - `effective_date` - When this code takes effect
 - `status` - Code status (active, repealed, superseded)
 
-### Issue Model
-
-Represents abstract political issues or topics that candidates address:
-
-- `title` - Issue title (e.g., "Affordable Housing Initiative")
-- `description` - Detailed description of the issue
-- `category` - Issue category aligning with AreaOfConcern categories
-- `status` - Issue status (active, resolved, archived)
-- `urgency_level` - How pressing this issue is (urgent, important, routine)
-- `created_at` - When this issue was first identified
-
-### Stance Model
+### Stance
 
 Links candidacies to issues, showing candidate positions:
 
 - `candidacy_id` - References Candidacy
 - `issue_id` - References Issue
-- `position` - Candidate's stance (strongly_support, support, neutral, oppose, strongly_oppose)
+- `approach_id` - References Approach
 - `explanation` - Detailed explanation of their position
 - `priority_level` - How important this issue is to the candidate (high, medium, low)
 - `evidence_links` - References to supporting documentation or voting records
-
-## Key Governance System Relationships
-
-1. **Jurisdiction → GoverningBody**: Each jurisdiction can have multiple governing bodies
-2. **GoverningBody → GovernanceType**: Each body has one governance type, types can be shared
-3. **GoverningBody ↔ AreaOfConcern**: Many-to-many through Policy
-4. **Policy → OfficialCode**: One-to-many (policies can have multiple implementing codes)
-5. **Issue**: Standalone abstract topics (not directly tied to specific policies)
-6. **Candidacy → Issue**: Many-to-many through Stance (jurisdiction context via candidacy→election→office→jurisdiction)
-
-## Benefits for Voter Education
-
-This governance structure helps voters by:
-- **Understanding Scope**: Clear connection between candidates and the actual governing bodies they'd join
-- **Policy Context**: Access to real policies and their enforcement mechanisms
-- **Informed Decisions**: Candidates' stances on issues relevant to their jurisdiction
-- **Accountability**: Track how candidate promises relate to actual governance responsibilities
-
-## Extensibility
-This foundation allows for future features like:
-- Voter registration and authentication
-- Ballot creation and voting interfaces
-- Results calculation and visualization
-- Polling and preference expression tools

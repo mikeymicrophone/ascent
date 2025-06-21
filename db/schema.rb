@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_191658) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_224200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "approaches", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "issue_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["issue_id"], name: "index_approaches_on_issue_id"
+  end
 
   create_table "area_of_concerns", force: :cascade do |t|
     t.string "name"
@@ -87,6 +96,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_191658) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["governance_type_id"], name: "index_governing_bodies_on_governance_type_id"
+  end
+
+  create_table "issues", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "topic_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_issues_on_topic_id"
   end
 
   create_table "offices", force: :cascade do |t|
@@ -165,6 +183,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_191658) do
     t.index ["country_id"], name: "index_states_on_country_id"
   end
 
+  create_table "topics", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "voter_election_baseline_archives", force: :cascade do |t|
     t.bigint "voter_id", null: false
     t.bigint "election_id", null: false
@@ -225,12 +250,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_191658) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "approaches", "issues"
   add_foreign_key "candidacies", "elections"
   add_foreign_key "candidacies", "people"
   add_foreign_key "cities", "states"
   add_foreign_key "elections", "offices"
   add_foreign_key "elections", "years"
   add_foreign_key "governing_bodies", "governance_types"
+  add_foreign_key "issues", "topics"
   add_foreign_key "offices", "positions"
   add_foreign_key "rating_archives", "candidacies"
   add_foreign_key "rating_archives", "voters"

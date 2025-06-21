@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :approaches
+  resources :issues
+  resources :topics
   resources :governing_bodies
   resources :area_of_concerns
   resources :governance_types
