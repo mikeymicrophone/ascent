@@ -30,7 +30,7 @@ class Views::Offices::OfficePartial < Views::ApplicationView
   private
 
   def render_current_office_holder
-    current_winner = get_current_office_holder
+    current_winner = @office.current_office_holder
     return unless current_winner
     
     div(class: "current-holder-section") do
@@ -175,16 +175,4 @@ class Views::Offices::OfficePartial < Views::ApplicationView
     end
   end
 
-  def get_current_office_holder
-    # Find the most recent completed election and return the winner
-    # Using the completed scope from Election model
-    most_recent_completed = @office.elections
-                                  .completed
-                                  .order(election_date: :desc)
-                                  .first
-    
-    return nil unless most_recent_completed
-    
-    most_recent_completed.approval_winner
-  end
 end

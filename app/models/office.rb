@@ -12,15 +12,12 @@ class Office < ApplicationRecord
   def name
     position.title + " - " + jurisdiction.name
   end
+
+  def recent_election
+    elections.completed.recent.first
+  end
   
   def current_office_holder
-    most_recent_completed = elections
-                              .completed
-                              .order(election_date: :desc)
-                              .first
-    
-    return nil unless most_recent_completed
-    
-    most_recent_completed.approval_winner
+    recent_election&.approval_winner
   end
 end
