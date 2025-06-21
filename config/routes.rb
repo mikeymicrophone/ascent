@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :governing_bodies
   resources :area_of_concerns
   resources :governance_types
   resources :voter_election_baselines

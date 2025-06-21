@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_183655) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_191658) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -73,6 +73,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_183655) do
     t.string "decision_making_process"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "governing_bodies", force: :cascade do |t|
+    t.string "name"
+    t.string "jurisdiction_type"
+    t.integer "jurisdiction_id"
+    t.bigint "governance_type_id", null: false
+    t.text "description"
+    t.string "meeting_schedule"
+    t.boolean "is_active"
+    t.date "established_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["governance_type_id"], name: "index_governing_bodies_on_governance_type_id"
   end
 
   create_table "offices", force: :cascade do |t|
@@ -216,6 +230,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_183655) do
   add_foreign_key "cities", "states"
   add_foreign_key "elections", "offices"
   add_foreign_key "elections", "years"
+  add_foreign_key "governing_bodies", "governance_types"
   add_foreign_key "offices", "positions"
   add_foreign_key "rating_archives", "candidacies"
   add_foreign_key "rating_archives", "voters"

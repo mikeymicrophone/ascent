@@ -34,6 +34,7 @@ class Views::Components::Navigation < Views::ApplicationView
               link_to "Positions", positions_path, class: nav_link_class(positions_path)
               link_to "Governance Types", governance_types_path, class: nav_link_class(governance_types_path)
               link_to "Areas of Concern", area_of_concerns_path, class: nav_link_class(area_of_concerns_path)
+              link_to "Governing Bodies", governing_bodies_path, class: nav_link_class(governing_bodies_path)
               link_to "Offices", offices_path, class: nav_link_class(offices_path)
             end
           end
