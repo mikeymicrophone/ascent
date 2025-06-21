@@ -2,12 +2,12 @@ class CitiesController < ApplicationController
   before_action :set_city, only: %i[ show edit update destroy ]
 
   def index
-    cities_scope = City.includes(:state, offices: :elections)
+    cities_scope = City.with_office_data
     
     # Filter by state if provided
     if params[:state_id].present?
       @state = State.find(params[:state_id])
-      cities_scope = cities_scope.where(state: @state)
+      cities_scope = cities_scope.in_state(@state)
     end
     
     @pagy, @cities = pagy(cities_scope)

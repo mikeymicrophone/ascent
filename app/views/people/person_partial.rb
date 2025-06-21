@@ -52,11 +52,9 @@ class Views::People::PersonPartial < Views::ApplicationView
 
   def render_candidacies_preview
     div(class: "candidacies-preview") do
-      # Show first 5 candidacies, sorted by election date (most recent first)
-      candidacies_to_show = @person.candidacies
-        .joins(:election)
-        .order('elections.election_date DESC')
-        .limit(5)
+      # Use the with_recent_candidacies scope which already includes the ordering
+      person_with_candidacies = Person.with_recent_candidacies.find(@person.id)
+      candidacies_to_show = person_with_candidacies.candidacies.limit(5)
       
       candidacies_to_show.each do |candidacy|
         div(class: "candidacy-preview-item") do

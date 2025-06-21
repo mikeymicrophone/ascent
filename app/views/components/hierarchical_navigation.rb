@@ -131,8 +131,8 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
       
       if children.count > 5
         div(class: "children-view-all") do
-          link_to "View all #{children.count} #{child_type_name(@current_object).pluralize.downcase}", 
-                  [@current_object, child_route_name(@current_object)], 
+          link_to "View all #{pluralize(children.count, child_type_name(@current_object).downcase)}", 
+                  get_children_path(@current_object), 
                   class: "link view-all"
         end
       end
@@ -163,14 +163,14 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     when Country
       {
         voters: item.voters.count,
-        active_elections: item.states.joins(cities: { offices: :elections }).merge(Election.active).count,
-        total_offices: item.offices.count + item.states.joins(:offices).count + item.states.joins(cities: :offices).count
+        active_elections: item.active_elections_count,
+        total_offices: item.total_offices_count
       }
     when State
       {
         voters: item.voters.count,
-        active_elections: item.cities.joins(offices: :elections).merge(Election.active).count,
-        total_offices: item.offices.count + item.cities.joins(:offices).count
+        active_elections: item.active_elections_count,
+        total_offices: item.total_offices_count
       }
     when City
       {
@@ -230,9 +230,11 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
   def get_children(item)
     case item
     when Country
-      item.states.order(:name)
+      # Use with_election_data scope for better performance when showing stats
+      item.states.with_election_data.order(:name)
     when State
-      item.cities.order(:name)
+      # Use with_office_data scope for better performance when showing stats
+      item.cities.with_office_data.order(:name)
     else
       []
     end
@@ -270,6 +272,20 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
       :cities
     else
       :locations
+    end
+  end
+
+  def get_children_path(item)
+    case item.class.name
+    when 'Country'
+      # Use nested route for states under country
+      [@current_object, :states]
+    when 'State'
+      # Use flat route for cities (no nested route exists)
+      cities_path
+    else
+      # Fallback to a safe path
+      root_path
     end
   end
 

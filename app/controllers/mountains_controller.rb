@@ -4,7 +4,7 @@ class MountainsController < ApplicationController
   before_action :set_baseline, only: [:show, :edit, :update]
 
   def index
-    @elections = Election.active.includes(:candidacies)
+    @elections = Election.active.with_candidacy_details
     render Views::Mountains::IndexView.new(elections: @elections)
   end
 
@@ -88,7 +88,7 @@ class MountainsController < ApplicationController
   end
 
   def build_mountain_data
-    @election.candidacies.active.includes(:person, :ratings).map do |candidacy|
+    @election.candidacies.active.with_rating_details.map do |candidacy|
       rating = candidacy.ratings.find_by(voter: @voter)
       
       {

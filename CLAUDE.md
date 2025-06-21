@@ -15,10 +15,13 @@ See `doc/llm-assistant/README.md` for complete navigation guide.
 
 ## Common Development Commands
 
+### Primary Development Cycle
+- Your primary tools include BrowserMCP and the development log
+- You can use the Rails console but you also have read access to Postgres
+
+
 ### Development Server
-- `bin/dev` - Start development server with Foreman (runs Rails server + Tailwind CSS watcher)
-- `bin/rails server` - Start Rails server only
-- `bin/rails tailwindcss:watch` - Start Tailwind CSS watcher only
+- `bin/rails restart` - Restart Rails server (after adding gems, configs, lib - normal code changes do not require restart)
 
 ### Testing
 - `bundle exec rspec` - Run all tests
@@ -26,17 +29,8 @@ See `doc/llm-assistant/README.md` for complete navigation guide.
 - `bundle exec rspec spec/path/to/file_spec.rb:line_number` - Run specific test
 
 ### Database
-- `bin/rails db:create` - Create databases
 - `bin/rails db:migrate` - Run migrations
 - `bin/rails db:seed` - Seed database
-- `bin/rails db:reset` - Drop, create, migrate, and seed
-
-### Code Quality
-- `bin/rubocop` - Run Ruby linter (uses Omakase styling)
-- `bin/brakeman` - Run security scanner
-
-### Asset Management
-- `bin/rails assets:precompile` - Precompile assets for production
 
 ## Architecture Overview
 
@@ -62,8 +56,7 @@ app/views/
 
 Key Phlex patterns:
 - Use initializers to set instance variables from arguments
-- Objects can be inferred from local variables or methods
-- Template named arguments should match variable names
+- yield to render child components
 
 ### CSS Architecture
 ⚠️ **CRITICAL: CUSTOM CSS APPROACH** ⚠️
@@ -93,7 +86,6 @@ Quick summary:
 ### Controller Patterns
 - Use service objects for complex business logic
 - Define most methods on relevant models
-- Use local variables instead of instance variables (Phlex doesn't require @variables)
 
 ### JavaScript/Stimulus Conventions
 - Encapsulate element condition checks in descriptively-named methods
@@ -103,11 +95,12 @@ Quick summary:
 
 ## Code Style
 
-### Ruby Style (RuboCop Omakase)
+### Ruby Style
 - Minimize parentheses usage as indicator of line complexity
 - Call methods directly on results rather than storing in variables for single use
 - Create separate methods for complex logic (if/case statements)
 - Don't preemptively check for nil or data structure types
+- Comments are only needed for logic where the method names are not self-explanatory
 
 ### View Helpers
 - Make heavy use of view helpers to encapsulate markup structure
@@ -120,15 +113,8 @@ Quick summary:
 
 ## Important Documentation
 
-**Always reference the comprehensive coding conventions in `doc/llm-assistant/conventions/`:**
-- `ruby-rails.md` - Testing, controller, model, view helper, and Phlex conventions
-- `javascript-stimulus.md` - Stimulus controller patterns and logging
-- `css-tailwind.md` - Four-layer CSS architecture and semantic classname approach
-- `database-postgresql.md` - Database conventions and patterns
-
 Additional context available in `doc/llm-assistant/`:
 - `tech-stack.md` - Core technology decisions and anti-patterns
-- `patterns/` - Service objects, form objects, decorators
 - `project-context/` - Architecture, deployment, testing context
 - `approval-voting-prd.md` - Product requirements for the voting features
 

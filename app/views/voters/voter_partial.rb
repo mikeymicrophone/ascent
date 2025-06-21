@@ -99,16 +99,19 @@ class Views::Voters::VoterPartial < Views::ApplicationView
   end
 
   def get_participated_elections
+    # Use the with_voting_activity scope to pre-load all necessary associations
+    voter_with_activity = Voter.with_voting_activity.find(@voter.id)
+    
     # Get elections where voter has set baselines or made ratings
-    baseline_elections = @voter.voter_election_baselines.includes(:election).map(&:election)
-    rating_elections = @voter.ratings.includes(candidacy: :election).map { |r| r.candidacy.election }.uniq
+    baseline_elections = voter_with_activity.voter_election_baselines.map(&:election)
+    rating_elections = voter_with_activity.ratings.map { |r| r.candidacy.election }.uniq
     
     all_elections = (baseline_elections + rating_elections).uniq
     
     # Build election data with associated voting info
     all_elections.map do |election|
-      baseline = @voter.voter_election_baselines.find { |b| b.election_id == election.id }
-      ratings_count = @voter.ratings.joins(:candidacy).where(candidacies: { election_id: election.id }).count
+      baseline = voter_with_activity.voter_election_baselines.find { |b| b.election_id == election.id }
+      ratings_count = voter_with_activity.ratings.count { |r| r.candidacy.election_id == election.id }
       
       {
         election: election,

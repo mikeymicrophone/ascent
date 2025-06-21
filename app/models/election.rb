@@ -17,6 +17,10 @@ class Election < ApplicationRecord
   scope :historical, -> { where(is_historical: true) }
   scope :real, -> { where(is_mock: false, is_historical: false) }
   
+  scope :with_full_details, -> { includes(:office, :candidates, :candidacies) }
+  scope :with_candidacy_details, -> { includes(candidacies: [:person, :ratings]) }
+  scope :with_office_context, -> { includes(office: :position) }
+  
   def name
     "#{office.name} - #{year.year}"
   end

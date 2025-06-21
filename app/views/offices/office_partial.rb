@@ -59,13 +59,14 @@ class Views::Offices::OfficePartial < Views::ApplicationView
       count: @office.elections.count
     ) do
       div(class: "election-timeline") do
-        sorted_elections = @office.elections.sort_by(&:election_date).reverse
+        # Use database ordering instead of Ruby sorting for better performance
+        recent_elections = @office.elections.order(election_date: :desc).limit(3)
         
-        sorted_elections.take(3).each do |election|
+        recent_elections.each do |election|
           render_election_details(election)
         end
         
-        if sorted_elections.count > 3
+        if @office.elections.count > 3
           div(class: "elections-view-all") do
             link_to "View all #{@office.elections.count} elections", [@office, :elections], class: "link view-all"
           end
@@ -176,6 +177,7 @@ class Views::Offices::OfficePartial < Views::ApplicationView
 
   def get_current_office_holder
     # Find the most recent completed election and return the winner
+    # Using the completed scope from Election model
     most_recent_completed = @office.elections
                                   .completed
                                   .order(election_date: :desc)

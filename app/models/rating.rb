@@ -11,6 +11,12 @@ class Rating < ApplicationRecord
   scope :above_baseline, ->(baseline) { where("rating >= ?", baseline) }
   scope :below_baseline, ->(baseline) { where("rating < ?", baseline) }
   scope :for_election, ->(election) { joins(:candidacy).where(candidacies: { election: election }) }
+  scope :for_voter_in_election, ->(voter, election) { 
+    joins(:candidacy).where(voter: voter, candidacies: { election: election })
+  }
+  scope :with_election_context, -> { 
+    joins(candidacy: [election: [office: :position]])
+  }
   
   def approved?(baseline = nil)
     baseline ||= voter_baseline_for_election

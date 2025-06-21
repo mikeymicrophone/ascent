@@ -13,6 +13,9 @@ class Candidacy < ApplicationRecord
   scope :withdrawn, -> { where(status: 'withdrawn') }
   scope :disqualified, -> { where(status: 'disqualified') }
   
+  scope :with_rating_details, -> { includes(:person, :ratings) }
+  scope :with_election_context, -> { includes(election: [office: :position]) }
+  
   def name
     "#{person.full_name} for #{election.office.position.title}"
   end
