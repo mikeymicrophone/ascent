@@ -73,6 +73,19 @@
   @apply font-normal;
 }
 
+/* Voting activity preview typography */
+.voting-office {
+  @apply font-normal;
+}
+
+.voting-participation {
+  @apply font-medium;
+}
+
+.voting-baseline {
+  @apply font-normal;
+}
+
 /* Button typography */
 .primary {
   @apply font-semibold;

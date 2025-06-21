@@ -52,4 +52,12 @@
   --status-upcoming-text: theme('colors.blue.800');
   --status-completed-bg: theme('colors.gray.100');
   --status-completed-text: theme('colors.gray.600');
+  --status-participated-bg: theme('colors.purple.100');
+  --status-participated-text: theme('colors.purple.800');
+  --status-partial-bg: theme('colors.yellow.100');
+  --status-partial-text: theme('colors.yellow.800');
+  --status-baseline-only-bg: theme('colors.orange.100');
+  --status-baseline-only-text: theme('colors.orange.800');
+  --status-registered-bg: theme('colors.cyan.100');
+  --status-registered-text: theme('colors.cyan.800');
 }

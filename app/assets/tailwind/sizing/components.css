@@ -190,6 +190,40 @@
   border-color: var(--expandable-border);
 }
 
+/* Voting activity preview */
+.voting-activity-preview {
+  @apply space-y-3;
+}
+
+.voting-activity-item {
+  @apply py-2;
+}
+
+.voting-activity-header {
+  @apply gap-1 mb-1;
+}
+
+.voting-office {
+  @apply text-sm;
+}
+
+.voting-activity-details {
+  @apply gap-2;
+}
+
+.voting-participation {
+  @apply text-sm;
+}
+
+.voting-baseline {
+  @apply text-sm;
+}
+
+.voting-activity-view-all {
+  @apply mt-3 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
 /* Button spacing */
 .primary {
   @apply px-6 py-3 rounded-md;

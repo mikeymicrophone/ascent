@@ -99,6 +99,26 @@ select.error {
   color: var(--status-completed-text);
 }
 
+.status-participated {
+  background-color: var(--status-participated-bg);
+  color: var(--status-participated-text);
+}
+
+.status-partial {
+  background-color: var(--status-partial-bg);
+  color: var(--status-partial-text);
+}
+
+.status-baseline-only {
+  background-color: var(--status-baseline-only-bg);
+  color: var(--status-baseline-only-text);
+}
+
+.status-registered {
+  background-color: var(--status-registered-bg);
+  color: var(--status-registered-text);
+}
+
 /* Candidates preview colors */
 .candidate-party {
   color: var(--text-muted);
@@ -131,13 +151,27 @@ select.error {
   color: var(--text-muted);
 }
 
+/* Voting activity preview colors */
+.voting-office {
+  color: var(--text-muted);
+}
+
+.voting-participation {
+  color: var(--text-muted);
+}
+
+.voting-baseline {
+  color: var(--text-muted);
+}
+
 /* Card styles */
 .scaffold,
 .country-partial,
 .state-partial,
 .city-partial,
 .election-partial,
-.person-partial {
+.person-partial,
+.voter-partial {
   background-color: var(--card-bg);
   border-color: var(--card-border);
   @apply border shadow-sm;

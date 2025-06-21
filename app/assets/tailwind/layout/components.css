@@ -172,6 +172,39 @@
   @apply block;
 }
 
+/* Voting activity preview */
+.voting-activity-preview {
+  @apply block;
+}
+
+.voting-activity-item {
+  @apply block;
+}
+
+.voting-activity-header {
+  @apply flex items-center;
+}
+
+.voting-office {
+  @apply inline;
+}
+
+.voting-activity-details {
+  @apply flex items-center;
+}
+
+.voting-participation {
+  @apply inline;
+}
+
+.voting-baseline {
+  @apply inline;
+}
+
+.voting-activity-view-all {
+  @apply block;
+}
+
 /* Button layout */
 .primary,
 .secondary,
