@@ -220,3 +220,72 @@ textarea,
 select {
   @apply block w-full;
 }
+
+/* Office holder layout */
+.current-holder-section {
+  @apply block;
+}
+
+.current-holder-info {
+  @apply flex items-center;
+}
+
+.current-holder-details {
+  @apply inline;
+}
+
+/* Election timeline layout */
+.election-timeline {
+  @apply block;
+}
+
+.election-timeline-item {
+  @apply block;
+}
+
+.election-header {
+  @apply block;
+}
+
+.election-main-info {
+  @apply block;
+}
+
+.election-meta {
+  @apply flex items-center;
+}
+
+.election-schedule,
+.election-results {
+  @apply block;
+}
+
+.results-list {
+  @apply block;
+}
+
+.result-item {
+  @apply flex items-center;
+}
+
+.more-results {
+  @apply block;
+}
+
+/* Voter stats layout */
+.turnout-stats {
+  @apply block;
+}
+
+.stats-grid {
+  @apply grid;
+}
+
+.stat-item {
+  @apply block;
+}
+
+.stat-label,
+.stat-value {
+  @apply block;
+}

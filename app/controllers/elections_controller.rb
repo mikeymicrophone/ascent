@@ -3,6 +3,7 @@ class ElectionsController < ApplicationController
 
   def index
     elections_scope = Election.includes(:office, :candidates, :candidacies)
+    elections_scope = elections_scope.where(office_id: params[:office_id]) if params[:office_id]
     @pagy, @elections = pagy(elections_scope)
     render Views::Elections::IndexView.new(elections: @elections, pagy: @pagy, notice: notice)
   end

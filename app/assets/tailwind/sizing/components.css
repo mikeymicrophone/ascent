@@ -251,3 +251,73 @@ textarea:focus,
 select:focus {
   @apply ring-2 ring-offset-1;
 }
+
+/* Office holder spacing */
+.current-holder-section {
+  @apply mt-4 p-4 rounded-md;
+}
+
+.current-holder-info {
+  @apply gap-1;
+}
+
+.current-holder-details {
+  @apply text-sm;
+}
+
+/* Election timeline spacing */
+.election-timeline {
+  @apply space-y-4;
+}
+
+.election-timeline-item {
+  @apply border-l-2 pl-4 pb-4;
+}
+
+.election-header {
+  @apply mb-2;
+}
+
+.election-meta {
+  @apply gap-1 text-sm;
+}
+
+.election-schedule,
+.election-results {
+  @apply mt-2;
+}
+
+.results-list {
+  @apply space-y-1 mt-2;
+}
+
+.result-item {
+  @apply gap-1;
+}
+
+.more-results {
+  @apply mt-2 pt-2 border-t;
+  border-color: var(--expandable-border);
+}
+
+/* Voter stats spacing */
+.turnout-stats {
+  @apply mt-3 p-3 rounded-md;
+  background-color: var(--expandable-header-bg);
+}
+
+.stats-grid {
+  @apply grid grid-cols-3 gap-3 mt-2;
+}
+
+.stat-item {
+  @apply text-center;
+}
+
+.stat-label {
+  @apply text-xs;
+}
+
+.stat-value {
+  @apply text-sm;
+}

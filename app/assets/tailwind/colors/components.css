@@ -164,6 +164,40 @@ select.error {
   color: var(--text-muted);
 }
 
+/* Office holder colors */
+.current-holder-section {
+  background-color: var(--current-holder-bg);
+  border-color: var(--current-holder-border);
+}
+
+.current-holder-party {
+  color: var(--current-holder-party);
+}
+
+/* Election timeline colors */
+.election-timeline-item {
+  border-color: var(--election-timeline-border);
+}
+
+.election-meta,
+.election-date,
+.schedule-label {
+  color: var(--election-meta);
+}
+
+.winner-indicator {
+  color: var(--winner-indicator);
+}
+
+/* Voter stats colors */
+.stat-label {
+  color: var(--stat-label);
+}
+
+.stat-value {
+  color: var(--stat-value);
+}
+
 /* Card styles */
 .scaffold,
 .country-partial,
@@ -171,7 +205,8 @@ select.error {
 .city-partial,
 .election-partial,
 .person-partial,
-.voter-partial {
+.voter-partial,
+.office-partial {
   background-color: var(--card-bg);
   border-color: var(--card-border);
   @apply border shadow-sm;

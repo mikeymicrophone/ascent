@@ -95,3 +95,55 @@
 .danger {
   @apply font-medium;
 }
+
+/* Office holder typography */
+.current-holder-name {
+  @apply font-semibold;
+}
+
+.current-holder-details,
+.current-holder-party {
+  @apply font-normal;
+}
+
+/* Election timeline typography */
+.election-name {
+  @apply font-medium;
+}
+
+.election-meta,
+.election-date,
+.schedule-label {
+  @apply font-normal;
+}
+
+.election-today {
+  @apply font-semibold;
+}
+
+.days-until {
+  @apply font-normal;
+}
+
+/* Election results typography */
+.result-rank {
+  @apply font-semibold;
+}
+
+.candidate-name {
+  @apply font-medium;
+}
+
+.candidate-party,
+.vote-count {
+  @apply font-normal;
+}
+
+/* Voter stats typography */
+.stat-label {
+  @apply font-medium;
+}
+
+.stat-value {
+  @apply font-semibold;
+}

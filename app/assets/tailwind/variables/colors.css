@@ -60,4 +60,18 @@
   --status-baseline-only-text: theme('colors.orange.800');
   --status-registered-bg: theme('colors.cyan.100');
   --status-registered-text: theme('colors.cyan.800');
+  
+  /* Office holder colors */
+  --current-holder-bg: theme('colors.blue.50');
+  --current-holder-border: theme('colors.blue.200');
+  --current-holder-party: theme('colors.gray.600');
+  
+  /* Election timeline colors */
+  --election-timeline-border: theme('colors.gray.200');
+  --election-meta: theme('colors.gray.500');
+  --winner-indicator: theme('colors.yellow.500');
+  
+  /* Voter stats colors */
+  --stat-label: theme('colors.gray.600');
+  --stat-value: theme('colors.gray.900');
 }

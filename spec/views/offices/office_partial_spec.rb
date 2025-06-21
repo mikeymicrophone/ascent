@@ -104,9 +104,9 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
         expect(rendered).to include('class="expandable-header"')
       end
 
-      it 'includes item preview for elections' do
-        # The ItemPreview component should be present
-        expect(rendered).to include('class="elections-preview"')
+      it 'includes election timeline for elections' do
+        # The election timeline should be present
+        expect(rendered).to include('class="election-timeline"')
       end
 
       context 'when office has many elections' do
@@ -156,8 +156,8 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
       expect(rendered_with_elections).to include('data-action="click->expandable-section#toggle"')
     end
 
-    it 'integrates with ItemPreview component' do
-      expect(rendered_with_elections).to include('class="elections-preview"')
+    it 'integrates with election timeline component' do
+      expect(rendered_with_elections).to include('class="election-timeline"')
     end
   end
 
@@ -176,6 +176,86 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
       expect(rendered).to include("Jurisdiction:")
       expect(rendered).to include("Is active:")
       expect(rendered).to include("Notes:")
+    end
+  end
+
+  describe 'current office holder' do
+    context 'when office has completed elections' do
+      let(:completed_office) { create(:office, position: position, jurisdiction: city) }
+      let!(:completed_election) { create(:election, office: completed_office, status: 'completed', election_date: 1.year.ago) }
+      let!(:candidacy) { create(:candidacy, election: completed_election) }
+      let!(:voter_baseline) { create(:voter_election_baseline, election: completed_election, baseline: 5) }
+      let!(:rating) { create(:rating, candidacy: candidacy, voter: voter_baseline.voter, rating: 7) }
+      let(:completed_partial) { described_class.new(office: completed_office) }
+      let(:completed_rendered) { render_component(completed_partial) }
+      
+      before do
+        completed_office.reload
+      end
+
+      it 'renders current office holder section' do
+        expect(completed_rendered).to include('Current Office Holder')
+        expect(completed_rendered).to include('class="current-holder-section"')
+      end
+
+      it 'shows the winner from most recent completed election' do
+        expect(completed_rendered).to include(candidacy.person.name)
+        expect(completed_rendered).to include('current-holder-name')
+      end
+    end
+
+    context 'when office has no completed elections' do
+      it 'does not render current office holder section' do
+        expect(rendered).not_to include('Current Office Holder')
+        expect(rendered).not_to include('class="current-holder-section"')
+      end
+    end
+  end
+
+  describe 'election timeline details' do
+    context 'with completed elections' do
+      let!(:completed_election) { create(:election, office: office, status: 'completed', election_date: 1.year.ago) }
+      let!(:candidacy1) { create(:candidacy, election: completed_election) }
+      let!(:candidacy2) { create(:candidacy, election: completed_election) }
+      let!(:voter_baseline) { create(:voter_election_baseline, election: completed_election, baseline: 5) }
+      let!(:rating1) { create(:rating, candidacy: candidacy1, voter: voter_baseline.voter, rating: 8) }
+      let!(:rating2) { create(:rating, candidacy: candidacy2, voter: voter_baseline.voter, rating: 3) }
+
+      before do
+        office.reload
+      end
+
+      it 'shows election results for completed elections' do
+        expect(rendered).to include('Results')
+        expect(rendered).to include('class="election-results"')
+        expect(rendered).to include(candidacy1.person.name)
+      end
+
+      it 'shows voter turnout statistics' do
+        expect(rendered).to include('Voter Participation')
+        expect(rendered).to include('class="turnout-stats"')
+        expect(rendered).to include('Registered Voters:')
+        expect(rendered).to include('Total Approvals:')
+      end
+
+      it 'includes winner indicator for top candidate' do
+        expect(rendered).to include('👑')
+        expect(rendered).to include('class="winner-indicator"')
+      end
+    end
+
+    context 'with upcoming elections' do
+      let!(:upcoming_election) { create(:election, office: office, status: 'upcoming', election_date: 1.month.from_now) }
+
+      before do
+        office.reload
+      end
+
+      it 'shows election schedule for upcoming elections' do
+        expect(rendered).to include('Scheduled:')
+        expect(rendered).to include('class="election-schedule"')
+        expect(rendered).to include('days away')
+      end
     end
   end
 
