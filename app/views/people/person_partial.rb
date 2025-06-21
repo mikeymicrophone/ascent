@@ -34,46 +34,44 @@ class Views::People::PersonPartial < Views::ApplicationView
       
       # Candidacy History expandable section
       if @person.candidacies.any?
-        render_expandable_candidacies
+        expandable_candidacies
       end
     end
   end
 
-  private
-
-  def render_expandable_candidacies
+  def expandable_candidacies(person = @person)
     Views::Components::ExpandableSection(
       title: "Elections",
-      count: @person.candidacies.count
+      count: person.candidacies.count
     ) do
-      render_candidacies_preview
+      candidacies_preview(person)
     end
   end
 
-  def render_candidacies_preview
+  def candidacies_preview(person = @person)
     div(class: "candidacies-preview") do
       # Use the with_recent_candidacies scope which already includes the ordering
-      person_with_candidacies = Person.with_recent_candidacies.find(@person.id)
+      person_with_candidacies = Person.with_recent_candidacies.find(person.id)
       candidacies_to_show = person_with_candidacies.candidacies.limit(5)
       
       candidacies_to_show.each do |candidacy|
         div(class: "candidacy-preview-item") do
-          render_candidacy_item(candidacy)
+          candidacy_item(candidacy)
         end
       end
       
       # Show "View All" link if there are more than 5 candidacies
-      if @person.candidacies.count > 5
+      if person.candidacies.count > 5
         div(class: "candidacies-view-all") do
-          link_to "View all #{@person.candidacies.count} elections", 
-                  candidacies_path(person_id: @person.id), 
+          link_to "View all #{person.candidacies.count} elections", 
+                  candidacies_path(person_id: person.id), 
                   class: "link view-all"
         end
       end
     end
   end
 
-  def render_candidacy_item(candidacy)
+  def candidacy_item(candidacy)
     election = candidacy.election
     office = election.office
     

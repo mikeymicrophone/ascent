@@ -24,31 +24,29 @@ class Views::Voters::VoterPartial < Views::ApplicationView
       
       # Voting Activity expandable section
       if @voter.ratings.any? || @voter.voter_election_baselines.any?
-        render_expandable_voting_activity
+        expandable_voting_activity
       end
     end
   end
 
-  private
-
-  def render_expandable_voting_activity
+  def expandable_voting_activity(voter = @voter)
     Views::Components::ExpandableSection(
       title: "Voting Activity",
-      count: voting_activity_count
+      count: voting_activity_count(voter)
     ) do
-      render_voting_activity_preview
+      voting_activity_preview(voter)
     end
   end
 
-  def render_voting_activity_preview
+  def voting_activity_preview(voter = @voter)
     div(class: "voting-activity-preview") do
       # Group activity by elections
-      participated_elections = get_participated_elections
+      participated_elections = participated_elections(voter)
       
       # Show first 5 elections, sorted by date (most recent first)
       participated_elections.first(5).each do |election_data|
         div(class: "voting-activity-item") do
-          render_voting_activity_item(election_data)
+          voting_activity_item(election_data)
         end
       end
       
@@ -56,14 +54,14 @@ class Views::Voters::VoterPartial < Views::ApplicationView
       if participated_elections.count > 5
         div(class: "voting-activity-view-all") do
           link_to "View all #{participated_elections.count} elections", 
-                  ratings_path(voter_id: @voter.id), 
+                  ratings_path(voter_id: voter.id), 
                   class: "link view-all"
         end
       end
     end
   end
 
-  def render_voting_activity_item(election_data)
+  def voting_activity_item(election_data)
     election = election_data[:election]
     baseline = election_data[:baseline]
     ratings_count = election_data[:ratings_count]
@@ -91,16 +89,14 @@ class Views::Voters::VoterPartial < Views::ApplicationView
     end
   end
 
-  private
-
-  def voting_activity_count
-    @voter.voter_election_baselines.count + 
-    @voter.ratings.joins(:candidacy).select('candidacies.election_id').distinct.count
+  def voting_activity_count(voter = @voter)
+    voter.voter_election_baselines.count + 
+    voter.ratings.joins(:candidacy).select('candidacies.election_id').distinct.count
   end
 
-  def get_participated_elections
+  def participated_elections(voter = @voter)
     # Use the with_voting_activity scope to pre-load all necessary associations
-    voter_with_activity = Voter.with_voting_activity.find(@voter.id)
+    voter_with_activity = Voter.with_voting_activity.find(voter.id)
     
     # Get elections where voter has set baselines or made ratings
     baseline_elections = voter_with_activity.voter_election_baselines.map(&:election)
@@ -120,6 +116,8 @@ class Views::Voters::VoterPartial < Views::ApplicationView
       }
     end.sort_by { |data| data[:election].election_date }.reverse
   end
+
+  private
 
   def determine_voting_status(election_data)
     election = election_data[:election]

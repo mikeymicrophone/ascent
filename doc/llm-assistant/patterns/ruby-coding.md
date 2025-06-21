@@ -73,3 +73,33 @@ class Office < ApplicationRecord
   end
 end
 ```
+
+#### Number 2: reusable view methods in Phlex components
+
+Don't do this:
+```ruby
+class Views::Offices::OfficePartial < Views::ApplicationView
+  private
+
+  def render_current_office_holder
+    current_winner = @office.current_office_holder
+    # ... markup logic
+  end
+end
+```
+
+Do this:
+```ruby
+class Views::Offices::OfficePartial < Views::ApplicationView
+  def current_office_holder(office = @office)
+    current_winner = office.current_office_holder
+    # ... markup logic
+  end
+end
+```
+
+This approach:
+- Removes unnecessary `render_` prefix
+- Makes methods public for reusability across components  
+- Uses default arguments (not named arguments) for easier calling
+- Converts instance variables to parameters for flexibility

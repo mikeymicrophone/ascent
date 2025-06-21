@@ -39,24 +39,22 @@ class Views::Elections::ElectionPartial < Views::ApplicationView
       
       # Candidates expandable section
       if @election.candidates.any?
-        render_expandable_candidates
+        expandable_candidates
       end
       
       # Results expandable section (only for completed elections)
       if @election.status == 'completed' && @election.candidates.any?
-        render_expandable_results
+        expandable_results
       end
     end
   end
 
-  private
-
-  def render_expandable_candidates
+  def expandable_candidates(election = @election)
     Views::Components::ExpandableSection(
       title: "Candidates",
-      count: @election.candidates.count
+      count: election.candidates.count
     ) do
-      Views::Components::ItemPreview(@election, :candidacies, 5) do |candidate|
+      Views::Components::ItemPreview(election, :candidacies, 5) do |candidate|
         link_to candidate.name, candidate, class: "link candidate"
         if candidate.respond_to?(:party_affiliation) && candidate.party_affiliation.present?
           span(class: "candidate-party") { " (#{candidate.party_affiliation})" }
@@ -65,18 +63,18 @@ class Views::Elections::ElectionPartial < Views::ApplicationView
     end
   end
 
-  def render_expandable_results
+  def expandable_results(election = @election)
     Views::Components::ExpandableSection(
       title: "Results",
-      count: "#{@election.candidates.count} candidates"
+      count: "#{election.candidates.count} candidates"
     ) do
-      render_results_preview
+      results_preview(election)
     end
   end
 
-  def render_results_preview
+  def results_preview(election = @election)
     div(class: "results-preview") do
-      results = @election.approval_results
+      results = election.approval_results
       if results.any?
         div(class: "results-summary") do
           span(class: "results-title") { "Approval Voting Results:" }
@@ -96,7 +94,7 @@ class Views::Elections::ElectionPartial < Views::ApplicationView
         
         # Show "View Full Results" link
         div(class: "results-view-all") do
-          link_to "View full results", @election, class: "link view-all"
+          link_to "View full results", election, class: "link view-all"
         end
       else
         div(class: "no-results") do
