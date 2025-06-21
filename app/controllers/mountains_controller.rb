@@ -103,8 +103,7 @@ class MountainsController < ApplicationController
 
   def calculate_position(rating)
     # Convert 0-500 rating to CSS position (inverted for top-origin)
-    max_height = 320 # pixels
-    (max_height - (rating.to_f / 500.0 * max_height)).to_i
+    Views::Mountains::YAxisLabels.new.calculate_label_position(rating)
   end
 
   def current_voter

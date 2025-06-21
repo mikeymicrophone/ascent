@@ -10,15 +10,13 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
 
   def view_template(&)
     nav(class: "hierarchical-navigation") do
-      render_breadcrumb_chain
+      breadcrumb_chain
       
       if @expandable && has_children?
-        render_drill_down_section
+        drill_down_section
       end
     end
   end
-
-  private
 
   def build_hierarchy_chain
     chain = []
@@ -44,10 +42,10 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     chain
   end
 
-  def render_breadcrumb_chain
+  def breadcrumb_chain
     div(class: "breadcrumb-chain") do
       @hierarchy_chain.each_with_index do |item, index|
-        render_breadcrumb_item(item, index)
+        breadcrumb_item(item, index)
         
         # Add separator unless it's the last item
         unless index == @hierarchy_chain.length - 1
@@ -57,25 +55,22 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     end
   end
 
-  def render_breadcrumb_item(item, index)
-    is_current = item == @current_object
-    is_clickable = !is_current
-    
-    span(class: "breadcrumb-item #{'current' if is_current}") do
-      if is_clickable
+  def breadcrumb_item(item, index)
+    span(class: "breadcrumb-item #{'current' if item == @current_object}") do
+      if item != @current_object
         link_to item.name, item, class: "breadcrumb-link"
       else
         span(class: "breadcrumb-current") { item.name }
       end
       
       if @show_stats
-        render_quick_stats(item)
+        quick_stats(item)
       end
     end
   end
 
-  def render_quick_stats(item)
-    stats = calculate_stats(item)
+  def quick_stats(item)
+    stats = electorate_stats_for(item)
     
     div(class: "quick-stats") do
       div(class: "stats-row") do
@@ -103,19 +98,19 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     end
   end
 
-  def render_drill_down_section
+  def drill_down_section
     Views::Components::ExpandableSection(
       title: "#{geographic_level_name(@current_object)} Overview",
       count: children_count
     ) do
       div(class: "drill-down-content") do
-        render_children_preview
-        render_geographic_summary
+        children_preview
+        geographic_summary
       end
     end
   end
 
-  def render_children_preview
+  def children_preview
     children = get_children(@current_object)
     return unless children.any?
     
@@ -125,7 +120,7 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
       children.take(5).each do |child|
         div(class: "child-item") do
           link_to child.name, child, class: "link child-name"
-          render_quick_stats(child)
+          quick_stats(child)
         end
       end
       
@@ -139,14 +134,12 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     end
   end
 
-  def render_geographic_summary
+  def geographic_summary
     div(class: "geographic-summary") do
       h5 { "Geographic Summary" }
       
-      summary_stats = calculate_comprehensive_stats(@current_object)
-      
       div(class: "summary-grid") do
-        summary_stats.each do |stat_key, stat_value|
+        calculate_comprehensive_stats(@current_object).each do |stat_key, stat_value|
           next if stat_value.zero?
           
           div(class: "summary-stat") do
@@ -158,7 +151,7 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     end
   end
 
-  def calculate_stats(item)
+  def electorate_stats_for(item)
     case item
     when Country
       {
@@ -184,22 +177,22 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
   end
 
   def calculate_comprehensive_stats(item)
-    base_stats = calculate_stats(item)
+    electorate_stats = electorate_stats_for(item)
     
     case item
     when Country
-      base_stats.merge({
+      electorate_stats.merge({
         total_states: item.states.count,
         total_cities: item.states.joins(:cities).count
       })
     when State
-      base_stats.merge({
+      electorate_stats.merge({
         total_cities: item.cities.count
       })
     when City
-      base_stats
+      electorate_stats
     else
-      base_stats
+      electorate_stats
     end
   end
 
