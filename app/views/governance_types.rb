@@ -1,5 +1,5 @@
 module Views
-    module GovernanceTypes
-        extend Phlex::Kit
-    end
+  module GovernanceTypes
+    extend Phlex::Kit
+  end
 end
