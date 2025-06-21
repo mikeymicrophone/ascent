@@ -76,38 +76,31 @@ class Views::Elections::ElectionPartial < Views::ApplicationView
 
   def render_results_preview
     div(class: "results-preview") do
-      # Try to get approval results if available
-      if @election.respond_to?(:approval_results)
-        results = @election.approval_results
-        if results.any?
-          div(class: "results-summary") do
-            span(class: "results-title") { "Approval Voting Results:" }
-          end
-          
-          # Show top 3 results
-          results.first(3).each_with_index do |result, index|
-            candidacy, vote_count = result
-            candidate = candidacy.person
-            div(class: "result-preview-item") do
-              span(class: "result-rank") { "#{index + 1}." }
-              whitespace
-              link_to candidate.name, candidate, class: "link candidate"
-              span(class: "result-votes") { " - #{vote_count} votes" }
-            end
-          end
-          
-          # Show "View Full Results" link
-          div(class: "results-view-all") do
-            link_to "View full results", @election, class: "link view-all"
-          end
-        else
-          div(class: "no-results") do
-            span { "No results available yet" }
+      results = @election.approval_results
+      if results.any?
+        div(class: "results-summary") do
+          span(class: "results-title") { "Approval Voting Results:" }
+        end
+        
+        # Show top 3 results
+        results.first(3).each_with_index do |result, index|
+          candidacy, vote_count = result
+          candidate = candidacy.person
+          div(class: "result-preview-item") do
+            span(class: "result-rank") { "#{index + 1}." }
+            whitespace
+            link_to candidate.name, candidate, class: "link candidate"
+            span(class: "result-votes") { " - #{vote_count} votes" }
           end
         end
+        
+        # Show "View Full Results" link
+        div(class: "results-view-all") do
+          link_to "View full results", @election, class: "link view-all"
+        end
       else
-        div(class: "results-placeholder") do
-          span { "Results calculation not available" }
+        div(class: "no-results") do
+          span { "No results available yet" }
         end
       end
     end
