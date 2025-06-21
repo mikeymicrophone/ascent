@@ -26,6 +26,10 @@ CitySeeder.seed
 puts "\n🏢 Seeding positions..."
 PositionSeeder.seed
 
+# Seed governance types (no dependencies)
+puts "\n⚖️ Seeding governance types..."
+GovernanceTypeSeeder.seed
+
 # Seed offices (depends on positions and jurisdictions)
 puts "\n🏛️ Seeding offices..."
 OfficeSeeder.seed
@@ -68,6 +72,7 @@ puts "   Countries: #{Country.count}"
 puts "   States: #{State.count}"
 puts "   Cities: #{City.count}"
 puts "   Positions: #{Position.count}"
+puts "   Governance Types: #{GovernanceType.count}"
 puts "   Offices: #{Office.count}"
 puts "   Years: #{Year.count}"
 puts "   Elections: #{Election.count}"

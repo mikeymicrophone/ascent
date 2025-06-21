@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_175809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -55,6 +55,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
     t.datetime "updated_at", null: false
     t.index ["office_id"], name: "index_elections_on_office_id"
     t.index ["year_id"], name: "index_elections_on_year_id"
+  end
+
+  create_table "governance_types", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "authority_level"
+    t.string "decision_making_process"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "offices", force: :cascade do |t|

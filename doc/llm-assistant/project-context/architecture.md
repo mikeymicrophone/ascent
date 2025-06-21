@@ -220,6 +220,105 @@ The project includes a custom `PhlexScaffoldGenerator` (`lib/generators/phlex_sc
 
 This generator system will accelerate development while ensuring all generated code follows project conventions and produces emotionally satisfying, production-ready code.
 
+## Governance & Policy Models
+
+### GoverningBody Model
+
+Represents actual governing entities within jurisdictions (e.g., City Council, State Legislature, School Board):
+
+- `name` - Name of the governing body (e.g., "San Francisco City Council")
+- `jurisdiction_type` - Polymorphic type (Country, State, City, Town, Organization)
+- `jurisdiction_id` - Polymorphic ID referencing the specific jurisdiction
+- `governance_type_id` - References GovernanceType
+- `description` - Purpose and scope of this governing body
+- `meeting_schedule` - How often they meet (weekly, monthly, quarterly)
+- `is_active` - Boolean indicating if currently active
+- `established_date` - When this body was established
+
+### GovernanceType Model
+
+Defines different types of governance structures:
+
+- `name` - Type name (e.g., "Municipal Legislature", "County Executive", "School Board")
+- `description` - Detailed explanation of this governance type
+- `authority_level` - Scope of authority (local, regional, state, federal)
+- `decision_making_process` - How decisions are made (majority vote, consensus, etc.)
+
+### AreaOfConcern Model
+
+Represents different policy domains that governing bodies address:
+
+- `name` - Area name (e.g., "Public Safety", "Education", "Transportation")
+- `description` - Detailed description of this policy area
+- `category` - High-level grouping (infrastructure, social, economic, environmental)
+- `scope` - Geographic or functional scope this area typically covers
+
+### Policy Model
+
+Join table connecting GoverningBodies to AreasOfConcern, representing actual policies:
+
+- `governing_body_id` - References GoverningBody
+- `area_of_concern_id` - References AreaOfConcern
+- `title` - Policy title/name
+- `description` - Policy summary and intent
+- `status` - Policy status (proposed, active, repealed, under_review)
+- `enacted_date` - When policy was enacted
+- `expiration_date` - When policy expires (if applicable)
+- `priority_level` - Importance level (high, medium, low)
+
+### OfficialCode Model
+
+Represents specific legal implementations and enforcement mechanisms:
+
+- `policy_id` - References Policy
+- `code_number` - Official numbering system (e.g., "Municipal Code 15.2.3")
+- `title` - Official title of the code/regulation
+- `full_text` - Complete legal text
+- `summary` - Plain-language summary for voters
+- `enforcement_mechanism` - How violations are handled
+- `penalty_structure` - Fines, sanctions, or other penalties
+- `effective_date` - When this code takes effect
+- `status` - Code status (active, repealed, superseded)
+
+### Issue Model
+
+Represents abstract political issues or topics that candidates address:
+
+- `title` - Issue title (e.g., "Affordable Housing Initiative")
+- `description` - Detailed description of the issue
+- `category` - Issue category aligning with AreaOfConcern categories
+- `status` - Issue status (active, resolved, archived)
+- `urgency_level` - How pressing this issue is (urgent, important, routine)
+- `created_at` - When this issue was first identified
+
+### Stance Model
+
+Links candidacies to issues, showing candidate positions:
+
+- `candidacy_id` - References Candidacy
+- `issue_id` - References Issue
+- `position` - Candidate's stance (strongly_support, support, neutral, oppose, strongly_oppose)
+- `explanation` - Detailed explanation of their position
+- `priority_level` - How important this issue is to the candidate (high, medium, low)
+- `evidence_links` - References to supporting documentation or voting records
+
+## Key Governance System Relationships
+
+1. **Jurisdiction → GoverningBody**: Each jurisdiction can have multiple governing bodies
+2. **GoverningBody → GovernanceType**: Each body has one governance type, types can be shared
+3. **GoverningBody ↔ AreaOfConcern**: Many-to-many through Policy
+4. **Policy → OfficialCode**: One-to-many (policies can have multiple implementing codes)
+5. **Issue**: Standalone abstract topics (not directly tied to specific policies)
+6. **Candidacy → Issue**: Many-to-many through Stance (jurisdiction context via candidacy→election→office→jurisdiction)
+
+## Benefits for Voter Education
+
+This governance structure helps voters by:
+- **Understanding Scope**: Clear connection between candidates and the actual governing bodies they'd join
+- **Policy Context**: Access to real policies and their enforcement mechanisms
+- **Informed Decisions**: Candidates' stances on issues relevant to their jurisdiction
+- **Accountability**: Track how candidate promises relate to actual governance responsibilities
+
 ## Extensibility
 This foundation allows for future features like:
 - Voter registration and authentication
