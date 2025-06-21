@@ -43,7 +43,7 @@ class Views::Mountains::ShowView < Views::ApplicationView
       link_to("Edit Ratings", edit_mountain_path(@election, voter_id: @voter.id), 
               class: "btn-primary")
       link_to("Simulate More Data", simulate_mountain_path(@election), 
-              method: :post, class: "btn-secondary")
+              data: { turbo_method: :post }, class: "btn-secondary")
       link_to("Back to Elections", mountains_path, class: "btn-tertiary")
     end
   end

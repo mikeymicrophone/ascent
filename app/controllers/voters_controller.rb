@@ -2,9 +2,7 @@ class VotersController < ApplicationController
   before_action :set_voter, only: %i[ show edit update destroy ]
 
   def index
-    voters_scope = Voter.includes(:ratings, :voter_election_baselines, 
-                                  ratings: [candidacy: [election: [office: :position]]],
-                                  voter_election_baselines: [election: [office: :position]])
+    voters_scope = Voter.with_voting_activity
     @pagy, @voters = pagy(voters_scope)
     render Views::Voters::IndexView.new(voters: @voters, pagy: @pagy, notice: notice)
   end
@@ -48,9 +46,7 @@ class VotersController < ApplicationController
   private
 
   def set_voter
-    @voter = Voter.includes(:ratings, :voter_election_baselines, 
-                            ratings: [candidacy: [election: [office: :position]]],
-                            voter_election_baselines: [election: [office: :position]]).find(params[:id])
+    @voter = Voter.with_voting_activity.find(params[:id])
   end
 
   def voter_params

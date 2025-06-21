@@ -16,7 +16,7 @@ class Views::Components::ItemPreview < Views::ApplicationView
   private
 
   def render_items(&block)
-    items_to_show = @items.respond_to?(:limit) ? @items.limit(@limit) : @items.first(@limit)
+    items_to_show = @items.limit(@limit)
     items_to_show.each do |item|
       div(class: item_class) do
         yield(item) if block
@@ -35,7 +35,7 @@ class Views::Components::ItemPreview < Views::ApplicationView
   end
 
   def total_count
-    @items.respond_to?(:count) ? @items.count : @items.size
+    @items.count
   end
 
   # Derive CSS classes from association name
@@ -64,11 +64,6 @@ class Views::Components::ItemPreview < Views::ApplicationView
     parent_class = @parent_object.class.name.downcase
     parent_id_param = "#{parent_class}_id"
     
-    if respond_to?(path_method)
-      send(path_method, parent_id_param => @parent_object.id)
-    else
-      # Fallback to the association path without filtering
-      send("#{@association_name}_path")
-    end
+    send(path_method, parent_id_param => @parent_object.id)
   end
 end

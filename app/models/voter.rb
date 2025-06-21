@@ -13,6 +13,13 @@ class Voter < ApplicationRecord
   validates :last_name, presence: true
   # validates :is_verified, inclusion: { in: [true, false] }
   
+  scope :with_voting_activity, -> {
+    includes(:ratings, :voter_election_baselines, 
+             ratings: [candidacy: [election: [office: :position]]],
+             voter_election_baselines: [election: [office: :position]])
+  }
+  scope :with_residence_details, -> { includes(residences: :jurisdiction) }
+  
   def full_name
     [first_name, last_name].compact.join(' ')
   end

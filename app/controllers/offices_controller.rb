@@ -2,7 +2,7 @@ class OfficesController < ApplicationController
   before_action :set_office, only: %i[ show edit update destroy ]
 
   def index
-    offices_scope = Office.includes(:position, elections: :candidates)
+    offices_scope = Office.with_elections_and_candidates
     @pagy, @offices = pagy(offices_scope)
     render Views::Offices::IndexView.new(offices: @offices, pagy: @pagy, notice: notice)
   end
@@ -46,7 +46,7 @@ class OfficesController < ApplicationController
   private
 
   def set_office
-    @office = Office.includes(:position, elections: :candidates).find(params[:id])
+    @office = Office.with_elections_and_candidates.find(params[:id])
   end
 
   def office_params

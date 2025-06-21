@@ -14,14 +14,9 @@ class Views::Mountains::YAxisLabels < Views::Components::Base
     end
   end
 
-  private
-
   def rating_scale_points
-    max_height = 320
-    
     [500, 400, 300, 200, 100, 0].map do |value|
-      position = max_height - (value.to_f / 500.0 * max_height)
-      { value: value, position: position.to_i }
+      { value: value, position: Views::Mountains.calculate_label_position(value) }
     end
   end
 end

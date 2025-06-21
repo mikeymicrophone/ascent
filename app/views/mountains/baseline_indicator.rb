@@ -24,7 +24,6 @@ class Views::Mountains::BaselineIndicator < Views::Components::Base
 
   def baseline_position
     # Convert baseline value to CSS position (inverted for top-origin)
-    max_height = 320 # pixels
-    (max_height - (@baseline.baseline.to_f / 500.0 * max_height)).to_i
+    Views::Mountains.calculate_label_position(@baseline.baseline)
   end
 end

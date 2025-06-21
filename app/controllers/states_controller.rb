@@ -2,8 +2,7 @@ class StatesController < ApplicationController
   before_action :set_state, only: %i[ show edit update destroy ]
 
   def index
-    states_scope = State.includes(:cities)
-    states_scope = states_scope.where(country_id: params[:country_id]) if params[:country_id]
+    states_scope = State.includes(:cities).in_country(params[:country_id])
     @pagy, @states = pagy(states_scope)
     render Views::States::IndexView.new(states: @states, pagy: @pagy, notice: notice)
   end

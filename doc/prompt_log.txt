@@ -383,3 +383,88 @@ https://www.phlex.fun/components/yielding.html  Think hard!
 Write a quick explainer on this to our phlex docs - and include the link to that yield page.
 
 
+Please refactor this so that the only arguments are @state, :cities, and 5.
+
+
+Looks like we are up to number 4 - the person's candidacy history
+
+
+proceed
+
+
+Why is this line here?
+
+
+Write a spec for the office_partial
+
+
+https://www.phlex.fun/components/testing.html
+
+
+Take a crack at these details and then we'll go to number 7
+
+
+Now to 7
+
+
+Begin by reading all files in @doc/ and then we should refactor some of the code from yesterday's interface
+enhancements.  First I would like you to construct reusable scopes for some of the cases where #include and
+#where are used in controllers or models.
+
+
+Can you add issues to GitHub
+
+
+two issues please: elections per year (per position, per state) and elections per position (per year, per
+state)
+
+
+add another: view history of ratings and baselines per candidacy for a subset of voters
+
+
+This should be a method on Office, and Election can delegate to it.  We don't want the prefix "get_", it's
+not part of our grammar.
+
+
+replace this at the call site, don't just wrap it.  And the usage in Election should leverage the method
+'delegate'.
+
+
+I like to perform ordering like this with a scope called 'recent'.  A chain this simple should be on a
+single line.  And the return value below can leverage the &. to handle nil
+
+
+Why is this being done?  Are there other places where you have been checking if our instance methods are
+defined?
+
+
+Please update ruby-coding.md with a section on "short-circuiting".  In general, this is an approach that we
+will only want once we get to a point where we need it.  There are lots of places in your code where you
+test for nil, and while I don't have a full solution yet, I will be developing it in this section of our
+docs.
+
+
+I can see that many of the methods that construct the markup for our Phlex components have been entitled
+with 'render_xyz'.  I don't want these to begin with 'render_'.  Please truncate these method names and
+check if the specs still pass.  Secondly, I want to be able to reuse these.  As an experiment, please remove
+the 'private' keyword, and where they are relying on instance variables, these can become arguments where
+the default value is that instance variable.
+
+
+That was really close.  Instead of named arguments (person: @person) we should use default arguments (person
+= @person) so we can call the methods more easily.
+
+
+Make me a quick report about methods with a local variable that is only used once.  Indicate the class name
+and variable name.
+
+
+HierNav still has render_ and private - please fix.
+stats - keep bc used more than once. but rename 'calculate_stats' to 'electorate_stats_for'
+summary_stats - inline
+is_current/clickable - inline
+base_stats - rename as electorate_stats
+position - extract into method
+max_height - extract into method on Views::Mountains
+
+

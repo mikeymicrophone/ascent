@@ -22,15 +22,13 @@ class Views::Offices::OfficePartial < Views::ApplicationView
         div(class: "mt-1") { simple_format(@office.notes) }
       end
       
-      render_current_office_holder
-      render_election_history
+      current_office_holder
+      election_history
     end
   end
 
-  private
-
-  def render_current_office_holder
-    current_winner = get_current_office_holder
+  def current_office_holder(office = @office)
+    current_winner = office.current_office_holder
     return unless current_winner
     
     div(class: "current-holder-section") do
@@ -51,30 +49,31 @@ class Views::Offices::OfficePartial < Views::ApplicationView
     end
   end
 
-  def render_election_history
-    return unless @office.elections.any?
+  def election_history(office = @office)
+    return unless office.elections.any?
     
     Views::Components::ExpandableSection(
       title: "Election History & Timeline",
-      count: @office.elections.count
+      count: office.elections.count
     ) do
       div(class: "election-timeline") do
-        sorted_elections = @office.elections.sort_by(&:election_date).reverse
+        # Use database ordering instead of Ruby sorting for better performance
+        recent_elections = office.elections.order(election_date: :desc).limit(3)
         
-        sorted_elections.take(3).each do |election|
-          render_election_details(election)
+        recent_elections.each do |election|
+          election_details(election)
         end
         
-        if sorted_elections.count > 3
+        if office.elections.count > 3
           div(class: "elections-view-all") do
-            link_to "View all #{@office.elections.count} elections", [@office, :elections], class: "link view-all"
+            link_to "View all #{office.elections.count} elections", [office, :elections], class: "link view-all"
           end
         end
       end
     end
   end
 
-  def render_election_details(election)
+  def election_details(election)
     div(class: "election-timeline-item") do
       div(class: "election-header") do
         div(class: "election-main-info") do
@@ -92,16 +91,16 @@ class Views::Offices::OfficePartial < Views::ApplicationView
       end
       
       if election.status == "completed"
-        render_election_results(election)
+        election_results(election)
       elsif election.status == "upcoming"
-        render_election_schedule(election)
+        election_schedule(election)
       end
       
-      render_voter_turnout_stats(election)
+      voter_turnout_stats(election)
     end
   end
 
-  def render_election_results(election)
+  def election_results(election)
     results = election.approval_results
     return if results.empty?
     
@@ -132,7 +131,7 @@ class Views::Offices::OfficePartial < Views::ApplicationView
     end
   end
 
-  def render_election_schedule(election)
+  def election_schedule(election)
     div(class: "election-schedule") do
       span(class: "schedule-label") { "Scheduled:" }
       whitespace
@@ -147,7 +146,7 @@ class Views::Offices::OfficePartial < Views::ApplicationView
     end
   end
 
-  def render_voter_turnout_stats(election)
+  def voter_turnout_stats(election)
     return unless election.status == "completed" && election.voter_election_baselines.any?
     
     summary = election.results_summary
@@ -174,15 +173,4 @@ class Views::Offices::OfficePartial < Views::ApplicationView
     end
   end
 
-  def get_current_office_holder
-    # Find the most recent completed election and return the winner
-    most_recent_completed = @office.elections
-                                  .completed
-                                  .order(election_date: :desc)
-                                  .first
-    
-    return nil unless most_recent_completed
-    
-    most_recent_completed.approval_winner
-  end
 end

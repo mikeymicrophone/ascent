@@ -17,9 +17,16 @@ class Election < ApplicationRecord
   scope :historical, -> { where(is_historical: true) }
   scope :real, -> { where(is_mock: false, is_historical: false) }
   
+  scope :recent, -> { order(election_date: :desc) }
+  scope :with_full_details, -> { includes(:office, :candidates, :candidacies) }
+  scope :with_candidacy_details, -> { includes(candidacies: [:person, :ratings]) }
+  scope :with_office_context, -> { includes(office: :position) }
+  
   def name
     "#{office.name} - #{year.year}"
   end
+  
+  delegate :current_office_holder, to: :office
   
   # Aggregates approval votes for this election based on voter baselines
   # Returns a hash with Candidacy objects as keys and vote counts as values
