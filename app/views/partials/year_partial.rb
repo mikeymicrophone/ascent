@@ -1,4 +1,4 @@
-class Views::Years::YearPartial < Views::ApplicationView
+class Views::Partials::YearPartial < Views::ApplicationView
   def initialize(year:)
     @year = year
   end
@@ -20,6 +20,10 @@ class Views::Years::YearPartial < Views::ApplicationView
         span { "Description:" }
         whitespace
         div(class: "mt-1") { simple_format(@year.description) }
+      end
+
+      expandable(@year, :elections) do |elections|
+        elections.each { ElectionPartial(election: it) }
       end
     end
   end

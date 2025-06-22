@@ -1,4 +1,4 @@
-class Views::Offices::OfficePartial < Views::ApplicationView
+class Views::Partials::OfficePartial < Views::ApplicationView
   def initialize(office:)
     @office = office
   end

@@ -1,4 +1,4 @@
-class Views::AreaOfConcerns::AreaOfConcernPartial < Views::ApplicationView
+class Views::Partials::AreaOfConcernPartial < Views::ApplicationView
   def initialize(area_of_concern:)
     @area_of_concern = area_of_concern
   end

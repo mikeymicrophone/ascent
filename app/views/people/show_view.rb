@@ -10,7 +10,7 @@ class Views::People::ShowView < Views::ApplicationView
       
       h1 { "Showing person" }
       
-      Views::People::PersonPartial(person: @person)
+      PersonPartial(person: @person)
       
       div do
         link_to "Edit this person", 

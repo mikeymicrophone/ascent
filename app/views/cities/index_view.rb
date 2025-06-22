@@ -37,7 +37,7 @@ class Views::Cities::IndexView < Views::ApplicationView
         if @cities.any?
           @cities.each do |city|
             div(id: dom_id(city, :list_item)) do
-              Views::Cities::CityPartial(city: city)
+              CityPartial(city: city)
               
               div do
                 link_to "Show", city,

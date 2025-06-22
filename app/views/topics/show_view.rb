@@ -17,7 +17,7 @@ class Views::Topics::ShowView < Views::ApplicationView
       
       h1 { "Showing topic" }
       
-      Views::Topics::TopicPartial(topic: @topic)
+      TopicPartial(topic: @topic)
       
       @content_sections.each do |section|
         div(class: "topic-content-section topic-#{section[:key]}") do
@@ -57,7 +57,7 @@ class Views::Topics::ShowView < Views::ApplicationView
     if @topic.issues.any?
       content_section("Issues in this Topic", key: "issues") do
         @topic.issues.each do |issue|
-          Views::Issues::IssuePartial(issue: issue, show_topic: false, show_approaches: true)
+          IssuePartial(issue: issue, show_topic: false, show_approaches: true)
         end
       end
     end
@@ -65,7 +65,7 @@ class Views::Topics::ShowView < Views::ApplicationView
     if @topic.stances.any?
       content_section("Candidate Positions on this Topic", key: "stances") do
         @topic.stances.includes(:candidacy, :issue, :approach).each do |stance|
-          Views::Stances::StancePartial(stance: stance, show_candidacy: true, show_issue: true, show_approach: true)
+          StancePartial(stance: stance, show_candidacy: true, show_issue: true, show_approach: true)
         end
       end
     end

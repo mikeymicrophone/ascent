@@ -10,7 +10,7 @@ class Views::Stances::ShowView < Views::ApplicationView
       
       h1 { "Showing stance" }
       
-      Views::Stances::StancePartial(stance: @stance)
+      StancePartial(stance: @stance)
       
       div do
         link_to "Edit this stance", 

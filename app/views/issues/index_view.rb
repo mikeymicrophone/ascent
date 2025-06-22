@@ -20,7 +20,7 @@ class Views::Issues::IndexView < Views::ApplicationView
         if @issues.any?
           @issues.each do |issue|
             div(id: dom_id(issue, :list_item)) do
-              Views::Issues::IssuePartial(issue: issue)
+              IssuePartial(issue: issue)
               
               div do
                 link_to "Show", issue,

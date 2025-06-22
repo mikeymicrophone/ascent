@@ -10,7 +10,7 @@ class Views::Positions::ShowView < Views::ApplicationView
       
       h1 { "Showing position" }
       
-      Views::Positions::PositionPartial(position: @position)
+      PositionPartial(position: @position)
       
       div do
         link_to "Edit this position", 

@@ -1,4 +1,4 @@
-class Views::States::StatePartial < Views::ApplicationView
+class Views::Partials::StatePartial < Views::ApplicationView
   def initialize(state:)
     @state = state
   end

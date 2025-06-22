@@ -10,7 +10,7 @@ class Views::Cities::ShowView < Views::ApplicationView
       
       h1 { "Showing city" }
       
-      Views::Cities::CityPartial(city: @city)
+      CityPartial(city: @city)
       
       div do
         link_to "Edit this city", 

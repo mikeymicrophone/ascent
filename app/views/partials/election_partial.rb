@@ -1,4 +1,4 @@
-class Views::Elections::ElectionPartial < Views::ApplicationView
+class Views::Partials::ElectionPartial < Views::ApplicationView
   def initialize(election:)
     @election = election
   end

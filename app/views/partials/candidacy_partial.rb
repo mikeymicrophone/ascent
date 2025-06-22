@@ -1,4 +1,4 @@
-class Views::Candidacies::CandidacyPartial < Views::ApplicationView
+class Views::Partials::CandidacyPartial < Views::ApplicationView
   def initialize(candidacy:)
     @candidacy = candidacy
   end
@@ -36,6 +36,10 @@ class Views::Candidacies::CandidacyPartial < Views::ApplicationView
         stances.each do |stance|
           CandidateStancePartial(stance: stance)
         end
+      end
+
+      expandable(@candidacy, :ratings, title: "Voter Ratings") do |ratings|
+        ratings.each { RatingPartial(rating: it) }
       end
     end
   end

@@ -20,7 +20,7 @@ class Views::AreaOfConcerns::IndexView < Views::ApplicationView
         if @area_of_concerns.any?
           @area_of_concerns.each do |area_of_concern|
             div(id: dom_id(area_of_concern, :list_item)) do
-              render Views::AreaOfConcerns::AreaOfConcernPartial.new(area_of_concern: area_of_concern)
+              render AreaOfConcernPartial.new(area_of_concern: area_of_concern)
               
               div do
                 link_to "Show", area_of_concern,

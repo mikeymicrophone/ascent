@@ -20,7 +20,7 @@ class Views::VoterElectionBaselines::IndexView < Views::ApplicationView
         if @voter_election_baselines.any?
           @voter_election_baselines.each do |voter_election_baseline|
             div(id: dom_id(voter_election_baseline, :list_item)) do
-              Views::VoterElectionBaselines::VoterElectionBaselinePartial(voter_election_baseline: voter_election_baseline)
+              VoterElectionBaselinePartial(voter_election_baseline: voter_election_baseline)
               
               div do
                 link_to "Show", voter_election_baseline,

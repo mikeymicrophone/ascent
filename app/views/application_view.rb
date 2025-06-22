@@ -17,6 +17,7 @@ class Views::ApplicationView < Phlex::HTML
   include Pagy::Frontend
 
   include Views::Components
+  include Views::Partials
 
   def self.inherited(subclass)
     super

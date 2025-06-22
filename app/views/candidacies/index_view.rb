@@ -20,7 +20,7 @@ class Views::Candidacies::IndexView < Views::ApplicationView
         if @candidacies.any?
           @candidacies.each do |candidacy|
             div(id: dom_id(candidacy, :list_item)) do
-              Views::Candidacies::CandidacyPartial(candidacy: candidacy)
+              CandidacyPartial(candidacy: candidacy)
               
               div do
                 link_to "Show", candidacy,

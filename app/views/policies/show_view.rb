@@ -10,7 +10,7 @@ class Views::Policies::ShowView < Views::ApplicationView
       
       h1 { "Showing policy" }
       
-      Views::Policies::PolicyPartial(policy: @policy)
+      PolicyPartial(policy: @policy)
       
       div do
         link_to "Edit this policy", 

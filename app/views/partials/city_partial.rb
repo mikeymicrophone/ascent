@@ -1,4 +1,4 @@
-class Views::Cities::CityPartial < Views::ApplicationView
+class Views::Partials::CityPartial < Views::ApplicationView
   def initialize(city:)
     @city = city
   end

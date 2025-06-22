@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Countries::CountryPartial < Views::ApplicationView
+class Views::Partials::CountryPartial < Views::ApplicationView
   
   def initialize(country:)
     @country = country

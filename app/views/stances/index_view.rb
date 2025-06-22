@@ -20,7 +20,7 @@ class Views::Stances::IndexView < Views::ApplicationView
         if @stances.any?
           @stances.each do |stance|
             div(id: dom_id(stance, :list_item)) do
-              Views::Stances::StancePartial(stance: stance)
+              StancePartial(stance: stance)
               
               div do
                 link_to "Show", stance,

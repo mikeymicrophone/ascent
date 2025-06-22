@@ -20,7 +20,7 @@ class Views::GovernanceTypes::IndexView < Views::ApplicationView
         if @governance_types.any?
           @governance_types.each do |governance_type|
             div(id: dom_id(governance_type, :list_item)) do
-              Views::GovernanceTypes::GovernanceTypePartial(governance_type: governance_type)
+              GovernanceTypePartial(governance_type: governance_type)
               
               div do
                 link_to "Show", governance_type,

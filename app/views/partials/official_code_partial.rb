@@ -1,4 +1,4 @@
-class Views::OfficialCodes::OfficialCodePartial < Views::ApplicationView
+class Views::Partials::OfficialCodePartial < Views::ApplicationView
   def initialize(official_code:)
     @official_code = official_code
   end

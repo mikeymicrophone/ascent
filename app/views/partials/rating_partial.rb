@@ -1,4 +1,4 @@
-class Views::Ratings::RatingPartial < Views::ApplicationView
+class Views::Partials::RatingPartial < Views::ApplicationView
   def initialize(rating:)
     @rating = rating
   end

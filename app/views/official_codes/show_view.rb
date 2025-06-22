@@ -10,7 +10,7 @@ class Views::OfficialCodes::ShowView < Views::ApplicationView
       
       h1 { "Showing official code" }
       
-      Views::OfficialCodes::OfficialCodePartial(official_code: @official_code)
+      OfficialCodePartial(official_code: @official_code)
       
       div do
         link_to "Edit this official code", 

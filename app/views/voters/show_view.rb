@@ -10,7 +10,7 @@ class Views::Voters::ShowView < Views::ApplicationView
       
       h1 { "Showing voter" }
       
-      Views::Voters::VoterPartial(voter: @voter)
+      VoterPartial(voter: @voter)
       
       div do
         link_to "Edit this voter", 

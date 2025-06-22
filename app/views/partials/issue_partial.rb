@@ -1,4 +1,4 @@
-class Views::Issues::IssuePartial < Views::ApplicationView
+class Views::Partials::IssuePartial < Views::ApplicationView
   def initialize(issue:, show_topic: true, show_approaches: false)
     @issue = issue
     @show_topic = show_topic
@@ -22,16 +22,19 @@ class Views::Issues::IssuePartial < Views::ApplicationView
         end
       end
       
-      if @show_approaches && @issue.approaches.any?
-        div(class: "issue-approaches") do
-          span { "Available Approaches:" }
+      if @show_approaches
+        expandable(@issue, :approaches, title: "Available Approaches") do |approaches|
           ul do
-            @issue.approaches.each do |approach|
+            approaches.each do |approach|
               li do
                 link_to approach.title, approach, class: "link approach"
               end
             end
           end
+        end
+      else
+        expandable(@issue, :approaches) do |approaches|
+          approaches.each { ApproachPartial(approach: it) }
         end
       end
     end

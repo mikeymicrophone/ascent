@@ -1,4 +1,4 @@
-class Views::People::PersonPartial < Views::ApplicationView
+class Views::Partials::PersonPartial < Views::ApplicationView
   def initialize(person:)
     @person = person
   end
