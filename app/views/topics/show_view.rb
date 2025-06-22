@@ -12,6 +12,24 @@ class Views::Topics::ShowView < Views::ApplicationView
       
       Views::Topics::TopicPartial(topic: @topic)
       
+      if @topic.issues.any?
+        div(class: "topic-issues") do
+          h2 { "Issues in this Topic" }
+          @topic.issues.each do |issue|
+            render Views::Issues::IssuePartial.new(issue: issue, show_topic: false, show_approaches: true)
+          end
+        end
+      end
+      
+      if @topic.stances.any?
+        div(class: "topic-stances") do
+          h2 { "Candidate Positions on this Topic" }
+          @topic.stances.includes(:candidacy, :issue, :approach).each do |stance|
+            render Views::Stances::StancePartial.new(stance: stance, show_candidacy: true, show_issue: true, show_approach: true)
+          end
+        end
+      end
+      
       div do
         link_to "Edit this topic", 
                 edit_topic_path(@topic),

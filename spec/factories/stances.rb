@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :stance do
     association :candidacy
-    association :issue
     association :approach
     explanation { "I believe this approach will effectively address this critical issue through comprehensive policy implementation, community engagement, and sustainable funding mechanisms that ensure long-term success and measurable outcomes." }
     priority_level { "high" }
@@ -22,42 +21,36 @@ FactoryBot.define do
       evidence_links { "https://example.com/background-research" }
     end
     trait :education_stance do
-      association :issue, factory: :school_funding_issue
       association :approach, factory: :school_improvement_approach
       priority_level { "high" }
       explanation { "Education is the foundation of our community's future. I strongly support increased school funding through dedicated revenue sources, teacher recruitment and retention programs, and modernized facilities that prepare our students for 21st century careers." }
       evidence_links { "https://example.com/education-plan, https://example.com/teacher-endorsements, https://example.com/student-outcomes-data" }
     end
     trait :healthcare_stance do
-      association :issue, factory: :healthcare_access_issue
       association :approach, factory: :mobile_health_approach
       priority_level { "high" }
       explanation { "Healthcare is a fundamental right. Mobile health clinics and expanded telehealth services will ensure all residents have access to quality care regardless of location or economic status, reducing emergency room visits and improving preventive care." }
       evidence_links { "https://example.com/healthcare-proposal, https://example.com/rural-health-data, https://example.com/physician-support" }
     end
     trait :housing_stance do
-      association :issue, factory: :affordable_housing_issue
       association :approach, factory: :affordable_housing_approach
       priority_level { "high" }
       explanation { "Every working family deserves access to safe, affordable housing. I support inclusionary zoning, housing trust funds, and public-private partnerships to create mixed-income communities that preserve neighborhood character while addressing housing needs." }
       evidence_links { "https://example.com/housing-strategy, https://example.com/affordability-analysis, https://example.com/developer-partnerships" }
     end
     trait :transportation_stance do
-      association :issue, factory: :traffic_congestion_issue
       association :approach, factory: :transit_expansion_approach
       priority_level { "medium" }
       explanation { "Improved public transit reduces traffic congestion, air pollution, and transportation costs for families. I support bus rapid transit and expanded service that connects residential areas with employment centers and essential services." }
       evidence_links { "https://example.com/transit-plan, https://example.com/ridership-projections, https://example.com/environmental-impact" }
     end
     trait :environmental_stance do
-      association :issue, factory: :environmental_pollution_issue
       association :approach, factory: :environmental_regulations_approach
       priority_level { "high" }
       explanation { "Environmental protection is essential for public health and economic sustainability. Stronger regulations, monitoring, and enforcement will protect our air and water quality while supporting businesses in adopting clean technologies." }
       evidence_links { "https://example.com/environmental-record, https://example.com/pollution-data, https://example.com/green-business-support" }
     end
     trait :economic_stance do
-      association :issue, factory: :unemployment_issue
       association :approach, factory: :job_training_approach
       priority_level { "high" }
       explanation { "Economic opportunity for all residents strengthens our entire community. Job training programs, apprenticeships, and small business support create pathways to good-paying careers while meeting employer needs for skilled workers." }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_22_002912) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_021640) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -207,7 +207,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_002912) do
 
   create_table "stances", force: :cascade do |t|
     t.bigint "candidacy_id", null: false
-    t.bigint "issue_id", null: false
     t.bigint "approach_id", null: false
     t.text "explanation"
     t.string "priority_level"
@@ -216,7 +215,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_002912) do
     t.datetime "updated_at", null: false
     t.index ["approach_id"], name: "index_stances_on_approach_id"
     t.index ["candidacy_id"], name: "index_stances_on_candidacy_id"
-    t.index ["issue_id"], name: "index_stances_on_issue_id"
   end
 
   create_table "states", force: :cascade do |t|
@@ -315,7 +313,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_002912) do
   add_foreign_key "residences", "voters"
   add_foreign_key "stances", "approaches"
   add_foreign_key "stances", "candidacies"
-  add_foreign_key "stances", "issues"
   add_foreign_key "states", "countries"
   add_foreign_key "voter_election_baseline_archives", "elections"
   add_foreign_key "voter_election_baseline_archives", "voters"

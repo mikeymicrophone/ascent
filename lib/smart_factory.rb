@@ -52,6 +52,7 @@ module SmartFactory
         person: 3,           # Low reuse - want diverse candidates
         candidacy: 2,        # Very low reuse - each candidacy should be unique
         rating: 1,           # No reuse - each rating is voter-specific
+        stance: 1,           # No reuse - each stance is candidacy-specific
         voter_election_baseline: 8  # High reuse - voters often have similar standards
       }
 

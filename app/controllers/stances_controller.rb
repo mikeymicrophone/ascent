@@ -69,6 +69,6 @@ class StancesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def stance_params
-      params.expect(stance: [ :candidacy_id, :issue_id, :approach_id, :explanation, :priority_level, :evidence_links ])
+      params.expect(stance: [ :candidacy_id, :approach_id, :explanation, :priority_level, :evidence_links ])
     end
 end

@@ -211,7 +211,6 @@ class StanceSeeder
       # Create the stance
       stance = Stance.find_or_create_by(
         candidacy: candidacy,
-        issue: issue,
         approach: approach
       ) do |s|
         s.explanation = config[:explanation]

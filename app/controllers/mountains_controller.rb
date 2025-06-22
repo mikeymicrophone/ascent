@@ -52,8 +52,46 @@ class MountainsController < ApplicationController
                                                   person: person, election: @election)
     end
 
+    # Create realistic policy stances for each candidate
+    @election.candidacies.reload.each do |candidacy|
+      # Skip if candidate already has stances
+      next if candidacy.stances.any?
+      
+      # Create 2-5 stances per candidate on different policy areas
+      stance_count = rand(2..5)
+      created_issues = []
+      
+      stance_count.times do
+        # Get a random issue that hasn't been used for this candidate
+        available_issues = Issue.where.not(id: created_issues)
+        next if available_issues.empty?
+        
+        issue = available_issues.sample
+        created_issues << issue.id
+        
+        # Find an approach for this issue
+        approach = issue.approaches.sample
+        next unless approach
+        
+        # Create stance with realistic priority and explanation
+        priority_level = [:high, :medium, :low].sample
+        stance_traits = case priority_level
+                       when :high then [:high_priority]
+                       when :medium then [:medium_priority] 
+                       else [:low_priority]
+                       end
+        
+        SmartFactory.create_for_mountain_simulation(:stance, stance_traits,
+                                                   candidacy: candidacy,
+                                                   approach: approach)
+      end
+    end
+
     # Create realistic ratings with varied patterns
     @election.candidacies.reload.each do |candidacy|
+      # Skip if rating already exists for this voter-candidacy combination
+      next if Rating.exists?(voter: @voter, candidacy: candidacy)
+      
       # Use different rating patterns for more realistic mountain visualization
       rating_type = [:high_variance, :polarized, :moderate].sample
       

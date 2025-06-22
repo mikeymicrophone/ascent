@@ -18,16 +18,6 @@ class Views::Stances::StanceForm < Views::ApplicationView
       end
 
       div do
-        form.label :issue_id, "Issue"
-        form.collection_select :issue_id, 
-                               ::Issue.all, 
-                               :id, 
-                               :name,
-                               { prompt: "Select a issue" },
-                               { class: input_classes(@stance.errors[:issue_id]) }
-      end
-
-      div do
         form.label :approach_id, "Approach"
         form.collection_select :approach_id, 
                                ::Approach.all, 
