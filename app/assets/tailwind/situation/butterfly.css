@@ -1,0 +1,228 @@
+/* Butterfly Navigation Effect - Layer 4: Interactive States */
+
+/* Butterfly container */
+.navigation-butterfly {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  z-index: 1000;
+  @apply transition-all duration-1000 ease-out;
+  transform: translate(-50%, -50%);
+}
+
+/* Butterfly visibility states */
+.navigation-butterfly.hidden {
+  opacity: 0;
+  @apply scale-0;
+}
+
+.navigation-butterfly.flying {
+  opacity: 1;
+  @apply scale-100;
+}
+
+/* Butterfly body */
+.butterfly-body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 16px;
+  background: linear-gradient(to bottom, var(--entity-topic), var(--entity-issue));
+  @apply rounded-full;
+  transform: translate(-50%, -50%);
+}
+
+/* Butterfly wings - left wing */
+.butterfly-wing-left {
+  position: absolute;
+  top: 2px;
+  left: -4px;
+  width: 8px;
+  height: 12px;
+  background: radial-gradient(ellipse at center, var(--entity-topic), transparent 70%);
+  border-radius: 60% 40% 40% 60%;
+  transform-origin: right center;
+  @apply transition-transform duration-300;
+}
+
+/* Butterfly wings - right wing */
+.butterfly-wing-right {
+  position: absolute;
+  top: 2px;
+  right: -4px;
+  width: 8px;
+  height: 12px;
+  background: radial-gradient(ellipse at center, var(--entity-topic), transparent 70%);
+  border-radius: 40% 60% 60% 40%;
+  transform-origin: left center;
+  @apply transition-transform duration-300;
+}
+
+/* Wing flapping animation */
+.navigation-butterfly.flying .butterfly-wing-left {
+  animation: flap-left 0.3s ease-in-out infinite alternate;
+}
+
+.navigation-butterfly.flying .butterfly-wing-right {
+  animation: flap-right 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes flap-left {
+  0% { transform: rotateY(0deg) rotateZ(-5deg); }
+  100% { transform: rotateY(-20deg) rotateZ(-15deg); }
+}
+
+@keyframes flap-right {
+  0% { transform: rotateY(0deg) rotateZ(5deg); }
+  100% { transform: rotateY(20deg) rotateZ(15deg); }
+}
+
+/* Butterfly trail effect */
+.butterfly-trail {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999;
+  @apply transition-opacity duration-500;
+}
+
+.butterfly-trail.sparkle {
+  background: radial-gradient(circle, var(--entity-topic), transparent);
+  opacity: 0.8;
+  animation: sparkle-fade 1s ease-out forwards;
+}
+
+@keyframes sparkle-fade {
+  0% { 
+    opacity: 0.8; 
+    transform: scale(1); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(0.2); 
+  }
+}
+
+/* Butterfly color themes for different navigation levels */
+.navigation-butterfly.level-topic {
+  --butterfly-primary: var(--entity-topic);
+  --butterfly-secondary: var(--entity-topic-bg);
+}
+
+.navigation-butterfly.level-issue {
+  --butterfly-primary: var(--entity-issue);
+  --butterfly-secondary: var(--entity-issue-bg);
+}
+
+.navigation-butterfly.level-approach {
+  --butterfly-primary: var(--entity-candidate);
+  --butterfly-secondary: var(--entity-candidate-bg);
+}
+
+.navigation-butterfly.level-country {
+  --butterfly-primary: var(--entity-country);
+  --butterfly-secondary: var(--entity-country-bg);
+}
+
+.navigation-butterfly.level-state {
+  --butterfly-primary: var(--entity-state);
+  --butterfly-secondary: var(--entity-state-bg);
+}
+
+.navigation-butterfly.level-city {
+  --butterfly-primary: var(--entity-city);
+  --butterfly-secondary: var(--entity-city-bg);
+}
+
+/* Apply theme colors to wings */
+.navigation-butterfly.level-topic .butterfly-wing-left,
+.navigation-butterfly.level-topic .butterfly-wing-right {
+  background: radial-gradient(ellipse at center, var(--butterfly-primary), transparent 70%);
+}
+
+.navigation-butterfly.level-issue .butterfly-wing-left,
+.navigation-butterfly.level-issue .butterfly-wing-right {
+  background: radial-gradient(ellipse at center, var(--butterfly-primary), transparent 70%);
+}
+
+.navigation-butterfly.level-approach .butterfly-wing-left,
+.navigation-butterfly.level-approach .butterfly-wing-right {
+  background: radial-gradient(ellipse at center, var(--butterfly-primary), transparent 70%);
+}
+
+.navigation-butterfly.level-country .butterfly-wing-left,
+.navigation-butterfly.level-country .butterfly-wing-right {
+  background: radial-gradient(ellipse at center, var(--butterfly-primary), transparent 70%);
+}
+
+.navigation-butterfly.level-state .butterfly-wing-left,
+.navigation-butterfly.level-state .butterfly-wing-right {
+  background: radial-gradient(ellipse at center, var(--butterfly-primary), transparent 70%);
+}
+
+.navigation-butterfly.level-city .butterfly-wing-left,
+.navigation-butterfly.level-city .butterfly-wing-right {
+  background: radial-gradient(ellipse at center, var(--butterfly-primary), transparent 70%);
+}
+
+/* Butterfly size variations for different levels */
+.navigation-butterfly.level-country {
+  width: 32px;
+  height: 32px;
+}
+
+.navigation-butterfly.level-state {
+  width: 28px;
+  height: 28px;
+}
+
+.navigation-butterfly.level-city {
+  width: 24px;
+  height: 24px;
+}
+
+.navigation-butterfly.level-topic {
+  width: 20px;
+  height: 20px;
+}
+
+.navigation-butterfly.level-issue {
+  width: 18px;
+  height: 18px;
+}
+
+.navigation-butterfly.level-approach {
+  width: 16px;
+  height: 16px;
+}
+
+/* Flutter effect when hovering over clickable elements */
+.navigation-target:hover ~ .navigation-butterfly,
+.navigation-target.hovered .navigation-butterfly {
+  animation: flutter 0.6s ease-in-out;
+}
+
+@keyframes flutter {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+  25% { transform: translate(-50%, -50%) rotate(-3deg) translateY(-2px); }
+  75% { transform: translate(-50%, -50%) rotate(3deg) translateY(-2px); }
+}
+
+/* Approach indicator - when butterfly reaches a destination */
+.navigation-butterfly.arrived {
+  animation: celebration 1s ease-in-out;
+}
+
+@keyframes celebration {
+  0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  25% { transform: translate(-50%, -50%) scale(1.2) rotate(90deg); }
+  50% { transform: translate(-50%, -50%) scale(1.1) rotate(180deg); }
+  75% { transform: translate(-50%, -50%) scale(1.2) rotate(270deg); }
+  100% { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+}

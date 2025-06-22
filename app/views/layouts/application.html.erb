@@ -22,7 +22,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body data-controller="butterfly" data-butterfly-level-value="<%= controller_name %>" data-butterfly-enabled-value="true">
     <%= render Views::Components::Navigation.new(current_voter: current_voter) %>
     <main class="main-content">
       <%= yield %>
