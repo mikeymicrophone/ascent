@@ -1,4 +1,4 @@
-class Views::Candidacies::CandidateStancePartial < Views::ApplicationView
+class Views::Partials::CandidateStancePartial < Views::ApplicationView
   def initialize(stance:)
     @stance = stance
   end

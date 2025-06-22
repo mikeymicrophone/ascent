@@ -10,7 +10,7 @@ class Views::Approaches::ShowView < Views::ApplicationView
       
       h1 { "Showing approach" }
       
-      Views::Approaches::ApproachPartial(approach: @approach)
+      ApproachPartial(approach: @approach)
       
       div do
         link_to "Edit this approach", 

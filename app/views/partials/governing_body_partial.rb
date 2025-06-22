@@ -1,4 +1,4 @@
-class Views::GoverningBodies::GoverningBodyPartial < Views::ApplicationView
+class Views::Partials::GoverningBodyPartial < Views::ApplicationView
   def initialize(governing_body:)
     @governing_body = governing_body
   end

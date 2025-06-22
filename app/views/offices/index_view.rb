@@ -20,7 +20,7 @@ class Views::Offices::IndexView < Views::ApplicationView
         if @offices.any?
           @offices.each do |office|
             div(id: dom_id(office, :list_item)) do
-              Views::Offices::OfficePartial(office: office)
+              OfficePartial(office: office)
               
               div do
                 link_to "Show", office,

@@ -1,4 +1,4 @@
-class Views::Topics::TopicPartial < Views::ApplicationView
+class Views::Partials::TopicPartial < Views::ApplicationView
   def initialize(topic:)
     @topic = topic
   end
@@ -10,6 +10,10 @@ class Views::Topics::TopicPartial < Views::ApplicationView
         span { "Description:" }
         whitespace
         div(class: "mt-1") { simple_format(@topic.description) }
+      end
+      
+      expandable(@topic, :issues) do |issues|
+        issues.each { IssuePartial(issue: it, show_topic: false, show_approaches: true) }
       end
     end
   end

@@ -10,7 +10,7 @@ class Views::Residences::ShowView < Views::ApplicationView
       
       h1 { "Showing residence" }
       
-      render Views::Residences::ResidencePartial.new(residence: @residence)
+      render ResidencePartial.new(residence: @residence)
       
       div do
         link_to "Edit this residence", 

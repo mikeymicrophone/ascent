@@ -20,7 +20,7 @@ class Views::Ratings::IndexView < Views::ApplicationView
         if @ratings.any?
           @ratings.each do |rating|
             div(id: dom_id(rating, :list_item)) do
-              Views::Ratings::RatingPartial(rating: rating)
+              RatingPartial(rating: rating)
               
               div do
                 link_to "Show", rating,

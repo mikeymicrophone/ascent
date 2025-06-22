@@ -20,7 +20,7 @@ class Views::Positions::IndexView < Views::ApplicationView
         if @positions.any?
           @positions.each do |position|
             div(id: dom_id(position, :list_item)) do
-              Views::Positions::PositionPartial(position: position)
+              PositionPartial(position: position)
               
               div do
                 link_to "Show", position,

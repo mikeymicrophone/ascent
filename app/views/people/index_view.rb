@@ -20,7 +20,7 @@ class Views::People::IndexView < Views::ApplicationView
         if @people.any?
           @people.each do |person|
             div(id: dom_id(person, :list_item)) do
-              Views::People::PersonPartial(person: person)
+              PersonPartial(person: person)
               
               div do
                 link_to "Show", person,

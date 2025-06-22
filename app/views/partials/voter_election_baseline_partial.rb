@@ -1,4 +1,4 @@
-class Views::VoterElectionBaselines::VoterElectionBaselinePartial < Views::ApplicationView
+class Views::Partials::VoterElectionBaselinePartial < Views::ApplicationView
   def initialize(voter_election_baseline:)
     @voter_election_baseline = voter_election_baseline
   end

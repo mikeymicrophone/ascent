@@ -20,7 +20,7 @@ class Views::Policies::IndexView < Views::ApplicationView
         if @policies.any?
           @policies.each do |policy|
             div(id: dom_id(policy, :list_item)) do
-              Views::Policies::PolicyPartial(policy: policy)
+              PolicyPartial(policy: policy)
               
               div do
                 link_to "Show", policy,

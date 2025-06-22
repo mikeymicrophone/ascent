@@ -1,4 +1,4 @@
-class Views::People::PersonPartial < Views::ApplicationView
+class Views::Partials::PersonPartial < Views::ApplicationView
   def initialize(person:)
     @person = person
   end
@@ -33,18 +33,9 @@ class Views::People::PersonPartial < Views::ApplicationView
       end
       
       # Candidacy History expandable section
-      if @person.candidacies.any?
-        expandable_candidacies
+      expandable(@person, :candidacies, title: "Elections") do |candidacies|
+        candidacies_preview(@person)
       end
-    end
-  end
-
-  def expandable_candidacies(person = @person)
-    Views::Components::ExpandableSection(
-      title: "Elections",
-      count: person.candidacies.count
-    ) do
-      candidacies_preview(person)
     end
   end
 

@@ -1,4 +1,4 @@
-class Views::GovernanceTypes::GovernanceTypePartial < Views::ApplicationView
+class Views::Partials::GovernanceTypePartial < Views::ApplicationView
   def initialize(governance_type:)
     @governance_type = governance_type
   end

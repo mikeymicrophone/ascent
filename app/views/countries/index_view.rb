@@ -23,7 +23,7 @@ class Views::Countries::IndexView < Views::ApplicationView
         if @countries.any?
           @countries.each do |country|
             div(id: dom_id(country, :list_item)) do
-              Views::Countries::CountryPartial(country: country)
+              CountryPartial(country: country)
               
               div do
                 link_to "Show", country,

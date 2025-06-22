@@ -1,4 +1,4 @@
-class Views::Positions::PositionPartial < Views::ApplicationView
+class Views::Partials::PositionPartial < Views::ApplicationView
   def initialize(position:)
     @position = position
   end
@@ -20,6 +20,10 @@ class Views::Positions::PositionPartial < Views::ApplicationView
         span { "Term length years:" }
         whitespace
         span { @position.term_length_years }
+      end
+      
+      expandable(@position, :offices) do |offices|
+        offices.each { OfficePartial(office: it) }
       end
     end
   end

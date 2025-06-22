@@ -10,7 +10,7 @@ class Views::VoterElectionBaselines::ShowView < Views::ApplicationView
       
       h1 { "Showing voter election baseline" }
       
-      Views::VoterElectionBaselines::VoterElectionBaselinePartial(voter_election_baseline: @voter_election_baseline)
+      VoterElectionBaselinePartial(voter_election_baseline: @voter_election_baseline)
       
       div do
         link_to "Edit this voter election baseline", 

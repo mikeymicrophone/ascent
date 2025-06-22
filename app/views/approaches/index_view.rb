@@ -20,7 +20,7 @@ class Views::Approaches::IndexView < Views::ApplicationView
         if @approaches.any?
           @approaches.each do |approach|
             div(id: dom_id(approach, :list_item)) do
-              Views::Approaches::ApproachPartial(approach: approach)
+              ApproachPartial(approach: approach)
               
               div do
                 link_to "Show", approach,

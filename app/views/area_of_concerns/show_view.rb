@@ -10,7 +10,7 @@ class Views::AreaOfConcerns::ShowView < Views::ApplicationView
       
       h1 { "Showing area of concern" }
       
-      render Views::AreaOfConcerns::AreaOfConcernPartial.new(area_of_concern: @area_of_concern)
+      render AreaOfConcernPartial.new(area_of_concern: @area_of_concern)
       
       div do
         link_to "Edit this area of concern", 

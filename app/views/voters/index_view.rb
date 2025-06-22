@@ -20,7 +20,7 @@ class Views::Voters::IndexView < Views::ApplicationView
         if @voters.any?
           @voters.each do |voter|
             div(id: dom_id(voter, :list_item)) do
-              Views::Voters::VoterPartial(voter: voter)
+              VoterPartial(voter: voter)
               
               div do
                 link_to "Show", voter,

@@ -10,7 +10,7 @@ class Views::Years::ShowView < Views::ApplicationView
       
       h1 { "Showing year" }
       
-      Views::Years::YearPartial(year: @year)
+      YearPartial(year: @year)
       
       div do
         link_to "Edit this year", 

@@ -10,7 +10,7 @@ class Views::Candidacies::ShowView < Views::ApplicationView
       
       h1 { "Showing candidacy" }
       
-      Views::Candidacies::CandidacyPartial(candidacy: @candidacy)
+      CandidacyPartial(candidacy: @candidacy)
       
       div do
         link_to "Edit this candidacy", 

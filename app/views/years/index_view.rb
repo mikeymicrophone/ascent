@@ -20,7 +20,7 @@ class Views::Years::IndexView < Views::ApplicationView
         if @years.any?
           @years.each do |year|
             div(id: dom_id(year, :list_item)) do
-              Views::Years::YearPartial(year: year)
+              YearPartial(year: year)
               
               div do
                 link_to "Show", year,

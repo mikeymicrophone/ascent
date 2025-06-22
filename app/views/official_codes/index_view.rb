@@ -20,7 +20,7 @@ class Views::OfficialCodes::IndexView < Views::ApplicationView
         if @official_codes.any?
           @official_codes.each do |official_code|
             div(id: dom_id(official_code, :list_item)) do
-              Views::OfficialCodes::OfficialCodePartial(official_code: official_code)
+              OfficialCodePartial(official_code: official_code)
               
               div do
                 link_to "Show", official_code,

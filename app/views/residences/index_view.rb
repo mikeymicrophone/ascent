@@ -20,7 +20,7 @@ class Views::Residences::IndexView < Views::ApplicationView
         if @residences.any?
           @residences.each do |residence|
             div(id: dom_id(residence, :list_item)) do
-              render Views::Residences::ResidencePartial.new(residence: residence)
+              render ResidencePartial.new(residence: residence)
               
               div do
                 link_to "Show", residence,

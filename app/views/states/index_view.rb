@@ -20,7 +20,7 @@ class Views::States::IndexView < Views::ApplicationView
         if @states.any?
           @states.each do |state|
             div(id: dom_id(state, :list_item)) do
-              Views::States::StatePartial(state: state)
+              StatePartial(state: state)
               
               div do
                 link_to "Show", state,

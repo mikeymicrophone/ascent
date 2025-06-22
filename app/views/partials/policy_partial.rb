@@ -1,4 +1,4 @@
-class Views::Policies::PolicyPartial < Views::ApplicationView
+class Views::Partials::PolicyPartial < Views::ApplicationView
   def initialize(policy:)
     @policy = policy
   end

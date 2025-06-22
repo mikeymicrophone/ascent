@@ -1,4 +1,4 @@
-class Views::Offices::OfficePartial < Views::ApplicationView
+class Views::Partials::OfficePartial < Views::ApplicationView
   def initialize(office:)
     @office = office
   end
@@ -50,12 +50,7 @@ class Views::Offices::OfficePartial < Views::ApplicationView
   end
 
   def election_history(office = @office)
-    return unless office.elections.any?
-    
-    Views::Components::ExpandableSection(
-      title: "Election History & Timeline",
-      count: office.elections.count
-    ) do
+    expandable(office, :elections, title: "Election History & Timeline") do |elections|
       div(class: "election-timeline") do
         # Use database ordering instead of Ruby sorting for better performance
         recent_elections = office.elections.order(election_date: :desc).limit(3)

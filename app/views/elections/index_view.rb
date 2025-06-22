@@ -20,7 +20,7 @@ class Views::Elections::IndexView < Views::ApplicationView
         if @elections.any?
           @elections.each do |election|
             div(id: dom_id(election, :list_item)) do
-              Views::Elections::ElectionPartial(election: election)
+              ElectionPartial(election: election)
               
               div do
                 button_to("Simulate Data", simulate_mountain_path(election), 

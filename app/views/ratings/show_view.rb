@@ -10,7 +10,7 @@ class Views::Ratings::ShowView < Views::ApplicationView
       
       h1 { "Showing rating" }
       
-      Views::Ratings::RatingPartial(rating: @rating)
+      RatingPartial(rating: @rating)
       
       div do
         link_to "Edit this rating", 

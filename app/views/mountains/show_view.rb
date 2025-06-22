@@ -11,7 +11,7 @@ class Views::Mountains::ShowView < Views::ApplicationView
   def view_template
     div(class: "mountain-show") do
       render_header
-      render Views::Mountains::MountainChart.new(
+      Views::Mountains::MountainChart(
         election: @election,
         voter: @voter,
         baseline: @baseline,

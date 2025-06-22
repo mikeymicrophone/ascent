@@ -123,6 +123,166 @@ Views::Components::ExpandableSection(...) do
 end
 ```
 
+## Advanced Yielding Patterns: Real Examples
+
+### Interface Yielding: Navigation Component
+
+Our `Navigation` component demonstrates **Interface Yielding**, where the component provides a builder interface for flexible composition:
+
+```ruby
+class Views::Components::Navigation < Views::ApplicationView
+  def view_template(&block)
+    if block
+      yield(NavigationBuilder.new(self))  # Pass builder to calling code
+    else
+      render_default_navigation
+    end
+    
+    nav(class: "main-navigation") do
+      @sections.each { |section| render_nav_section(section) }
+    end
+  end
+
+  def add_section(title, &block)
+    section = NavigationSection.new(title)
+    yield(section) if block
+    @sections << section
+  end
+
+  class NavigationBuilder
+    def section(title, &block)
+      @navigation.add_section(title, &block)
+    end
+  end
+end
+```
+
+**Usage:**
+```ruby
+Views::Components::Navigation() do |nav|
+  nav.section("Custom Section") do |section|
+    section.link("Special Link", custom_path)
+    section.link("Another Link", other_path)
+  end
+end
+```
+
+**Key Advantage:** Interface yielding provides **declarative composition** - callers describe what they want using a fluent, domain-specific interface rather than manually building HTML structures. This makes the component more intuitive and prevents structural mistakes.
+
+### Vanishing Yield: Mountain Chart Component
+
+Our `MountainChart` component demonstrates **Vanishing Yield**, where the yield collects configuration before rendering:
+
+```ruby
+class Views::Mountains::MountainChart < Views::Components::Base
+  def view_template(&block)
+    if block
+      vanish(&block)  # Collect candidacy data without immediate rendering
+    end
+    
+    div(class: "mountain-chart") do
+      # Render collected data after vanish completes
+      @candidacies.each do |candidacy_data|
+        CandidateColumn(candidacy_data)  # Auto-included from Views::Mountains
+      end
+    end
+  end
+
+  def candidacy(candidacy, rating: 0, approved: false)
+    # Store data for later rendering
+    @candidacies << { candidacy: candidacy, rating: rating, approved: approved }
+    nil  # Return nil - this doesn't render immediately
+  end
+
+  private
+
+  def vanish(&block)
+    yield(self) if block  # Collect configuration calls
+  end
+end
+```
+
+**Usage:**
+```ruby
+Views::Mountains::MountainChart(election: @election) do |chart|
+  chart.candidacy(candidacy_a, rating: 400, approved: true)
+  chart.candidacy(candidacy_b, rating: 250, approved: false)
+  chart.candidacy(candidacy_c, rating: 350, approved: true)
+end
+```
+
+**Key Advantage:** Vanishing yield enables **delayed rendering with validation** - the component can collect all configuration first, then validate completeness, apply business rules, or optimize rendering order before generating any HTML. This prevents partially-rendered components when data is incomplete.
+
+## Auto-Include Convention
+
+All views that inherit from `ApplicationView` automatically include their corresponding namespace module:
+
+- `Views::Issues::ShowView` automatically includes `Views::Issues`
+- `Views::Mountains::MountainChart` automatically includes `Views::Mountains` 
+- `Views::Candidacies::EditView` automatically includes `Views::Candidacies`
+
+This allows you to use Kit components without the full namespace:
+
+```ruby
+class Views::Mountains::MountainChart < Views::ApplicationView
+  def view_template
+    div(class: "mountain-chart") do
+      YAxisLabels()           # Instead of Views::Mountains::YAxisLabels()
+      CandidateColumn(...)    # Instead of Views::Mountains::CandidateColumn(...)
+      
+      # Module methods are also available:
+      position = calculate_label_position(rating)  # From Views::Mountains
+    end
+  end
+end
+```
+
+## Expandable Helper
+
+All views inherit a powerful `expandable` helper that automatically creates ExpandableSection components with `#any?` checks:
+
+**Signature:** `expandable(context, collection_or_symbol, title: nil, &block)`
+
+**Pattern 1: Association Symbol**
+```ruby
+# Context object + association symbol
+expandable(@city, :offices) do |offices|
+  ItemPreview(@city, :offices, 3) do |office|
+    link_to office.name, office, class: "link office"
+  end
+end
+```
+
+**Pattern 2: Pre-computed Collection**
+```ruby
+# Context object + computed collection with custom title
+active_elections = @city.elections.active
+expandable(@city, active_elections, title: "Active Elections") do |elections|
+  elections.each { link_to it.name, it, class: "link election" }
+end
+```
+
+**Pattern 3: Collection without Context**
+```ruby
+# No context needed for standalone collections
+expandable(nil, some_collection, title: "Items") do |items|
+  items.each { render ItemPartial(item: it) }
+end
+```
+
+**Future Expansion:**
+```ruby
+# Array context for complex where clauses (not implemented yet)
+expandable([@topic, @state], :stances) # Will raise NotImplementedError
+```
+
+**Key Benefits:**
+- **Consistent API** - context first, collection/symbol second
+- **Automatic `#any?` check** - only renders if collection has items
+- **Automatic count** - shows item count in section header
+- **Smart title generation** - humanizes association names automatically
+- **Future-proof** - designed for complex multi-object filtering
+
 ## Reference
 
 For more details on Phlex yielding patterns, see the official documentation:

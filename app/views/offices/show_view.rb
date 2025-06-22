@@ -10,7 +10,7 @@ class Views::Offices::ShowView < Views::ApplicationView
       
       h1 { "Showing office" }
       
-      Views::Offices::OfficePartial(office: @office)
+      OfficePartial(office: @office)
       
       div do
         link_to "Edit this office", 

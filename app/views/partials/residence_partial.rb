@@ -1,4 +1,4 @@
-class Views::Residences::ResidencePartial < Views::ApplicationView
+class Views::Partials::ResidencePartial < Views::ApplicationView
   def initialize(residence:)
     @residence = residence
   end

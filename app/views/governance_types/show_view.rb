@@ -10,7 +10,7 @@ class Views::GovernanceTypes::ShowView < Views::ApplicationView
       
       h1 { "Showing governance type" }
       
-      Views::GovernanceTypes::GovernanceTypePartial(governance_type: @governance_type)
+      GovernanceTypePartial(governance_type: @governance_type)
       
       div do
         link_to "Edit this governance type", 

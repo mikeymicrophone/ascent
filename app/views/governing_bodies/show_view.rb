@@ -10,7 +10,7 @@ class Views::GoverningBodies::ShowView < Views::ApplicationView
       
       h1 { "Showing governing body" }
       
-      render Views::GoverningBodies::GoverningBodyPartial.new(governing_body: @governing_body)
+      render GoverningBodyPartial.new(governing_body: @governing_body)
       
       div do
         link_to "Edit this governing body", 

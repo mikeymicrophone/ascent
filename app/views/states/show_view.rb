@@ -10,7 +10,7 @@ class Views::States::ShowView < Views::ApplicationView
       
       h1 { "Showing state" }
       
-      Views::States::StatePartial(state: @state)
+      StatePartial(state: @state)
       
       div do
         link_to "Edit this state", 

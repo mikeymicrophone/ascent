@@ -20,7 +20,7 @@ class Views::GoverningBodies::IndexView < Views::ApplicationView
         if @governing_bodies.any?
           @governing_bodies.each do |governing_body|
             div(id: dom_id(governing_body, :list_item)) do
-              render Views::GoverningBodies::GoverningBodyPartial.new(governing_body: governing_body)
+              render GoverningBodyPartial.new(governing_body: governing_body)
               
               div do
                 link_to "Show", governing_body,

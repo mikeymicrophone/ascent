@@ -60,9 +60,7 @@ class Views::Stances::StanceForm < Views::ApplicationView
       h2 { "#{pluralize(@stance.errors.count, 'error')} prohibited this stance from being saved:" }
       
       ul(class: "list-disc ml-6") do
-        @stance.errors.each do |error|
-          li { error.full_message }
-        end
+        @stance.errors.each { li { it.full_message } }
       end
     end
   end
