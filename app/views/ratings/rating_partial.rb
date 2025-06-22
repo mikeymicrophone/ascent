@@ -5,7 +5,7 @@ class Views::Ratings::RatingPartial < Views::ApplicationView
 
   def view_template(&)
     div(id: dom_id(@rating), class: "rating-partial") do
-      h3 { @rating.voter_id }
+      h3 { @rating.voter.name }
       div do
         span { "Candidacy:" }
         whitespace

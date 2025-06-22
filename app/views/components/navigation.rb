@@ -11,19 +11,79 @@ class Views::Components::Navigation < Views::ApplicationView
         end
         
         div(class: "nav-links") do
-          link_to "Countries", countries_path, class: nav_link_class(countries_path)
-          link_to "States", states_path, class: nav_link_class(states_path)
-          link_to "Cities", cities_path, class: nav_link_class(cities_path)
-          link_to "Positions", positions_path, class: nav_link_class(positions_path)
-          link_to "Offices", offices_path, class: nav_link_class(offices_path)
-          link_to "Years", years_path, class: nav_link_class(years_path)
-          link_to "Elections", elections_path, class: nav_link_class(elections_path)
-          link_to "People", people_path, class: nav_link_class(people_path)
-          link_to "Candidacies", candidacies_path, class: nav_link_class(candidacies_path)
-          link_to "Voters", voters_path, class: nav_link_class(voters_path)
-          link_to "Residences", residences_path, class: nav_link_class(residences_path)
-          link_to "Ratings", ratings_path, class: nav_link_class(ratings_path)
-          link_to "Baselines", voter_election_baselines_path, class: nav_link_class(voter_election_baselines_path)
+          # Jurisdictions dropdown
+          div(class: "nav-group", data: { controller: "dropdown" }) do
+            div(class: "nav-group-header", data: { action: "click->dropdown#toggle" }) do
+              span { "Jurisdictions" }
+              span(class: "nav-group-arrow") { "▼" }
+            end
+            div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
+              link_to "Countries", countries_path, class: nav_link_class(countries_path)
+              link_to "States", states_path, class: nav_link_class(states_path)
+              link_to "Cities", cities_path, class: nav_link_class(cities_path)
+            end
+          end
+          
+          # Governance dropdown
+          div(class: "nav-group", data: { controller: "dropdown" }) do
+            div(class: "nav-group-header", data: { action: "click->dropdown#toggle" }) do
+              span { "Governance" }
+              span(class: "nav-group-arrow") { "▼" }
+            end
+            div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
+              link_to "Positions", positions_path, class: nav_link_class(positions_path)
+              link_to "Governance Types", governance_types_path, class: nav_link_class(governance_types_path)
+              link_to "Areas of Concern", area_of_concerns_path, class: nav_link_class(area_of_concerns_path)
+              link_to "Governing Bodies", governing_bodies_path, class: nav_link_class(governing_bodies_path)
+              link_to "Offices", offices_path, class: nav_link_class(offices_path)
+              link_to "Policies", policies_path, class: nav_link_class(policies_path)
+              link_to "Official Codes", official_codes_path, class: nav_link_class(official_codes_path)
+            end
+          end
+          
+          # Policy dropdown
+          div(class: "nav-group", data: { controller: "dropdown" }) do
+            div(class: "nav-group-header", data: { action: "click->dropdown#toggle" }) do
+              span { "Policy" }
+              span(class: "nav-group-arrow") { "▼" }
+            end
+            div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
+              link_to "Topics", topics_path, class: nav_link_class(topics_path)
+              link_to "Issues", issues_path, class: nav_link_class(issues_path)
+              link_to "Approaches", approaches_path, class: nav_link_class(approaches_path)
+              link_to "Stances", stances_path, class: nav_link_class(stances_path)
+            end
+          end
+          
+          # Elections dropdown
+          div(class: "nav-group", data: { controller: "dropdown" }) do
+            div(class: "nav-group-header", data: { action: "click->dropdown#toggle" }) do
+              span { "Elections" }
+              span(class: "nav-group-arrow") { "▼" }
+            end
+            div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
+              link_to "Years", years_path, class: nav_link_class(years_path)
+              link_to "Elections", elections_path, class: nav_link_class(elections_path)
+              link_to "People", people_path, class: nav_link_class(people_path)
+              link_to "Candidacies", candidacies_path, class: nav_link_class(candidacies_path)
+            end
+          end
+          
+          # Voting dropdown
+          div(class: "nav-group", data: { controller: "dropdown" }) do
+            div(class: "nav-group-header", data: { action: "click->dropdown#toggle" }) do
+              span { "Voting" }
+              span(class: "nav-group-arrow") { "▼" }
+            end
+            div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
+              link_to "Voters", voters_path, class: nav_link_class(voters_path)
+              link_to "Residences", residences_path, class: nav_link_class(residences_path)
+              link_to "Ratings", ratings_path, class: nav_link_class(ratings_path)
+              link_to "Baselines", voter_election_baselines_path, class: nav_link_class(voter_election_baselines_path)
+              link_to "Mountains", mountains_path, class: nav_link_class(mountains_path)
+            end
+          end
+          
           render Views::Components::DeviseLinks.new(current_voter: @current_voter)
         end
       end

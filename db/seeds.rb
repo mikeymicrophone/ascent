@@ -26,6 +26,38 @@ CitySeeder.seed
 puts "\n🏢 Seeding positions..."
 PositionSeeder.seed
 
+# Seed governance types (no dependencies)
+puts "\n⚖️ Seeding governance types..."
+GovernanceTypeSeeder.seed
+
+# Seed areas of concern (no dependencies)
+puts "\n🎯 Seeding areas of concern..."
+AreaOfConcernSeeder.seed
+
+# Seed topics (no dependencies)
+puts "\n📋 Seeding topics..."
+TopicSeeder.seed
+
+# Seed issues (depends on topics)
+puts "\n⚠️ Seeding issues..."
+IssueSeeder.seed
+
+# Seed approaches (depends on issues)
+puts "\n💡 Seeding approaches..."
+ApproachSeeder.seed
+
+# Seed governing bodies (depends on governance types and jurisdictions)
+puts "\n🏛️ Seeding governing bodies..."
+GoverningBodySeeder.seed
+
+# Seed policies (depends on governing bodies, areas of concern, and approaches)
+puts "\n📋 Seeding policies..."
+PolicySeeder.seed
+
+# Seed official codes (depends on policies)
+puts "\n📜 Seeding official codes..."
+OfficialCodeSeeder.seed
+
 # Seed offices (depends on positions and jurisdictions)
 puts "\n🏛️ Seeding offices..."
 OfficeSeeder.seed
@@ -45,6 +77,10 @@ PersonSeeder.seed
 # Seed candidacies (depends on people and elections)
 puts "\n🏃 Seeding candidacies..."
 CandidacySeeder.seed
+
+# Seed stances (depends on candidacies, issues, and approaches)
+puts "\n🎯 Seeding candidate stances..."
+StanceSeeder.seed
 
 # Seed voters (no dependencies)
 puts "\n🗳️ Seeding voters..."
@@ -68,6 +104,15 @@ puts "   Countries: #{Country.count}"
 puts "   States: #{State.count}"
 puts "   Cities: #{City.count}"
 puts "   Positions: #{Position.count}"
+puts "   Governance Types: #{GovernanceType.count}"
+puts "   Areas of Concern: #{AreaOfConcern.count}"
+puts "   Topics: #{Topic.count}"
+puts "   Issues: #{Issue.count}"
+puts "   Approaches: #{Approach.count}"
+puts "   Stances: #{Stance.count}"
+puts "   Governing Bodies: #{GoverningBody.count}"
+puts "   Policies: #{Policy.count}"
+puts "   Official Codes: #{OfficialCode.count}"
 puts "   Offices: #{Office.count}"
 puts "   Years: #{Year.count}"
 puts "   Elections: #{Election.count}"

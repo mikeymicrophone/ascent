@@ -12,6 +12,28 @@
   @apply gap-8;
 }
 
+/* Dropdown Spacing */
+.nav-group {
+  @apply mx-2;
+}
+
+.nav-group-header {
+  @apply px-4 py-2;
+  @apply gap-2;
+}
+
+.nav-group-content {
+  @apply mt-1 p-2;
+  @apply min-w-48;
+  @apply shadow-lg;
+  @apply rounded-md;
+}
+
+.nav-group-content .nav-link {
+  @apply px-3 py-2;
+  @apply w-full;
+}
+
 .nav-link {
   @apply px-4 py-2;
   @apply rounded-md;

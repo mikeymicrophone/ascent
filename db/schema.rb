@@ -10,9 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_002912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "approaches", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "issue_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["issue_id"], name: "index_approaches_on_issue_id"
+  end
+
+  create_table "area_of_concerns", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "policy_domain"
+    t.string "regulatory_scope"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "candidacies", force: :cascade do |t|
     t.bigint "person_id", null: false
@@ -57,6 +75,38 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
     t.index ["year_id"], name: "index_elections_on_year_id"
   end
 
+  create_table "governance_types", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "authority_level"
+    t.string "decision_making_process"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "governing_bodies", force: :cascade do |t|
+    t.string "name"
+    t.string "jurisdiction_type"
+    t.integer "jurisdiction_id"
+    t.bigint "governance_type_id", null: false
+    t.text "description"
+    t.string "meeting_schedule"
+    t.boolean "is_active"
+    t.date "established_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["governance_type_id"], name: "index_governing_bodies_on_governance_type_id"
+  end
+
+  create_table "issues", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "topic_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_issues_on_topic_id"
+  end
+
   create_table "offices", force: :cascade do |t|
     t.bigint "position_id", null: false
     t.string "jurisdiction_type", null: false
@@ -69,6 +119,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
     t.index ["position_id"], name: "index_offices_on_position_id"
   end
 
+  create_table "official_codes", force: :cascade do |t|
+    t.bigint "policy_id", null: false
+    t.string "code_number"
+    t.string "title"
+    t.text "full_text"
+    t.text "summary"
+    t.text "enforcement_mechanism"
+    t.text "penalty_structure"
+    t.date "effective_date"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["policy_id"], name: "index_official_codes_on_policy_id"
+  end
+
   create_table "people", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -78,6 +143,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
     t.text "bio"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "policies", force: :cascade do |t|
+    t.bigint "governing_body_id", null: false
+    t.bigint "area_of_concern_id", null: false
+    t.bigint "approach_id", null: false
+    t.string "title"
+    t.text "description"
+    t.string "status"
+    t.date "enacted_date"
+    t.date "expiration_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approach_id"], name: "index_policies_on_approach_id"
+    t.index ["area_of_concern_id"], name: "index_policies_on_area_of_concern_id"
+    t.index ["governing_body_id"], name: "index_policies_on_governing_body_id"
   end
 
   create_table "positions", force: :cascade do |t|
@@ -124,6 +205,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
     t.index ["voter_id"], name: "index_residences_on_voter_id"
   end
 
+  create_table "stances", force: :cascade do |t|
+    t.bigint "candidacy_id", null: false
+    t.bigint "issue_id", null: false
+    t.bigint "approach_id", null: false
+    t.text "explanation"
+    t.string "priority_level"
+    t.text "evidence_links"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approach_id"], name: "index_stances_on_approach_id"
+    t.index ["candidacy_id"], name: "index_stances_on_candidacy_id"
+    t.index ["issue_id"], name: "index_stances_on_issue_id"
+  end
+
   create_table "states", force: :cascade do |t|
     t.string "name"
     t.string "code"
@@ -131,6 +226,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_states_on_country_id"
+  end
+
+  create_table "topics", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "voter_election_baseline_archives", force: :cascade do |t|
@@ -193,17 +295,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_135020) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "approaches", "issues"
   add_foreign_key "candidacies", "elections"
   add_foreign_key "candidacies", "people"
   add_foreign_key "cities", "states"
   add_foreign_key "elections", "offices"
   add_foreign_key "elections", "years"
+  add_foreign_key "governing_bodies", "governance_types"
+  add_foreign_key "issues", "topics"
   add_foreign_key "offices", "positions"
+  add_foreign_key "official_codes", "policies"
+  add_foreign_key "policies", "approaches"
+  add_foreign_key "policies", "area_of_concerns"
+  add_foreign_key "policies", "governing_bodies"
   add_foreign_key "rating_archives", "candidacies"
   add_foreign_key "rating_archives", "voters"
   add_foreign_key "ratings", "candidacies"
   add_foreign_key "ratings", "voters"
   add_foreign_key "residences", "voters"
+  add_foreign_key "stances", "approaches"
+  add_foreign_key "stances", "candidacies"
+  add_foreign_key "stances", "issues"
   add_foreign_key "states", "countries"
   add_foreign_key "voter_election_baseline_archives", "elections"
   add_foreign_key "voter_election_baseline_archives", "voters"

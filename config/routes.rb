@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  resources :official_codes
+  resources :policies
+  resources :stances
+  resources :approaches
+  resources :issues
+  resources :topics
+  resources :governing_bodies
+  resources :area_of_concerns
+  resources :governance_types
   resources :voter_election_baselines
   resources :ratings
 

@@ -16,3 +16,22 @@
   background-color: var(--nav-link-hover-bg);
   color: var(--nav-link-hover-color);
 }
+
+/* Dropdown States */
+.nav-group-header {
+  @apply transition-all duration-200;
+}
+
+.nav-group-header:hover {
+  background-color: var(--nav-link-hover-bg);
+  color: var(--nav-link-hover-color);
+}
+
+.nav-group-content {
+  @apply transition-all duration-200 ease-out;
+}
+
+.nav-group-content .nav-link:hover {
+  background-color: var(--nav-link-hover-bg);
+  color: var(--nav-link-hover-color);
+}

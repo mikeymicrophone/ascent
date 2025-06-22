@@ -196,33 +196,99 @@ The project includes a custom `PhlexScaffoldGenerator` (`lib/generators/phlex_sc
 - Form and Partial components with Tailwind styling
 - Model and route generation
 
-### Planned Enhancements
 
-**Testing Integration**
-- RSpec controller and model specs with realistic test scenarios
-- FactoryBot factories with descriptive, politically-relevant data
-- System tests for complete CRUD workflows
 
-**Convention Alignment**
-- Service object generation for complex business logic
-- View helper generation for markup encapsulation  
-- Enhanced error handling and flash message patterns
 
-**CSS/Styling Improvements**
-- Semantic CSS class generation instead of direct Tailwind
-- Corresponding CSS files with @apply directives
-- Better component organization (UI vs domain separation)
+## Governance & Policy Models
 
-**Documentation Generation**
-- Inline code documentation
-- README updates for new resources
-- Generator options for election-specific scaffolds (mock, historical, binding)
+### GoverningBody Model
 
-This generator system will accelerate development while ensuring all generated code follows project conventions and produces emotionally satisfying, production-ready code.
+Represents actual governing entities within jurisdictions (e.g., City Council, State Legislature, School Board):
 
-## Extensibility
-This foundation allows for future features like:
-- Voter registration and authentication
-- Ballot creation and voting interfaces
-- Results calculation and visualization
-- Polling and preference expression tools
+- `name` - Name of the governing body (e.g., "San Francisco City Council")
+- `jurisdiction_type` - Polymorphic type (Country, State, City, Town, Organization)
+- `jurisdiction_id` - Polymorphic ID referencing the specific jurisdiction
+- `governance_type_id` - References GovernanceType
+- `description` - Purpose and scope of this governing body
+- `meeting_schedule` - How often they meet (weekly, monthly, quarterly)
+- `is_active` - Boolean indicating if currently active
+- `established_date` - When this body was established
+
+### GovernanceType Model
+
+Defines different types of governance structures:
+
+- `name` - Type name (e.g., "Municipal Legislature", "County Executive", "School Board")
+- `description` - Detailed explanation of this governance type
+- `authority_level` - Scope of authority (local, regional, state, federal)
+- `decision_making_process` - How decisions are made (majority vote, consensus, etc.)
+
+### AreaOfConcern Model
+
+Represents different policy domains that governing bodies address:
+
+- `name` - Area name (e.g., "Public Safety", "Education", "Transportation")
+- `description` - Detailed description of this policy area
+- `category` - High-level grouping (infrastructure, social, economic, environmental)
+- `scope` - Geographic or functional scope this area typically covers
+
+### Topic
+
+This is a general pattern of interaction, like "taxes" or "education". It can be a topic of discussion, a policy area, or a general issue.
+
+- `title` - Topic title (e.g., "Affordable Housing Initiative")
+- `description` - Detailed description of the topic
+
+### Issue Model
+
+This is a particular unsolved problem, like "affordable housing" or "poor education". It is a specific instance of a topic.
+
+- `title` - Issue title (e.g., "Affordable Housing Initiative")
+- `description` - Detailed description of the issue
+- `topic_id` - References Topic
+
+### Approach
+
+This is a specific solution to an issue, like "affordable housing initiative" or "poor education initiative". It is a specific instance of an issue.
+
+- `title` - Approach title (e.g., "Affordable Housing Initiative")
+- `description` - Detailed description of the approach
+- `issue_id` - References Issue
+
+### Policy
+
+Join table connecting GoverningBodies to AreasOfConcern, representing actual policies:
+
+- `governing_body_id` - References GoverningBody
+- `area_of_concern_id` - References AreaOfConcern
+- `approach_id` - References Approach
+- `title` - Policy title/name
+- `description` - Policy summary and intent
+- `status` - Policy status (proposed, active, repealed, under_review)
+- `enacted_date` - When policy was enacted
+- `expiration_date` - When policy expires (if applicable)
+
+### OfficialCode
+
+Represents specific legal implementations and enforcement mechanisms:
+
+- `policy_id` - References Policy
+- `code_number` - Official numbering system (e.g., "Municipal Code 15.2.3")
+- `title` - Official title of the code/regulation
+- `full_text` - Complete legal text
+- `summary` - Plain-language summary for voters
+- `enforcement_mechanism` - How violations are handled
+- `penalty_structure` - Fines, sanctions, or other penalties
+- `effective_date` - When this code takes effect
+- `status` - Code status (active, repealed, superseded)
+
+### Stance
+
+Links candidacies to issues, showing candidate positions:
+
+- `candidacy_id` - References Candidacy
+- `issue_id` - References Issue
+- `approach_id` - References Approach
+- `explanation` - Detailed explanation of their position
+- `priority_level` - How important this issue is to the candidate (high, medium, low)
+- `evidence_links` - References to supporting documentation or voting records

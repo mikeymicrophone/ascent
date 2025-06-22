@@ -9,3 +9,13 @@
   @apply font-medium;
   @apply no-underline;
 }
+
+/* Dropdown Typography */
+.nav-group-header {
+  @apply font-semibold;
+  @apply no-underline;
+}
+
+.nav-group-arrow {
+  @apply font-normal;
+}
