@@ -220,89 +220,31 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
   end
 
   def has_children?
-    case @current_object
-    when Country
-      @current_object.states.any?
-    when State
-      @current_object.cities.any?
-    when City
-      false
-    else
-      false
-    end
+    @current_object.has_navigation_children?
   end
 
   def children_count
-    case @current_object
-    when Country
-      @current_object.states.count
-    when State
-      @current_object.cities.count
-    else
-      0
-    end
+    @current_object.children_count
   end
 
   def get_children(item)
-    case item
-    when Country
-      # Use with_election_data scope for better performance when showing stats
-      item.states.with_election_data.order(:name)
-    when State
-      # Use with_office_data scope for better performance when showing stats
-      item.cities.with_office_data.order(:name)
-    else
-      []
-    end
+    item.get_children
   end
 
   def geographic_level_name(item)
-    case item
-    when Country
-      "Country"
-    when State
-      "State"
-    when City
-      "City"
-    else
-      "Location"
-    end
+    item.hierarchy_level_name
   end
 
   def child_type_name(item)
-    case item
-    when Country
-      "State"
-    when State
-      "City"
-    else
-      "Location"
-    end
+    item.child_type_name
   end
 
   def child_route_name(item)
-    case item
-    when Country
-      :states
-    when State
-      :cities
-    else
-      :locations
-    end
+    item.child_route_name
   end
 
   def get_children_path(item)
-    case item.class.name
-    when 'Country'
-      # Use nested route for states under country
-      [@current_object, :states]
-    when 'State'
-      # Use flat route for cities (no nested route exists)
-      cities_path
-    else
-      # Fallback to a safe path
-      root_path
-    end
+    item.get_children_path(self)
   end
 
   def humanize_stat_label(key)
