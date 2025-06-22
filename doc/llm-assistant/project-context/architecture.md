@@ -277,6 +277,8 @@ Represents specific legal implementations and enforcement mechanisms:
 - `title` - Official title of the code/regulation
 - `full_text` - Complete legal text
 - `summary` - Plain-language summary for voters
+- `code_type` - enum: [:statute, :regulation, :ordinance, :administrative_order, :policy_directive, :judicial_rule]
+- `statutory_authority` - If it's a regulation, what statute authorizes it?
 - `enforcement_mechanism` - How violations are handled
 - `penalty_structure` - Fines, sanctions, or other penalties
 - `effective_date` - When this code takes effect

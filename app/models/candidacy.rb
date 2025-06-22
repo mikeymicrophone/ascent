@@ -3,6 +3,7 @@ class Candidacy < ApplicationRecord
   belongs_to :election
   has_many :ratings, dependent: :destroy
   has_many :rating_archives, dependent: :destroy
+  has_many :stances, dependent: :destroy
   has_many :voters, through: :ratings
   
   validates :status, presence: true, inclusion: { in: %w[announced active withdrawn disqualified] }
