@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Mountains::MountainChart < Views::Components::Base
+class Views::Mountains::MountainChart < Views::ApplicationView
   def initialize(election:, voter: nil, baseline: nil, mountain_data: nil)
     @election = election
     @voter = voter
@@ -17,14 +17,14 @@ class Views::Mountains::MountainChart < Views::Components::Base
     end
     
     div(class: "mountain-chart") do
-      Views::Mountains::YAxisLabels()
+      YAxisLabels()
       
       div(class: "chart-content") do
-        Views::Mountains::BaselineIndicator(baseline: @baseline) if @baseline
+        BaselineIndicator(baseline: @baseline) if @baseline
         
         div(class: "candidate-columns") do
           @candidacies.each do |candidacy_data|
-            Views::Mountains::CandidateColumn(
+            CandidateColumn(
               candidacy: candidacy_data[:candidacy],
               rating_value: candidacy_data[:rating_value],
               has_rating: candidacy_data[:has_rating],
@@ -38,7 +38,7 @@ class Views::Mountains::MountainChart < Views::Components::Base
   end
 
   def candidacy(candidacy, rating: 0, approved: false, has_rating: false)
-    position_y = Views::Mountains.calculate_label_position(rating)
+    position_y = calculate_label_position(rating)
     @candidacies << {
       candidacy: candidacy,
       rating_value: rating,

@@ -183,7 +183,7 @@ class Views::Mountains::MountainChart < Views::Components::Base
     div(class: "mountain-chart") do
       # Render collected data after vanish completes
       @candidacies.each do |candidacy_data|
-        render Views::Mountains::CandidateColumn.new(candidacy_data)
+        CandidateColumn(candidacy_data)  # Auto-included from Views::Mountains
       end
     end
   end
@@ -212,6 +212,30 @@ end
 ```
 
 **Key Advantage:** Vanishing yield enables **delayed rendering with validation** - the component can collect all configuration first, then validate completeness, apply business rules, or optimize rendering order before generating any HTML. This prevents partially-rendered components when data is incomplete.
+
+## Auto-Include Convention
+
+All views that inherit from `ApplicationView` automatically include their corresponding namespace module:
+
+- `Views::Issues::ShowView` automatically includes `Views::Issues`
+- `Views::Mountains::MountainChart` automatically includes `Views::Mountains` 
+- `Views::Candidacies::EditView` automatically includes `Views::Candidacies`
+
+This allows you to use Kit components without the full namespace:
+
+```ruby
+class Views::Mountains::MountainChart < Views::ApplicationView
+  def view_template
+    div(class: "mountain-chart") do
+      YAxisLabels()           # Instead of Views::Mountains::YAxisLabels()
+      CandidateColumn(...)    # Instead of Views::Mountains::CandidateColumn(...)
+      
+      # Module methods are also available:
+      position = calculate_label_position(rating)  # From Views::Mountains
+    end
+  end
+end
+```
 
 ## Reference
 

@@ -10,7 +10,7 @@ class Views::Issues::ShowView < Views::ApplicationView
       
       h1 { "Showing issue" }
       
-      Views::Issues::IssuePartial(issue: @issue)
+      IssuePartial(issue: @issue)
       
       div do
         link_to "Edit this issue", 
