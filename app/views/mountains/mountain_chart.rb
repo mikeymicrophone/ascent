@@ -17,14 +17,14 @@ class Views::Mountains::MountainChart < Views::Components::Base
     end
     
     div(class: "mountain-chart") do
-      render Views::Mountains::YAxisLabels.new
+      Views::Mountains::YAxisLabels()
       
       div(class: "chart-content") do
-        render Views::Mountains::BaselineIndicator.new(baseline: @baseline) if @baseline
+        Views::Mountains::BaselineIndicator(baseline: @baseline) if @baseline
         
         div(class: "candidate-columns") do
           @candidacies.each do |candidacy_data|
-            render Views::Mountains::CandidateColumn.new(
+            Views::Mountains::CandidateColumn(
               candidacy: candidacy_data[:candidacy],
               rating_value: candidacy_data[:rating_value],
               has_rating: candidacy_data[:has_rating],

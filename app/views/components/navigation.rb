@@ -22,7 +22,7 @@ class Views::Components::Navigation < Views::ApplicationView
             render_nav_section(section)
           end
           
-          render Views::Components::DeviseLinks.new(current_voter: @current_voter)
+          Views::Components::DeviseLinks(current_voter: @current_voter)
         end
       end
     end

@@ -123,6 +123,96 @@ Views::Components::ExpandableSection(...) do
 end
 ```
 
+## Advanced Yielding Patterns: Real Examples
+
+### Interface Yielding: Navigation Component
+
+Our `Navigation` component demonstrates **Interface Yielding**, where the component provides a builder interface for flexible composition:
+
+```ruby
+class Views::Components::Navigation < Views::ApplicationView
+  def view_template(&block)
+    if block
+      yield(NavigationBuilder.new(self))  # Pass builder to calling code
+    else
+      render_default_navigation
+    end
+    
+    nav(class: "main-navigation") do
+      @sections.each { |section| render_nav_section(section) }
+    end
+  end
+
+  def add_section(title, &block)
+    section = NavigationSection.new(title)
+    yield(section) if block
+    @sections << section
+  end
+
+  class NavigationBuilder
+    def section(title, &block)
+      @navigation.add_section(title, &block)
+    end
+  end
+end
+```
+
+**Usage:**
+```ruby
+Views::Components::Navigation() do |nav|
+  nav.section("Custom Section") do |section|
+    section.link("Special Link", custom_path)
+    section.link("Another Link", other_path)
+  end
+end
+```
+
+**Key Advantage:** Interface yielding provides **declarative composition** - callers describe what they want using a fluent, domain-specific interface rather than manually building HTML structures. This makes the component more intuitive and prevents structural mistakes.
+
+### Vanishing Yield: Mountain Chart Component
+
+Our `MountainChart` component demonstrates **Vanishing Yield**, where the yield collects configuration before rendering:
+
+```ruby
+class Views::Mountains::MountainChart < Views::Components::Base
+  def view_template(&block)
+    if block
+      vanish(&block)  # Collect candidacy data without immediate rendering
+    end
+    
+    div(class: "mountain-chart") do
+      # Render collected data after vanish completes
+      @candidacies.each do |candidacy_data|
+        render Views::Mountains::CandidateColumn.new(candidacy_data)
+      end
+    end
+  end
+
+  def candidacy(candidacy, rating: 0, approved: false)
+    # Store data for later rendering
+    @candidacies << { candidacy: candidacy, rating: rating, approved: approved }
+    nil  # Return nil - this doesn't render immediately
+  end
+
+  private
+
+  def vanish(&block)
+    yield(self) if block  # Collect configuration calls
+  end
+end
+```
+
+**Usage:**
+```ruby
+Views::Mountains::MountainChart(election: @election) do |chart|
+  chart.candidacy(candidacy_a, rating: 400, approved: true)
+  chart.candidacy(candidacy_b, rating: 250, approved: false)
+  chart.candidacy(candidacy_c, rating: 350, approved: true)
+end
+```
+
+**Key Advantage:** Vanishing yield enables **delayed rendering with validation** - the component can collect all configuration first, then validate completeness, apply business rules, or optimize rendering order before generating any HTML. This prevents partially-rendered components when data is incomplete.
+
 ## Reference
 
 For more details on Phlex yielding patterns, see the official documentation:

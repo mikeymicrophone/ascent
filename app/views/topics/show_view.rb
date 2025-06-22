@@ -57,7 +57,7 @@ class Views::Topics::ShowView < Views::ApplicationView
     if @topic.issues.any?
       content_section("Issues in this Topic", key: "issues") do
         @topic.issues.each do |issue|
-          render Views::Issues::IssuePartial.new(issue: issue, show_topic: false, show_approaches: true)
+          Views::Issues::IssuePartial(issue: issue, show_topic: false, show_approaches: true)
         end
       end
     end
@@ -65,7 +65,7 @@ class Views::Topics::ShowView < Views::ApplicationView
     if @topic.stances.any?
       content_section("Candidate Positions on this Topic", key: "stances") do
         @topic.stances.includes(:candidacy, :issue, :approach).each do |stance|
-          render Views::Stances::StancePartial.new(stance: stance, show_candidacy: true, show_issue: true, show_approach: true)
+          Views::Stances::StancePartial(stance: stance, show_candidacy: true, show_issue: true, show_approach: true)
         end
       end
     end
