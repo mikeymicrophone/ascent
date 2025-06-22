@@ -16,12 +16,43 @@ class Views::ApplicationView < Phlex::HTML
   include Devise::Controllers::Helpers
   include Pagy::Frontend
 
+  include Views::Components
+
   def self.inherited(subclass)
     super
     auto_include_namespace_module subclass
   end
 
   private
+
+  def expandable(object_or_collection, association_or_options = nil, title: nil, &block)
+    # Handle different argument patterns:
+    # expandable(@city, :offices) { ... }
+    # expandable(collection, title: "Custom Title") { ... }
+
+    if association_or_options.is_a?(Symbol)
+      # Pattern: expandable(object, :association)
+      collection = object_or_collection.send(association_or_options)
+      section_title = title || association_or_options.to_s.humanize
+    elsif association_or_options.is_a?(Hash) || title
+      # Pattern: expandable(collection, title: "Title") or expandable(collection, "Title")
+      collection = object_or_collection
+      section_title = title || association_or_options[:title] || "Items"
+    else
+      # Pattern: expandable(collection) - use collection class name
+      collection = object_or_collection
+      section_title = collection.first&.class&.name&.pluralize || "Items"
+    end
+
+    return unless collection.respond_to?(:any?) && collection.any?
+
+    Views::Components::ExpandableSection(
+      title: section_title,
+      count: collection.count
+    ) do
+      yield(collection) if block
+    end
+  end
 
   # All views that inherit from this have access to methods on their namespace module, including Kits
   def self.auto_include_namespace_module(klass)

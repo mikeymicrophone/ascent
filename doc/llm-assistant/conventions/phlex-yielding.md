@@ -237,6 +237,35 @@ class Views::Mountains::MountainChart < Views::ApplicationView
 end
 ```
 
+## Expandable Helper
+
+All views inherit a powerful `expandable` helper that automatically creates ExpandableSection components with `#any?` checks:
+
+**Pattern 1: Association Symbol**
+```ruby
+# Automatically gets collection, title, and count from association
+expandable(@city, :offices) do |offices|
+  ItemPreview(@city, :offices, 3) do |office|
+    link_to office.name, office, class: "link office"
+  end
+end
+```
+
+**Pattern 2: Custom Collection with Title**
+```ruby
+# Pass computed collection with custom title
+active_elections = @city.elections.active
+expandable(active_elections, title: "Active Elections") do |elections|
+  elections.each { link_to it.name, it, class: "link election" }
+end
+```
+
+**Key Benefits:**
+- **Automatic `#any?` check** - only renders if collection has items
+- **Automatic count** - shows item count in section header
+- **Smart title generation** - humanizes association names automatically
+- **Flexible usage** - works with associations or computed collections
+
 ## Reference
 
 For more details on Phlex yielding patterns, see the official documentation:
