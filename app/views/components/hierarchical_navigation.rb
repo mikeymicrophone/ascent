@@ -6,16 +6,34 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     @show_stats = show_stats
     @expandable = expandable
     @hierarchy_chain = build_hierarchy_chain
+    @custom_stats = []
+    @custom_sections = []
   end
 
-  def view_template(&)
+  def view_template(&block)
+    if block
+      yield(NavigationBuilder.new(self))
+    end
+    
     nav(class: "hierarchical-navigation") do
       breadcrumb_chain
       
       if @expandable && has_children?
         drill_down_section
       end
+      
+      @custom_sections.each do |section|
+        section[:content].call
+      end
     end
+  end
+
+  def add_stat(key, value, label)
+    @custom_stats << { key: key, value: value, label: label }
+  end
+
+  def add_custom_section(&block)
+    @custom_sections << { content: block }
   end
 
   def build_hierarchy_chain
@@ -92,6 +110,13 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
           span(class: "stat-item office-count") do
             span(class: "stat-value") { stats[:total_offices] }
             span(class: "stat-label") { "offices" }
+          end
+        end
+        
+        @custom_stats.each do |custom_stat|
+          span(class: "stat-item custom-stat") do
+            span(class: "stat-value") { custom_stat[:value] }
+            span(class: "stat-label") { custom_stat[:label] }
           end
         end
       end
@@ -296,6 +321,20 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
       "Cities"
     else
       key.to_s.humanize
+    end
+  end
+
+  class NavigationBuilder
+    def initialize(navigation)
+      @navigation = navigation
+    end
+
+    def stat(key, value, label)
+      @navigation.add_stat(key, value, label)
+    end
+
+    def custom_section(&block)
+      @navigation.add_custom_section(&block)
     end
   end
 end
