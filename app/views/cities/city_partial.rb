@@ -20,7 +20,7 @@ class Views::Cities::CityPartial < Views::ApplicationView
       
       # Active Elections expandable section
       active_elections = @city.offices.joins(:elections).includes(:elections).flat_map(&:elections).select { |e| e.status == 'active' }
-      expandable(active_elections, title: "Active Elections") do |elections|
+      expandable(@city, active_elections, title: "Active Elections") do |elections|
         ItemPreview(@city, :active_elections, 3) do |election|
           link_to election.name, election, class: "link election"
           div(class: "election-status") do

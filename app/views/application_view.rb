@@ -25,28 +25,29 @@ class Views::ApplicationView < Phlex::HTML
 
   private
 
-  def expandable(object_or_collection, association_or_options = nil, title: nil, &block)
-    # Handle different argument patterns:
-    # expandable(@city, :offices) { ... }
-    # expandable(collection, title: "Custom Title") { ... }
+  def expandable(context, collection_or_symbol, title: nil, &block)
+    # Handle array context (future expansion for complex where clauses)
+    if context.is_a?(Array)
+      raise NotImplementedError, "Array context not implemented yet - for future stances filtering by topic AND state"
+    end
 
-    if association_or_options.is_a?(Symbol)
-      # Pattern: expandable(object, :association)
-      collection = object_or_collection.send(association_or_options)
-      section_title = title || association_or_options.to_s.humanize
-    elsif association_or_options.is_a?(Hash) || title
-      # Pattern: expandable(collection, title: "Title") or expandable(collection, "Title")
-      collection = object_or_collection
-      section_title = title || association_or_options[:title] || "Items"
+    # Determine the collection
+    if collection_or_symbol.is_a?(Symbol)
+      # Fetch collection from context object using symbol
+      if context.nil?
+        raise ArgumentError, "Context cannot be nil when using symbol for collection"
+      end
+      collection = context.send(collection_or_symbol)
+      section_title = title || collection_or_symbol.to_s.humanize
     else
-      # Pattern: expandable(collection) - use collection class name
-      collection = object_or_collection
-      section_title = collection.first&.class&.name&.pluralize || "Items"
+      # Use provided collection directly
+      collection = collection_or_symbol
+      section_title = title || collection.first&.class&.name&.pluralize || "Items"
     end
 
     return unless collection.respond_to?(:any?) && collection.any?
 
-    Views::Components::ExpandableSection(
+    ExpandableSection(
       title: section_title,
       count: collection.count
     ) do

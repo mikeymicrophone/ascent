@@ -241,9 +241,11 @@ end
 
 All views inherit a powerful `expandable` helper that automatically creates ExpandableSection components with `#any?` checks:
 
+**Signature:** `expandable(context, collection_or_symbol, title: nil, &block)`
+
 **Pattern 1: Association Symbol**
 ```ruby
-# Automatically gets collection, title, and count from association
+# Context object + association symbol
 expandable(@city, :offices) do |offices|
   ItemPreview(@city, :offices, 3) do |office|
     link_to office.name, office, class: "link office"
@@ -251,20 +253,35 @@ expandable(@city, :offices) do |offices|
 end
 ```
 
-**Pattern 2: Custom Collection with Title**
+**Pattern 2: Pre-computed Collection**
 ```ruby
-# Pass computed collection with custom title
+# Context object + computed collection with custom title
 active_elections = @city.elections.active
-expandable(active_elections, title: "Active Elections") do |elections|
+expandable(@city, active_elections, title: "Active Elections") do |elections|
   elections.each { link_to it.name, it, class: "link election" }
 end
 ```
 
+**Pattern 3: Collection without Context**
+```ruby
+# No context needed for standalone collections
+expandable(nil, some_collection, title: "Items") do |items|
+  items.each { render ItemPartial(item: it) }
+end
+```
+
+**Future Expansion:**
+```ruby
+# Array context for complex where clauses (not implemented yet)
+expandable([@topic, @state], :stances) # Will raise NotImplementedError
+```
+
 **Key Benefits:**
+- **Consistent API** - context first, collection/symbol second
 - **Automatic `#any?` check** - only renders if collection has items
 - **Automatic count** - shows item count in section header
 - **Smart title generation** - humanizes association names automatically
-- **Flexible usage** - works with associations or computed collections
+- **Future-proof** - designed for complex multi-object filtering
 
 ## Reference
 
