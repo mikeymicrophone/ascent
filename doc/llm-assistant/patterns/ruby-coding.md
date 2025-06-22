@@ -103,3 +103,22 @@ This approach:
 - Makes methods public for reusability across components  
 - Uses default arguments (not named arguments) for easier calling
 - Converts instance variables to parameters for flexibility
+
+#### Number 3: blocks that contain a single method
+
+Don't do this:
+```ruby
+@sections.each do |section|
+  nav_section(section)
+end
+```
+
+Do this:
+```ruby
+@sections.each { nav_section it }
+```
+
+This approach:
+- Removes unnecessary `do` and `end` blocks
+- Makes code more concise and readable
+- reduces the number of variables we have to name

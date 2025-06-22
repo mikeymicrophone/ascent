@@ -18,9 +18,7 @@ class Views::Components::Navigation < Views::ApplicationView
         end
         
         div(class: "nav-links") do
-          @sections.each do |section|
-            render_nav_section(section)
-          end
+          @sections.each { render_nav_section it }
           
           Views::Components::DeviseLinks(current_voter: @current_voter)
         end
@@ -83,9 +81,7 @@ class Views::Components::Navigation < Views::ApplicationView
         span(class: "nav-group-arrow") { "▼" }
       end
       div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
-        section.links.each do |link_data|
-          link_to link_data[:text], link_data[:path], class: nav_link_class(link_data[:path])
-        end
+        section.links.each { link_to it[:text], it[:path], class: nav_link_class(it[:path]) }
       end
     end
   end

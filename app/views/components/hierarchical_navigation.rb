@@ -22,9 +22,7 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
         drill_down_section
       end
       
-      @custom_sections.each do |section|
-        section[:content].call
-      end
+      @custom_sections.each { it[:content].call }
     end
   end
 

@@ -16,9 +16,7 @@ class Views::Stances::StancePartial < Views::ApplicationView
     end
     
     div(id: dom_id(@stance), class: "stance-partial") do
-      @fields.each do |field|
-        field[:content].call
-      end
+      @fields.each { it[:content].call }
       
       @custom_fields.each do |field|
         div(class: "custom-field") do

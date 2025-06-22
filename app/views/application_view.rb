@@ -18,33 +18,26 @@ class Views::ApplicationView < Phlex::HTML
 
   def self.inherited(subclass)
     super
-    auto_include_namespace_module(subclass)
+    auto_include_namespace_module subclass
   end
 
   private
 
+  # All views that inherit from this have access to methods on their namespace module, including Kits
   def self.auto_include_namespace_module(klass)
     # Extract the module name from the class name
-    # Views::Issues::IndexView -> Views::Issues
     # Views::Candidacies::EditView -> Views::Candidacies
-    # Views::Mountains::MountainChart -> Views::Mountains
-    
-    class_name = klass.name
-    return unless class_name&.start_with?("Views::")
-    
-    parts = class_name.split("::")
-    return unless parts.length >= 3  # Views, Namespace, ClassName
-    
+    class_name = klass.name; return unless class_name&.start_with?("Views::")
+    parts = class_name.split("::"); return unless parts.length >= 3  # Views, Namespace, ClassName
     module_name = parts[0..2].join("::")  # Views::Issues, Views::Candidacies, etc.
-    
+
     begin
       target_module = module_name.constantize
       # Only include if it's a Module (not a Class) and is different from the class itself
       if target_module.is_a?(Module) && !target_module.is_a?(Class) && target_module != klass
-        klass.include(target_module)
+        klass.include target_module
       end
     rescue NameError
-      # Module doesn't exist, silently continue
       # This allows views that don't have a corresponding module
     end
   end
