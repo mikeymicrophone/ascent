@@ -28,7 +28,7 @@ export default class extends Controller {
   createButterfly() {
     // Create butterfly element
     this.butterfly = document.createElement('div')
-    this.butterfly.className = `navigation-butterfly hidden level-${this.levelValue || 'topic'}`
+    this.butterfly.className = `navigation-butterfly flying level-${this.levelValue || 'topic'}`
     
     // Create butterfly structure
     this.butterfly.innerHTML = `
@@ -38,7 +38,7 @@ export default class extends Controller {
     `
     
     document.body.appendChild(this.butterfly)
-    console.log('[Butterfly] Created for level:', this.levelValue)
+    console.log('[Butterfly] Created for level:', this.levelValue, 'Element:', this.butterfly)
   }
 
   bindEvents() {
@@ -123,12 +123,11 @@ export default class extends Controller {
 
   getDestinationPosition(element) {
     const rect = element.getBoundingClientRect()
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop
-    const scrollX = window.pageXOffset || document.documentElement.scrollLeft
     
+    // Use viewport coordinates for fixed positioning
     return {
-      x: rect.left + rect.width / 2 + scrollX,
-      y: rect.top + rect.height / 2 + scrollY
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2
     }
   }
 
@@ -155,12 +154,11 @@ export default class extends Controller {
     if (!this.butterfly) return { x: window.innerWidth / 2, y: window.innerHeight / 2 }
     
     const rect = this.butterfly.getBoundingClientRect()
-    const scrollY = window.pageYOffset || document.documentElement.scrollTop
-    const scrollX = window.pageXOffset || document.documentElement.scrollLeft
     
+    // Use viewport coordinates for fixed positioning
     return {
-      x: rect.left + rect.width / 2 + scrollX,
-      y: rect.top + rect.height / 2 + scrollY
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2
     }
   }
 
@@ -303,7 +301,12 @@ export default class extends Controller {
   hideButterfly() {
     if (this.butterfly) {
       this.butterfly.classList.remove('flying')
-      this.butterfly.classList.add('hidden')
+      // Stay visible longer to appreciate the animation
+      setTimeout(() => {
+        if (this.butterfly) {
+          this.butterfly.classList.add('hidden')
+        }
+      }, 3000) // Hide after 3 seconds
     }
   }
 

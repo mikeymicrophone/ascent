@@ -17,10 +17,12 @@ export default class extends Controller {
       content.style.display = "none"
       icon.textContent = "▶"
       this.element.classList.remove("expanded")
+      this.element.dispatchEvent(new CustomEvent('expandable:closed', { bubbles: true }))
     } else {
       content.style.display = "block"
       icon.textContent = "▼"
       this.element.classList.add("expanded")
+      this.element.dispatchEvent(new CustomEvent('expandable:opened', { bubbles: true }))
     }
 
     this.log(`Toggled to ${isVisible ? 'collapsed' : 'expanded'}`)

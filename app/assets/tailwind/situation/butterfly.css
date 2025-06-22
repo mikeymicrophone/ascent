@@ -5,8 +5,8 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   pointer-events: none;
   z-index: 1000;
   @apply transition-all duration-1000 ease-out;
@@ -29,9 +29,9 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 2px;
-  height: 16px;
-  background: linear-gradient(to bottom, var(--entity-topic), var(--entity-issue));
+  width: 3px;
+  height: 20px;
+  background: linear-gradient(to bottom, #0891b2, #0e7490);
   @apply rounded-full;
   transform: translate(-50%, -50%);
 }
@@ -39,11 +39,11 @@
 /* Butterfly wings - left wing */
 .butterfly-wing-left {
   position: absolute;
-  top: 2px;
-  left: -4px;
-  width: 8px;
-  height: 12px;
-  background: radial-gradient(ellipse at center, var(--entity-topic), transparent 70%);
+  top: 3px;
+  left: -6px;
+  width: 12px;
+  height: 16px;
+  background: radial-gradient(ellipse at center, #0891b2, transparent 70%);
   border-radius: 60% 40% 40% 60%;
   transform-origin: right center;
   @apply transition-transform duration-300;
@@ -52,11 +52,11 @@
 /* Butterfly wings - right wing */
 .butterfly-wing-right {
   position: absolute;
-  top: 2px;
-  right: -4px;
-  width: 8px;
-  height: 12px;
-  background: radial-gradient(ellipse at center, var(--entity-topic), transparent 70%);
+  top: 3px;
+  right: -6px;
+  width: 12px;
+  height: 16px;
+  background: radial-gradient(ellipse at center, #0891b2, transparent 70%);
   border-radius: 40% 60% 60% 40%;
   transform-origin: left center;
   @apply transition-transform duration-300;
