@@ -57,15 +57,162 @@ select {
   @apply transition-all duration-200;
 }
 
-/* Card hover states */
+/* Enhanced card hover states with 3D effects and parallax */
+.scaffold,
+.country-partial,
+.state-partial,
+.city-partial,
+.election-partial,
+.person-partial,
+.candidacy-partial,
+.voter-partial,
+.office-partial,
+.topic-partial,
+.issue-partial,
+.approach-partial {
+  @apply transition-all duration-300 ease-out;
+  transform-style: preserve-3d;
+}
+
+/* "Moved into foreground with parallax" effect for cards */
+.country-partial:hover,
+.state-partial:hover,
+.city-partial:hover,
+.election-partial:hover,
+.person-partial:hover,
+.candidacy-partial:hover,
+.office-partial:hover,
+.topic-partial:hover,
+.issue-partial:hover {
+  box-shadow: var(--shadow-elevated);
+  @apply -translate-y-1 scale-[1.02];
+  transform: translateY(-4px) translateZ(20px) scale(1.02);
+}
+
+.voter-partial:hover,
+.approach-partial:hover {
+  box-shadow: var(--shadow-medium);
+  @apply -translate-y-0.5 scale-[1.01];
+}
+
+/* "Sides of a box" rotation effect for sequences */
 .country-partial,
 .state-partial,
 .city-partial {
-  @apply transition-shadow duration-200;
+  @apply transition-transform duration-500 ease-in-out;
 }
 
-.country-partial:hover,
-.state-partial:hover,
+.country-partial:hover {
+  transform: translateY(-4px) rotateY(2deg) translateZ(20px) scale(1.02);
+  box-shadow: var(--shadow-elevated), 8px 0 16px var(--shadow-color-success);
+}
+
+.state-partial:hover {
+  transform: translateY(-4px) rotateY(-1deg) translateZ(20px) scale(1.02);
+  box-shadow: var(--shadow-elevated), -4px 0 12px var(--shadow-color-primary);
+}
+
 .city-partial:hover {
-  @apply shadow-md;
+  transform: translateY(-4px) rotateY(1deg) translateZ(20px) scale(1.02);
+  box-shadow: var(--shadow-elevated), 4px 0 12px var(--shadow-color-secondary);
+}
+
+/* Enhanced expandable section interactions */
+.expandable-header {
+  @apply transition-all duration-300 ease-out;
+  transform-style: preserve-3d;
+}
+
+.expandable-header:hover {
+  box-shadow: var(--shadow-medium);
+  @apply -translate-y-0.5;
+  background-color: var(--card-bg);
+}
+
+.expandable-header:active {
+  @apply translate-y-0;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Sophisticated expandable content animations */
+.expandable-content {
+  @apply transition-all duration-500 ease-out;
+  transform-origin: top;
+}
+
+.expandable-content[data-state="open"] {
+  @apply animate-in slide-in-from-top-2 fade-in duration-300;
+}
+
+.expandable-content[data-state="closed"] {
+  @apply animate-out slide-out-to-top-2 fade-out duration-200;
+}
+
+/* Enhanced button interactions with depth */
+.primary,
+.secondary,
+.danger {
+  @apply transition-all duration-200 ease-out;
+  transform-style: preserve-3d;
+}
+
+.primary:hover,
+.secondary:hover,
+.danger:hover {
+  @apply -translate-y-0.5;
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px) translateZ(4px);
+}
+
+.primary:active,
+.secondary:active,
+.danger:active {
+  @apply translate-y-0;
+  box-shadow: var(--shadow-soft);
+  transform: translateY(0) translateZ(0);
+}
+
+/* Sophisticated link hover effects */
+.link {
+  @apply transition-all duration-200 ease-out;
+}
+
+.link:hover {
+  color: var(--link-hover);
+  @apply underline -translate-y-px;
+  text-shadow: 0 1px 2px var(--shadow-color-primary);
+}
+
+/* Status indicator enhancements */
+.status-indicator {
+  @apply transition-all duration-200;
+}
+
+.status-indicator:hover {
+  @apply scale-105;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Results and candidate item hover effects */
+.result-preview-item,
+.candidate-preview-item,
+.office-preview-item {
+  @apply transition-all duration-200 ease-out;
+}
+
+.result-preview-item:hover,
+.candidate-preview-item:hover,
+.office-preview-item:hover {
+  @apply bg-gray-50 scale-[1.01] px-2 py-1 rounded;
+  box-shadow: var(--shadow-subtle);
+}
+
+/* Form input enhanced focus states */
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus, 
+textarea:focus, 
+select:focus {
+  @apply scale-[1.01];
+  box-shadow: var(--shadow-soft), 0 0 0 3px var(--shadow-color-primary);
 }

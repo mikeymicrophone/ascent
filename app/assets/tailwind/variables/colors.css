@@ -98,4 +98,37 @@
   --geo-summary-border: theme('colors.green.200');
   --geo-summary-value: theme('colors.green.700');
   --geo-summary-label: theme('colors.green.600');
+
+  /* Enhanced shadow system for depth and 3D effects */
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-dramatic: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  
+  /* Interactive shadow colors for depth perception */
+  --shadow-color-primary: rgba(59, 130, 246, 0.15);
+  --shadow-color-secondary: rgba(107, 114, 128, 0.15);
+  --shadow-color-success: rgba(34, 197, 94, 0.15);
+  --shadow-color-warning: rgba(245, 158, 11, 0.15);
+  --shadow-color-danger: rgba(239, 68, 68, 0.15);
+
+  /* Entity type colors for visual distinction */
+  --entity-country: theme('colors.emerald.600');
+  --entity-country-bg: theme('colors.emerald.50');
+  --entity-state: theme('colors.blue.600');
+  --entity-state-bg: theme('colors.blue.50');
+  --entity-city: theme('colors.purple.600');
+  --entity-city-bg: theme('colors.purple.50');
+  --entity-election: theme('colors.orange.600');
+  --entity-election-bg: theme('colors.orange.50');
+  --entity-candidate: theme('colors.indigo.600');
+  --entity-candidate-bg: theme('colors.indigo.50');
+  --entity-topic: theme('colors.teal.600');
+  --entity-topic-bg: theme('colors.teal.50');
+  --entity-issue: theme('colors.cyan.600');
+  --entity-issue-bg: theme('colors.cyan.50');
+  --entity-office: theme('colors.amber.600');
+  --entity-office-bg: theme('colors.amber.50');
 }

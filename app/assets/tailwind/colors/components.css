@@ -262,16 +262,111 @@ select.error {
   color: var(--breadcrumb-link);
 }
 
-/* Card styles */
-.scaffold,
-.country-partial,
-.state-partial,
-.city-partial,
-.election-partial,
-.person-partial,
-.voter-partial,
-.office-partial {
+/* Enhanced expandable section styling with 3D effects */
+.expandable-header {
+  background-color: var(--expandable-header-bg);
+  border-color: var(--expandable-border);
+  @apply border;
+  box-shadow: var(--shadow-soft);
+}
+
+.expandable-header[aria-expanded="true"] {
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow-medium);
+}
+
+.expandable-content {
+  background-color: var(--expandable-content-bg);
+  border-color: var(--expandable-border);
+  @apply border border-t-0;
+  box-shadow: var(--shadow-soft);
+}
+
+.expandable-icon {
+  color: var(--text-muted);
+  @apply transition-transform duration-300 ease-in-out;
+}
+
+/* Clockwise twist animation for expandable icons */
+.expandable-header[aria-expanded="true"] .expandable-icon {
+  @apply rotate-90;
+}
+
+/* Entity-specific card styling with depth */
+.scaffold {
   background-color: var(--card-bg);
   border-color: var(--card-border);
-  @apply border shadow-sm;
+  @apply border;
+  box-shadow: var(--shadow-soft);
+}
+
+.country-partial {
+  background-color: var(--entity-country-bg);
+  border-color: var(--entity-country);
+  @apply border-l-4 border-t border-r border-b;
+  box-shadow: var(--shadow-soft);
+}
+
+.state-partial {
+  background-color: var(--entity-state-bg);
+  border-color: var(--entity-state);
+  @apply border-l-4 border-t border-r border-b;
+  box-shadow: var(--shadow-soft);
+}
+
+.city-partial {
+  background-color: var(--entity-city-bg);
+  border-color: var(--entity-city);
+  @apply border-l-4 border-t border-r border-b;
+  box-shadow: var(--shadow-soft);
+}
+
+.election-partial {
+  background-color: var(--entity-election-bg);
+  border-color: var(--entity-election);
+  @apply border-l-4 border-t border-r border-b;
+  box-shadow: var(--shadow-soft);
+}
+
+.person-partial,
+.candidacy-partial {
+  background-color: var(--entity-candidate-bg);
+  border-color: var(--entity-candidate);
+  @apply border-l-4 border-t border-r border-b;
+  box-shadow: var(--shadow-soft);
+}
+
+.voter-partial {
+  background-color: var(--card-bg);
+  border-color: var(--card-border);
+  @apply border;
+  box-shadow: var(--shadow-soft);
+}
+
+.office-partial {
+  background-color: var(--entity-office-bg);
+  border-color: var(--entity-office);
+  @apply border-l-4 border-t border-r border-b;
+  box-shadow: var(--shadow-soft);
+}
+
+.topic-partial {
+  background-color: var(--entity-topic-bg);
+  border-color: var(--entity-topic);
+  @apply border-l-4 border-t border-r border-b;
+  box-shadow: var(--shadow-soft);
+}
+
+.issue-partial {
+  background-color: var(--entity-issue-bg);
+  border-color: var(--entity-issue);
+  @apply border-l-4 border-t border-r border-b;
+  box-shadow: var(--shadow-soft);
+}
+
+.approach-partial {
+  background-color: var(--card-bg);
+  border-color: var(--card-border);
+  @apply border;
+  box-shadow: var(--shadow-soft);
 }
