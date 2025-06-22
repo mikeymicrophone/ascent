@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Views::Partials::CountryPartial < Views::ApplicationView
-  
   def initialize(country:)
     @country = country
   end
@@ -9,10 +8,12 @@ class Views::Partials::CountryPartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@country), class: "country-partial") do
       h3 { @country.name }
-      
-      # Hierarchical navigation
-      Views::Components::HierarchicalNavigation(current_object: @country)
-      
+
+      Views::Components::HierarchicalNavigation(current_object: @country) do
+        Views::Components::ChildrenPreview(current_object: @country)
+        Views::Components::GeographicSummary(current_object: @country)
+      end
+
       div do
         span { "Code:" }
         whitespace

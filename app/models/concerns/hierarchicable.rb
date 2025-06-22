@@ -108,14 +108,14 @@ module Hierarchicable
     send(config[:children_relation]).any?
   end
 
-  def children_count
+  def nav_children_count
     config = hierarchy_config
     return 0 unless config&.dig(:children_relation)
     
     send(config[:children_relation]).count
   end
 
-  def get_children
+  def nav_children
     config = hierarchy_config
     return [] unless config&.dig(:children_scope)
     
@@ -127,21 +127,57 @@ module Hierarchicable
     config&.dig(:display_name) || 'Unknown'
   end
 
-  def child_type_name
+  def nav_child_type_name
     config = hierarchy_config
     config&.dig(:child_type_name) || 'Item'
   end
 
-  def child_route_name
+  def nav_child_route_name
     config = hierarchy_config
     config&.dig(:child_route_name)
   end
 
-  def get_children_path(context = nil)
+  def nav_children_path(context = nil)
     config = hierarchy_config
     return (context.respond_to?(:root_path) ? context.root_path : '/') unless config&.dig(:children_path)
     
     config[:children_path].call(self, context)
+  end
+
+  def build_hierarchy_chain
+    chain = []
+    current = self
+    
+    # Build chain from current object up to root
+    while current
+      chain.unshift(current)
+      
+      # Use string-based class matching to avoid Rails autoloading issues
+      current = case current.class.name
+               when 'City'
+                 current.state
+               when 'State'
+                 current.country
+               when 'Country'
+                 nil
+               when 'Issue'
+                 current.topic
+               when 'Approach'
+                 current.issue
+               when 'Stance'
+                 current.approach
+               when 'GoverningBody'
+                 current.governance_type
+               when 'Policy'
+                 current.governing_body
+               when 'OfficialCode'
+                 current.policy
+               else
+                 nil
+               end
+    end
+    
+    chain
   end
 
   private
