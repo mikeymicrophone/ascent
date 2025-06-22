@@ -38,37 +38,21 @@ class Views::Elections::ElectionPartial < Views::ApplicationView
       end
       
       # Candidates expandable section
-      if @election.candidates.any?
-        expandable_candidates
+      expandable(@election, :candidacies, title: "Candidates") do |candidacies|
+        ItemPreview(@election, :candidacies, 5) do |candidate|
+          link_to candidate.name, candidate, class: "link candidate"
+          if candidate.respond_to?(:party_affiliation) && candidate.party_affiliation.present?
+            span(class: "candidate-party") { " (#{candidate.party_affiliation})" }
+          end
+        end
       end
       
       # Results expandable section (only for completed elections)
       if @election.status == 'completed' && @election.candidates.any?
-        expandable_results
-      end
-    end
-  end
-
-  def expandable_candidates(election = @election)
-    Views::Components::ExpandableSection(
-      title: "Candidates",
-      count: election.candidates.count
-    ) do
-      Views::Components::ItemPreview(election, :candidacies, 5) do |candidate|
-        link_to candidate.name, candidate, class: "link candidate"
-        if candidate.respond_to?(:party_affiliation) && candidate.party_affiliation.present?
-          span(class: "candidate-party") { " (#{candidate.party_affiliation})" }
+        expandable(@election, @election.candidacies, title: "Results") do |candidacies|
+          results_preview(@election)
         end
       end
-    end
-  end
-
-  def expandable_results(election = @election)
-    Views::Components::ExpandableSection(
-      title: "Results",
-      count: "#{election.candidates.count} candidates"
-    ) do
-      results_preview(election)
     end
   end
 

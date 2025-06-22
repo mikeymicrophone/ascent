@@ -32,12 +32,9 @@ class Views::Candidacies::CandidacyPartial < Views::ApplicationView
         div(class: "mt-1") { simple_format(@candidacy.platform_summary) }
       end
 
-      if @candidacy.stances.any?
-        div(class: "candidate-stances") do
-          h4 { "Policy Positions" }
-          @candidacy.stances.each do |stance|
-            render Views::Candidacies::CandidateStancePartial.new(stance: stance)
-          end
+      expandable(@candidacy, :stances, title: "Policy Positions") do |stances|
+        stances.each do |stance|
+          CandidateStancePartial(stance: stance)
         end
       end
     end

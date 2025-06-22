@@ -22,19 +22,12 @@ class Views::Voters::VoterPartial < Views::ApplicationView
         span { @voter.is_verified.to_s }
       end
       
-      # Voting Activity expandable section
+      # Voting Activity expandable section  
       if @voter.ratings.any? || @voter.voter_election_baselines.any?
-        expandable_voting_activity
+        expandable(@voter, participated_elections(@voter), title: "Voting Activity") do |activity|
+          voting_activity_preview(@voter)
+        end
       end
-    end
-  end
-
-  def expandable_voting_activity(voter = @voter)
-    Views::Components::ExpandableSection(
-      title: "Voting Activity",
-      count: voting_activity_count(voter)
-    ) do
-      voting_activity_preview(voter)
     end
   end
 
