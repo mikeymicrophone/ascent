@@ -6,6 +6,9 @@ class Views::Partials::PolicyPartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@policy), class: "policy-partial") do
       h3 { @policy.governing_body.name }
+
+      HierarchicalNavigation(current_object: @policy)
+
       div do
         span { "Area of concern:" }
         whitespace

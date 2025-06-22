@@ -9,10 +9,7 @@ class Views::Partials::CountryPartial < Views::ApplicationView
     div(id: dom_id(@country), class: "country-partial") do
       h3 { @country.name }
 
-      Views::Components::HierarchicalNavigation(current_object: @country) do
-        Views::Components::ChildrenPreview(current_object: @country)
-        Views::Components::GeographicSummary(current_object: @country)
-      end
+      HierarchicalNavigation(current_object: @country)
 
       div do
         span { "Code:" }

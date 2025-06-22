@@ -8,6 +8,9 @@ class Views::Partials::IssuePartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@issue), class: "issue-partial") do
       h3 { @issue.title }
+
+      HierarchicalNavigation(current_object: @issue)
+
       div do
         span { "Description:" }
         whitespace
