@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_224200) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_002912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -119,6 +119,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_224200) do
     t.index ["position_id"], name: "index_offices_on_position_id"
   end
 
+  create_table "official_codes", force: :cascade do |t|
+    t.bigint "policy_id", null: false
+    t.string "code_number"
+    t.string "title"
+    t.text "full_text"
+    t.text "summary"
+    t.text "enforcement_mechanism"
+    t.text "penalty_structure"
+    t.date "effective_date"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["policy_id"], name: "index_official_codes_on_policy_id"
+  end
+
   create_table "people", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -128,6 +143,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_224200) do
     t.text "bio"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "policies", force: :cascade do |t|
+    t.bigint "governing_body_id", null: false
+    t.bigint "area_of_concern_id", null: false
+    t.bigint "approach_id", null: false
+    t.string "title"
+    t.text "description"
+    t.string "status"
+    t.date "enacted_date"
+    t.date "expiration_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approach_id"], name: "index_policies_on_approach_id"
+    t.index ["area_of_concern_id"], name: "index_policies_on_area_of_concern_id"
+    t.index ["governing_body_id"], name: "index_policies_on_governing_body_id"
   end
 
   create_table "positions", force: :cascade do |t|
@@ -172,6 +203,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_224200) do
     t.datetime "updated_at", null: false
     t.index ["jurisdiction_type", "jurisdiction_id"], name: "index_residences_on_jurisdiction"
     t.index ["voter_id"], name: "index_residences_on_voter_id"
+  end
+
+  create_table "stances", force: :cascade do |t|
+    t.bigint "candidacy_id", null: false
+    t.bigint "issue_id", null: false
+    t.bigint "approach_id", null: false
+    t.text "explanation"
+    t.string "priority_level"
+    t.text "evidence_links"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approach_id"], name: "index_stances_on_approach_id"
+    t.index ["candidacy_id"], name: "index_stances_on_candidacy_id"
+    t.index ["issue_id"], name: "index_stances_on_issue_id"
   end
 
   create_table "states", force: :cascade do |t|
@@ -259,11 +304,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_224200) do
   add_foreign_key "governing_bodies", "governance_types"
   add_foreign_key "issues", "topics"
   add_foreign_key "offices", "positions"
+  add_foreign_key "official_codes", "policies"
+  add_foreign_key "policies", "approaches"
+  add_foreign_key "policies", "area_of_concerns"
+  add_foreign_key "policies", "governing_bodies"
   add_foreign_key "rating_archives", "candidacies"
   add_foreign_key "rating_archives", "voters"
   add_foreign_key "ratings", "candidacies"
   add_foreign_key "ratings", "voters"
   add_foreign_key "residences", "voters"
+  add_foreign_key "stances", "approaches"
+  add_foreign_key "stances", "candidacies"
+  add_foreign_key "stances", "issues"
   add_foreign_key "states", "countries"
   add_foreign_key "voter_election_baseline_archives", "elections"
   add_foreign_key "voter_election_baseline_archives", "voters"

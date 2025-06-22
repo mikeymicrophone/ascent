@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :official_codes
+  resources :policies
+  resources :stances
   resources :approaches
   resources :issues
   resources :topics

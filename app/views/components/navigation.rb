@@ -36,6 +36,8 @@ class Views::Components::Navigation < Views::ApplicationView
               link_to "Areas of Concern", area_of_concerns_path, class: nav_link_class(area_of_concerns_path)
               link_to "Governing Bodies", governing_bodies_path, class: nav_link_class(governing_bodies_path)
               link_to "Offices", offices_path, class: nav_link_class(offices_path)
+              link_to "Policies", policies_path, class: nav_link_class(policies_path)
+              link_to "Official Codes", official_codes_path, class: nav_link_class(official_codes_path)
             end
           end
           
@@ -49,6 +51,7 @@ class Views::Components::Navigation < Views::ApplicationView
               link_to "Topics", topics_path, class: nav_link_class(topics_path)
               link_to "Issues", issues_path, class: nav_link_class(issues_path)
               link_to "Approaches", approaches_path, class: nav_link_class(approaches_path)
+              link_to "Stances", stances_path, class: nav_link_class(stances_path)
             end
           end
           
