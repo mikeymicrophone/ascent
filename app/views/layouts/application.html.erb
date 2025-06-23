@@ -16,13 +16,14 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+    <%= load_google_fonts %>
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body data-controller="butterfly" data-butterfly-level-value="<%= controller_name %>" data-butterfly-enabled-value="true" data-butterfly-log-level-value="debug">
     <%= render Views::Components::Navigation.new(current_voter: current_voter) %>
     <main class="main-content">
       <%= yield %>

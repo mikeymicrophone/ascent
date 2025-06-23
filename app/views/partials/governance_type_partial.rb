@@ -6,6 +6,9 @@ class Views::Partials::GovernanceTypePartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@governance_type), class: "governance_type-partial") do
       h3 { @governance_type.name }
+
+      HierarchicalNavigation(current_object: @governance_type)
+
       div do
         span { "Description:" }
         whitespace

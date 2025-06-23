@@ -6,6 +6,9 @@ class Views::Partials::GoverningBodyPartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@governing_body), class: "governing_body-partial") do
       h3 { @governing_body.name }
+
+      HierarchicalNavigation(current_object: @governing_body)
+
       div do
         span { "Jurisdiction type:" }
         whitespace

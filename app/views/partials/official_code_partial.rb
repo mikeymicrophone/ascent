@@ -6,6 +6,9 @@ class Views::Partials::OfficialCodePartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@official_code), class: "official_code-partial") do
       h3 { @official_code.policy.name }
+
+      HierarchicalNavigation(current_object: @official_code)
+
       div do
         span { "Code number:" }
         whitespace

@@ -6,6 +6,9 @@ class Views::Partials::ApproachPartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@approach), class: "approach-partial") do
       h3 { @approach.title }
+
+      HierarchicalNavigation(current_object: @approach)
+
       div do
         span { "Description:" }
         whitespace

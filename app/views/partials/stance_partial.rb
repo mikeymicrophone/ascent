@@ -16,6 +16,8 @@ class Views::Partials::StancePartial < Views::ApplicationView
     end
     
     div(id: dom_id(@stance), class: "stance-partial") do
+      HierarchicalNavigation(current_object: @stance)
+
       @fields.each { it[:content].call }
       
       @custom_fields.each do |field|

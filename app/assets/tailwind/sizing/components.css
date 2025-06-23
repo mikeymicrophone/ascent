@@ -5,44 +5,58 @@
   @apply p-8 rounded-lg;
 }
 
-/* Partial containers */
+/* Enhanced partial containers with breathing room for 3D effects */
 .country-partial,
 .state-partial,
-.city-partial {
-  @apply p-6 mb-4 rounded-lg;
+.city-partial,
+.election-partial,
+.person-partial,
+.candidacy-partial,
+.voter-partial,
+.office-partial,
+.topic-partial,
+.issue-partial,
+.approach-partial {
+  @apply p-6 mb-6 rounded-lg;
+  /* Extra margin for transform effects */
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
-/* Expandable sections */
+/* Enhanced expandable sections with 3D-friendly spacing */
 .expandable-section {
-  @apply mt-4;
+  @apply mt-6 mb-4;
+  /* Extra margin for hover effects */
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .expandable-header {
-  @apply p-3 rounded-t-md;
+  @apply p-4 rounded-t-lg;
 }
 
 .expandable-section.expanded .expandable-header {
-  @apply rounded-t-md;
+  @apply rounded-t-lg;
 }
 
 .expandable-section:not(.expanded) .expandable-header {
-  @apply rounded-md;
+  @apply rounded-lg;
 }
 
 .expandable-title {
-  @apply gap-2;
+  @apply gap-3;
 }
 
 .expandable-icon {
-  @apply w-4 h-4;
+  @apply w-5 h-5;
 }
 
 .expandable-content {
-  @apply p-3 rounded-b-md;
+  @apply p-5 rounded-b-lg;
 }
 
 .expandable-count {
-  @apply text-sm;
+  @apply text-sm px-3 py-1 rounded-full ml-2;
 }
 
 /* Cities preview */

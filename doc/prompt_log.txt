@@ -468,3 +468,284 @@ position - extract into method
 max_height - extract into method on Views::Mountains
 
 
+Check the Rails docs, I think this might need http: {method: :post}
+
+
+It's time to return to
+@doc/llm-assistant/project-context/architecture.md and design the
+next group of resources.  The terminology will be a little harder
+this time because we will be presenting the concept of policies in a
+new way.  Each Jurisdiction (our existing resources although we
+haven't scaffolded Town or Organization yet) will have some number of
+GoverningBody objects, which will perform a GovernanceType that has
+many AreaOfConcern.  Bodies will be joined to Areas by Policy
+objects, which will have many OfficialCodes or something that can
+help voters understand exactly what is legal and exactly how it is
+enforced or penalized.  Then a Candidacy can have a Stance which
+joins it to an Issue that references a Policy or a Code 
+
+
+ok it was too ambitious of me to join Issue directly to actual
+policies and how they're enforced - people will want to talk about
+issues in the abstract.  But to join an issue to a policy, we'll need
+a way to connect the stance to the jurisdiction, or the election
+since that frames its timeliness.  It's possible that not all of
+these join tables need a fully explorable display controller,
+although since we have an easy way to generate them I expect we
+should.  Write the current plan to the architecture doc for project
+context and I'll continue revision.
+
+
+Now add those resources to the document with your proposals for which
+fields should be generated. 
+
+
+I think we need to elevate OfficialCode and possibly Policy because
+they are going to have so much duplication throughout different
+jurisdictions.  But let's get started by scaffolding GovernanceType 
+
+
+make authority_level an enum  
+
+
+Make some seed data, add to nav, and then test it through your
+browser 
+
+
+server at http://ascent.test  
+
+
+try again, and please group the nav links into menus, it has gotten
+too big.  And add Mountains to the nav
+
+
+Write a recap of the session to @doc/llm-assistant/sessions/ 
+
+
+Please make a styling changes and a stimulus controller to make the
+nav work like dropdown menus  
+
+
+now let's scaffold GoverningBody  
+
+
+Include Phlex::Kit in each views module and do a nice job with the
+factories. 
+
+
+Let's try this.  Make sure every file ends with a newline.  Remove
+all comments.  Remove all blank lines that are in the middle of
+methods.  
+
+
+I'd like to add loglevel to our js: https://raw.githubusercontent.com
+/pimterry/loglevel/main/dist/loglevel.js
+
+
+Where is the proper place to save this file   
+
+
+ok let's scaffold topic, issue, and approach.
+
+
+ok I was curious if you would use the phlex scaffold without it being
+mentioned again.  Having scaffolded this with the other, we have
+some files not seen before, mostly different types of specs and the
+json builders.  I've left those as well as the controllers.  I
+removed the erb views.  If you can use the generator to just create
+views, or just views and controllers, perhaps we can do that.  If
+it's easier that I also remove the migrations and controllers so they
+can be regenerated, let me know.  What are the options?  Of course,
+one option would just be to create the Phlex views directly.  
+
+
+Let's add them to the nav  
+
+
+Make seed data for those three.  Think harder to make it good. 
+
+
+now do Stance with the phlex scaffold, nav, kit, seed  
+
+
+Now please scaffold Policy and OfficialCode entirely using the phlex
+scaffold generator. nav, kit, and seeds  
+
+
+Make a stance partial for the candidacy show page.  Include a link to
+each candidacy from the mountain. 
+
+
+Let's add some stances to the payload that gets created when we
+simulate a mountain.  The stances will have to connect to approaches,
+which connect to issues, etc.  So the find-or-create simulation
+process will take a few steps.  Also I noticed that when I 'simulate
+more data' for a mountain I already have, no ratings are being
+created.     
+
+
+Please add issues and stances to the topic show page.  We can use the
+existing partials - it would be nice if they had a way to detect the
+context in which they are rendering, so that they could omit the
+redundant attributes (relationships).  I think Phlex has a way to do
+this - we can check the docs.  If not, we can obviously add arguments
+to the partial initializers.  
+
+
+I see stance has issue_id.  I don't think it should since the issue
+already captures that reference.  I suspect that may be the reason
+for the error in the dev log  
+
+
+I see two or three techniques illustrated on
+https://www.phlex.fun/components/yielding.html but they are a little
+too abstract for me to comprehend.  Please suggest 5 spots in this
+codebase where we could try one or more of these yielding techniques. 
+
+
+dd two of those examples to our phlex documentation and describe one
+advantage that each one has.  
+
+
+Please use the Kit syntax whenever available (e.g. probably not in
+controllers). 
+
+
+[Pasted text #1 +68 lines]   
+
+
+Tiny blocks like this can be done on one line with curly braces, "it"
+instead of a block variable, an no need of parentheses.  
+
+
+These two subsections are making ExpandableSection components.  I'd
+like to see them generalized into a method expandable(@city,
+symbol_or_collection, &block) that also performs the check for #any? 
+
+
+That's pretty good, but I think I'd prefer to keep the
+first argument as the context object (or array of
+objects), even though this isn't always being used
+(yet) and we might have to call it with nil at times.
+The second argument will be the fetched collection, or
+the name of the collection to fetch.  The context might
+be two (or more) active records, since we may want to
+expand a collection such as the stances pertaining to a
+given topic and a given state.  I think where clauses
+can achieve that but also feel free to raise a
+NotImplementedError for the case where the first
+argument is an array - since WE ARE NOT USING IT YET :)
+
+
+Good - now where else can #expandable be used? 
+
+
+Now we can add expandables to topics(issues),
+issues(approaches), approaches(stances),
+years(elections), positions(offices),
+candidacies(ratings). 
+
+
+Since we currently have one partial per resource, let's
+move them to Views::Partials and include that in
+ApplicationView. I suspect an implementation in-module
+would override the included one anyway.  
+
+
+This is pretty remarkable.  With my help, you've
+compacted the code into something much more semantic
+and cute (not beautiful YET).  Please take a couple
+minutes to click around the nav, open some expandables,
+and gather some screenshots.  We may want to add color
+and shadow soon. 
+
+
+Now begin to implement styling a la
+@doc/llm-assistant/project-context/style-guide.md
+according to
+@doc/llm-assistant/conventions/css-tailwind.md and
+think hard about rules that can be shared, nested, or
+applied to compound selectors 
+
+
+I'm interested if a "butterfly" could move from the
+general to the specific, such as when the user clicks
+'Approaches' on the Issues index.  Do you know of any
+CSS plugins that could help us make one that flies
+around to where the mouse clicks?
+
+
+I can see some accurate logging but alas, I do not see
+the butterflies.  Take your browser for a spin and
+utilize these log levels to zero in on any display
+problems.
+
+
+Move this to ApplicationRecord, rename it to
+has_navigation_children?(context), raise a NotImplementedError when
+context is an array, and expand the case statement to include Topic,
+Issue, Approach, Stance, as well as GovernanceType, GoverningBody,
+Policy, OfficialCode 
+
+
+note quite.  Context is an optional modifier for how to branch downwards
+through the hierarchy - leave context out of it for now, I actually don't
+have an example for you.  Just call the relations on the implicit self.
+
+
+Move that method and all of these into a mixin called Hierarchicable, but
+include it in ApplicationRecord rather than in all of the other models.
+Please consolidate the logic and think hard 
+
+
+Call the new methods directly from the template rather than wrapping them
+with these.  And let's use "nav_child" in the method names instead of
+just "child" and "children". 
+
+
+move build_hierachy_chain into Hierarchicable and move these three 'stat'
+methods into another mixin called Statisticable. The block in
+drill_down_section should be a block on the overall component so we can
+locally customize the markup per usage. 
+
+
+I was suggesting that these methods be called in a block at the call
+sites where we instantiate HierNav components, because now that we will
+be navigating over a dozen types of resources, there is not enough
+commonality.  But I see that to call them from that context we'll need to
+promote them to be their own Phlex components.
+
+
+hmm check dev log.  I didn't yield correctly 
+
+
+I did it incorrectly.  Take a look at the countries index and the states
+index.  I suspect we were trying to use the block for two different
+things and it (possibly) can't do both.  Think hard
+
+
+ ok now add HierarchicalNavigation() to all the partials for resources
+listed in Hierarchicable switch statements. 
+
+
+Give me some tips on how to debug the butterfly-controller and add some
+loglevel console statements that can help me.  Perhaps a method I can
+call to view its CSS attributes and its position. 
+
+
+ReferenceError: Can't find variable: application
+findController — butterfly_controller-7ebdde04.js:546
+forceVisible — butterfly_controller-7ebdde04.js:560
+Global Code   
+
+
+[Image #1] the butterfly is just at the bottom, 6 pixels high.  I still
+haven't seen it at all.  When you take screenshots can you save them in
+my tmp directory or something like that? 
+
+
+I've added five fonts, two of which have italics and various weights.
+Please use some or all of them to style our application. 
+
+
+Try that out in your browser.  I don't think it worked

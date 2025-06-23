@@ -2,20 +2,20 @@
 
 /* Link typography */
 .link {
-  @apply font-medium no-underline;
+  @apply font-['Nunito'] font-medium no-underline;
 }
 
 /* Expandable sections typography */
 .expandable-header {
-  @apply font-medium text-left;
+  @apply font-['Kanit'] font-medium text-left;
 }
 
 .expandable-count {
-  @apply font-normal;
+  @apply font-['WDXL_Lubrifont_JP_N'] font-normal;
 }
 
 .expandable-icon {
-  @apply text-center select-none;
+  @apply font-['Kanit'] text-center select-none;
 }
 
 /* Cities preview typography */
@@ -141,45 +141,103 @@
 
 /* Voter stats typography */
 .stat-label {
-  @apply font-medium;
+  @apply font-['Nunito'] font-medium uppercase tracking-wide;
 }
 
 .stat-value {
-  @apply font-semibold;
+  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
 }
 
 /* Hierarchical navigation typography */
 .breadcrumb-link {
-  @apply font-medium no-underline;
+  @apply font-['Nunito'] font-medium no-underline;
 }
 
 .breadcrumb-current {
-  @apply font-semibold;
+  @apply font-['Kanit'] font-semibold;
 }
 
 .breadcrumb-separator {
-  @apply font-normal;
+  @apply font-['Nunito'] font-normal;
 }
 
 /* Quick stats typography */
 .quick-stats .stat-value {
-  @apply font-bold;
+  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
 }
 
 .quick-stats .stat-label {
-  @apply font-medium;
+  @apply font-['Nunito'] font-medium uppercase tracking-wide;
 }
 
 /* Geographic summary typography */
 .summary-value {
-  @apply font-bold;
+  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
 }
 
 .summary-label {
-  @apply font-normal;
+  @apply font-['Nunito'] font-normal uppercase tracking-wide;
 }
 
 /* Children preview typography */
 .child-name {
-  @apply font-medium;
+  @apply font-['Nunito'] font-medium;
+}
+
+/* Special content typography */
+.description-text {
+  @apply font-['Nunito'] leading-relaxed;
+}
+
+.formal-content {
+  @apply font-['Noto_Serif_Dives_Akuru'] leading-relaxed;
+}
+
+.policy-text {
+  @apply font-['Noto_Serif_Dives_Akuru'] text-base leading-relaxed;
+}
+
+.quote-text {
+  @apply font-['Noto_Serif_Dives_Akuru'] italic text-lg leading-relaxed;
+}
+
+/* Accent elements */
+.voter-count,
+.election-count,
+.office-count {
+  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+}
+
+/* Special page elements */
+.page-title {
+  @apply font-['Kanit'] font-bold text-3xl;
+}
+
+.section-heading {
+  @apply font-['Kanit'] text-xl;
+}
+
+/* Entity-specific typography */
+.country-name,
+.state-name,
+.city-name {
+  @apply font-['Kanit'] font-semibold;
+}
+
+.topic-title,
+.issue-title,
+.approach-title {
+  @apply font-['Kanit'] font-medium;
+}
+
+.candidate-name {
+  @apply font-['Nunito'] font-bold;
+}
+
+.office-title {
+  @apply font-['Kanit'] font-medium;
+}
+
+.election-name {
+  @apply font-['Kanit'] font-medium;
 }

@@ -1,34 +1,54 @@
 /* Scaffold Typography Classes - Layer 3: Fonts, text styling */
 
 .scaffold {
+  /* Base font for body */
+  @apply font-['Nunito'];
+  
   /* Headings */
   h1 {
-    @apply font-bold text-4xl;
+    @apply font-['Kanit'] font-bold text-4xl;
+  }
+  
+  h2 {
+    @apply font-['Kanit'] text-3xl;
   }
   
   h3 {
-    @apply font-semibold text-lg;
+    @apply font-['Kanit'] font-semibold text-xl;
+  }
+  
+  h4 {
+    @apply font-['Kanit'] text-lg;
+  }
+  
+  h5 {
+    @apply font-['Kanit'] text-base;
   }
   
   /* Labels and Text */
   label {
-    @apply block font-medium;
+    @apply block font-['Nunito'] font-medium;
   }
   
   span {
-    @apply font-medium;
+    @apply font-['Nunito'];
+  }
+  
+  /* Paragraphs and descriptions */
+  p {
+    @apply font-['Nunito'] leading-relaxed;
   }
   
   /* Button Text */
   button,
   input[type="submit"],
   a[class*="button"] {
-    @apply font-medium;
+    @apply font-['Kanit'] font-medium;
   }
   
   /* Notice Text */
   #notice {
-    @apply font-medium;
+    @apply font-['Nunito'] font-medium;
   }
   
   /* Empty State Text */
