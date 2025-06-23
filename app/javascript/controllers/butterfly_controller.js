@@ -6,7 +6,8 @@ export default class extends Controller {
   static targets = ["container"]
   static values = { 
     level: String,
-    enabled: { type: Boolean, default: true }
+    enabled: { type: Boolean, default: true },
+    logLevel: { type: String, default: "info" }
   }
 
   connect() {
@@ -14,6 +15,21 @@ export default class extends Controller {
     this.trail = []
     this.maxTrailLength = 8
     this.isFlying = false
+    
+    // Store reference for global debugging
+    window.butterflyControllerInstance = this
+    
+    // Set up global debug methods on first connection
+    if (!window.debugButterfly) {
+      this.constructor.addGlobalDebugMethods()
+    }
+    
+    this.debug('[Butterfly] Controller connected', {
+      level: this.levelValue,
+      enabled: this.enabledValue,
+      logLevel: this.logLevelValue,
+      element: this.element
+    })
     
     if (this.enabledValue) {
       this.createButterfly()
@@ -28,7 +44,9 @@ export default class extends Controller {
   createButterfly() {
     // Create butterfly element
     this.butterfly = document.createElement('div')
-    this.butterfly.className = `navigation-butterfly flying level-${this.levelValue || 'topic'}`
+    // Start hidden and without the 'flying' class.
+    this.butterfly.className = `navigation-butterfly hidden level-${this.levelValue || 'topic'}`
+    this.butterfly.id = `butterfly-${Date.now()}`
     
     // Create butterfly structure
     this.butterfly.innerHTML = `
@@ -38,7 +56,22 @@ export default class extends Controller {
     `
     
     document.body.appendChild(this.butterfly)
-    console.log('[Butterfly] Created for level:', this.levelValue, 'Element:', this.butterfly)
+
+    // Set initial position to avoid it appearing at (0,0)
+    const initialPosition = this.getCurrentPosition()
+    this.butterfly.style.left = `${initialPosition.x}px`
+    this.butterfly.style.top = `${initialPosition.y}px`
+    this.butterfly.style.transform = 'translate(-50%, -50%)'
+
+    this.info('[Butterfly] Created butterfly', {
+      level: this.levelValue,
+      element: this.butterfly,
+      id: this.butterfly.id,
+      className: this.butterfly.className,
+      initialPosition: initialPosition
+    })
+    
+    this.debugButterflyState('after creation')
   }
 
   bindEvents() {
@@ -132,7 +165,15 @@ export default class extends Controller {
   }
 
   flyTo(destination, level) {
-    if (!this.butterfly || this.isFlying) return
+    if (!this.butterfly || this.isFlying) {
+      this.warn('[Butterfly] Cannot fly', {
+        hasButterfly: !!this.butterfly,
+        isFlying: this.isFlying,
+        destination,
+        level
+      })
+      return
+    }
     
     this.isFlying = true
     this.showButterfly()
@@ -144,7 +185,15 @@ export default class extends Controller {
     const start = this.getCurrentPosition()
     const controlPoint = this.calculateControlPoint(start, destination)
     
-    console.log('[Butterfly] Flying from', start, 'to', destination, 'via', controlPoint)
+    this.info('[Butterfly] Starting flight', {
+      from: start,
+      to: destination,
+      via: controlPoint,
+      level: level,
+      butterflyState: this.getButterflyState()
+    })
+    
+    this.debugButterflyState('before flight')
     
     // Animate along bezier curve
     this.animateAlongPath(start, controlPoint, destination, level)
@@ -342,6 +391,207 @@ export default class extends Controller {
     this.levelValue = newLevel
     if (this.butterfly) {
       this.butterfly.className = `navigation-butterfly hidden level-${newLevel}`
+    }
+  }
+
+  // =============================================================================
+  // DEBUGGING AND LOGGING METHODS
+  // =============================================================================
+
+  // Logging methods that respect log level
+  debug(message, data = null) {
+    if (this.shouldLog('debug')) {
+      console.log(message, data)
+    }
+  }
+
+  info(message, data = null) {
+    if (this.shouldLog('info')) {
+      console.log(message, data)
+    }
+  }
+
+  warn(message, data = null) {
+    if (this.shouldLog('warn')) {
+      console.warn(message, data)
+    }
+  }
+
+  error(message, data = null) {
+    if (this.shouldLog('error')) {
+      console.error(message, data)
+    }
+  }
+
+  shouldLog(level) {
+    const levels = ['debug', 'info', 'warn', 'error']
+    const currentLevelIndex = levels.indexOf(this.logLevelValue)
+    const requestedLevelIndex = levels.indexOf(level)
+    return requestedLevelIndex >= currentLevelIndex
+  }
+
+  // Get complete butterfly state for debugging
+  getButterflyState() {
+    if (!this.butterfly) return { exists: false }
+
+    const rect = this.butterfly.getBoundingClientRect()
+    const computedStyle = window.getComputedStyle(this.butterfly)
+    
+    return {
+      exists: true,
+      id: this.butterfly.id,
+      className: this.butterfly.className,
+      isFlying: this.isFlying,
+      position: {
+        viewport: {
+          left: rect.left,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          width: rect.width,
+          height: rect.height
+        },
+        center: {
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2
+        },
+        css: {
+          left: computedStyle.left,
+          top: computedStyle.top,
+          transform: computedStyle.transform,
+          position: computedStyle.position
+        }
+      },
+      visibility: {
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity,
+        zIndex: computedStyle.zIndex
+      },
+      size: {
+        width: computedStyle.width,
+        height: computedStyle.height
+      },
+      inDOM: document.body.contains(this.butterfly),
+      trail: this.trail.length
+    }
+  }
+
+  // Debug butterfly state with optional context
+  debugButterflyState(context = '') {
+    const state = this.getButterflyState()
+    this.debug(`[Butterfly] State ${context}:`, state)
+    return state
+  }
+
+  // Check if butterfly is visible to user
+  isButterflyVisible() {
+    if (!this.butterfly) return false
+    
+    const rect = this.butterfly.getBoundingClientRect()
+    const computedStyle = window.getComputedStyle(this.butterfly)
+    
+    const isInViewport = rect.top >= 0 && 
+                        rect.left >= 0 && 
+                        rect.bottom <= window.innerHeight && 
+                        rect.right <= window.innerWidth
+    
+    const isVisible = computedStyle.display !== 'none' && 
+                     computedStyle.visibility !== 'hidden' && 
+                     parseFloat(computedStyle.opacity) > 0
+    
+    const result = {
+      inViewport: isInViewport,
+      cssVisible: isVisible,
+      fullyVisible: isInViewport && isVisible,
+      rect: rect,
+      style: {
+        display: computedStyle.display,
+        visibility: computedStyle.visibility,
+        opacity: computedStyle.opacity
+      }
+    }
+    
+    this.debug('[Butterfly] Visibility check:', result)
+    return result
+  }
+
+  // Force butterfly to be visible for debugging
+  forceVisible() {
+    if (!this.butterfly) {
+      this.warn('[Butterfly] Cannot force visible - no butterfly exists')
+      return
+    }
+    
+    this.butterfly.style.display = 'block'
+    this.butterfly.style.visibility = 'visible'
+    this.butterfly.style.opacity = '1'
+    this.butterfly.style.zIndex = '9999'
+    this.butterfly.style.backgroundColor = 'red'
+    this.butterfly.style.border = '3px solid blue'
+    
+    this.info('[Butterfly] Forced visible with debug styling')
+    this.debugButterflyState('after force visible')
+  }
+
+  // Reset butterfly to center of screen for debugging
+  centerButterfly() {
+    if (!this.butterfly) {
+      this.warn('[Butterfly] Cannot center - no butterfly exists')
+      return
+    }
+    
+    this.butterfly.style.left = '50%'
+    this.butterfly.style.top = '50%'
+    this.butterfly.style.transform = 'translate(-50%, -50%)'
+    
+    this.info('[Butterfly] Centered butterfly')
+    this.debugButterflyState('after centering')
+  }
+
+  // Global debugging methods accessible from console
+  static addGlobalDebugMethods() {
+    window.debugButterfly = {
+      findController: () => {
+        return window.butterflyControllerInstance || null
+      },
+      
+      getState: () => {
+        const controller = window.debugButterfly.findController()
+        return controller ? controller.getButterflyState() : 'No butterfly controller found'
+      },
+      
+      checkVisibility: () => {
+        const controller = window.debugButterfly.findController()
+        return controller ? controller.isButterflyVisible() : 'No butterfly controller found'
+      },
+      
+      forceVisible: () => {
+        const controller = window.debugButterfly.findController()
+        if (controller) {
+          controller.forceVisible()
+          return 'Butterfly forced visible'
+        }
+        return 'No butterfly controller found'
+      },
+      
+      center: () => {
+        const controller = window.debugButterfly.findController()
+        if (controller) {
+          controller.centerButterfly()
+          return 'Butterfly centered'
+        }
+        return 'No butterfly controller found'
+      },
+      
+      setLogLevel: (level) => {
+        const controller = window.debugButterfly.findController()
+        if (controller) {
+          controller.logLevelValue = level
+          return `Log level set to ${level}`
+        }
+        return 'No butterfly controller found'
+      }
     }
   }
 }
