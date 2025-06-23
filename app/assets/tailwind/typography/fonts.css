@@ -1,0 +1,70 @@
+/* Typography System - Layer 3: Typography */
+
+/* Component-Specific Typography Classes */
+
+/* Main site branding */
+.site-title {
+  @apply font-['Caprasimo'] text-4xl;
+}
+
+/* Navigation elements */
+.nav-link {
+  @apply font-['Kanit'] font-medium;
+}
+
+/* Page headings */
+.page-title {
+  @apply font-['Kanit'] font-bold text-3xl;
+}
+
+.section-title {
+  @apply font-['Kanit'] text-2xl;
+}
+
+.subsection-title {
+  @apply font-['Kanit'] text-xl;
+}
+
+/* Content text */
+.content-text {
+  @apply font-['Nunito'] text-base leading-relaxed;
+}
+
+.content-description {
+  @apply font-['Nunito'] font-light text-sm leading-relaxed;
+}
+
+/* Special elements */
+.stat-value {
+  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+}
+
+.stat-label {
+  @apply font-['Nunito'] text-xs uppercase tracking-wide;
+}
+
+.quote-text {
+  @apply font-['Noto_Serif_Dives_Akuru'] italic text-lg leading-relaxed;
+}
+
+/* Interactive elements */
+.button-text {
+  @apply font-['Kanit'] font-medium;
+}
+
+.link-text {
+  @apply font-['Nunito'] font-medium;
+}
+
+/* Utility classes for emphasis */
+.text-emphasis {
+  @apply font-['Nunito'] font-bold;
+}
+
+.text-subtle {
+  @apply font-['Nunito'] font-light;
+}
+
+.text-accent {
+  @apply font-['WDXL_Lubrifont_JP_N'];
+}

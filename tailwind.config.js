@@ -10,8 +10,22 @@ module.exports = {
   ],
   theme: {
     extend: {
-      // Custom theme extensions will go here
-      // Colors, fonts, spacing, etc. can be customized as needed
+      fontFamily: {
+        'display': ['Caprasimo', 'cursive'],
+        'heading': ['Kanit', 'sans-serif'],
+        'body': ['Nunito', 'sans-serif'],
+        'accent': ['WDXL Lubrifont JP N', 'sans-serif'],
+        'serif': ['Noto Serif Dives Akuru', 'serif'],
+      },
+      fontWeight: {
+        'light': '200',
+        'normal': '400',
+        'medium': '500',
+        'semibold': '600',
+        'bold': '700',
+        'extrabold': '800',
+        'black': '900',
+      }
     },
   },
   plugins: [

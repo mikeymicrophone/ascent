@@ -18,6 +18,7 @@
 @import "./sizing/mountain.css";
 
 /* Layer 3: Typography & Colors */
+@import "./typography/fonts.css";
 @import "./typography/scaffold.css";
 @import "./typography/navigation.css";
 @import "./typography/components.css";

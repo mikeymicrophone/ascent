@@ -1,21 +1,28 @@
 /* Navigation Typography - Layer 3: Fonts and text properties */
 
 .brand-link {
-  @apply font-bold;
+  @apply font-['Caprasimo'] text-2xl;
   @apply no-underline;
 }
 
 .nav-link {
-  @apply font-medium;
+  @apply font-['Kanit'] font-medium;
   @apply no-underline;
 }
 
 /* Dropdown Typography */
 .nav-group-header {
-  @apply font-semibold;
+  @apply font-['Kanit'] font-semibold;
   @apply no-underline;
 }
 
 .nav-group-arrow {
-  @apply font-normal;
+  @apply font-['Kanit'] font-normal;
+}
+
+/* Auth Links */
+.sign-in-link,
+.sign-up-link {
+  @apply font-['Kanit'] font-medium;
+  @apply no-underline;
 }
