@@ -52,8 +52,8 @@ module Hierarchicable
       display_name: 'Approach',
       child_type_name: 'Stance',
       child_route_name: :stances,
-      children_scope: ->(item) { item.stances.order(:name) },
-      children_path: ->(item, context) { [item, :stances] }
+      children_scope: ->(item) { item.stances.order(:priority_level) },
+      children_path: ->(item, context) { context.respond_to?(:stances_path) ? context.stances_path : '/stances' }
     },
     'Stance' => {
       children_relation: nil,
