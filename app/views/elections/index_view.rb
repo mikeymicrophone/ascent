@@ -26,14 +26,7 @@ class Views::Elections::IndexView < Views::ApplicationView
                 button_to("Simulate Data", simulate_mountain_path(election), 
                   method: :post, class: "btn-secondary", form: { style: "display: inline;" })
                 whitespace
-                link_to "Show", election,
-                        class: "secondary"
-                link_to "Edit", edit_election_path(election),
-                        class: "secondary"
-                button_to "Destroy", election,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
+                Ui::ResourceActions(resource: election)
               end
             end
           end

@@ -22,16 +22,7 @@ class Views::Approaches::IndexView < Views::ApplicationView
             div(id: dom_id(approach, :list_item)) do
               ApproachPartial(approach: approach)
               
-              div do
-                link_to "Show", approach,
-                        class: "secondary"
-                link_to "Edit", edit_approach_path(approach),
-                        class: "secondary"
-                button_to "Destroy", approach,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: approach)
             end
           end
         else

@@ -12,19 +12,7 @@ class Views::Voters::ShowView < Views::ApplicationView
       
       VoterPartial(voter: @voter)
       
-      div do
-        link_to "Edit this voter", 
-                edit_voter_path(@voter),
-                class: "secondary"
-        link_to "Back to voters", 
-                voters_path,
-                class: "secondary"
-        button_to "Destroy this voter", 
-                  @voter,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @voter)
     end
   end
 

@@ -12,19 +12,7 @@ class Views::Approaches::ShowView < Views::ApplicationView
       
       ApproachPartial(approach: @approach)
       
-      div do
-        link_to "Edit this approach", 
-                edit_approach_path(@approach),
-                class: "secondary"
-        link_to "Back to approaches", 
-                approaches_path,
-                class: "secondary"
-        button_to "Destroy this approach", 
-                  @approach,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @approach)
     end
   end
 

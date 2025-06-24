@@ -8,10 +8,10 @@ class Views::Policies::IndexView < Views::ApplicationView
   def view_template(&)
     div(class: "scaffold policies-index", id: "index_policies") do
       render_notice if @notice.present?
-      
+
       div do
         h1 { "Policies" }
-        link_to "New policy", 
+        link_to "New policy",
                 new_policy_path,
                 class: "primary"
       end
@@ -21,17 +21,8 @@ class Views::Policies::IndexView < Views::ApplicationView
           @policies.each do |policy|
             div(id: dom_id(policy, :list_item)) do
               PolicyPartial(policy: policy)
-              
-              div do
-                link_to "Show", policy,
-                        class: "secondary"
-                link_to "Edit", edit_policy_path(policy),
-                        class: "secondary"
-                button_to "Destroy", policy,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+
+              Ui::ResourceActions(resource: policy)
             end
           end
         else
@@ -39,7 +30,7 @@ class Views::Policies::IndexView < Views::ApplicationView
         end
       end
 
-      Views::Components::Pagination(pagy: @pagy) if @pagy
+      Pagination(pagy: @pagy) if @pagy
     end
   end
 

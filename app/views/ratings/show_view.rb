@@ -12,19 +12,7 @@ class Views::Ratings::ShowView < Views::ApplicationView
       
       RatingPartial(rating: @rating)
       
-      div do
-        link_to "Edit this rating", 
-                edit_rating_path(@rating),
-                class: "secondary"
-        link_to "Back to ratings", 
-                ratings_path,
-                class: "secondary"
-        button_to "Destroy this rating", 
-                  @rating,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @rating)
     end
   end
 

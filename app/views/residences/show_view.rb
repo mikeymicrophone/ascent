@@ -12,19 +12,7 @@ class Views::Residences::ShowView < Views::ApplicationView
       
       render ResidencePartial.new(residence: @residence)
       
-      div do
-        link_to "Edit this residence", 
-                edit_residence_path(@residence),
-                class: "secondary"
-        link_to "Back to residences", 
-                residences_path,
-                class: "secondary"
-        button_to "Destroy this residence", 
-                  @residence,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @residence)
     end
   end
 

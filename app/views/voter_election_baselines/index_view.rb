@@ -22,16 +22,7 @@ class Views::VoterElectionBaselines::IndexView < Views::ApplicationView
             div(id: dom_id(voter_election_baseline, :list_item)) do
               VoterElectionBaselinePartial(voter_election_baseline: voter_election_baseline)
               
-              div do
-                link_to "Show", voter_election_baseline,
-                        class: "secondary"
-                link_to "Edit", edit_voter_election_baseline_path(voter_election_baseline),
-                        class: "secondary"
-                button_to "Destroy", voter_election_baseline,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: voter_election_baseline)
             end
           end
         else

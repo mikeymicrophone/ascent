@@ -22,16 +22,7 @@ class Views::Residences::IndexView < Views::ApplicationView
             div(id: dom_id(residence, :list_item)) do
               render ResidencePartial.new(residence: residence)
               
-              div do
-                link_to "Show", residence,
-                        class: "secondary"
-                link_to "Edit", edit_residence_path(residence),
-                        class: "secondary"
-                button_to "Destroy", residence,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: residence)
             end
           end
         else

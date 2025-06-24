@@ -22,16 +22,7 @@ class Views::GovernanceTypes::IndexView < Views::ApplicationView
             div(id: dom_id(governance_type, :list_item)) do
               GovernanceTypePartial(governance_type: governance_type)
               
-              div do
-                link_to "Show", governance_type,
-                        class: "secondary"
-                link_to "Edit", edit_governance_type_path(governance_type),
-                        class: "secondary"
-                button_to "Destroy", governance_type,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: governance_type)
             end
           end
         else

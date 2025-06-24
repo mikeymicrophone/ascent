@@ -12,19 +12,7 @@ class Views::Issues::ShowView < Views::ApplicationView
       
       IssuePartial(issue: @issue)
       
-      div do
-        link_to "Edit this issue", 
-                edit_issue_path(@issue),
-                class: "secondary"
-        link_to "Back to issues", 
-                issues_path,
-                class: "secondary"
-        button_to "Destroy this issue", 
-                  @issue,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @issue)
     end
   end
 

@@ -12,19 +12,7 @@ class Views::Years::ShowView < Views::ApplicationView
       
       YearPartial(year: @year)
       
-      div do
-        link_to "Edit this year", 
-                edit_year_path(@year),
-                class: "secondary"
-        link_to "Back to years", 
-                years_path,
-                class: "secondary"
-        button_to "Destroy this year", 
-                  @year,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @year)
     end
   end
 

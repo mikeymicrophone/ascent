@@ -22,16 +22,7 @@ class Views::AreaOfConcerns::IndexView < Views::ApplicationView
             div(id: dom_id(area_of_concern, :list_item)) do
               render AreaOfConcernPartial.new(area_of_concern: area_of_concern)
               
-              div do
-                link_to "Show", area_of_concern,
-                        class: "secondary"
-                link_to "Edit", edit_area_of_concern_path(area_of_concern),
-                        class: "secondary"
-                button_to "Destroy", area_of_concern,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: area_of_concern)
             end
           end
         else

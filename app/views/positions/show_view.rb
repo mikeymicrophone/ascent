@@ -12,19 +12,7 @@ class Views::Positions::ShowView < Views::ApplicationView
       
       PositionPartial(position: @position)
       
-      div do
-        link_to "Edit this position", 
-                edit_position_path(@position),
-                class: "secondary"
-        link_to "Back to positions", 
-                positions_path,
-                class: "secondary"
-        button_to "Destroy this position", 
-                  @position,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @position)
     end
   end
 

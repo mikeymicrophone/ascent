@@ -22,16 +22,7 @@ class Views::People::IndexView < Views::ApplicationView
             div(id: dom_id(person, :list_item)) do
               PersonPartial(person: person)
               
-              div do
-                link_to "Show", person,
-                        class: "secondary"
-                link_to "Edit", edit_person_path(person),
-                        class: "secondary"
-                button_to "Destroy", person,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: person)
             end
           end
         else

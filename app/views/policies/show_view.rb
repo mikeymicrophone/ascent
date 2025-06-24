@@ -12,19 +12,7 @@ class Views::Policies::ShowView < Views::ApplicationView
       
       PolicyPartial(policy: @policy)
       
-      div do
-        link_to "Edit this policy", 
-                edit_policy_path(@policy),
-                class: "secondary"
-        link_to "Back to policies", 
-                policies_path,
-                class: "secondary"
-        button_to "Destroy this policy", 
-                  @policy,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @policy)
     end
   end
 

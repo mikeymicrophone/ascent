@@ -12,19 +12,7 @@ class Views::People::ShowView < Views::ApplicationView
       
       PersonPartial(person: @person)
       
-      div do
-        link_to "Edit this person", 
-                edit_person_path(@person),
-                class: "secondary"
-        link_to "Back to people", 
-                people_path,
-                class: "secondary"
-        button_to "Destroy this person", 
-                  @person,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @person)
     end
   end
 
