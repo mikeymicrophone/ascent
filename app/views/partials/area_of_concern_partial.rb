@@ -5,21 +5,31 @@ class Views::Partials::AreaOfConcernPartial < Views::ApplicationView
 
   def view_template(&)
     div(id: dom_id(@area_of_concern), class: "area_of_concern-partial") do
-      h3 { @area_of_concern.name }
-      div do
-        span { "Description:" }
-        whitespace
-        div(class: "mt-1") { simple_format(@area_of_concern.description) }
+      # Header
+      div(class: "partial-header") do
+        h3(class: "partial-title") { @area_of_concern.name }
       end
-      div do
-        span { "Policy domain:" }
-        whitespace
-        span { @area_of_concern.policy_domain }
-      end
-      div do
-        span { "Regulatory scope:" }
-        whitespace
-        span { @area_of_concern.regulatory_scope }
+      
+      # Main content
+      div(class: "partial-content") do
+        # Description
+        if @area_of_concern.description.present?
+          div(class: "content-section") do
+            div(class: "content-description") { simple_format(@area_of_concern.description) }
+          end
+        end
+        
+        # Policy information grid
+        div(class: "info-grid") do
+          div(class: "info-item") do
+            span(class: "info-label") { "Policy Domain" }
+            span(class: "info-value") { @area_of_concern.policy_domain }
+          end
+          div(class: "info-item") do
+            span(class: "info-label") { "Regulatory Scope" }
+            span(class: "info-value") { @area_of_concern.regulatory_scope }
+          end
+        end
       end
     end
   end

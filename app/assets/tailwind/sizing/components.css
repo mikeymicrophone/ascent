@@ -408,3 +408,56 @@ select:focus {
 .summary-label {
   @apply text-xs;
 }
+
+/* Enhanced partial layout sizing */
+.partial-header {
+  @apply mb-6 pb-4 border-b border-gray-200;
+}
+
+.partial-title {
+  @apply text-xl font-semibold leading-tight;
+}
+
+.header-indicators {
+  @apply gap-2;
+}
+
+.partial-content {
+  @apply space-y-6;
+}
+
+.navigation-section {
+  @apply my-6 p-4 rounded-lg;
+}
+
+.content-section {
+  @apply mb-6;
+}
+
+.info-grid {
+  @apply gap-4;
+}
+
+.info-item {
+  @apply p-3 rounded border border-gray-100;
+}
+
+.info-label {
+  @apply text-xs font-medium uppercase tracking-wide mb-1;
+}
+
+.info-value {
+  @apply text-sm font-medium;
+}
+
+.expandable-sections {
+  @apply mt-8 space-y-6;
+}
+
+.expandable-grid {
+  @apply gap-4 p-4;
+}
+
+.results-container {
+  @apply space-y-3;
+}
