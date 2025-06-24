@@ -3,7 +3,7 @@ class GoverningBodiesController < ApplicationController
 
   def index
     @pagy, @governing_bodies = pagy(GoverningBody.all)
-    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy, current_voter: current_voter, notice: notice)
+    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy, notice: notice)
   end
 
   def show

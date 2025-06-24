@@ -9,6 +9,9 @@ class ApplicationController < ActionController::Base
   include ActionPolicy::Controller
   authorize :voter, through: :current_voter
 
+  # Make current_voter available as a helper method in views
+  helper_method :current_voter
+
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected

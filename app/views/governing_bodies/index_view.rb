@@ -1,8 +1,7 @@
 class Views::GoverningBodies::IndexView < Views::ApplicationView
-  def initialize(governing_bodies:, pagy: nil, current_voter: nil, notice: nil)
+  def initialize(governing_bodies:, pagy: nil, notice: nil)
     @governing_bodies = governing_bodies
     @pagy = pagy
-    @current_voter = current_voter
     @notice = notice
   end
 
@@ -23,7 +22,7 @@ class Views::GoverningBodies::IndexView < Views::ApplicationView
             div(id: dom_id(governing_body, :list_item)) do
               render GoverningBodyPartial.new(governing_body: governing_body)
               
-              Ui::ResourceActions(resource: governing_body, current_voter: @current_voter)
+              Ui::ResourceActions(resource: governing_body)
             end
           end
         else

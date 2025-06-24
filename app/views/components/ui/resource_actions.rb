@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class Views::Components::Ui::ResourceActions < Views::Components::Base
-  def initialize(resource:, current_voter: nil, show_path: nil, edit_path: nil, destroy_confirm: "Are you sure?")
+  def initialize(resource:, show_path: nil, edit_path: nil, destroy_confirm: "Are you sure?")
     @resource = resource
-    @current_voter = current_voter
     @show_path = show_path
     @edit_path = edit_path
     @destroy_confirm = destroy_confirm
@@ -35,9 +34,9 @@ class Views::Components::Ui::ResourceActions < Views::Components::Base
   end
 
   def can_destroy?
-    return true unless @current_voter # If no voter is logged in, allow by default
+    return true unless current_voter # If no voter is logged in, allow by default
     begin
-      allowed_to?(:destroy?, @resource, context: { voter: @current_voter })
+      allowed_to?(:destroy?, @resource, context: { voter: current_voter })
     rescue ActionPolicy::NotFound
       # If no policy exists for this resource, allow destruction by default
       true

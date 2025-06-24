@@ -1,6 +1,5 @@
 class Views::Components::Navigation < Views::ApplicationView
-  def initialize(current_voter: nil)
-    @current_voter = current_voter
+  def initialize
     @sections = []
   end
 
@@ -20,7 +19,7 @@ class Views::Components::Navigation < Views::ApplicationView
         div(class: "nav-links") do
           @sections.each { render_nav_section it }
           
-          Views::Components::DeviseLinks(current_voter: @current_voter)
+          Views::Components::DeviseLinks()
         end
       end
     end
