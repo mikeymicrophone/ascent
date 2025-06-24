@@ -2,11 +2,14 @@ module ApplicationHelper
   # Include Pagy frontend helpers for pagination support
   include Pagy::Frontend
 
+  def link_to_name(resource)
+    link_to resource.name, resource
+  end
+
   def load_google_fonts
     font_header +
     tag.link(rel: "stylesheet", href: font_url)
   end
-
 
   def font_header
     tag.link(rel: "preconnect", href: "https://fonts.googleapis.com") +
