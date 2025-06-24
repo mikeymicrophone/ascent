@@ -5,6 +5,10 @@ class ApplicationController < ActionController::Base
   # Include Pagy backend for pagination support
   include Pagy::Backend
 
+  # Include ActionPolicy authorization
+  include ActionPolicy::Controller
+  authorize :voter, through: :current_voter
+
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected

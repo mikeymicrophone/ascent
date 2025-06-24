@@ -27,6 +27,9 @@ gem "superform"
 # Use Devise for authentication [https://github.com/heartcombo/devise]
 gem "devise"
 
+# Authorization [https://github.com/palkan/action_policy]
+gem "action_policy"
+
 # Pagination [https://github.com/ddnexus/pagy]
 gem "pagy"
 

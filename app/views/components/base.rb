@@ -9,6 +9,9 @@ class Views::Components::Base < Phlex::HTML
   include Phlex::Rails::Helpers::ButtonTo
   include Phlex::Rails::Helpers::CSRFMetaTags
   
+  # Include ActionPolicy authorization helpers
+  include ActionPolicy::Behaviour
+  
   # You can add more helpers as needed:
   # include Phlex::Rails::Helpers::NumberHelper
   # include Phlex::Rails::Helpers::DateHelper
