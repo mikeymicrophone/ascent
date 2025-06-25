@@ -12,19 +12,7 @@ class Views::OfficialCodes::ShowView < Views::ApplicationView
       
       OfficialCodePartial(official_code: @official_code)
       
-      div do
-        link_to "Edit this official code", 
-                edit_official_code_path(@official_code),
-                class: "secondary"
-        link_to "Back to official codes", 
-                official_codes_path,
-                class: "secondary"
-        button_to "Destroy this official code", 
-                  @official_code,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @official_code)
     end
   end
 

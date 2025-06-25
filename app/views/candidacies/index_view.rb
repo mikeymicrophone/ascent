@@ -22,16 +22,7 @@ class Views::Candidacies::IndexView < Views::ApplicationView
             div(id: dom_id(candidacy, :list_item)) do
               CandidacyPartial(candidacy: candidacy)
               
-              div do
-                link_to "Show", candidacy,
-                        class: "secondary"
-                link_to "Edit", edit_candidacy_path(candidacy),
-                        class: "secondary"
-                button_to "Destroy", candidacy,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: candidacy)
             end
           end
         else

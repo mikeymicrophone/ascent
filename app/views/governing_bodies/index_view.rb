@@ -22,16 +22,7 @@ class Views::GoverningBodies::IndexView < Views::ApplicationView
             div(id: dom_id(governing_body, :list_item)) do
               render GoverningBodyPartial.new(governing_body: governing_body)
               
-              div do
-                link_to "Show", governing_body,
-                        class: "secondary"
-                link_to "Edit", edit_governing_body_path(governing_body),
-                        class: "secondary"
-                button_to "Destroy", governing_body,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: governing_body)
             end
           end
         else

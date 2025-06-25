@@ -64,6 +64,14 @@
   --status-baseline-only-text: theme('colors.orange.800');
   --status-registered-bg: theme('colors.cyan.100');
   --status-registered-text: theme('colors.cyan.800');
+  --status-executive-bg: theme('colors.purple.100');
+  --status-executive-text: theme('colors.purple.800');
+  --status-mock-bg: theme('colors.gray.200');
+  --status-mock-text: theme('colors.gray.700');
+  --status-historical-bg: theme('colors.amber.100');
+  --status-historical-text: theme('colors.amber.800');
+  --status-party-bg: theme('colors.indigo.100');
+  --status-party-text: theme('colors.indigo.800');
   
   /* Office holder colors */
   --current-holder-bg: theme('colors.blue.50');
@@ -78,6 +86,12 @@
   /* Voter stats colors */
   --stat-label: theme('colors.gray.600');
   --stat-value: theme('colors.gray.900');
+  
+  /* Information display colors */
+  --info-label-color: theme('colors.gray.600');
+  --info-value-color: theme('colors.gray.900');
+  --partial-title-color: theme('colors.gray.900');
+  --content-description-color: theme('colors.gray.700');
   
   /* Hierarchical navigation colors */
   --breadcrumb-bg: theme('colors.gray.50');

@@ -119,6 +119,44 @@ select.error {
   color: var(--status-registered-text);
 }
 
+/* Enhanced status indicators for partials */
+.status-executive {
+  background-color: var(--status-executive-bg);
+  color: var(--status-executive-text);
+}
+
+.status-mock {
+  background-color: var(--status-mock-bg);
+  color: var(--status-mock-text);
+}
+
+.status-historical {
+  background-color: var(--status-historical-bg);
+  color: var(--status-historical-text);
+}
+
+.status-party {
+  background-color: var(--status-party-bg);
+  color: var(--status-party-text);
+}
+
+/* Information display colors */
+.info-label {
+  color: var(--info-label-color);
+}
+
+.info-value {
+  color: var(--info-value-color);
+}
+
+.partial-title {
+  color: var(--partial-title-color);
+}
+
+.content-description {
+  color: var(--content-description-color);
+}
+
 /* Candidates preview colors */
 .candidate-party {
   color: var(--text-muted);

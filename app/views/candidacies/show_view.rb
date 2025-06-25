@@ -12,19 +12,7 @@ class Views::Candidacies::ShowView < Views::ApplicationView
       
       CandidacyPartial(candidacy: @candidacy)
       
-      div do
-        link_to "Edit this candidacy", 
-                edit_candidacy_path(@candidacy),
-                class: "secondary"
-        link_to "Back to candidacies", 
-                candidacies_path,
-                class: "secondary"
-        button_to "Destroy this candidacy", 
-                  @candidacy,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @candidacy)
     end
   end
 

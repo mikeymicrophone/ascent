@@ -1,11 +1,10 @@
 class Views::Components::DeviseLinks < Views::ApplicationView
-  def initialize(current_voter: nil)
-    @current_voter = current_voter
+  def initialize
   end
 
   def view_template
     div(class: "devise-links") do
-      if @current_voter
+      if current_voter
         authenticated_links
       else
         unauthenticated_links
@@ -16,8 +15,8 @@ class Views::Components::DeviseLinks < Views::ApplicationView
   private
 
   def authenticated_links
-    span(class: "voter-greeting") { "Hello, #{@current_voter.first_name}" }
-    link_to "Profile", edit_voter_path(@current_voter), class: "nav-link"
+    span(class: "voter-greeting") { "Hello, #{current_voter.first_name}" }
+    link_to "Profile", edit_voter_path(current_voter), class: "nav-link"
     link_to "Sign Out", destroy_voter_session_path, 
             class: "nav-link",
             data: { turbo_method: :delete }

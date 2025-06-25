@@ -22,16 +22,7 @@ class Views::Stances::IndexView < Views::ApplicationView
             div(id: dom_id(stance, :list_item)) do
               StancePartial(stance: stance)
               
-              div do
-                link_to "Show", stance,
-                        class: "secondary"
-                link_to "Edit", edit_stance_path(stance),
-                        class: "secondary"
-                button_to "Destroy", stance,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: stance)
             end
           end
         else

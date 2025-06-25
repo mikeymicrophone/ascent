@@ -241,3 +241,32 @@
 .election-name {
   @apply font-['Kanit'] font-medium;
 }
+
+/* Enhanced partial typography system */
+.partial-title {
+  @apply font-['Kanit'] font-bold text-2xl leading-tight;
+}
+
+.info-label {
+  @apply font-['Nunito'] font-medium text-xs uppercase tracking-wider;
+}
+
+.info-value {
+  @apply font-['Nunito'] font-semibold text-base;
+}
+
+.content-description {
+  @apply font-['Nunito'] text-base leading-relaxed;
+}
+
+/* Enhanced status indicator typography */
+.status-indicator {
+  @apply font-['Kanit'] font-medium text-xs uppercase tracking-wide;
+}
+
+.status-executive,
+.status-mock,
+.status-historical,
+.status-party {
+  @apply font-['Kanit'] font-medium text-xs;
+}

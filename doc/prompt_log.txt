@@ -749,3 +749,20 @@ Please use some or all of them to style our application.
 
 
 Try that out in your browser.  I don't think it worked
+
+
+Something we did in the last commit made a lot of the stylesheets      │
+│   work better.  It looks like 'slide-in-from-top-2' was causing a        │
+│   tailwind error I hadn't noticed.  Now I'm ready to make the partials   │
+│   look better - from corner to corner.  Currently some of them have a    │
+│   very basic printout of attribute names and values, including some      │
+│   booleans.  Some of those can be converted into stickers; others don't  │
+│   need to be displayed at all because they are more for uses other       │
+│   than informing the viewer.  Some of the bits of info can be moved to   │
+│   the right or to the top.  The HierNav should look better, and the      │
+│   items in expanded expandables should splay out from left to right.     │
+│   Think hard.
+
+
+
+

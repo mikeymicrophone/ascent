@@ -22,16 +22,7 @@ class Views::Topics::IndexView < Views::ApplicationView
             div(id: dom_id(topic, :list_item)) do
               TopicPartial(topic: topic)
               
-              div do
-                link_to "Show", topic,
-                        class: "secondary"
-                link_to "Edit", edit_topic_path(topic),
-                        class: "secondary"
-                button_to "Destroy", topic,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: topic)
             end
           end
         else

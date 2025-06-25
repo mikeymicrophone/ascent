@@ -22,16 +22,7 @@ class Views::Ratings::IndexView < Views::ApplicationView
             div(id: dom_id(rating, :list_item)) do
               RatingPartial(rating: rating)
               
-              div do
-                link_to "Show", rating,
-                        class: "secondary"
-                link_to "Edit", edit_rating_path(rating),
-                        class: "secondary"
-                button_to "Destroy", rating,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: rating)
             end
           end
         else

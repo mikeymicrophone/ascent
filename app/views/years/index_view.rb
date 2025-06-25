@@ -22,16 +22,7 @@ class Views::Years::IndexView < Views::ApplicationView
             div(id: dom_id(year, :list_item)) do
               YearPartial(year: year)
               
-              div do
-                link_to "Show", year,
-                        class: "secondary"
-                link_to "Edit", edit_year_path(year),
-                        class: "secondary"
-                button_to "Destroy", year,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: year)
             end
           end
         else

@@ -12,19 +12,7 @@ class Views::Stances::ShowView < Views::ApplicationView
       
       StancePartial(stance: @stance)
       
-      div do
-        link_to "Edit this stance", 
-                edit_stance_path(@stance),
-                class: "secondary"
-        link_to "Back to stances", 
-                stances_path,
-                class: "secondary"
-        button_to "Destroy this stance", 
-                  @stance,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @stance)
     end
   end
 

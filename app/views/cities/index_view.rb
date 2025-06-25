@@ -39,16 +39,7 @@ class Views::Cities::IndexView < Views::ApplicationView
             div(id: dom_id(city, :list_item)) do
               CityPartial(city: city)
               
-              div do
-                link_to "Show", city,
-                        class: "secondary"
-                link_to "Edit", edit_city_path(city),
-                        class: "secondary"
-                button_to "Destroy", city,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: city)
             end
           end
         else

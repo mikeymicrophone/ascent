@@ -12,19 +12,7 @@ class Views::Cities::ShowView < Views::ApplicationView
       
       CityPartial(city: @city)
       
-      div do
-        link_to "Edit this city", 
-                edit_city_path(@city),
-                class: "secondary"
-        link_to "Back to cities", 
-                cities_path,
-                class: "secondary"
-        button_to "Destroy this city", 
-                  @city,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @city)
     end
   end
 

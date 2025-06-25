@@ -22,16 +22,7 @@ class Views::<%= controller_class_name %>::IndexView < Views::ApplicationView
             div(id: dom_id(<%= singular_table_name %>, :list_item)) do
               Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: <%= singular_table_name %>)
               
-              div do
-                link_to "Show", <%= singular_table_name %>,
-                        class: "secondary"
-                link_to "Edit", edit_<%= singular_route_name %>_path(<%= singular_table_name %>),
-                        class: "secondary"
-                button_to "Destroy", <%= singular_table_name %>,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: <%= singular_table_name %>)
             end
           end
         else

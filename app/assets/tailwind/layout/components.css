@@ -5,11 +5,24 @@
   @apply block;
 }
 
-/* Partial containers */
+/* Enhanced partial containers - corner to corner styling */
 .country-partial,
 .state-partial,
-.city-partial {
-  @apply block;
+.city-partial,
+.election-partial,
+.person-partial,
+.candidacy-partial,
+.voter-partial,
+.office-partial,
+.topic-partial,
+.issue-partial,
+.approach-partial,
+.area_of_concern-partial,
+.governance_type-partial,
+.position-partial {
+  @apply block w-full;
+  /* Corner-to-corner utilization */
+  max-width: none;
 }
 
 /* Expandable sections */
@@ -290,38 +303,50 @@ select {
   @apply block;
 }
 
-/* Hierarchical navigation layout */
+/* Enhanced hierarchical navigation layout - corner to corner */
 .hierarchical-navigation {
-  @apply block;
+  @apply block w-full;
+  /* Corner-to-corner styling */
+  margin-left: -1rem;
+  margin-right: -1rem;
+  @apply px-4;
 }
 
 .breadcrumb-chain {
-  @apply flex items-center flex-wrap;
+  @apply flex items-center justify-between flex-wrap;
+  /* Spread breadcrumbs across full width */
 }
 
 .breadcrumb-item {
-  @apply flex items-center;
+  @apply flex items-center flex-col md:flex-row;
+  /* Stack on mobile, spread on desktop */
 }
 
 .breadcrumb-link,
 .breadcrumb-current {
-  @apply inline;
+  @apply inline-block;
 }
 
 .breadcrumb-separator {
-  @apply inline;
+  @apply inline-block mx-2 text-lg;
+  /* More prominent separators */
 }
 
 .quick-stats {
-  @apply block;
+  @apply mt-2 md:mt-0 md:ml-4;
+  /* Position stats to the right on larger screens */
 }
 
 .stats-row {
-  @apply flex items-center flex-wrap;
+  @apply flex items-center justify-start md:justify-end flex-wrap gap-3;
+  /* Spread stats across available space */
 }
 
 .stat-item {
-  @apply flex items-center;
+  @apply flex items-center px-3 py-1 rounded-full;
+  /* More distinct stat items */
+  background-color: var(--quick-stats-bg);
+  border: 1px solid var(--quick-stats-border);
 }
 
 .stat-value,
@@ -366,4 +391,98 @@ select {
 .summary-value,
 .summary-label {
   @apply block;
+}
+
+/* Enhanced partial layout system */
+.partial-header {
+  @apply flex items-start justify-between;
+}
+
+.partial-title {
+  @apply flex-1;
+}
+
+.header-indicators {
+  @apply flex items-center gap-2 flex-wrap;
+}
+
+.partial-content {
+  @apply space-y-4;
+}
+
+.navigation-section {
+  @apply my-4;
+}
+
+.content-section {
+  @apply block;
+}
+
+/* Information grid layout */
+.info-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+.info-item {
+  @apply flex flex-col space-y-1;
+}
+
+.info-label {
+  @apply text-sm font-medium;
+}
+
+.info-value {
+  @apply text-base;
+}
+
+/* Enhanced expandable sections with splay layout */
+.expandable-sections {
+  @apply space-y-6;
+}
+
+.expandable-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  /* Splay out items from left to right with staggered spacing */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Progressive stagger effect for items splaying left-to-right */
+.expandable-grid > *:nth-child(1) {
+  @apply md:col-start-1;
+}
+
+.expandable-grid > *:nth-child(2) {
+  @apply md:col-start-2;
+}
+
+.expandable-grid > *:nth-child(3) {
+  @apply lg:col-start-3;
+}
+
+.expandable-grid > *:nth-child(4) {
+  @apply xl:col-start-4;
+}
+
+/* Enhanced splay effect for larger screens */
+@media (min-width: 1024px) {
+  .expandable-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .expandable-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+}
+
+/* Results container layout */
+.results-container {
+  @apply space-y-3;
+}
+
+.candidate-preview-item {
+  @apply flex items-center space-x-2;
 }

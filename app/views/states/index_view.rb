@@ -22,16 +22,7 @@ class Views::States::IndexView < Views::ApplicationView
             div(id: dom_id(state, :list_item)) do
               StatePartial(state: state)
               
-              div do
-                link_to "Show", state,
-                        class: "secondary"
-                link_to "Edit", edit_state_path(state),
-                        class: "secondary"
-                button_to "Destroy", state,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: state)
             end
           end
         else

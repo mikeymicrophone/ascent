@@ -26,19 +26,7 @@ class Views::Topics::ShowView < Views::ApplicationView
         end
       end
       
-      div do
-        link_to "Edit this topic", 
-                edit_topic_path(@topic),
-                class: "secondary"
-        link_to "Back to topics", 
-                topics_path,
-                class: "secondary"
-        button_to "Destroy this topic", 
-                  @topic,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @topic)
     end
   end
 

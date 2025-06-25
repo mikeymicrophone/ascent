@@ -12,19 +12,7 @@ class Views::AreaOfConcerns::ShowView < Views::ApplicationView
       
       render AreaOfConcernPartial.new(area_of_concern: @area_of_concern)
       
-      div do
-        link_to "Edit this area of concern", 
-                edit_area_of_concern_path(@area_of_concern),
-                class: "secondary"
-        link_to "Back to area of concerns", 
-                area_of_concerns_path,
-                class: "secondary"
-        button_to "Destroy this area of concern", 
-                  @area_of_concern,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @area_of_concern)
     end
   end
 

@@ -15,19 +15,7 @@ class Views::Countries::ShowView < Views::ApplicationView
       
       CountryPartial(country: @country)
       
-      div do
-        link_to "Edit this country", 
-                edit_country_path(@country),
-                class: "secondary"
-        link_to "Back to countries", 
-                countries_path,
-                class: "secondary"
-        button_to "Destroy this country", 
-                  @country,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @country)
     end
   end
 

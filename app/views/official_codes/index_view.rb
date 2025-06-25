@@ -22,16 +22,7 @@ class Views::OfficialCodes::IndexView < Views::ApplicationView
             div(id: dom_id(official_code, :list_item)) do
               OfficialCodePartial(official_code: official_code)
               
-              div do
-                link_to "Show", official_code,
-                        class: "secondary"
-                link_to "Edit", edit_official_code_path(official_code),
-                        class: "secondary"
-                button_to "Destroy", official_code,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: official_code)
             end
           end
         else

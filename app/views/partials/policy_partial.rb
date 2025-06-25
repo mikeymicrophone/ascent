@@ -9,24 +9,16 @@ class Views::Partials::PolicyPartial < Views::ApplicationView
 
       HierarchicalNavigation(current_object: @policy)
 
+      h4 { @policy.title } unless helpers.controller_name == "policies"
       div do
         span { "Area of concern:" }
         whitespace
         link_to @policy.area_of_concern.name, @policy.area_of_concern, class: "link area_of_concern"
       end
       div do
-        span { "Approach:" }
-        whitespace
-        link_to @policy.approach.name, @policy.approach, class: "link approach"
+        helpers.link_to_name @policy.approach, class: "link approach"
       end
       div do
-        span { "Title:" }
-        whitespace
-        span { @policy.title }
-      end
-      div do
-        span { "Description:" }
-        whitespace
         div(class: "mt-1") { simple_format(@policy.description) }
       end
       div do
@@ -36,12 +28,8 @@ class Views::Partials::PolicyPartial < Views::ApplicationView
       end
       div do
         span { "Enacted date:" }
-        whitespace
         span { @policy.enacted_date }
-      end
-      div do
-        span { "Expiration date:" }
-        whitespace
+        span { "-" }
         span { @policy.expiration_date }
       end
     end

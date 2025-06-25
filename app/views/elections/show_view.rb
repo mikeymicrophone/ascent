@@ -12,19 +12,7 @@ class Views::Elections::ShowView < Views::ApplicationView
       
       ElectionPartial(election: @election)
       
-      div do
-        link_to "Edit this election", 
-                edit_election_path(@election),
-                class: "secondary"
-        link_to "Back to elections", 
-                elections_path,
-                class: "secondary"
-        button_to "Destroy this election", 
-                  @election,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @election)
     end
   end
 

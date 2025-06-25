@@ -12,19 +12,7 @@ class Views::Offices::ShowView < Views::ApplicationView
       
       OfficePartial(office: @office)
       
-      div do
-        link_to "Edit this office", 
-                edit_office_path(@office),
-                class: "secondary"
-        link_to "Back to offices", 
-                offices_path,
-                class: "secondary"
-        button_to "Destroy this office", 
-                  @office,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @office)
     end
   end
 

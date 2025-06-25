@@ -22,16 +22,7 @@ class Views::Voters::IndexView < Views::ApplicationView
             div(id: dom_id(voter, :list_item)) do
               VoterPartial(voter: voter)
               
-              div do
-                link_to "Show", voter,
-                        class: "secondary"
-                link_to "Edit", edit_voter_path(voter),
-                        class: "secondary"
-                button_to "Destroy", voter,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: voter)
             end
           end
         else

@@ -12,19 +12,7 @@ class Views::GoverningBodies::ShowView < Views::ApplicationView
       
       render GoverningBodyPartial.new(governing_body: @governing_body)
       
-      div do
-        link_to "Edit this governing body", 
-                edit_governing_body_path(@governing_body),
-                class: "secondary"
-        link_to "Back to governing bodies", 
-                governing_bodies_path,
-                class: "secondary"
-        button_to "Destroy this governing body", 
-                  @governing_body,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @governing_body)
     end
   end
 

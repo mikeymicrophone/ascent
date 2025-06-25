@@ -22,16 +22,7 @@ class Views::Offices::IndexView < Views::ApplicationView
             div(id: dom_id(office, :list_item)) do
               OfficePartial(office: office)
               
-              div do
-                link_to "Show", office,
-                        class: "secondary"
-                link_to "Edit", edit_office_path(office),
-                        class: "secondary"
-                button_to "Destroy", office,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: office)
             end
           end
         else

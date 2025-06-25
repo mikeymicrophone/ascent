@@ -12,19 +12,7 @@ class Views::VoterElectionBaselines::ShowView < Views::ApplicationView
       
       VoterElectionBaselinePartial(voter_election_baseline: @voter_election_baseline)
       
-      div do
-        link_to "Edit this voter election baseline", 
-                edit_voter_election_baseline_path(@voter_election_baseline),
-                class: "secondary"
-        link_to "Back to voter election baselines", 
-                voter_election_baselines_path,
-                class: "secondary"
-        button_to "Destroy this voter election baseline", 
-                  @voter_election_baseline,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @voter_election_baseline)
     end
   end
 

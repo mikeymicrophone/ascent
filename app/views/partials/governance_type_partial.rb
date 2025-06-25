@@ -5,24 +5,36 @@ class Views::Partials::GovernanceTypePartial < Views::ApplicationView
 
   def view_template(&)
     div(id: dom_id(@governance_type), class: "governance_type-partial") do
-      h3 { @governance_type.name }
-
-      HierarchicalNavigation(current_object: @governance_type)
-
-      div do
-        span { "Description:" }
-        whitespace
-        div(class: "mt-1") { simple_format(@governance_type.description) }
+      # Header
+      div(class: "partial-header") do
+        h3(class: "partial-title") { @governance_type.name }
       end
-      div do
-        span { "Authority level:" }
-        whitespace
-        span { @governance_type.authority_level }
+
+      # Hierarchical navigation (improved positioning)
+      div(class: "navigation-section") do
+        HierarchicalNavigation(current_object: @governance_type)
       end
-      div do
-        span { "Decision making process:" }
-        whitespace
-        span { @governance_type.decision_making_process }
+
+      # Main content
+      div(class: "partial-content") do
+        # Description
+        if @governance_type.description.present?
+          div(class: "content-section") do
+            div(class: "content-description") { simple_format(@governance_type.description) }
+          end
+        end
+        
+        # Governance information grid
+        div(class: "info-grid") do
+          div(class: "info-item") do
+            span(class: "info-label") { "Authority Level" }
+            span(class: "info-value") { @governance_type.authority_level }
+          end
+          div(class: "info-item") do
+            span(class: "info-label") { "Decision Making Process" }
+            span(class: "info-value") { @governance_type.decision_making_process }
+          end
+        end
       end
     end
   end

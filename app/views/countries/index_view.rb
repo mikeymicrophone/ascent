@@ -25,16 +25,7 @@ class Views::Countries::IndexView < Views::ApplicationView
             div(id: dom_id(country, :list_item)) do
               CountryPartial(country: country)
               
-              div do
-                link_to "Show", country,
-                        class: "secondary"
-                link_to "Edit", edit_country_path(country),
-                        class: "secondary"
-                button_to "Destroy", country,
-                          method: :delete,
-                          class: "danger",
-                          data: { turbo_confirm: "Are you sure?" }
-              end
+              Ui::ResourceActions(resource: country)
             end
           end
         else

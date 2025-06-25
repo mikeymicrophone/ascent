@@ -12,19 +12,7 @@ class Views::States::ShowView < Views::ApplicationView
       
       StatePartial(state: @state)
       
-      div do
-        link_to "Edit this state", 
-                edit_state_path(@state),
-                class: "secondary"
-        link_to "Back to states", 
-                states_path,
-                class: "secondary"
-        button_to "Destroy this state", 
-                  @state,
-                  method: :delete,
-                  class: "danger",
-                  data: { turbo_confirm: "Are you sure?" }
-      end
+      Ui::ResourceActions(resource: @state)
     end
   end
 
