@@ -11,7 +11,7 @@ The primary goal of this project is therefore to familiarize voters with the pos
 
 ### The Scent: Simulating Complex Preferences
 
-When voters have access to multiple votes, and multiple candidates, you can start to see a lot of detail about their preferences.  The candidates can see those preferences, and factor them into a sophisticated understanding of the role they seek.
+When voters have access to multiple votes, and multiple candidates, you can start to see a lot of detail about their preferences.  The candidates can see those preferences, and factor them into a sophisticated approach of the role they can play.
 
 If we can use the Ascent system to simulate how many groups of voters with different preferences can combine to create a result, it may be useful.
 

@@ -9,11 +9,11 @@ class Views::Partials::PolicyPartial < Views::ApplicationView
 
       HierarchicalNavigation(current_object: @policy)
 
-      h4 { @policy.title } unless helpers.controller_name == "policies"
+      h4 { @policy.title } unless @parent.is_a?(Views::Policies::ShowView)
       div do
         span { "Area of concern:" }
         whitespace
-        link_to @policy.area_of_concern.name, @policy.area_of_concern, class: "link area_of_concern"
+        helpers.link_to_name @policy.area_of_concern, class: "link area_of_concern"
       end
       div do
         helpers.link_to_name @policy.approach, class: "link approach"
