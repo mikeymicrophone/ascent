@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Views::Offices::OfficePartial, type: :view do
+RSpec.describe Views::Partials::OfficePartial, type: :view do
   let(:position) { create(:position, title: "Mayor") }
   let(:city) { create(:city, name: "Springfield") }
   let(:office) { create(:office, position: position, jurisdiction: city, is_active: true, notes: "City executive office") }

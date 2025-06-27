@@ -79,6 +79,10 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  
+  # Code coverage reporting [https://github.com/simplecov-ruby/simplecov]
+  gem "simplecov", require: false
+  gem "simplecov-html", require: false
 end
 
 gem "ruby-lsp", "~> 0.24.2"
