@@ -46,6 +46,12 @@
   @apply rounded;
 }
 
+.baseline-label.baseline-empty {
+  @apply bg-orange-50;
+  @apply text-orange-700;
+  @apply border-orange-200;
+}
+
 /* Party affiliation colors */
 .party-democratic {
   @apply text-blue-600;

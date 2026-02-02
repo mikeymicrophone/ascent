@@ -30,7 +30,12 @@ class MountainsController < ApplicationController
 
   def update
     # Handle batch rating updates
-    redirect_to mountain_path(@election, voter_id: @voter.id)
+    ActiveRecord::Base.transaction do
+      update_baseline
+      update_ratings
+    end
+
+    redirect_to mountain_path(@election, voter_id: @voter.id), notice: "Mountain ratings updated."
   end
 
   def simulate
@@ -142,6 +147,42 @@ class MountainsController < ApplicationController
   def calculate_position(rating)
     # Convert 0-500 rating to CSS position (inverted for top-origin)
     Views::Mountains.calculate_label_position(rating)
+  end
+
+  def update_baseline
+    baseline_value = params[:baseline].presence
+
+    if baseline_value
+      baseline_record = VoterElectionBaseline.find_or_initialize_by(voter: @voter, election: @election)
+      baseline_record.update!(baseline: normalize_rating(baseline_value))
+    else
+      @baseline&.destroy
+    end
+  end
+
+  def update_ratings
+    rating_params.each do |candidacy_id, rating_value|
+      candidacy = @election.candidacies.find(candidacy_id)
+      rating_record = Rating.find_by(voter: @voter, candidacy: candidacy)
+
+      if rating_value.present?
+        if rating_record
+          rating_record.update!(rating: normalize_rating(rating_value))
+        else
+          Rating.create!(voter: @voter, candidacy: candidacy, rating: normalize_rating(rating_value))
+        end
+      else
+        rating_record&.destroy
+      end
+    end
+  end
+
+  def rating_params
+    params.fetch(:ratings, {}).to_unsafe_h
+  end
+
+  def normalize_rating(value)
+    value.to_i.clamp(0, 500)
   end
 
   def current_voter

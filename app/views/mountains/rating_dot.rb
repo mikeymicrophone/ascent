@@ -12,7 +12,8 @@ class Views::Mountains::RatingDot < Views::Components::Base
     div(
       class: rating_dot_classes,
       style: "top: #{@position_y}px;",
-      title: rating_tooltip
+      title: rating_tooltip,
+      data: { role: "rating-dot" }
     ) do
       # Dot content if needed
     end

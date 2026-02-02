@@ -16,14 +16,28 @@ class Views::Mountains::EditView < Views::ApplicationView
         p { "Click on candidate columns to rate them, or drag the baseline to adjust your approval threshold." }
       end
       
-      render MountainChart.new(
-        election: @election,
-        voter: @voter,
-        baseline: @baseline,
-        mountain_data: @mountain_data
-      )
-      
-      render_save_controls
+      form_with(
+        url: mountain_path(@election, voter_id: @voter.id),
+        method: :patch,
+        class: "mountain-form",
+        data: {
+          controller: "mountain-editor",
+          "mountain-editor-max-height-value": Views::Mountains.max_height
+        }
+      ) do
+        render_baseline_input
+        render_rating_inputs
+
+        render MountainChart.new(
+          election: @election,
+          voter: @voter,
+          baseline: @baseline,
+          mountain_data: @mountain_data,
+          editable: true
+        )
+        
+        render_save_controls
+      end
     end
   end
 
@@ -38,7 +52,7 @@ class Views::Mountains::EditView < Views::ApplicationView
         if @baseline
           p { "Current Baseline: #{@baseline.baseline}" }
         else
-          p(class: "no-baseline") { "No baseline set - ratings will default to disapproved" }
+          p(class: "no-baseline") { "No baseline set yet - drag the baseline line to set one" }
         end
       end
     end
@@ -46,10 +60,33 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   def render_save_controls
     div(class: "save-controls") do
-      link_to("Save Changes", mountain_path(@election, voter_id: @voter.id), 
-              class: "btn-primary")
+      button(class: "btn-primary", type: "submit") { "Save Changes" }
       link_to("Cancel", mountain_path(@election, voter_id: @voter.id), 
               class: "btn-secondary")
     end
+  end
+
+  def render_baseline_input
+    input(
+      type: "hidden",
+      name: "baseline",
+      value: @baseline&.baseline,
+      data: { "mountain-editor-target": "baselineInput" }
+    )
+  end
+
+  def render_rating_inputs
+    @mountain_data.each do |data|
+      input(
+        type: "hidden",
+        id: rating_input_id(data[:candidacy].id),
+        name: "ratings[#{data[:candidacy].id}]",
+        value: data[:has_rating] ? data[:rating_value] : nil
+      )
+    end
+  end
+
+  def rating_input_id(candidacy_id)
+    "rating-input-#{candidacy_id}"
   end
 end

@@ -75,3 +75,21 @@
   @apply bg-white/75;
   @apply text-gray-600;
 }
+
+/* Editable states */
+.mountain-chart.editable .rating-area {
+  @apply cursor-crosshair;
+}
+
+.baseline-indicator.editable {
+  @apply pointer-events-auto;
+  @apply cursor-row-resize;
+}
+
+.rating-area.is-dragging {
+  @apply bg-gray-50;
+}
+
+.mountain-chart.baseline-dragging .baseline-line {
+  @apply border-blue-600;
+}
