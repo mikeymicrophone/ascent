@@ -100,3 +100,9 @@
 .y-axis-labels {
   @apply text-gray-500;
 }
+
+.mountain-empty {
+  @apply bg-white;
+  @apply border-gray-200;
+  @apply text-gray-700;
+}

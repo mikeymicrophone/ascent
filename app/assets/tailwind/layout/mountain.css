@@ -23,6 +23,18 @@
   @apply mb-8;
 }
 
+.election-context {
+  @apply flex items-center gap-2;
+}
+
+.mountain-empty {
+  @apply border rounded-lg;
+  @apply flex flex-col items-center justify-center;
+}
+
+.mountain-empty-actions {
+  @apply flex gap-3;
+}
 .mountain-chart {
   @apply relative w-full;
   @apply bg-white border rounded-lg;

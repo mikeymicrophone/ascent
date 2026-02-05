@@ -5,6 +5,18 @@
   min-height: 500px;
 }
 
+.election-context {
+  @apply mb-3;
+}
+
+.mountain-empty {
+  @apply p-8;
+  min-height: 320px;
+}
+
+.mountain-empty-actions {
+  @apply mt-4;
+}
 .candidate-column {
   @apply p-2;
   min-width: 80px;

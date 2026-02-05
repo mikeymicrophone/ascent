@@ -55,6 +55,10 @@
   @apply p-5 rounded-b-lg;
 }
 
+.election-vote-action {
+  @apply mt-6;
+}
+
 .expandable-count {
   @apply text-sm px-3 py-1 rounded-full ml-2;
 }

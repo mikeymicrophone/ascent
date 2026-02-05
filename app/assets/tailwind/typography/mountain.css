@@ -67,3 +67,11 @@
   @apply bg-blue-50;
   @apply rounded-lg;
 }
+
+.election-context {
+  @apply text-sm;
+}
+
+.mountain-empty {
+  @apply text-base;
+}

@@ -28,13 +28,17 @@ class Views::Mountains::EditView < Views::ApplicationView
         render_baseline_input
         render_rating_inputs
 
-        render MountainChart.new(
-          election: @election,
-          voter: @voter,
-          baseline: @baseline,
-          mountain_data: @mountain_data,
-          editable: true
-        )
+        if @mountain_data.empty?
+          render_empty_state
+        else
+          render MountainChart.new(
+            election: @election,
+            voter: @voter,
+            baseline: @baseline,
+            mountain_data: @mountain_data,
+            editable: true
+          )
+        end
         
         render_save_controls
       end
@@ -46,6 +50,12 @@ class Views::Mountains::EditView < Views::ApplicationView
   def render_header
     div(class: "mountain-header") do
       h1(class: "election-title") { "Edit Ratings: #{@election.name}" }
+
+      div(class: "election-context") do
+        span { "Election:" }
+        whitespace
+        link_to @election.name, @election, class: "link"
+      end
       
       div(class: "voter-info") do
         p { "Voter: #{@voter.name}" }
@@ -63,6 +73,17 @@ class Views::Mountains::EditView < Views::ApplicationView
       button(class: "btn-primary", type: "submit") { "Save Changes" }
       link_to("Cancel", mountain_path(@election, voter_id: @voter.id), 
               class: "btn-secondary")
+    end
+  end
+
+  def render_empty_state
+    div(class: "mountain-empty") do
+      p { "No candidates yet for this election." }
+      div(class: "mountain-empty-actions") do
+        link_to("Simulate Data", simulate_mountain_path(@election),
+                data: { turbo_method: :post }, class: "btn-primary")
+        link_to("Back to Election", @election, class: "btn-tertiary")
+      end
     end
   end
 

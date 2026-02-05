@@ -64,6 +64,12 @@ class Views::Partials::ElectionPartial < Views::ApplicationView
           end
         end
       end
+
+      if @election.status == "active"
+        div(class: "election-vote-action") do
+          link_to "Vote", mountain_path(@election, voter_id: current_voter&.id), class: "btn-primary"
+        end
+      end
     end
   end
 
