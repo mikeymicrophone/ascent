@@ -11,9 +11,7 @@ class Views::Candidacies::IndexView < Views::ApplicationView
       
       div do
         h1 { "Candidacies" }
-        link_to "New candidacy", 
-                new_candidacy_path,
-                class: "primary"
+        scaffold_new_resource_link "New candidacy", new_candidacy_path, record: Candidacy
       end
 
       div(id: "candidacies") do

@@ -11,9 +11,7 @@ class Views::Policies::IndexView < Views::ApplicationView
 
       div do
         h1 { "Policies" }
-        link_to "New policy",
-                new_policy_path,
-                class: "primary"
+        scaffold_new_resource_link "New policy", new_policy_path, record: Policy
       end
 
       div(id: "policies") do

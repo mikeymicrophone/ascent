@@ -1,32 +1,32 @@
 .story-kicker,
 .story-section-kicker {
-  @apply font-['Kanit'] text-sm font-semibold uppercase tracking-[0.24em];
+  @apply font-['Sora'] text-sm font-semibold uppercase tracking-[0.24em];
 }
 
 .story-title {
-  @apply font-['Kanit'] text-4xl font-bold leading-tight md:text-6xl;
+  @apply font-['Sora'] text-4xl font-bold leading-tight md:text-6xl;
 }
 
 .story-lead {
-  @apply max-w-4xl font-['Nunito'] text-lg leading-8 md:text-xl;
+  @apply max-w-4xl font-['Source_Serif_4'] text-lg leading-8 md:text-xl;
 }
 
 .story-metric-value {
-  @apply font-['WDXL_Lubrifont_JP_N'] text-4xl leading-none;
+  @apply font-['IBM_Plex_Mono'] text-4xl leading-none;
 }
 
 .story-metric-label {
-  @apply font-['Nunito'] text-sm uppercase tracking-[0.2em];
+  @apply font-['Sora'] text-sm uppercase tracking-[0.2em];
 }
 
 .story-section-title,
 .story-callout-title {
-  @apply font-['Kanit'] text-2xl font-semibold md:text-3xl;
+  @apply font-['Sora'] text-2xl font-semibold md:text-3xl;
 }
 
 .story-card-title,
 .story-election-title {
-  @apply font-['Kanit'] text-xl font-semibold;
+  @apply font-['Sora'] text-xl font-semibold;
 }
 
 .story-card-title {
@@ -37,7 +37,7 @@
 .story-election-summary,
 .story-callout-copy,
 .story-election-context {
-  @apply font-['Nunito'] text-base leading-7;
+  @apply font-['Source_Serif_4'] text-base leading-7;
 }
 
 .story-callout-copy,

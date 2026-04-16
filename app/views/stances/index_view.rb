@@ -11,9 +11,7 @@ class Views::Stances::IndexView < Views::ApplicationView
       
       div do
         h1 { "Stances" }
-        link_to "New stance", 
-                new_stance_path,
-                class: "primary"
+        scaffold_new_resource_link "New stance", new_stance_path, record: Stance
       end
 
       div(id: "stances") do

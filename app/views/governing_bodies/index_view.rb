@@ -11,9 +11,7 @@ class Views::GoverningBodies::IndexView < Views::ApplicationView
       
       div do
         h1 { "Governing bodies" }
-        link_to "New governing body", 
-                new_governing_body_path,
-                class: "primary"
+        scaffold_new_resource_link "New governing body", new_governing_body_path, record: GoverningBody
       end
 
       div(id: "governing_bodies") do

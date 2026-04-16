@@ -1,7 +1,6 @@
 :root {
-    --font-basic: "Nunito"; /* 2 styles, 9 weights */
-    --font-very-thick: "Caprasimo"; /* 1 style */
-    --font-technical: "Kanit"; /* 18 styles */
-    --font-chunky: "WDXL Lubrifont JP N"; /* 1 style */
-    --font-fun: "Noto Serif Dives Akuru"; /* 1 style */
+    --font-body: "Source Serif 4";
+    --font-brand: "Calistoga";
+    --font-ui: "Sora";
+    --font-metric: "IBM Plex Mono";
 }

@@ -1,24 +1,16 @@
 # frozen_string_literal: true
 
-class GoverningBodyPolicy < ApplicationPolicy
+class VoterPolicy < ApplicationRecordPolicy
   def index?
-    true
+    admin?
   end
 
   def show?
-    true
-  end
-
-  def create?
-    admin?
-  end
-
-  def new?
-    create?
+    admin? || own_record?
   end
 
   def edit?
-    admin?
+    admin? || own_record?
   end
 
   def update?
@@ -31,7 +23,7 @@ class GoverningBodyPolicy < ApplicationPolicy
 
   private
 
-  def admin?
-    voter&.admin?
+  def own_record?
+    voter.present? && record == voter
   end
 end

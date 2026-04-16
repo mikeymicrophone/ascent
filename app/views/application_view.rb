@@ -2,6 +2,7 @@
 
 class Views::ApplicationView < Phlex::HTML
   # Common helpers are included here to be available in all views.
+  include ScaffoldUiHelper
   include Phlex::Rails::Helpers::DOMID
   include Phlex::Rails::Helpers::LinkTo
   include Phlex::Rails::Helpers::ButtonTo
@@ -14,6 +15,7 @@ class Views::ApplicationView < Phlex::HTML
   include Phlex::Rails::Helpers::Request
 
   include Devise::Controllers::Helpers
+  include ActionPolicy::Behaviour
   include Pagy::Frontend
 
   include Views::Components
@@ -25,6 +27,10 @@ class Views::ApplicationView < Phlex::HTML
   end
 
   private
+
+  def default_authorization_policy_class
+    ApplicationRecordPolicy
+  end
 
   def expandable(context, collection_or_symbol, title: nil, &block)
     # Handle array context (future expansion for complex where clauses)

@@ -2,53 +2,53 @@
 
 .scaffold {
   /* Base font for body */
-  @apply font-['Nunito'];
+  @apply font-['Source_Serif_4'];
   
   /* Headings */
   h1 {
-    @apply font-['Kanit'] font-bold text-4xl;
+    @apply font-['Sora'] font-bold text-4xl;
   }
   
   h2 {
-    @apply font-['Kanit'] text-3xl;
+    @apply font-['Sora'] text-3xl;
   }
   
   h3 {
-    @apply font-['Kanit'] font-semibold text-xl;
+    @apply font-['Sora'] font-semibold text-xl;
   }
   
   h4 {
-    @apply font-['Kanit'] text-lg;
+    @apply font-['Sora'] text-lg;
   }
   
   h5 {
-    @apply font-['Kanit'] text-base;
+    @apply font-['Sora'] text-base;
   }
   
   /* Labels and Text */
   label {
-    @apply block font-['Nunito'] font-medium;
+    @apply block font-['Source_Serif_4'] font-medium;
   }
   
   span {
-    @apply font-['Nunito'];
+    @apply font-['Source_Serif_4'];
   }
   
   /* Paragraphs and descriptions */
   p {
-    @apply font-['Nunito'] leading-relaxed;
+    @apply font-['Source_Serif_4'] leading-relaxed;
   }
   
   /* Button Text */
   button,
   input[type="submit"],
   a[class*="button"] {
-    @apply font-['Kanit'] font-medium;
+    @apply font-['Sora'] font-medium;
   }
   
   /* Notice Text */
   #notice {
-    @apply font-['Nunito'] font-medium;
+    @apply font-['Source_Serif_4'] font-medium;
   }
   
   /* Empty State Text */

@@ -11,9 +11,7 @@ class Views::Topics::IndexView < Views::ApplicationView
       
       div do
         h1 { "Topics" }
-        link_to "New topic", 
-                new_topic_path,
-                class: "primary"
+        scaffold_new_resource_link "New topic", new_topic_path, record: Topic
       end
 
       div(id: "topics") do

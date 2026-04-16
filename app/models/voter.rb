@@ -19,6 +19,10 @@ class Voter < ApplicationRecord
              voter_election_baselines: [election: [office: :position]])
   }
   scope :with_residence_details, -> { includes(residences: :jurisdiction) }
+
+  def admin?
+    admin
+  end
   
   def full_name
     [first_name, last_name].compact.join(' ')

@@ -14,9 +14,7 @@ class Views::Countries::IndexView < Views::ApplicationView
       
       div do
         h1 { "Countries" }
-        link_to "New country", 
-                new_country_path,
-                class: "primary"
+        scaffold_new_resource_link "New country", new_country_path, record: Country
       end
 
       div(id: "countries") do

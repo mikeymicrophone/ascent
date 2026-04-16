@@ -1,31 +1,31 @@
 /* Navigation Typography - Layer 3: Fonts and text properties */
 
 .brand-link {
-  @apply font-['Caprasimo'] text-3xl;
+  @apply font-['Calistoga'] text-3xl;
   @apply no-underline;
 }
 
 .nav-link {
-  @apply font-['Nunito'] font-semibold;
+  @apply font-['Source_Serif_4'] font-semibold;
   @apply no-underline;
 }
 
 .nav-group-header {
-  @apply font-['Kanit'] text-sm font-semibold uppercase tracking-[0.18em];
+  @apply font-['Sora'] text-sm font-semibold uppercase tracking-[0.18em];
   @apply no-underline;
 }
 
 .nav-group-arrow {
-  @apply font-['Kanit'] text-xs font-normal;
+  @apply font-['Sora'] text-xs font-normal;
 }
 
 .nav-auth-link,
 .sign-in-link,
 .sign-up-link {
-  @apply font-['Kanit'] text-sm font-semibold;
+  @apply font-['Sora'] text-sm font-semibold;
   @apply no-underline;
 }
 
 .voter-greeting {
-  @apply font-['Nunito'] text-sm font-semibold;
+  @apply font-['Source_Serif_4'] text-sm font-semibold;
 }

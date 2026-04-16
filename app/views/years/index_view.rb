@@ -11,9 +11,7 @@ class Views::Years::IndexView < Views::ApplicationView
       
       div do
         h1 { "Years" }
-        link_to "New year", 
-                new_year_path,
-                class: "primary"
+        scaffold_new_resource_link "New year", new_year_path, record: Year
       end
 
       div(id: "years") do

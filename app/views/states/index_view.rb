@@ -11,9 +11,7 @@ class Views::States::IndexView < Views::ApplicationView
       
       div do
         h1 { "States" }
-        link_to "New state", 
-                new_state_path,
-                class: "primary"
+        scaffold_new_resource_link "New state", new_state_path, record: State
       end
 
       div(id: "states") do

@@ -11,9 +11,7 @@ class Views::Residences::IndexView < Views::ApplicationView
       
       div do
         h1 { "Residences" }
-        link_to "New residence", 
-                new_residence_path,
-                class: "primary"
+        scaffold_new_resource_link "New residence", new_residence_path, record: Residence
       end
 
       div(id: "residences") do

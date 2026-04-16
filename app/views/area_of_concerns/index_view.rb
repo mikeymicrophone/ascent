@@ -11,9 +11,7 @@ class Views::AreaOfConcerns::IndexView < Views::ApplicationView
       
       div do
         h1 { "Area of concerns" }
-        link_to "New area of concern", 
-                new_area_of_concern_path,
-                class: "primary"
+        scaffold_new_resource_link "New area of concern", new_area_of_concern_path, record: AreaOfConcern
       end
 
       div(id: "area_of_concerns") do

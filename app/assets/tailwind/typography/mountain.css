@@ -1,25 +1,30 @@
 /* Mountain Interface Typography */
 
 .page-title {
+  @apply font-['Sora'];
   @apply text-3xl font-bold;
   @apply mb-4;
 }
 
 .page-description {
+  @apply font-['Source_Serif_4'];
   @apply text-lg text-gray-600;
   @apply mb-8;
 }
 
 .election-title {
+  @apply font-['Sora'];
   @apply text-xl font-semibold;
   @apply mb-2;
 }
 
 .election-meta p {
+  @apply font-['Source_Serif_4'];
   @apply text-sm text-gray-600;
 }
 
 .voter-info p {
+  @apply font-['Source_Serif_4'];
   @apply text-base;
   @apply mb-1;
 }
@@ -30,12 +35,14 @@
 }
 
 .candidate-name {
+  @apply font-['Source_Serif_4'];
   @apply text-sm font-medium;
   @apply text-center;
   @apply leading-tight;
 }
 
 .party-affiliation {
+  @apply font-['Sora'];
   @apply text-xs;
   @apply font-medium;
 }
@@ -61,6 +68,7 @@
 }
 
 .edit-instructions {
+  @apply font-['Source_Serif_4'];
   @apply text-base;
   @apply mb-6;
   @apply p-4;
@@ -69,15 +77,17 @@
 }
 
 .election-context {
+  @apply font-['Source_Serif_4'];
   @apply text-sm;
 }
 
 .mountain-empty {
+  @apply font-['Source_Serif_4'];
   @apply text-base;
 }
 
 .btn-primary,
 .btn-secondary,
 .btn-tertiary {
-  @apply font-['Kanit'] font-semibold no-underline;
+  @apply font-['Sora'] font-semibold no-underline;
 }

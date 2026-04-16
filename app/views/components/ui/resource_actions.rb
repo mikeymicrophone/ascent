@@ -9,15 +9,21 @@ class Views::Components::Ui::ResourceActions < Views::Components::Base
   end
 
   def view_template
+    return unless scaffold_record_actions_visible?(@resource)
+
     div do
-      link_to "Show", show_path,
-              class: "secondary" if show_path
-      link_to "Edit", edit_path,
-              class: "secondary" if edit_path
+      if show_path && scaffold_show_action_visible?(@resource)
+        link_to "Show", show_path, class: scaffold_secondary_action_class
+      end
+
+      if edit_path && scaffold_edit_action_visible?(@resource)
+        link_to "Edit", edit_path, class: scaffold_secondary_action_class
+      end
+
       if can_destroy?
         button_to "Destroy", @resource,
                   method: :delete,
-                  class: "danger",
+                  class: scaffold_destructive_action_class,
                   data: { turbo_confirm: @destroy_confirm }
       end
     end
@@ -34,15 +40,6 @@ class Views::Components::Ui::ResourceActions < Views::Components::Base
   end
 
   def can_destroy?
-    return true unless current_voter # If no voter is logged in, allow by default
-    begin
-      allowed_to?(:destroy?, @resource, context: { voter: current_voter })
-    rescue ActionPolicy::NotFound
-      # If no policy exists for this resource, allow destruction by default
-      true
-    rescue ActionPolicy::AuthorizationContextMissing
-      # If authorization context is missing, allow destruction by default
-      true
-    end
+    scaffold_destroy_action_visible?(@resource)
   end
 end

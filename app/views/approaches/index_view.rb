@@ -11,9 +11,7 @@ class Views::Approaches::IndexView < Views::ApplicationView
       
       div do
         h1 { "Approaches" }
-        link_to "New approach", 
-                new_approach_path,
-                class: "primary"
+        scaffold_new_resource_link "New approach", new_approach_path, record: Approach
       end
 
       div(id: "approaches") do

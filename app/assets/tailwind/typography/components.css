@@ -2,20 +2,20 @@
 
 /* Link typography */
 .link {
-  @apply font-['Nunito'] font-medium no-underline;
+  @apply font-['Source_Serif_4'] font-medium no-underline;
 }
 
 /* Expandable sections typography */
 .expandable-header {
-  @apply font-['Kanit'] font-medium text-left;
+  @apply font-['Sora'] font-medium text-left;
 }
 
 .expandable-count {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-normal;
+  @apply font-['IBM_Plex_Mono'] font-normal;
 }
 
 .expandable-icon {
-  @apply font-['Kanit'] text-center select-none;
+  @apply font-['Sora'] text-center select-none;
 }
 
 /* Cities preview typography */
@@ -141,122 +141,122 @@
 
 /* Voter stats typography */
 .stat-label {
-  @apply font-['Nunito'] font-medium uppercase tracking-wide;
+  @apply font-['Sora'] font-medium uppercase tracking-wide;
 }
 
 .stat-value {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+  @apply font-['IBM_Plex_Mono'] font-bold;
 }
 
 /* Hierarchical navigation typography */
 .breadcrumb-link {
-  @apply font-['Nunito'] font-medium no-underline;
+  @apply font-['Source_Serif_4'] font-medium no-underline;
 }
 
 .breadcrumb-current {
-  @apply font-['Kanit'] font-semibold;
+  @apply font-['Sora'] font-semibold;
 }
 
 .breadcrumb-separator {
-  @apply font-['Nunito'] font-normal;
+  @apply font-['Source_Serif_4'] font-normal;
 }
 
 /* Quick stats typography */
 .quick-stats .stat-value {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+  @apply font-['IBM_Plex_Mono'] font-bold;
 }
 
 .quick-stats .stat-label {
-  @apply font-['Nunito'] font-medium uppercase tracking-wide;
+  @apply font-['Sora'] font-medium uppercase tracking-wide;
 }
 
 /* Geographic summary typography */
 .summary-value {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+  @apply font-['IBM_Plex_Mono'] font-bold;
 }
 
 .summary-label {
-  @apply font-['Nunito'] font-normal uppercase tracking-wide;
+  @apply font-['Sora'] font-normal uppercase tracking-wide;
 }
 
 /* Children preview typography */
 .child-name {
-  @apply font-['Nunito'] font-medium;
+  @apply font-['Source_Serif_4'] font-medium;
 }
 
 /* Special content typography */
 .description-text {
-  @apply font-['Nunito'] leading-relaxed;
+  @apply font-['Source_Serif_4'] leading-relaxed;
 }
 
 .formal-content {
-  @apply font-['Noto_Serif_Dives_Akuru'] leading-relaxed;
+  @apply font-['Source_Serif_4'] leading-relaxed;
 }
 
 .policy-text {
-  @apply font-['Noto_Serif_Dives_Akuru'] text-base leading-relaxed;
+  @apply font-['Source_Serif_4'] text-base leading-relaxed;
 }
 
 .quote-text {
-  @apply font-['Noto_Serif_Dives_Akuru'] italic text-lg leading-relaxed;
+  @apply font-['Source_Serif_4'] italic text-lg leading-relaxed;
 }
 
 /* Accent elements */
 .voter-count,
 .election-count,
 .office-count {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+  @apply font-['IBM_Plex_Mono'] font-bold;
 }
 
 /* Special page elements */
 .page-title {
-  @apply font-['Kanit'] font-bold text-3xl;
+  @apply font-['Sora'] font-bold text-3xl;
 }
 
 .section-heading {
-  @apply font-['Kanit'] text-xl;
+  @apply font-['Sora'] text-xl;
 }
 
 /* Entity-specific typography */
 .country-name,
 .state-name,
 .city-name {
-  @apply font-['Kanit'] font-semibold;
+  @apply font-['Sora'] font-semibold;
 }
 
 .topic-title,
 .issue-title,
 .approach-title {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Sora'] font-medium;
 }
 
 .candidate-name {
-  @apply font-['Nunito'] font-bold;
+  @apply font-['Source_Serif_4'] font-bold;
 }
 
 .office-title {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Sora'] font-medium;
 }
 
 .election-name {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Sora'] font-medium;
 }
 
 /* Enhanced partial typography system */
 .partial-title {
-  @apply font-['Kanit'] font-bold text-2xl leading-tight;
+  @apply font-['Sora'] font-bold text-2xl leading-tight;
 }
 
 .info-label {
-  @apply font-['Nunito'] font-medium text-xs uppercase tracking-wider;
+  @apply font-['Sora'] font-medium text-xs uppercase tracking-wider;
 }
 
 .info-value {
-  @apply font-['Nunito'] font-semibold text-base;
+  @apply font-['Source_Serif_4'] font-semibold text-base;
 }
 
 .content-description {
-  @apply font-['Nunito'] text-base leading-relaxed;
+  @apply font-['Source_Serif_4'] text-base leading-relaxed;
 }
 
 /* Enhanced status indicator typography */
@@ -268,5 +268,5 @@
 .status-mock,
 .status-historical,
 .status-party {
-  @apply font-['Kanit'] font-medium text-xs;
+  @apply font-['Sora'] font-medium text-xs;
 }

@@ -11,9 +11,7 @@ class Views::Ratings::IndexView < Views::ApplicationView
       
       div do
         h1 { "Ratings" }
-        link_to "New rating", 
-                new_rating_path,
-                class: "primary"
+        scaffold_new_resource_link "New rating", new_rating_path, record: Rating
       end
 
       div(id: "ratings") do

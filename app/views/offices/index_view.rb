@@ -11,9 +11,7 @@ class Views::Offices::IndexView < Views::ApplicationView
       
       div do
         h1 { "Offices" }
-        link_to "New office", 
-                new_office_path,
-                class: "primary"
+        scaffold_new_resource_link "New office", new_office_path, record: Office
       end
 
       div(id: "offices") do

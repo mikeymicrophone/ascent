@@ -5,17 +5,17 @@ FactoryBot.define do
     association :approach
     title { "Affordable Housing Development Standards" }
     description { "Comprehensive policy establishing requirements for affordable housing inclusion in new residential developments, density bonuses for developers, and streamlined permitting processes to address the housing shortage." }
-    status { "active" }
+    status { "enacted" }
     enacted_date { 2.years.ago }
     expiration_date { nil }
     trait :proposed do
-      status { "proposed" }
+      status { "pending" }
       enacted_date { nil }
       title { "Proposed Climate Action Plan" }
       description { "Draft policy framework for achieving carbon neutrality through renewable energy incentives, green building standards, and transportation electrification initiatives." }
     end
     trait :under_review do
-      status { "under_review" }
+      status { "pending" }
       enacted_date { nil }
       title { "Small Business Support Program Review" }
       description { "Comprehensive review of existing small business assistance programs to improve effectiveness, reduce administrative burden, and expand access to capital and technical assistance." }
@@ -32,7 +32,7 @@ FactoryBot.define do
       association :approach, factory: :school_improvement_approach
       title { "School Funding Equity Initiative" }
       description { "Policy ensuring equitable per-pupil funding across all schools, with additional resources for high-need populations and performance accountability measures." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 3.years.ago }
     end
     trait :healthcare_policy do
@@ -40,7 +40,7 @@ FactoryBot.define do
       association :approach, factory: :mobile_health_approach
       title { "Rural Healthcare Access Program" }
       description { "Policy establishing mobile health clinic services, telemedicine infrastructure, and provider incentives to ensure healthcare access in underserved rural areas." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 18.months.ago }
     end
     trait :transportation_policy do
@@ -48,7 +48,7 @@ FactoryBot.define do
       association :approach, factory: :transit_expansion_approach
       title { "Complete Streets Implementation" }
       description { "Policy requiring all new street construction and major renovations to accommodate pedestrians, cyclists, transit users, and vehicles through universal design principles." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 4.years.ago }
     end
     trait :environmental_policy do
@@ -56,7 +56,7 @@ FactoryBot.define do
       association :approach, factory: :environmental_regulations_approach
       title { "Environmental Protection Standards" }
       description { "Enhanced environmental regulations requiring impact assessments, emission monitoring, and pollution prevention measures for industrial and development activities." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 2.years.ago }
     end
     trait :housing_policy do
@@ -64,7 +64,7 @@ FactoryBot.define do
       association :approach, factory: :affordable_housing_approach
       title { "Inclusionary Housing Ordinance" }
       description { "Policy requiring new residential developments to include affordable units or contribute to housing trust fund, with incentives for exceeding requirements." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 3.years.ago }
     end
     trait :economic_policy do
@@ -72,28 +72,28 @@ FactoryBot.define do
       association :approach, factory: :job_training_approach
       title { "Workforce Development Partnership" }
       description { "Policy establishing partnerships between government, employers, and educational institutions to provide job training, apprenticeships, and career pathways." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 2.years.ago }
     end
     trait :temporary_policy do
       expiration_date { 1.year.from_now }
       title { "Emergency Housing Assistance Program" }
       description { "Temporary policy providing rental assistance and eviction prevention during economic hardship, with automatic renewal based on need assessment." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 6.months.ago }
     end
     trait :federal_policy do
       association :governing_body, factory: :federal_congress
       title { "National Infrastructure Investment Act" }
       description { "Federal policy providing funding for state and local infrastructure projects including roads, bridges, broadband, and green energy systems." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 1.year.ago }
     end
     trait :state_policy do
       association :governing_body, factory: :state_legislature_body
       title { "State Education Funding Formula" }
       description { "State policy establishing per-pupil funding formulas, equity adjustments for high-need districts, and accountability measures for academic performance." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 5.years.ago }
     end
     trait :local_policy do
@@ -118,4 +118,3 @@ FactoryBot.define do
     factory :local_policy_example, traits: [:local_policy]
   end
 end
-

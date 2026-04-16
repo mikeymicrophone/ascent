@@ -11,9 +11,7 @@ class Views::People::IndexView < Views::ApplicationView
       
       div do
         h1 { "People" }
-        link_to "New person", 
-                new_person_path,
-                class: "primary"
+        scaffold_new_resource_link "New person", new_person_path, record: Person
       end
 
       div(id: "people") do

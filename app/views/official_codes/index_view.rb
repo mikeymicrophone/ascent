@@ -11,9 +11,7 @@ class Views::OfficialCodes::IndexView < Views::ApplicationView
       
       div do
         h1 { "Official codes" }
-        link_to "New official code", 
-                new_official_code_path,
-                class: "primary"
+        scaffold_new_resource_link "New official code", new_official_code_path, record: OfficialCode
       end
 
       div(id: "official_codes") do

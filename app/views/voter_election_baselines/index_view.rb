@@ -11,9 +11,7 @@ class Views::VoterElectionBaselines::IndexView < Views::ApplicationView
       
       div do
         h1 { "Voter election baselines" }
-        link_to "New voter election baseline", 
-                new_voter_election_baseline_path,
-                class: "primary"
+        scaffold_new_resource_link "New voter election baseline", new_voter_election_baseline_path, record: VoterElectionBaseline
       end
 
       div(id: "voter_election_baselines") do

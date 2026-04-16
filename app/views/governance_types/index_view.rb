@@ -11,9 +11,7 @@ class Views::GovernanceTypes::IndexView < Views::ApplicationView
       
       div do
         h1 { "Governance types" }
-        link_to "New governance type", 
-                new_governance_type_path,
-                class: "primary"
+        scaffold_new_resource_link "New governance type", new_governance_type_path, record: GovernanceType
       end
 
       div(id: "governance_types") do

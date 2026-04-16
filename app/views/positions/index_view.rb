@@ -11,9 +11,7 @@ class Views::Positions::IndexView < Views::ApplicationView
       
       div do
         h1 { "Positions" }
-        link_to "New position", 
-                new_position_path,
-                class: "primary"
+        scaffold_new_resource_link "New position", new_position_path, record: Position
       end
 
       div(id: "positions") do

@@ -12,9 +12,9 @@ RSpec.describe "Policies Index", type: :request do
     end
 
     context "with multiple policies" do
-      let!(:policy1) { create(:policy, title: "Healthcare Reform", summary: "Expanding access to affordable healthcare") }
-      let!(:policy2) { create(:policy, title: "Education Funding", summary: "Increasing investment in public education") }
-      let!(:policy3) { create(:policy, title: "Infrastructure Development", summary: "Modernizing transportation systems") }
+      let!(:policy1) { create(:policy, title: "Healthcare Reform", description: "Expanding access to affordable healthcare") }
+      let!(:policy2) { create(:policy, title: "Education Funding", description: "Increasing investment in public education") }
+      let!(:policy3) { create(:policy, title: "Infrastructure Development", description: "Modernizing transportation systems") }
 
       it "renders successfully with policy data" do
         get policies_path
@@ -69,6 +69,39 @@ RSpec.describe "Policies Index", type: :request do
         
         expect { get policies_path }.to raise_error(ActiveRecord::StatementInvalid)
       end
+    end
+  end
+
+  describe "authorization" do
+    let!(:policy) { create(:policy, title: "Authorization Test Policy") }
+
+    it "allows public read access to the index" do
+      get policies_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Authorization Test Policy")
+    end
+
+    it "redirects guests away from the new policy form" do
+      get new_policy_path
+
+      expect(response).to redirect_to(new_voter_session_path)
+    end
+
+    it "redirects non-admin voters away from the new policy form" do
+      sign_in create(:voter)
+
+      get new_policy_path
+
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "allows admin voters to reach the new policy form" do
+      sign_in create(:admin_voter)
+
+      get new_policy_path
+
+      expect(response).to have_http_status(:ok)
     end
   end
 end

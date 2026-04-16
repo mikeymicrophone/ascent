@@ -28,9 +28,7 @@ class Views::Cities::IndexView < Views::ApplicationView
           end
         end
         
-        link_to "New city", 
-                new_city_path,
-                class: "primary"
+        scaffold_new_resource_link "New city", new_city_path, record: City
       end
 
       div(id: "cities") do

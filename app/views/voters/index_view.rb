@@ -11,9 +11,7 @@ class Views::Voters::IndexView < Views::ApplicationView
       
       div do
         h1 { "Voters" }
-        link_to "New voter", 
-                new_voter_path,
-                class: "primary"
+        scaffold_new_resource_link "New voter", new_voter_path, record: Voter
       end
 
       div(id: "voters") do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class GoverningBodyPolicy < ApplicationPolicy
+class ApplicationRecordPolicy < ApplicationPolicy
   def index?
     true
   end
