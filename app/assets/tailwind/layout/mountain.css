@@ -106,3 +106,9 @@
 .election-actions {
   @apply mt-4 flex gap-2;
 }
+
+.btn-primary,
+.btn-secondary,
+.btn-tertiary {
+  @apply inline-flex items-center justify-center;
+}

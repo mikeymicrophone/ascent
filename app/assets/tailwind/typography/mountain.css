@@ -75,3 +75,9 @@
 .mountain-empty {
   @apply text-base;
 }
+
+.btn-primary,
+.btn-secondary,
+.btn-tertiary {
+  @apply font-['Kanit'] font-semibold no-underline;
+}

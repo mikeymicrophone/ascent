@@ -1,36 +1,33 @@
 /* Main Content Layout - Layer 1: Layout techniques and positioning */
 
+/* Reserve enough room for the fixed multi-row navigation. */
+:root {
+  --nav-clearance: 7rem;
+}
+
 .main-content {
   @apply container mx-auto;
 }
 
-/* Ensure main content doesn't overlap with fixed navigation */
 body {
-  @apply pt-32; /* Default for when navigation wraps */
+  @apply min-h-screen;
+  padding-top: var(--nav-clearance);
 }
 
-/* Responsive body padding adjustments */
-@media (min-width: 1025px) {
-  body {
-    @apply pt-20; /* Single line navigation on large screens */
-  }
-}
-
-/* Intermediate widths - reduced padding for smaller nav */
-@media (max-width: 1024px) and (min-width: 769px) {
-  body {
-    @apply pt-24; /* Reduced padding with smaller nav links */
+@media (min-width: 1100px) {
+  :root {
+    --nav-clearance: 6.5rem;
   }
 }
 
 @media (max-width: 768px) {
-  body {
-    @apply pt-28; /* Vertical navigation on mobile/tablet */
+  :root {
+    --nav-clearance: 10.5rem;
   }
 }
 
 @media (max-width: 640px) {
-  body {
-    @apply pt-20; /* Compact navigation on small mobile */
+  :root {
+    --nav-clearance: 9.5rem;
   }
 }

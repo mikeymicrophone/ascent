@@ -9,7 +9,7 @@
 }
 
 .nav-links {
-  @apply gap-8;
+  @apply gap-6;
 }
 
 /* Dropdown Spacing */
@@ -47,6 +47,10 @@
   @apply flex items-center gap-4;
 }
 
+.nav-auth {
+  @apply ml-4;
+}
+
 .voter-greeting {
   @apply text-sm font-medium;
 }
@@ -64,6 +68,10 @@
   
   .nav-link {
     @apply px-2 py-1.5;
+  }
+
+  .nav-auth {
+    @apply ml-3;
   }
 }
 
@@ -87,6 +95,10 @@
   .devise-links {
     @apply gap-2;
   }
+
+  .nav-auth {
+    @apply ml-0 mt-2;
+  }
   
   .voter-greeting {
     @apply text-xs;
@@ -104,6 +116,10 @@
   
   .devise-links {
     @apply gap-1;
+  }
+
+  .nav-auth {
+    @apply mt-1;
   }
   
   .voter-greeting {

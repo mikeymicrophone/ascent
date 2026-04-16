@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   # Development only: serve SimpleCov coverage reports
   if Rails.env.development?
     mount Rack::Files.new(Rails.root.join('coverage')), at: '/coverage'
+    mount Rack::Files.new(Rails.root.join('app/assets/builds')), at: '/dev-assets'
   end
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

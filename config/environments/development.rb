@@ -3,6 +3,12 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  no_cache_headers = {
+    "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0",
+    "Pragma" => "no-cache",
+    "Expires" => "0"
+  }
+
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
 
@@ -20,10 +26,12 @@ Rails.application.configure do
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
-    config.public_file_server.headers = { "cache-control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
   end
+
+  # Keep browser asset caching off in development so Safari always refetches CSS/JS.
+  config.public_file_server.headers = no_cache_headers
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store

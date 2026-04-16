@@ -2,6 +2,7 @@
   background-color: var(--nav-bg);
   border-color: var(--nav-border);
   @apply shadow-sm;
+  backdrop-filter: blur(10px);
 }
 
 .brand-link {

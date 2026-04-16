@@ -1,5 +1,5 @@
 /* Main Content Sizing - Layer 2: Spacing and sizing */
 
 .main-content {
-  @apply mt-8 px-5;
+  @apply px-5 pb-10;
 }

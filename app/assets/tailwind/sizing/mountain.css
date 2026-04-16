@@ -17,6 +17,13 @@
 .mountain-empty-actions {
   @apply mt-4;
 }
+
+.btn-primary,
+.btn-secondary,
+.btn-tertiary {
+  @apply rounded-full px-4 py-2.5 text-sm;
+}
+
 .candidate-column {
   @apply p-2;
   min-width: 80px;

@@ -35,6 +35,11 @@
   border: 1px solid var(--story-border);
 }
 
+.story-card,
+.story-support-card {
+  border-top: 4px solid rgba(30, 64, 175, 0.18);
+}
+
 .story-card-subtle {
   background: var(--story-muted-card-surface);
   border-color: var(--story-dark-border);

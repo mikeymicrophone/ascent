@@ -57,6 +57,11 @@
 .story-election-card,
 .story-support-card {
   @apply rounded-[1.5rem] p-5;
+  @apply flex flex-col;
+}
+
+.story-card {
+  @apply gap-3;
 }
 
 .story-election-card,

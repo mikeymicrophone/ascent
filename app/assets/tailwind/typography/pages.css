@@ -29,9 +29,19 @@
   @apply font-['Kanit'] text-xl font-semibold;
 }
 
+.story-card-title {
+  @apply mb-1;
+}
+
 .story-card-copy,
 .story-election-summary,
 .story-callout-copy,
 .story-election-context {
   @apply font-['Nunito'] text-base leading-7;
+}
+
+.story-callout-copy,
+.story-election-summary,
+.story-card-copy {
+  @apply text-[1.02rem];
 }
