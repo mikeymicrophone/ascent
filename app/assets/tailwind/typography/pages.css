@@ -1,0 +1,37 @@
+.story-kicker,
+.story-section-kicker {
+  @apply font-['Kanit'] text-sm font-semibold uppercase tracking-[0.24em];
+}
+
+.story-title {
+  @apply font-['Kanit'] text-4xl font-bold leading-tight md:text-6xl;
+}
+
+.story-lead {
+  @apply max-w-4xl font-['Nunito'] text-lg leading-8 md:text-xl;
+}
+
+.story-metric-value {
+  @apply font-['WDXL_Lubrifont_JP_N'] text-4xl leading-none;
+}
+
+.story-metric-label {
+  @apply font-['Nunito'] text-sm uppercase tracking-[0.2em];
+}
+
+.story-section-title,
+.story-callout-title {
+  @apply font-['Kanit'] text-2xl font-semibold md:text-3xl;
+}
+
+.story-card-title,
+.story-election-title {
+  @apply font-['Kanit'] text-xl font-semibold;
+}
+
+.story-card-copy,
+.story-election-summary,
+.story-callout-copy,
+.story-election-context {
+  @apply font-['Nunito'] text-base leading-7;
+}

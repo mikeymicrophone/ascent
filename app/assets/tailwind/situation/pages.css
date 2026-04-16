@@ -1,0 +1,33 @@
+.story-card,
+.story-election-card,
+.story-support-card,
+.story-metric-card,
+.story-callout {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.story-card:hover,
+.story-election-card:hover,
+.story-support-card:hover,
+.story-metric-card:hover,
+.story-callout:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-floating);
+}
+
+.story-actions .btn-primary,
+.story-actions .btn-tertiary,
+.story-card-actions .btn-primary,
+.story-card-actions .btn-secondary,
+.story-card-actions .btn-tertiary {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.story-actions .btn-primary:hover,
+.story-actions .btn-tertiary:hover,
+.story-card-actions .btn-primary:hover,
+.story-card-actions .btn-secondary:hover,
+.story-card-actions .btn-tertiary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}

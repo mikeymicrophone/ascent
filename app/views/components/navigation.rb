@@ -34,6 +34,12 @@ class Views::Components::Navigation < Views::ApplicationView
   private
 
   def render_default_navigation
+    add_section("Project") do |section|
+      section.link("Overview", root_path)
+      section.link("For Supporters", supporters_path)
+      section.link("Mountains", mountains_path)
+    end
+
     add_section("Jurisdictions") do |section|
       section.link("Countries", countries_path)
       section.link("States", states_path)
@@ -69,7 +75,6 @@ class Views::Components::Navigation < Views::ApplicationView
       section.link("Residences", residences_path)
       section.link("Ratings", ratings_path)
       section.link("Baselines", voter_election_baselines_path)
-      section.link("Mountains", mountains_path)
     end
   end
 

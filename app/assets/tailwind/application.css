@@ -9,6 +9,7 @@
 @import "./layout/main.css";
 @import "./layout/components.css";
 @import "./layout/mountain.css";
+@import "./layout/pages.css";
 
 /* Layer 2: Spacing/Size */
 @import "./sizing/scaffold.css";
@@ -23,20 +24,22 @@
 @import "./typography/navigation.css";
 @import "./typography/components.css";
 @import "./typography/mountain.css";
+@import "./typography/pages.css";
 
 /* Layer 3: Colors */
 @import "./colors/scaffold.css";
 @import "./colors/navigation.css";
 @import "./colors/components.css";
 @import "./colors/mountain.css";
+@import "./colors/pages.css";
 
 /* Layer 4: State */
 @import "./situation/scaffold.css";
 @import "./situation/navigation.css";
 @import "./situation/components.css";
 @import "./situation/mountain.css";
+@import "./situation/pages.css";
 @import "./situation/butterfly.css";
 
 /* Layer 5: Plugins */
 @import "./plugins/pagy.tailwind.css";
-

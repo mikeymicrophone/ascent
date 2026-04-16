@@ -1,0 +1,87 @@
+.story-page {
+  @apply container mx-auto px-4 pb-16;
+  @apply flex flex-col gap-8;
+}
+
+.story-hero {
+  @apply relative overflow-hidden rounded-[2rem] px-6 py-10 md:px-10 md:py-14;
+}
+
+.story-hero::before {
+  content: "";
+  @apply absolute inset-0 opacity-80;
+  background:
+    radial-gradient(circle at top left, rgba(16, 185, 129, 0.16), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.18), transparent 35%);
+}
+
+.story-hero > * {
+  @apply relative z-10;
+}
+
+.story-actions,
+.story-card-actions {
+  @apply flex flex-wrap gap-3;
+}
+
+.story-section,
+.story-band,
+.story-callout {
+  @apply rounded-[2rem] px-6 py-8 md:px-8;
+}
+
+.story-section-heading {
+  @apply mb-6 flex flex-col gap-2;
+}
+
+.story-metric-grid,
+.story-card-grid,
+.story-election-grid,
+.story-support-grid {
+  @apply grid gap-4;
+  @apply grid-cols-1 md:grid-cols-2;
+}
+
+.story-card-grid,
+.story-election-grid,
+.story-support-grid {
+  @apply lg:grid-cols-3;
+}
+
+.story-card-grid-compact {
+  @apply lg:grid-cols-4;
+}
+
+.story-metric-card,
+.story-card,
+.story-election-card,
+.story-support-card {
+  @apply rounded-[1.5rem] p-5;
+}
+
+.story-election-card,
+.story-support-card {
+  @apply flex flex-col gap-4;
+}
+
+.story-election-card-inline {
+  @apply justify-between;
+}
+
+.mountain-empty-state {
+  @apply rounded-[1.5rem] border p-6;
+  @apply flex flex-col gap-4;
+}
+
+@media (max-width: 640px) {
+  .story-page {
+    @apply px-3 pb-12;
+  }
+
+  .story-hero,
+  .story-section,
+  .story-band,
+  .story-callout {
+    @apply rounded-[1.5rem] px-5 py-6;
+  }
+}

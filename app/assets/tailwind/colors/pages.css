@@ -1,0 +1,68 @@
+:root {
+  --story-surface: linear-gradient(180deg, rgba(239, 246, 255, 0.9), rgba(255, 255, 255, 1));
+  --story-band-surface: linear-gradient(135deg, rgba(12, 74, 110, 0.96), rgba(30, 64, 175, 0.9));
+  --story-card-surface: rgba(255, 255, 255, 0.9);
+  --story-muted-card-surface: rgba(255, 255, 255, 0.08);
+  --story-border: rgba(148, 163, 184, 0.22);
+  --story-dark-border: rgba(191, 219, 254, 0.18);
+  --story-ink: rgb(15 23 42);
+  --story-soft-ink: rgb(51 65 85);
+  --story-band-ink: rgb(239 246 255);
+  --story-accent: rgb(30 64 175);
+}
+
+.story-hero,
+.story-section,
+.story-callout {
+  background: var(--story-surface);
+  border: 1px solid var(--story-border);
+  color: var(--story-ink);
+  box-shadow: var(--shadow-elevated);
+}
+
+.story-band {
+  background: var(--story-band-surface);
+  border: 1px solid var(--story-dark-border);
+  color: var(--story-band-ink);
+  box-shadow: var(--shadow-dramatic);
+}
+
+.story-metric-card,
+.story-card,
+.story-election-card,
+.story-support-card {
+  background: var(--story-card-surface);
+  border: 1px solid var(--story-border);
+}
+
+.story-card-subtle {
+  background: var(--story-muted-card-surface);
+  border-color: var(--story-dark-border);
+}
+
+.story-kicker,
+.story-section-kicker,
+.story-election-context,
+.story-metric-label {
+  color: var(--story-accent);
+}
+
+.story-lead,
+.story-card-copy,
+.story-election-summary,
+.story-callout-copy {
+  color: var(--story-soft-ink);
+}
+
+.story-band .story-kicker,
+.story-band .story-section-kicker,
+.story-band .story-card-copy,
+.story-band .story-card-title,
+.story-band .story-section-title,
+.story-band .story-lead {
+  color: var(--story-band-ink);
+}
+
+.mountain-empty-state {
+  @apply bg-slate-50 border-slate-200 text-slate-800;
+}

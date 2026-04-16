@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "supporters" => "pages#supporters", as: :supporters
   resources :official_codes
   resources :policies
   resources :stances
@@ -49,5 +50,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "countries#index"
+  root "pages#home"
 end
