@@ -8,7 +8,8 @@
   color: var(--brand-hover);
 }
 
-.nav-link {
+.nav-link,
+.nav-auth-link {
   @apply transition-all duration-200;
 }
 
@@ -17,14 +18,21 @@
   color: var(--nav-link-hover-color);
 }
 
-/* Dropdown States */
+.nav-auth-link:hover {
+  background-color: rgba(239, 246, 255, 0.95);
+  color: var(--nav-link-hover-color);
+  transform: translateY(-1px);
+}
+
 .nav-group-header {
   @apply transition-all duration-200;
 }
 
 .nav-group-header:hover {
-  background-color: var(--nav-link-hover-bg);
+  background-color: rgba(239, 246, 255, 0.92);
+  border-color: rgba(96, 165, 250, 0.3);
   color: var(--nav-link-hover-color);
+  transform: translateY(-1px);
 }
 
 .nav-group-content {

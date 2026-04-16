@@ -2,7 +2,7 @@
 
 /* Reserve enough room for the fixed multi-row navigation. */
 :root {
-  --nav-clearance: 7rem;
+  --nav-clearance: 8.75rem;
 }
 
 .main-content {
@@ -16,18 +16,18 @@ body {
 
 @media (min-width: 1100px) {
   :root {
-    --nav-clearance: 6.5rem;
+    --nav-clearance: 8.25rem;
   }
 }
 
 @media (max-width: 768px) {
   :root {
-    --nav-clearance: 10.5rem;
+    --nav-clearance: 11.5rem;
   }
 }
 
 @media (max-width: 640px) {
   :root {
-    --nav-clearance: 9.5rem;
+    --nav-clearance: 10.5rem;
   }
 }

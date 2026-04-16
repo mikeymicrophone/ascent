@@ -12,16 +12,18 @@ class Views::Components::Navigation < Views::ApplicationView
     
     nav(class: "main-navigation") do
       div(class: "nav-container") do
-        div(class: "nav-brand") do
-          link_to "Ascent", root_path, class: "brand-link"
+        div(class: "nav-topbar") do
+          div(class: "nav-brand") do
+            link_to "Ascent", root_path, class: "brand-link"
+          end
+
+          div(class: "nav-auth") do
+            Views::Components::DeviseLinks()
+          end
         end
 
         div(class: "nav-links") do
           @sections.each { render_nav_section it }
-        end
-
-        div(class: "nav-auth") do
-          Views::Components::DeviseLinks()
         end
       end
     end

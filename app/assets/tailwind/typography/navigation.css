@@ -1,28 +1,31 @@
 /* Navigation Typography - Layer 3: Fonts and text properties */
 
 .brand-link {
-  @apply font-['Caprasimo'] text-2xl;
+  @apply font-['Caprasimo'] text-3xl;
   @apply no-underline;
 }
 
 .nav-link {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Nunito'] font-semibold;
   @apply no-underline;
 }
 
-/* Dropdown Typography */
 .nav-group-header {
-  @apply font-['Kanit'] font-semibold;
+  @apply font-['Kanit'] text-sm font-semibold uppercase tracking-[0.18em];
   @apply no-underline;
 }
 
 .nav-group-arrow {
-  @apply font-['Kanit'] font-normal;
+  @apply font-['Kanit'] text-xs font-normal;
 }
 
-/* Auth Links */
+.nav-auth-link,
 .sign-in-link,
 .sign-up-link {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Kanit'] text-sm font-semibold;
   @apply no-underline;
+}
+
+.voter-greeting {
+  @apply font-['Nunito'] text-sm font-semibold;
 }
