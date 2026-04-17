@@ -1,6 +1,6 @@
 class CitySeeder
   def self.seed
-    cities_data = YAML.load_file(Rails.root.join("db", "seeds", "data", "cities.yml"))
+    cities_data = YAML.load_file(SeedDataPaths.file("cities.yml"))
     
     cities_data.each do |city_data|
       state = State.find_by(code: city_data["state_code"])

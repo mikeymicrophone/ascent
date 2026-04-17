@@ -28,6 +28,7 @@ class Views::Pages::HomeView < Views::ApplicationView
 
       div(class: "story-actions") do
         link_to "Explore the Mountain Demo", mountains_path, class: "btn-primary"
+        link_to "Read the Schema Glossary", glossary_path, class: "btn-secondary"
         link_to "For Philanthropic Partners", supporters_path, class: "btn-tertiary"
       end
     end

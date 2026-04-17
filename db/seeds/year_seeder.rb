@@ -1,6 +1,6 @@
 class YearSeeder
   def self.seed
-    years_data = YAML.load_file(Rails.root.join("db", "seeds", "data", "years.yml"))
+    years_data = YAML.load_file(SeedDataPaths.file("years.yml"))
     
     years_data.each do |year_data|
       Year.find_or_create_by(year: year_data["year"]) do |year|

@@ -1,0 +1,3 @@
+[submodule "db/seeds/ascent_seed_data"]
+	path = db/seeds/ascent_seed_data
+	url = /Users/michaelschwab/CascadeProjects/ascent_seed_data

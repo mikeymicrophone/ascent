@@ -1,6 +1,6 @@
 class VoterSeeder
   def self.seed
-    voters_data = YAML.load_file(Rails.root.join("db", "seeds", "data", "voters.yml"))
+    voters_data = YAML.load_file(SeedDataPaths.file("voters.yml"))
     
     voters_data.each do |voter_data|
       voter = Voter.find_or_initialize_by(email: voter_data["email"])

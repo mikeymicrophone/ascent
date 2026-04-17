@@ -40,6 +40,7 @@ class Views::Components::Navigation < Views::ApplicationView
   def render_default_navigation
     add_section("Project") do |section|
       section.link("Overview", root_path)
+      section.link("Glossary", glossary_path)
       section.link("For Supporters", supporters_path)
       section.link("Mountains", mountains_path)
     end

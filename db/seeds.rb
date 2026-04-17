@@ -2,6 +2,8 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
+require Rails.root.join("db/seeds/data_paths")
+
 # Load all seeder classes
 Dir[Rails.root.join('db/seeds/*.rb')].each { |f| require f }
 
@@ -9,13 +11,13 @@ puts "🌱 Starting seed process..."
 
 # Seed countries first (no dependencies)
 puts "\n📍 Seeding countries..."
-CountrySeeder.seed(Rails.root.join('db/seeds/data/countries.yml'))
+CountrySeeder.seed(SeedDataPaths.file("countries.yml"))
 
 # Seed states (depends on countries)
 puts "\n🏛️ Seeding states..."
 StateSeeder.seed([
-  Rails.root.join('db/seeds/data/us_states.yml'),
-  Rails.root.join('db/seeds/data/canadian_provinces.yml')
+  SeedDataPaths.file("us_states.yml"),
+  SeedDataPaths.file("canadian_provinces.yml")
 ])
 
 # Seed cities (depends on states)

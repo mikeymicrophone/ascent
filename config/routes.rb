@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "glossary" => "pages#glossary", as: :glossary
   get "supporters" => "pages#supporters", as: :supporters
   resources :official_codes
   resources :policies

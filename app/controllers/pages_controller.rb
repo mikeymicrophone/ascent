@@ -6,6 +6,10 @@ class PagesController < ApplicationController
     )
   end
 
+  def glossary
+    render Views::Pages::GlossaryView.new
+  end
+
   def supporters
     render Views::Pages::SupportersView.new(
       active_elections: active_elections,

@@ -38,3 +38,4 @@
 
 # Ignore SimpleCov coverage reports
 /coverage/
+.DS_Store

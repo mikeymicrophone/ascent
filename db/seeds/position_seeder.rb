@@ -1,6 +1,6 @@
 class PositionSeeder
   def self.seed
-    positions_data = YAML.load_file(Rails.root.join("db", "seeds", "data", "positions.yml"))
+    positions_data = YAML.load_file(SeedDataPaths.file("positions.yml"))
     
     positions_data.each do |position_data|
       Position.find_or_create_by(title: position_data["title"]) do |position|

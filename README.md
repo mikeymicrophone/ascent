@@ -21,3 +21,14 @@ Since we give voters a way to opine about specific policy proposals, it is a nud
 
 A pretty interesting side benefit would be if we established a decent way for citizens to understand what is legal for them, as well as what services they can access.
 
+## Seed Data
+
+The seed YAML is now sourced from the Git submodule at `db/seeds/ascent_seed_data`.
+For local setup, run `bin/setup` so the submodule is initialized before `db:prepare`.
+
+During the transition, the app still falls back to the legacy `db/seeds/data` directory if the submodule is missing.
+To copy the current legacy YAML into the submodule working tree, run:
+
+```bash
+bin/rails seed_data:copy_legacy_to_submodule
+```
