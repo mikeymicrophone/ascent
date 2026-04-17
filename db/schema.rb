@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_223000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_16_224800) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -205,6 +205,58 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_223000) do
     t.index ["voter_id"], name: "index_residences_on_voter_id"
   end
 
+  create_table "rule_conditions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "kind", default: 0, null: false
+    t.string "label", null: false
+    t.text "notes"
+    t.integer "position", default: 0, null: false
+    t.string "slug", null: false
+    t.bigint "statement_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["statement_id", "slug"], name: "index_rule_conditions_on_statement_id_and_slug", unique: true
+    t.index ["statement_id"], name: "index_rule_conditions_on_statement_id"
+  end
+
+  create_table "rule_source_links", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "linkable_id", null: false
+    t.string "linkable_type", null: false
+    t.bigint "lu_unit_id", null: false
+    t.text "notes"
+    t.integer "relationship_kind", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["linkable_type", "linkable_id"], name: "index_rule_source_links_on_linkable"
+    t.index ["lu_unit_id"], name: "index_rule_source_links_on_lu_unit_id"
+  end
+
+  create_table "rule_statements", force: :cascade do |t|
+    t.string "action_label"
+    t.string "actor_label"
+    t.datetime "created_at", null: false
+    t.integer "effect", default: 0, null: false
+    t.string "object_label"
+    t.integer "position", default: 0, null: false
+    t.string "slug", null: false
+    t.integer "status", default: 0, null: false
+    t.text "summary", null: false
+    t.string "title", null: false
+    t.bigint "topic_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id", "slug"], name: "index_rule_statements_on_topic_id_and_slug", unique: true
+    t.index ["topic_id"], name: "index_rule_statements_on_topic_id"
+  end
+
+  create_table "rule_topics", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "slug", null: false
+    t.integer "status", default: 0, null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_rule_topics_on_slug", unique: true
+  end
+
   create_table "stances", force: :cascade do |t|
     t.bigint "approach_id", null: false
     t.bigint "candidacy_id", null: false
@@ -312,6 +364,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_223000) do
   add_foreign_key "ratings", "candidacies"
   add_foreign_key "ratings", "voters"
   add_foreign_key "residences", "voters"
+  add_foreign_key "rule_conditions", "rule_statements", column: "statement_id"
+  add_foreign_key "rule_statements", "rule_topics", column: "topic_id"
   add_foreign_key "stances", "approaches"
   add_foreign_key "stances", "candidacies"
   add_foreign_key "states", "countries"
