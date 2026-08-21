@@ -6,24 +6,30 @@
 FactoryBot.define do
   factory :mountain_scenario, class: Hash do
     transient do
-      election { association :election, :mock }
-      voter { association :voter }
+      election { FactoryBot.create(:election, :mock) }
+      voter { FactoryBot.create(:voter) }
       candidate_count { 8 }
       baseline { 275 }
       ratings { [470, 425, 365, 310, 265, 205, 125, 55] }
     end
 
     initialize_with do
+      candidate_names = %w[
+        Avery Blair Cameron Devon Ellis Finley Gray Harper
+        Jordan Kai Morgan Parker Quinn Riley Sawyer Taylor
+      ]
+
       candidacies = Array.new(candidate_count) do |index|
-        person = create(
+        person = FactoryBot.create(
           :person,
-          first_name: %w[Avery Blair Cameron Devon Ellis Finley Gray Harper Jordan Kai Morgan Parker Quinn Riley Sawyer Taylor][index],
+          first_name: candidate_names.fetch(index),
           last_name: "Candidate"
         )
-        create(:candidacy, election: election, person: person)
+
+        FactoryBot.create(:candidacy, election: election, person: person)
       end
 
-      voter_baseline = create(
+      voter_baseline = FactoryBot.create(
         :voter_election_baseline,
         voter: voter,
         election: election,
@@ -31,7 +37,7 @@ FactoryBot.define do
       )
 
       created_ratings = candidacies.each_with_index.map do |candidacy, index|
-        create(
+        FactoryBot.create(
           :rating,
           voter: voter,
           candidacy: candidacy,
