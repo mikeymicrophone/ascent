@@ -52,11 +52,11 @@ class Views::Pages::GlossaryView < Views::ApplicationView
         },
         {
           term: "Position",
-          definition: "A reusable role title such as Mayor or Governor. A position is the reusable role. An office is that role in a specific jurisdiction."
+          definition: "A reusable role title such as Mayor, Senator, or Justice. Each position belongs to a branch: legislative, executive, or judicial."
         },
         {
           term: "Office",
-          definition: "A concrete seat formed by pairing a Position with a jurisdiction. \"Mayor of Albany\" and \"Mayor of Buffalo\" are different offices even if they share the same position."
+          definition: "A concrete seat formed by pairing a Position with a jurisdiction. An office can also sit in a GoverningBody, and in a Chamber when that body has houses."
         },
         {
           term: "Year",
@@ -115,12 +115,20 @@ class Views::Pages::GlossaryView < Views::ApplicationView
       title: "How public problems connect to institutions, proposals, and codified text.",
       entries: [
         {
+          term: "Branch",
+          definition: "Legislative, executive, or judicial. The same three branches apply at every level. A school board or special district can be a governing body with no branch."
+        },
+        {
           term: "GovernanceType",
-          definition: "A reusable category of governing structure, such as a city council, school board, or executive office."
+          definition: "The form of an institution, independent of level: Legislature, Court, Council, Board, or Executive. Congress and a state legislature share the Legislature type."
         },
         {
           term: "GoverningBody",
-          definition: "The actual institution operating in a jurisdiction. A governing body belongs to a governance type and is the actor that owns policies."
+          definition: "An institution in a jurisdiction, such as a state legislature or a state supreme court. It has a governance type, an optional branch, and owns policies."
+        },
+        {
+          term: "Chamber",
+          definition: "A house of a governing body. A bicameral legislature stays one body; its Senate and Assembly or House are chambers. Seats in a house belong to that chamber."
         },
         {
           term: "AreaOfConcern",

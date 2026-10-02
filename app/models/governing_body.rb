@@ -1,7 +1,12 @@
 class GoverningBody < ApplicationRecord
+  include GovernmentBranch
+
   belongs_to :governance_type
   belongs_to :jurisdiction, polymorphic: true
+  has_many :chambers, dependent: :destroy
+  has_many :offices, dependent: :nullify
   has_many :policies
+
   has_many :official_codes, through: :policies
 
   validates :name, presence: true

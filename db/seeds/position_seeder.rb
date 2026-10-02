@@ -3,11 +3,11 @@ class PositionSeeder
     positions_data = YAML.load_file(SeedDataPaths.file("positions.yml"))
     
     positions_data.each do |position_data|
-      Position.find_or_create_by(title: position_data["title"]) do |position|
-        position.description = position_data["description"]
-        position.is_executive = position_data["is_executive"]
-        position.term_length_years = position_data["term_length_years"]
-      end
+      position = Position.find_or_initialize_by(title: position_data["title"])
+      position.description = position_data["description"]
+      position.branch = position_data["branch"]
+      position.term_length_years = position_data["term_length_years"]
+      position.save!
     end
     
     puts "Seeded #{Position.count} positions"

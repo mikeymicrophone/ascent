@@ -11,6 +11,20 @@ class Views::Partials::OfficePartial < Views::ApplicationView
         whitespace
         link_to @office.jurisdiction.name, @office.jurisdiction, class: "link jurisdiction"
       end
+      if @office.governing_body
+        div do
+          span { "Governing body:" }
+          whitespace
+          link_to @office.governing_body.name, @office.governing_body, class: "link governing_body"
+        end
+      end
+      if @office.chamber
+        div do
+          span { "Chamber:" }
+          whitespace
+          span { @office.chamber.name }
+        end
+      end
       div do
         span { "Is active:" }
         whitespace

@@ -38,7 +38,8 @@ RSpec.describe "Pages", type: :request do
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("How the current data model names the civic concepts in Ascent.")
-      expect(response.body).to include("A position is the reusable role. An office is that role in a specific jurisdiction.")
+      expect(response.body).to include("Each position belongs to a branch: legislative, executive, or judicial.")
+      expect(response.body).to include("An office can also sit in a GoverningBody")
       expect(response.body).to include("A voter&#39;s approval threshold for one election.")
       expect(response.body).to include("Separate namespace from the general Topic model.")
     end

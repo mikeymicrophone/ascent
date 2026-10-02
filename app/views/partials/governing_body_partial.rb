@@ -20,6 +20,21 @@ class Views::Partials::GoverningBodyPartial < Views::ApplicationView
         link_to @governing_body.jurisdiction.name, @governing_body.jurisdiction, class: "link jurisdiction"
       end
       div do
+        span { "Branch:" }
+        whitespace
+        span { @governing_body.branch&.titleize || "None" }
+      end
+      if @governing_body.chambers.any?
+        div do
+          span { "Chambers:" }
+          ul do
+            @governing_body.chambers.each do |chamber|
+              li { chamber.name }
+            end
+          end
+        end
+      end
+      div do
         span { "Governance type:" }
         whitespace
         link_to @governing_body.governance_type.name, @governing_body.governance_type, class: "link governance_type"

@@ -36,6 +36,14 @@ class Views::GoverningBodies::GoverningBodyForm < Views::ApplicationView
       end
 
       div do
+        form.label :branch
+        form.select :branch,
+                    GoverningBody.branches.keys.map { |branch| [ branch.titleize, branch ] },
+                    { include_blank: "None" },
+                    class: input_classes(@governing_body.errors[:branch])
+      end
+
+      div do
         form.label :description
         form.textarea :description,
                                         rows: 4,

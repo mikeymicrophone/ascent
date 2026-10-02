@@ -1,15 +1,11 @@
 class GoverningBodySeeder
   def self.seed
     # Get available governance types and jurisdictions
-    municipal_legislature = GovernanceType.find_by(name: "Municipal Legislature")
-    county_executive = GovernanceType.find_by(name: "County Executive")
-    county_legislature = GovernanceType.find_by(name: "County Legislature")
-    state_legislature = GovernanceType.find_by(name: "State Legislature")
-    state_executive = GovernanceType.find_by(name: "State Executive")
-    school_board = GovernanceType.find_by(name: "School Board")
-    special_district = GovernanceType.find_by(name: "Special District Board")
-    federal_legislature = GovernanceType.find_by(name: "Federal Legislature")
-    federal_executive = GovernanceType.find_by(name: "Federal Executive")
+    legislature = GovernanceType.find_by(name: "Legislature")
+    court = GovernanceType.find_by(name: "Court")
+    council = GovernanceType.find_by(name: "Council")
+    board = GovernanceType.find_by(name: "Board")
+    executive = GovernanceType.find_by(name: "Executive")
     
     # Get some representative jurisdictions
     us = Country.find_by(code: "US")
@@ -28,26 +24,46 @@ class GoverningBodySeeder
     governing_bodies = []
     
     # Federal Level Bodies
-    if us && federal_legislature
+    if us && legislature
       governing_bodies << {
         name: "United States Congress",
         jurisdiction_type: "Country",
         jurisdiction_id: us.id,
-        governance_type_id: federal_legislature.id,
+        governance_type_id: legislature.id,
+        branch: :legislative,
         description: "The bicameral legislature of the federal government of the United States consisting of the House of Representatives and the Senate.",
         meeting_schedule: "Year-round with recesses",
         is_active: true,
-        established_date: Date.new(1789, 3, 4)
+        established_date: Date.new(1789, 3, 4),
+        chambers: [
+          { name: "Senate", description: "The upper house of the United States Congress." },
+          { name: "House of Representatives", description: "The lower house of the United States Congress." }
+        ]
+      }
+    end
+
+    if us && court
+      governing_bodies << {
+        name: "Supreme Court of the United States",
+        jurisdiction_type: "Country",
+        jurisdiction_id: us.id,
+        governance_type_id: court.id,
+        branch: :judicial,
+        description: "The court of last resort of the United States, responsible for interpreting the Constitution and federal law.",
+        meeting_schedule: "Scheduled terms",
+        is_active: true,
+        established_date: Date.new(1789, 9, 24)
       }
     end
     
-    if us && federal_executive
+    if us && executive
       governing_bodies << {
         name: "Executive Office of the President",
         jurisdiction_type: "Country",
         jurisdiction_id: us.id,
-        governance_type_id: federal_executive.id,
-        description: "The executive branch of the United States federal government, headed by the President.",
+        governance_type_id: executive.id,
+        branch: :executive,
+        description: "The executive institution of the United States federal government, headed by the President.",
         meeting_schedule: "Continuous",
         is_active: true,
         established_date: Date.new(1789, 4, 30)
@@ -65,12 +81,13 @@ class GoverningBodySeeder
       abbrev = state_info[:abbrev]
       next unless state
       
-      if state_legislature
+      if legislature
         governing_bodies << {
           name: "#{state.name} State Legislature",
           jurisdiction_type: "State",
           jurisdiction_id: state.id,
-          governance_type_id: state_legislature.id,
+          governance_type_id: legislature.id,
+          branch: :legislative,
           description: "The state legislature of #{state.name}, responsible for making state laws and appropriating the state budget.",
           meeting_schedule: "Annual sessions",
           is_active: true,
@@ -80,17 +97,42 @@ class GoverningBodySeeder
                            when "TX" then Date.new(1845, 12, 29)
                            when "FL" then Date.new(1845, 3, 3)
                            else Date.new(1850, 1, 1)
+                           end,
+          chambers: [
+            { name: "Senate", description: "The upper house of the #{state.name} State Legislature." },
+            { name: lower_house_name(abbrev), description: "The lower house of the #{state.name} State Legislature." }
+          ]
+        }
+      end
+
+      if court
+        governing_bodies << {
+          name: court_name(state, abbrev),
+          jurisdiction_type: "State",
+          jurisdiction_id: state.id,
+          governance_type_id: court.id,
+          branch: :judicial,
+          description: "The court of last resort of #{state.name}.",
+          meeting_schedule: "Scheduled terms",
+          is_active: true,
+          established_date: case abbrev
+                           when "CA" then Date.new(1849, 12, 20)
+                           when "NY" then Date.new(1847, 7, 5)
+                           when "TX" then Date.new(1845, 12, 29)
+                           when "FL" then Date.new(1845, 3, 3)
+                           else Date.new(1850, 1, 1)
                            end
         }
       end
       
-      if state_executive
+      if executive
         governing_bodies << {
           name: "Office of the Governor of #{state.name}",
           jurisdiction_type: "State",
           jurisdiction_id: state.id,
-          governance_type_id: state_executive.id,
-          description: "The executive branch of #{state.name} state government, headed by the Governor.",
+          governance_type_id: executive.id,
+          branch: :executive,
+          description: "The executive institution of #{state.name} state government, headed by the Governor.",
           meeting_schedule: "Continuous",
           is_active: true,
           established_date: case abbrev
@@ -114,13 +156,14 @@ class GoverningBodySeeder
     ].each do |city_info|
       city = city_info[:city]
       county = city_info[:county]
-      next unless city && municipal_legislature
+      next unless city && council
       
       governing_bodies << {
         name: "#{city.name} City Council",
         jurisdiction_type: "City",
         jurisdiction_id: city.id,
-        governance_type_id: municipal_legislature.id,
+        governance_type_id: council.id,
+        branch: :legislative,
         description: "The legislative body of the City of #{city.name}, responsible for local ordinances, budget approval, and municipal policy.",
         meeting_schedule: "Weekly",
         is_active: true,
@@ -135,12 +178,13 @@ class GoverningBodySeeder
       }
       
       # Add county executives where applicable
-      if county_executive
+      if executive
         governing_bodies << {
           name: "#{county} County Executive",
           jurisdiction_type: "City", # Using city as proxy for county
           jurisdiction_id: city.id,
-          governance_type_id: county_executive.id,
+          governance_type_id: executive.id,
+          branch: :executive,
           description: "The chief executive officer of #{county} County, responsible for implementing county policies and managing county operations.",
           meeting_schedule: "As needed",
           is_active: true,
@@ -159,13 +203,14 @@ class GoverningBodySeeder
     ].each do |school_info|
       city = school_info[:city]
       name = school_info[:name]
-      next unless city && school_board
+      next unless city && board
       
       governing_bodies << {
         name: "#{name} Board",
         jurisdiction_type: "City",
         jurisdiction_id: city.id,
-        governance_type_id: school_board.id,
+        governance_type_id: board.id,
+        branch: nil,
         description: "The governing board of #{name}, responsible for educational policy, budget oversight, and superintendent selection.",
         meeting_schedule: "Monthly",
         is_active: true,
@@ -174,12 +219,13 @@ class GoverningBodySeeder
     end
     
     # Special Districts
-    if special_district && san_francisco
+    if board && san_francisco
       governing_bodies << {
         name: "San Francisco Bay Area Rapid Transit District Board",
         jurisdiction_type: "City",
         jurisdiction_id: san_francisco.id,
-        governance_type_id: special_district.id,
+        governance_type_id: board.id,
+        branch: nil,
         description: "The governing board of BART, responsible for transit policy, fare setting, and system expansion decisions.",
         meeting_schedule: "Bi-weekly",
         is_active: true,
@@ -187,12 +233,13 @@ class GoverningBodySeeder
       }
     end
     
-    if special_district && los_angeles
+    if board && los_angeles
       governing_bodies << {
         name: "Metropolitan Water District of Southern California Board",
         jurisdiction_type: "City",
         jurisdiction_id: los_angeles.id,
-        governance_type_id: special_district.id,
+        governance_type_id: board.id,
+        branch: nil,
         description: "The governing board responsible for water supply management and infrastructure for Southern California region.",
         meeting_schedule: "Monthly",
         is_active: true,
@@ -202,19 +249,16 @@ class GoverningBodySeeder
     
     # Create the governing bodies
     governing_bodies.each do |gb_attrs|
-      governing_body = GoverningBody.find_or_create_by(
+      chambers = gb_attrs.delete(:chambers)
+      governing_body = GoverningBody.find_or_initialize_by(
         name: gb_attrs[:name],
         jurisdiction_type: gb_attrs[:jurisdiction_type],
         jurisdiction_id: gb_attrs[:jurisdiction_id]
-      ) do |gb|
-        gb.governance_type_id = gb_attrs[:governance_type_id]
-        gb.description = gb_attrs[:description]
-        gb.meeting_schedule = gb_attrs[:meeting_schedule]
-        gb.is_active = gb_attrs[:is_active]
-        gb.established_date = gb_attrs[:established_date]
-      end
-      
-      if governing_body.persisted?
+      )
+      governing_body.assign_attributes(gb_attrs)
+
+      if governing_body.save
+        seed_chambers(governing_body, chambers)
         print "."
       else
         puts "\n❌ Failed to create governing body: #{gb_attrs[:name]}"
@@ -223,5 +267,25 @@ class GoverningBodySeeder
     end
     
     puts " #{GoverningBody.count} governing bodies"
+  end
+
+  def self.lower_house_name(abbrev)
+    %w[CA NY].include?(abbrev) ? "Assembly" : "House of Representatives"
+  end
+
+  def self.court_name(state, abbrev)
+    return "New York Court of Appeals" if abbrev == "NY"
+
+    "Supreme Court of #{state.name}"
+  end
+
+  def self.seed_chambers(governing_body, chambers)
+    return if chambers.blank?
+
+    chambers.each do |attrs|
+      chamber = governing_body.chambers.find_or_initialize_by(name: attrs[:name])
+      chamber.description = attrs[:description]
+      chamber.save!
+    end
   end
 end

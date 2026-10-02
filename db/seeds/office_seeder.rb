@@ -19,13 +19,14 @@ class OfficeSeeder
     
     president_position = Position.find_by(title: "President")
     if president_position
-      Office.find_or_create_by(
+      office = Office.find_or_create_by(
         position: president_position,
         jurisdiction: us
-      ) do |office|
-        office.is_active = true
-        office.notes = "President of the United States"
+      ) do |record|
+        record.is_active = true
+        record.notes = "President of the United States"
       end
+      place_in_body(office, "Executive Office of the President")
     end
   end
   
@@ -35,13 +36,14 @@ class OfficeSeeder
     return unless governor_position
     
     State.find_each do |state|
-      Office.find_or_create_by(
+      office = Office.find_or_create_by(
         position: governor_position,
         jurisdiction: state
-      ) do |office|
-        office.is_active = true
-        office.notes = "Governor of #{state.name}"
+      ) do |record|
+        record.is_active = true
+        record.notes = "Governor of #{state.name}"
       end
+      place_in_body(office, "Office of the Governor of #{state.name}")
     end
     
     # Create Senator offices (2 per state)
@@ -49,13 +51,14 @@ class OfficeSeeder
     if senator_position
       State.find_each do |state|
         2.times do |i|
-          Office.find_or_create_by(
+          office = Office.find_or_create_by(
             position: senator_position,
             jurisdiction: state,
             notes: "U.S. Senator from #{state.name} - Seat #{i + 1}"
-          ) do |office|
-            office.is_active = true
+          ) do |record|
+            record.is_active = true
           end
+          place_in_body(office, "United States Congress", "Senate")
         end
       end
     end
@@ -79,5 +82,14 @@ class OfficeSeeder
         office.notes = "Mayor of #{city.name}"
       end
     end
+  end
+
+  def self.place_in_body(office, body_name, chamber_name = nil)
+    body = GoverningBody.find_by(name: body_name)
+    return unless office && body
+
+    office.governing_body = body
+    office.chamber = body.chambers.find_by(name: chamber_name) if chamber_name
+    office.save! if office.changed?
   end
 end

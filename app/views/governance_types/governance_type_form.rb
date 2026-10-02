@@ -21,12 +21,6 @@ class Views::GovernanceTypes::GovernanceTypeForm < Views::ApplicationView
       end
 
       div do
-        form.label :authority_level
-        form.number_field :authority_level,
-                                        class: input_classes(@governance_type.errors[:authority_level])
-      end
-
-      div do
         form.label :decision_making_process
         form.text_field :decision_making_process,
                                         class: input_classes(@governance_type.errors[:decision_making_process])

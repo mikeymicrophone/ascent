@@ -2,6 +2,8 @@ FactoryBot.define do
   factory :office do
     association :position
     association :jurisdiction, factory: :city
+    governing_body { nil }
+    chamber { nil }
     is_active { true }
     notes { "Active political office available for election" }
 

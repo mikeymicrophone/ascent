@@ -49,6 +49,6 @@ class GovernanceTypesController < ApplicationController
   end
 
   def governance_type_params
-    params.require(:governance_type).permit(:name, :description, :authority_level, :decision_making_process)
+    params.require(:governance_type).permit(:name, :description, :decision_making_process)
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_16_224800) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -45,6 +45,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_224800) do
     t.index ["person_id"], name: "index_candidacies_on_person_id"
   end
 
+  create_table "chambers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.bigint "governing_body_id", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["governing_body_id", "name"], name: "index_chambers_on_governing_body_id_and_name", unique: true
+    t.index ["governing_body_id"], name: "index_chambers_on_governing_body_id"
+  end
+
   create_table "cities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -76,7 +86,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_224800) do
   end
 
   create_table "governance_types", force: :cascade do |t|
-    t.integer "authority_level"
     t.datetime "created_at", null: false
     t.string "decision_making_process"
     t.text "description"
@@ -85,6 +94,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_224800) do
   end
 
   create_table "governing_bodies", force: :cascade do |t|
+    t.integer "branch"
     t.datetime "created_at", null: false
     t.text "description"
     t.date "established_date"
@@ -108,13 +118,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_224800) do
   end
 
   create_table "offices", force: :cascade do |t|
+    t.bigint "chamber_id"
     t.datetime "created_at", null: false
+    t.bigint "governing_body_id"
     t.boolean "is_active"
     t.bigint "jurisdiction_id", null: false
     t.string "jurisdiction_type", null: false
     t.text "notes"
     t.bigint "position_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["chamber_id"], name: "index_offices_on_chamber_id"
+    t.index ["governing_body_id"], name: "index_offices_on_governing_body_id"
     t.index ["jurisdiction_type", "jurisdiction_id"], name: "index_offices_on_jurisdiction"
     t.index ["position_id"], name: "index_offices_on_position_id"
   end
@@ -162,9 +176,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_224800) do
   end
 
   create_table "positions", force: :cascade do |t|
+    t.integer "branch"
     t.datetime "created_at", null: false
     t.text "description"
-    t.boolean "is_executive"
     t.integer "term_length_years"
     t.string "title"
     t.datetime "updated_at", null: false
@@ -349,11 +363,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_16_224800) do
   add_foreign_key "approaches", "issues"
   add_foreign_key "candidacies", "elections"
   add_foreign_key "candidacies", "people"
+  add_foreign_key "chambers", "governing_bodies"
   add_foreign_key "cities", "states"
   add_foreign_key "elections", "offices"
   add_foreign_key "elections", "years"
   add_foreign_key "governing_bodies", "governance_types"
   add_foreign_key "issues", "topics"
+  add_foreign_key "offices", "chambers"
+  add_foreign_key "offices", "governing_bodies"
   add_foreign_key "offices", "positions"
   add_foreign_key "official_codes", "policies"
   add_foreign_key "policies", "approaches"

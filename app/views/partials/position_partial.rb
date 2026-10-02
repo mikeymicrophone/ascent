@@ -9,8 +9,8 @@ class Views::Partials::PositionPartial < Views::ApplicationView
       div(class: "partial-header") do
         h3(class: "partial-title") { @position.title }
         div(class: "header-indicators") do
-          if @position.is_executive
-            span(class: "status-indicator status-executive") { "Executive" }
+          if @position.branch.present?
+            span(class: "status-indicator status-#{@position.branch}") { @position.branch.titleize }
           end
         end
       end

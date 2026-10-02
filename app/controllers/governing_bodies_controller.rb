@@ -49,6 +49,6 @@ class GoverningBodiesController < ApplicationController
   end
 
   def governing_body_params
-    params.require(:governing_body).permit(:name, :jurisdiction_type, :jurisdiction_id, :description, :meeting_schedule, :is_active, :established_date)
+    params.require(:governing_body).permit(:name, :jurisdiction_type, :jurisdiction_id, :governance_type_id, :branch, :description, :meeting_schedule, :is_active, :established_date)
   end
 end

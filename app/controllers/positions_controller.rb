@@ -49,6 +49,6 @@ class PositionsController < ApplicationController
   end
 
   def position_params
-    params.require(:position).permit(:title, :description, :is_executive, :term_length_years)
+    params.require(:position).permit(:title, :description, :branch, :term_length_years)
   end
 end

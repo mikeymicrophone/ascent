@@ -28,6 +28,26 @@ class Views::Offices::OfficeForm < Views::ApplicationView
       end
 
       div do
+        form.label :governing_body_id, "Governing body"
+        form.collection_select :governing_body_id,
+                               ::GoverningBody.order(:name),
+                               :id,
+                               :name,
+                               { include_blank: "None" },
+                               { class: input_classes(@office.errors[:governing_body_id]) }
+      end
+
+      div do
+        form.label :chamber_id, "Chamber"
+        form.collection_select :chamber_id,
+                               ::Chamber.order(:name),
+                               :id,
+                               :name,
+                               { include_blank: "None" },
+                               { class: input_classes(@office.errors[:chamber_id]) }
+      end
+
+      div do
         form.label :is_active
         form.checkbox :is_active,
                                         class: checkbox_classes(@office.errors[:is_active])

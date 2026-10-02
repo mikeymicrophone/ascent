@@ -50,6 +50,6 @@ class OfficesController < ApplicationController
   end
 
   def office_params
-    params.require(:office).permit(:is_active, :notes)
+    params.require(:office).permit(:position_id, :jurisdiction_id, :jurisdiction_type, :governing_body_id, :chamber_id, :is_active, :notes)
   end
 end

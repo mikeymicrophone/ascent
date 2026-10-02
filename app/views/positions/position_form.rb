@@ -21,9 +21,11 @@ class Views::Positions::PositionForm < Views::ApplicationView
       end
 
       div do
-        form.label :is_executive
-        form.checkbox :is_executive,
-                                        class: checkbox_classes(@position.errors[:is_executive])
+        form.label :branch
+        form.select :branch,
+                    Position.branches.keys.map { |branch| [ branch.titleize, branch ] },
+                    { include_blank: "None" },
+                    class: input_classes(@position.errors[:branch])
       end
 
       div do
