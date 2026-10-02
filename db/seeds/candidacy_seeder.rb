@@ -1,9 +1,6 @@
 class CandidacySeeder
   def self.seed
-    # Create candidacies for various elections
-    create_presidential_candidacies
-    create_gubernatorial_candidacies
-    create_mayoral_candidacies
+    # Never attach fictional people to a source-backed election.
     create_mock_election_candidacies
     
     puts "Seeded #{Candidacy.count} candidacies"

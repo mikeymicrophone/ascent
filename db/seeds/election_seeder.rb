@@ -1,9 +1,7 @@
 class ElectionSeeder
   def self.seed
-    # Create elections for various offices and years
-    create_presidential_elections
-    create_gubernatorial_elections
-    create_mayoral_elections
+    # Only create clearly-labelled educational simulations. Source-backed races
+    # are seeded by their reference-data loaders.
     create_mock_elections
     
     puts "Seeded #{Election.count} elections"

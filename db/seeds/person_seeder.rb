@@ -1,6 +1,6 @@
 class PersonSeeder
   def self.seed
-    people_data = YAML.load_file(SeedDataPaths.file("people.yml"))
+    people_data = YAML.load_file(SimulatedSeedDataPaths.file("people.yml"))
     
     people_data.each do |person_data|
       Person.find_or_create_by(email: person_data["email"]) do |person|

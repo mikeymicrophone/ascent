@@ -2,6 +2,18 @@ require "fileutils"
 require Rails.root.join("db/seeds/data_paths")
 
 namespace :seed_data do
+  desc "Seed only the factual reference layer used by normal app setup"
+  task reference: :environment do
+    require Rails.root.join("db", "seeds", "seed_layers")
+    SeedLayers.seed_reference!
+  end
+
+  desc "Seed the fictitious demo layer after the factual reference layer"
+  task simulated: :environment do
+    require Rails.root.join("db", "seeds", "seed_layers")
+    SeedLayers.seed_simulated!
+  end
+
   desc "Copy legacy seed YAML into the ascent_seed_data submodule working tree"
   task copy_legacy_to_submodule: :environment do
     source_root = SeedDataPaths.legacy_root
