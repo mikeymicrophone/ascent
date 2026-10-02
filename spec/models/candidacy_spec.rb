@@ -111,14 +111,14 @@ RSpec.describe Candidacy, type: :model do
       end
 
       context 'with baseline of 250' do
-        it 'counts ratings at or above baseline' do
-          expect(candidacy.approval_count(250)).to eq(2) # 300 and 400 are >= 250
+        it 'counts ratings strictly above baseline' do
+          expect(candidacy.approval_count(250)).to eq(2) # 300 and 400 are > 250
         end
       end
 
       context 'with baseline of 350' do
         it 'counts only ratings above baseline' do
-          expect(candidacy.approval_count(350)).to eq(1) # Only 400 is >= 350
+          expect(candidacy.approval_count(350)).to eq(1) # Only 400 is > 350
         end
       end
 
@@ -151,14 +151,14 @@ RSpec.describe Candidacy, type: :model do
 
       context 'with baseline of 250' do
         it 'calculates percentage of approving ratings' do
-          # 2 out of 4 ratings are >= 250 (300, 400)
+          # 2 out of 4 ratings are > 250 (300, 400)
           expect(candidacy.approval_percentage(250)).to eq(50.0)
         end
       end
 
       context 'with baseline of 350' do
         it 'calculates percentage correctly' do
-          # 1 out of 4 ratings is >= 350 (400)
+          # 1 out of 4 ratings is > 350 (400)
           expect(candidacy.approval_percentage(350)).to eq(25.0)
         end
       end
@@ -173,8 +173,8 @@ RSpec.describe Candidacy, type: :model do
         let!(:rating5) { create(:rating, candidacy: candidacy, rating: 250) }
         
         it 'rounds to 1 decimal place' do
-          # 3 out of 5 ratings are >= 250 = 60%
-          expect(candidacy.approval_percentage(250)).to eq(60.0)
+          # 2 out of 5 ratings are > 250 = 40%
+          expect(candidacy.approval_percentage(250)).to eq(40.0)
         end
       end
     end

@@ -9,33 +9,24 @@ class MountainsController < ApplicationController
   end
 
   def show
-    @mountain_data = build_mountain_data
-    render Views::Mountains::ShowView.new(
-      election: @election, 
-      voter: @voter, 
-      baseline: @baseline, 
-      mountain_data: @mountain_data
-    )
+    render_mountain_editor
   end
 
   def edit
-    @mountain_data = build_mountain_data
-    render Views::Mountains::EditView.new(
-      election: @election, 
-      voter: @voter, 
-      baseline: @baseline, 
-      mountain_data: @mountain_data
-    )
+    render_mountain_editor
   end
 
   def update
-    # Handle batch rating updates
     ActiveRecord::Base.transaction do
       update_baseline
       update_ratings
     end
 
+    # Stay on the editable mountain so ratings remain draggable after save.
     redirect_to mountain_path(@election, voter_id: @voter.id), notice: "Mountain ratings updated."
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
+    redirect_to mountain_path(@election, voter_id: @voter.id),
+                alert: "Could not save mountain ratings: #{e.message}"
   end
 
   def simulate
@@ -114,6 +105,16 @@ class MountainsController < ApplicationController
 
   private
 
+  def render_mountain_editor
+    @mountain_data = build_mountain_data
+    render Views::Mountains::EditView.new(
+      election: @election,
+      voter: @voter,
+      baseline: @baseline,
+      mountain_data: @mountain_data
+    )
+  end
+
   def set_election
     @election = Election.find(params[:id])
   end
@@ -122,8 +123,10 @@ class MountainsController < ApplicationController
     @voter = if params[:voter_id].present?
                Voter.find(params[:voter_id])
              else
-               current_voter || Voter.first || FactoryBot.create(:voter)
+               current_voter || Voter.first
              end
+
+    raise ActiveRecord::RecordNotFound, "No voter available for mountain" unless @voter
   end
 
   def set_baseline
@@ -185,8 +188,4 @@ class MountainsController < ApplicationController
     value.to_i.clamp(0, 500)
   end
 
-  def current_voter
-    # TODO: Implement proper voter session management
-    nil
-  end
 end

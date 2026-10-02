@@ -25,7 +25,7 @@ class Views::Mountains::MountainChart < Views::ApplicationView
           baseline_value: baseline_value,
           baseline_set: baseline_set?,
           editable: @editable
-        ) if baseline_value
+        ) if show_baseline?
         
         div(class: "candidate-columns") do
           @candidacies.each do |candidacy_data|
@@ -79,6 +79,10 @@ class Views::Mountains::MountainChart < Views::ApplicationView
     return @baseline.baseline if @baseline
     return 250 if @editable
     nil
+  end
+
+  def show_baseline?
+    @editable || @baseline.present?
   end
 
   def baseline_set?

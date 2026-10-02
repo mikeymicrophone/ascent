@@ -17,6 +17,12 @@ class PagesController < ApplicationController
     )
   end
 
+  def approval_voting
+    render Views::Pages::ApprovalVotingView.new(
+      page: PageContent.load("approval_voting")
+    )
+  end
+
   private
 
   def active_elections

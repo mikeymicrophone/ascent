@@ -10,10 +10,11 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   def view_template
     div(class: "mountain-edit") do
+      render_flash
       render_header
       
       div(class: "edit-instructions") do
-        p { "Click on candidate columns to rate them, or drag the baseline to adjust your approval threshold." }
+        p { "Click or drag in a candidate column to set their rating. Drag the Baseline label on the right to set your approval threshold. Save when ready — you can keep editing after save." }
       end
       
       form_with(
@@ -47,9 +48,18 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   private
 
+  def render_flash
+    if flash[:notice].present?
+      div(class: "flash-notice", role: "status") { flash[:notice] }
+    end
+    if flash[:alert].present?
+      div(class: "flash-alert", role: "alert") { flash[:alert] }
+    end
+  end
+
   def render_header
     div(class: "mountain-header") do
-      h1(class: "election-title") { "Edit Ratings: #{@election.name}" }
+      h1(class: "election-title") { @election.name }
 
       div(class: "election-context") do
         span { "Election:" }
@@ -62,7 +72,7 @@ class Views::Mountains::EditView < Views::ApplicationView
         if @baseline
           p { "Current Baseline: #{@baseline.baseline}" }
         else
-          p(class: "no-baseline") { "No baseline set yet - drag the baseline line to set one" }
+          p(class: "no-baseline") { "No baseline set yet — drag the Baseline handle to set one" }
         end
       end
     end
@@ -71,8 +81,7 @@ class Views::Mountains::EditView < Views::ApplicationView
   def render_save_controls
     div(class: "save-controls") do
       button(class: "btn-primary", type: "submit") { "Save Changes" }
-      link_to("Cancel", mountain_path(@election, voter_id: @voter.id), 
-              class: "btn-secondary")
+      link_to("Back to Elections", mountains_path, class: "btn-secondary")
     end
   end
 

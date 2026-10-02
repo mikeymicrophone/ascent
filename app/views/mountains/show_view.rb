@@ -10,6 +10,7 @@ class Views::Mountains::ShowView < Views::ApplicationView
 
   def view_template
     div(class: "mountain-show") do
+      render_flash
       render_header
       if @mountain_data.empty?
         render_empty_state
@@ -26,6 +27,15 @@ class Views::Mountains::ShowView < Views::ApplicationView
   end
 
   private
+
+  def render_flash
+    if flash[:notice].present?
+      div(class: "flash-notice", role: "status") { flash[:notice] }
+    end
+    if flash[:alert].present?
+      div(class: "flash-alert", role: "alert") { flash[:alert] }
+    end
+  end
 
   def render_header
     div(class: "mountain-header") do

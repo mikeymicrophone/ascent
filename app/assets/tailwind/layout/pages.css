@@ -34,6 +34,10 @@
   @apply mb-6 flex flex-col gap-2;
 }
 
+.story-prose {
+  @apply flex flex-col gap-4 max-w-3xl;
+}
+
 .story-metric-grid,
 .story-card-grid,
 .story-election-grid,

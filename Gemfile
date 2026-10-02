@@ -20,8 +20,8 @@ gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 # Use Phlex for view components [https://github.com/phlex-rb/phlex]
-gem "phlex"
-gem "phlex-rails"
+gem "phlex", "~> 2.4"
+gem "phlex-rails", "~> 2.4"
 # gem "phlex-icons"
 gem "literal"
 gem "superform"

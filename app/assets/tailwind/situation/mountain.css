@@ -81,9 +81,15 @@
   @apply cursor-crosshair;
 }
 
-.baseline-indicator.editable {
-  @apply pointer-events-auto;
+.baseline-label.editable {
   @apply cursor-row-resize;
+  /* Expand vertical hit target around the thin label */
+  padding-block: 10px;
+  margin-block: -10px;
+}
+
+.baseline-label.editable:hover {
+  @apply shadow-md;
 }
 
 .rating-area.is-dragging {

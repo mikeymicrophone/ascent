@@ -1,45 +1,57 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Interactive mountain ratings: drag within a candidate column to set 0–500,
+// drag the baseline handle to set the approval threshold.
 export default class extends Controller {
   static values = {
-    maxHeight: Number
+    maxHeight: { type: Number, default: 320 }
   }
 
   connect() {
     this.draggingRating = false
     this.draggingBaseline = false
     this.activeRatingArea = null
+    this.boundPointerMove = this.onPointerMove.bind(this)
+    this.boundPointerUp = this.onPointerUp.bind(this)
     this.updateApprovalStates()
+  }
+
+  disconnect() {
+    this.teardownDocumentListeners()
   }
 
   startRatingDrag(event) {
     if (!this.isPrimaryPointer(event)) return
+    if (this.isInteractiveChrome(event.target)) return
+
+    event.preventDefault()
     this.draggingRating = true
+    this.draggingBaseline = false
     this.activeRatingArea = event.currentTarget
     this.capturePointer(event, this.activeRatingArea)
     this.toggleDraggingClass(this.activeRatingArea, true)
+    this.attachDocumentListeners()
     this.updateRatingFromEvent(event)
-  }
-
-  dragRating(event) {
-    if (!this.draggingRating || !this.activeRatingArea) return
-    this.updateRatingFromEvent(event)
-  }
-
-  stopRatingDrag(event) {
-    if (!this.draggingRating) return
-    this.draggingRating = false
-    this.toggleDraggingClass(this.activeRatingArea, false)
-    this.releasePointer(event, this.activeRatingArea)
-    this.activeRatingArea = null
   }
 
   startBaselineDrag(event) {
     if (!this.isPrimaryPointer(event)) return
+
+    event.preventDefault()
+    event.stopPropagation()
     this.draggingBaseline = true
+    this.draggingRating = false
+    this.activeRatingArea = null
     this.capturePointer(event, event.currentTarget)
     this.toggleBaselineDragging(true)
+    this.attachDocumentListeners()
     this.updateBaselineFromEvent(event)
+  }
+
+  // Kept for data-action bindings; real work is in document listeners while dragging.
+  dragRating(event) {
+    if (!this.draggingRating) return
+    this.updateRatingFromEvent(event)
   }
 
   dragBaseline(event) {
@@ -47,15 +59,56 @@ export default class extends Controller {
     this.updateBaselineFromEvent(event)
   }
 
-  stopBaselineDrag(event) {
-    if (!this.draggingBaseline) return
+  stopRatingDrag() {
+    this.finishDrag()
+  }
+
+  stopBaselineDrag() {
+    this.finishDrag()
+  }
+
+  onPointerMove(event) {
+    if (this.draggingRating) {
+      this.updateRatingFromEvent(event)
+    } else if (this.draggingBaseline) {
+      this.updateBaselineFromEvent(event)
+    }
+  }
+
+  onPointerUp() {
+    this.finishDrag()
+  }
+
+  finishDrag() {
+    if (this.draggingRating) {
+      this.toggleDraggingClass(this.activeRatingArea, false)
+    }
+    if (this.draggingBaseline) {
+      this.toggleBaselineDragging(false)
+    }
+
+    this.draggingRating = false
     this.draggingBaseline = false
-    this.toggleBaselineDragging(false)
-    this.releasePointer(event, event.currentTarget)
+    this.activeRatingArea = null
+    this.teardownDocumentListeners()
+  }
+
+  attachDocumentListeners() {
+    document.addEventListener("pointermove", this.boundPointerMove)
+    document.addEventListener("pointerup", this.boundPointerUp)
+    document.addEventListener("pointercancel", this.boundPointerUp)
+  }
+
+  teardownDocumentListeners() {
+    document.removeEventListener("pointermove", this.boundPointerMove)
+    document.removeEventListener("pointerup", this.boundPointerUp)
+    document.removeEventListener("pointercancel", this.boundPointerUp)
   }
 
   updateRatingFromEvent(event) {
-    const ratingArea = this.activeRatingArea || event.currentTarget
+    const ratingArea = this.activeRatingArea
+    if (!ratingArea) return
+
     const column = this.closestCandidateColumn(ratingArea)
     if (!column) return
 
@@ -64,9 +117,6 @@ export default class extends Controller {
   }
 
   updateBaselineFromEvent(event) {
-    const chart = this.chartElement()
-    if (!chart) return
-
     const ratingArea = this.firstRatingArea()
     if (!ratingArea) return
 
@@ -149,7 +199,7 @@ export default class extends Controller {
       }
 
       const ratingValue = Number.parseInt(input.value, 10)
-      const approved = baselineValue !== null && ratingValue >= baselineValue
+      const approved = baselineValue !== null && ratingValue > baselineValue
       this.applyDotState(column, true, approved)
     })
   }
@@ -166,7 +216,7 @@ export default class extends Controller {
   approvalLabel(ratingValue) {
     const baselineValue = this.baselineValue()
     if (baselineValue === null) return "Disapproved"
-    return ratingValue >= baselineValue ? "Approved" : "Disapproved"
+    return ratingValue > baselineValue ? "Approved" : "Disapproved"
   }
 
   baselineValue() {
@@ -177,7 +227,10 @@ export default class extends Controller {
 
   ratingFromPointer(event, areaElement) {
     const rect = areaElement.getBoundingClientRect()
-    const relativeY = event.clientY - rect.top
+    const clientY = event.clientY ?? event.touches?.[0]?.clientY
+    if (clientY === undefined) return 0
+
+    const relativeY = clientY - rect.top
     const height = rect.height || this.maxHeightValue || 320
     const clampedY = Math.max(0, Math.min(relativeY, height))
     const rating = Math.round((1 - clampedY / height) * 500)
@@ -213,6 +266,10 @@ export default class extends Controller {
     return element.closest(".candidate-column")
   }
 
+  isInteractiveChrome(target) {
+    return Boolean(target.closest("a, button, input, textarea, select, label"))
+  }
+
   toggleDraggingClass(element, shouldAdd) {
     if (!element) return
     element.classList.toggle("is-dragging", shouldAdd)
@@ -226,13 +283,11 @@ export default class extends Controller {
 
   capturePointer(event, element) {
     if (element?.setPointerCapture && event.pointerId !== undefined) {
-      element.setPointerCapture(event.pointerId)
-    }
-  }
-
-  releasePointer(event, element) {
-    if (element?.releasePointerCapture && event.pointerId !== undefined) {
-      element.releasePointerCapture(event.pointerId)
+      try {
+        element.setPointerCapture(event.pointerId)
+      } catch (_error) {
+        // Ignore if the pointer is already released (common on touch end races).
+      }
     }
   }
 

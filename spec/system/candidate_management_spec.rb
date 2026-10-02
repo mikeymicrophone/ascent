@@ -118,11 +118,11 @@ RSpec.describe "Candidate Management", type: :system do
 
       it "shows approval counts based on baseline" do
         baseline_250 = 250
-        expect(candidacy.approval_count(baseline_250)).to eq(2) # 450 and 300 are >= 250
+        expect(candidacy.approval_count(baseline_250)).to eq(2) # 450 and 300 are > 250
         expect(candidacy.approval_percentage(baseline_250)).to eq(66.7) # 2/3 = 66.67%, rounded to 66.7%
         
         baseline_350 = 350
-        expect(candidacy.approval_count(baseline_350)).to eq(1) # Only 450 is >= 350
+        expect(candidacy.approval_count(baseline_350)).to eq(1) # Only 450 is > 350
         expect(candidacy.approval_percentage(baseline_350)).to eq(33.3) # 1/3 = 33.33%, rounded to 33.3%
       end
 

@@ -19,6 +19,11 @@
   @apply container mx-auto px-4 py-8;
 }
 
+.flash-notice,
+.flash-alert {
+  @apply mb-4 rounded border px-4 py-3;
+}
+
 .mountain-header {
   @apply mb-8;
 }
@@ -47,7 +52,8 @@
 
 .candidate-columns {
   @apply flex gap-4 overflow-x-auto;
-  @apply h-full;
+  @apply relative h-full;
+  z-index: 2;
 }
 
 .candidate-column {
@@ -60,6 +66,7 @@
   @apply relative flex-1;
   @apply border-l border-gray-200;
   height: 320px; /* Actual rating scale area */
+  z-index: 2;
 }
 
 .candidate-info {
@@ -79,7 +86,9 @@
 .baseline-indicator {
   @apply absolute left-0 w-full;
   @apply flex items-center;
+  /* Never capture column clicks — only the label handle is interactive */
   @apply pointer-events-none;
+  z-index: 1;
 }
 
 .baseline-line {
@@ -89,13 +98,28 @@
 .baseline-label {
   @apply absolute -right-2;
   @apply whitespace-nowrap;
+  z-index: 6;
+}
+
+.baseline-label.editable {
+  @apply pointer-events-auto;
+  touch-action: none;
+  user-select: none;
+  cursor: row-resize;
 }
 
 .rating-dot {
   @apply absolute rounded-full;
   @apply border-2;
-  @apply cursor-pointer;
   @apply -ml-1.5; /* Center on column */
+  /* Let pointer events hit the rating-area so drag always starts */
+  pointer-events: none;
+  z-index: 2;
+}
+
+.mountain-chart.editable .rating-area {
+  touch-action: none;
+  user-select: none;
 }
 
 .mountain-controls,

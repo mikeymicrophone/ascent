@@ -12,10 +12,10 @@ class Views::Mountains::BaselineIndicator < Views::Components::Base
       class: baseline_classes,
       style: "top: #{baseline_position}px;",
       title: baseline_title,
-      data: baseline_data
+      data: { baseline_set: @baseline_set }
     ) do
       div(class: "baseline-line")
-      div(class: baseline_label_classes) do
+      div(class: baseline_label_classes, data: baseline_handle_data) do
         span(data: { role: "baseline-label" }) { baseline_label }
       end
     end
@@ -24,7 +24,6 @@ class Views::Mountains::BaselineIndicator < Views::Components::Base
   private
 
   def baseline_position
-    # Convert baseline value to CSS position (inverted for top-origin)
     Views::Mountains.calculate_label_position(@baseline_value)
   end
 
@@ -35,6 +34,7 @@ class Views::Mountains::BaselineIndicator < Views::Components::Base
 
   def baseline_label_classes
     classes = ["baseline-label"]
+    classes << "editable" if @editable
     classes << "baseline-empty" unless @baseline_set
     classes.join(" ")
   end
@@ -50,12 +50,13 @@ class Views::Mountains::BaselineIndicator < Views::Components::Base
     classes.join(" ")
   end
 
-  def baseline_data
+  # Only the label/handle captures pointer events so the line never blocks column drags.
+  def baseline_handle_data
     return {} unless @editable
 
     {
-      action: "pointerdown->mountain-editor#startBaselineDrag pointermove->mountain-editor#dragBaseline pointerup->mountain-editor#stopBaselineDrag pointercancel->mountain-editor#stopBaselineDrag",
-      baseline_set: @baseline_set
+      role: "baseline-handle",
+      action: "pointerdown->mountain-editor#startBaselineDrag"
     }
   end
 end

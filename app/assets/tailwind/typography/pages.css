@@ -45,3 +45,7 @@
 .story-card-copy {
   @apply text-[1.02rem];
 }
+
+.story-prose p {
+  @apply font-['Source_Serif_4'] text-lg leading-8;
+}

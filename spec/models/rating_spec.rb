@@ -57,8 +57,8 @@ RSpec.describe Rating, type: :model do
     let!(:low_rating) { create(:rating, rating: 100) }
 
     describe '.above_baseline' do
-      it 'returns ratings at or above the baseline' do
-        expect(Rating.above_baseline(250)).to contain_exactly(high_rating, medium_rating)
+      it 'returns ratings strictly above the baseline' do
+        expect(Rating.above_baseline(250)).to contain_exactly(high_rating)
       end
 
       it 'excludes ratings below baseline' do
@@ -67,12 +67,12 @@ RSpec.describe Rating, type: :model do
     end
 
     describe '.below_baseline' do
-      it 'returns ratings below the baseline' do
-        expect(Rating.below_baseline(250)).to contain_exactly(low_rating)
+      it 'returns ratings at or below the baseline' do
+        expect(Rating.below_baseline(250)).to contain_exactly(medium_rating, low_rating)
       end
 
-      it 'excludes ratings at or above baseline' do
-        expect(Rating.below_baseline(250)).not_to include(high_rating, medium_rating)
+      it 'excludes ratings strictly above the baseline' do
+        expect(Rating.below_baseline(250)).not_to include(high_rating)
       end
     end
 
@@ -200,8 +200,8 @@ RSpec.describe Rating, type: :model do
       context 'with rating at baseline' do
         let(:rating) { create(:rating, voter: voter, candidacy: candidacy, rating: 300) }
         
-        it 'returns true' do
-          expect(rating.approved?).to be true # 300 >= 300
+        it 'returns false' do
+          expect(rating.approved?).to be false # 300 does not exceed 300
         end
       end
 

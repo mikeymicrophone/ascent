@@ -30,7 +30,7 @@ class Election < ApplicationRecord
   
   # Aggregates approval votes for this election based on voter baselines
   # Returns a hash with Candidacy objects as keys and vote counts as values
-  # A vote is counted when a voter's rating for a candidacy meets or exceeds their baseline
+  # A vote is counted when a voter's rating for a candidacy exceeds their baseline.
   #
   # @return [Hash<Candidacy, Integer>] candidacy => approval vote count
   def aggregate_votes
@@ -49,9 +49,9 @@ class Election < ApplicationRecord
                            .where(voter: voter, candidacies: { election: self })
                            .includes(:candidacy)
       
-      # Count approval votes (ratings at or above baseline)
+      # Count approval votes (ratings strictly above baseline).
       voter_ratings.each do |rating|
-        if rating.rating >= voter_baseline
+        if rating.rating > voter_baseline
           results[rating.candidacy] += 1
         end
       end

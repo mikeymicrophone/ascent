@@ -1,0 +1,115 @@
+# About Approval Voting
+# Edit this file to change the page at /approval-voting.
+#
+# hero.actions and section.actions use route helper names without "_path":
+#   mountains -> mountains_path, root -> root_path, glossary -> glossary_path
+# section types: cards, prose, callout
+# optional keys: surface (band), layout (compact)
+
+hero:
+  kicker: About Approval Voting
+  title: The case for a ballot that can say yes to more than one candidate.
+  lead: >
+    Plurality voting asks you to pick a single name, even when that forces a
+    strategic lie. Approval voting asks a simpler question: which of these people
+    would you accept in the office? That small change would drain a lot of poison
+    out of the process, and it might change how people govern once they get there.
+  actions:
+    - text: Try a Mountain
+      path: mountains
+      style: primary
+    - text: Return to Overview
+      path: root
+      style: tertiary
+
+sections:
+  - type: cards
+    kicker: The problems
+    title: The current ballot trains us to treat elections as a two-person fight.
+    items:
+      - title: The spoiler effect
+        copy: >
+          When two similar candidates split a constituency, both can lose to a
+          less-liked rival. Voters learn to abandon the person they actually
+          prefer. Parties learn they must nominate exactly one person, even when
+          several credible ones exist.
+      - title: Emotional overload
+        copy: >
+          A lot of the cost of elections is not information. It is the negative
+          energy the contest demands, and that energy does not necessarily
+          dissipate when the results are certified. A ballot that punishes
+          honesty makes the whole season feel more existential than it needs to.
+      - title: Cynical governance
+        copy: >
+          When power is contested by very few factions, there is little
+          presumption of trust. Decisions get calculated to maximize control.
+          Officials spend their term preparing for the next binary fight instead
+          of pursuing goals that almost everyone already shares.
+
+  - type: prose
+    surface: band
+    kicker: The mechanism
+    title: Approval voting is almost embarrassingly simple.
+    paragraphs:
+      - >
+        You mark every candidate you approve. The candidate with the most
+        approvals wins. There is no ranking to complete, and no runoff math the
+        voter has to simulate in their head.
+      - >
+        The important consequence is what disappears. You no longer have to
+        desert a liked candidate to stop a disliked one. Similar candidates can
+        share support instead of destroying each other. A vote for the person you
+        actually want is no longer a gift to the person you fear.
+
+  - type: cards
+    kicker: What that unlocks
+    title: If spoilers stop dominating, other things become possible.
+    items:
+      - title: Shared support stays visible
+        copy: >
+          Candidates who do not win can still show that a large public would have
+          accepted them. That popularity is currently hidden by the spoiler
+          effect. Exposing it could strengthen the role those people play on the
+          political team that follows the election.
+      - title: Parties need not pick only one
+        copy: >
+          It is not necessary for a party to nominate a single candidate, and it
+          is not necessary for a candidate to belong wholly to a single party.
+          Endorsements can become a spectrum rather than a coronation.
+      - title: Room for overlapping goals
+        copy: >
+          If officials are less trapped in a two-faction death struggle, their
+          judgment in office can be less cynical. The work can tilt toward
+          problems on which almost everyone can agree, instead of toward the next
+          culture-war loyalty test.
+
+  - type: prose
+    kicker: The mountain
+    title: Ascent adds ratings and a baseline so approval can be more than a checkbox.
+    paragraphs:
+      - >
+        Classic approval voting is a yes or no on each name. That is already a
+        large improvement on plurality. Ascent goes one step further: you rate
+        each candidate from 0 to 500, then set a baseline. Everyone above the
+        line receives your approval. The mountain is that picture — a landscape
+        of preference, and a threshold you control.
+      - >
+        The point of this application is not to replace a statute tomorrow. It
+        is to let voters, researchers, and officials try the idea with mock
+        elections and visible data, so the argument can be examined instead of
+        merely asserted.
+
+  - type: callout
+    title: This is a working thesis, not a finished proof.
+    copy: >
+      The rest of Ascent exists so this case can be inspected: ratings, baselines,
+      offices, and policy claims in one place. If the ballot change is as
+      consequential as it looks, it should be possible to watch the difference
+      rather than take it on faith.
+    actions:
+      - text: Explore a live Mountain
+        path: mountains
+        style: primary
+      - text: Read the schema glossary
+        path: glossary
+        style: secondary

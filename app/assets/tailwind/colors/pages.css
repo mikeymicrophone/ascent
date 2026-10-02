@@ -55,7 +55,8 @@
 .story-lead,
 .story-card-copy,
 .story-election-summary,
-.story-callout-copy {
+.story-callout-copy,
+.story-prose p {
   color: var(--story-soft-ink);
 }
 
@@ -64,7 +65,8 @@
 .story-band .story-card-copy,
 .story-band .story-card-title,
 .story-band .story-section-title,
-.story-band .story-lead {
+.story-band .story-lead,
+.story-band .story-prose p {
   color: var(--story-band-ink);
 }
 

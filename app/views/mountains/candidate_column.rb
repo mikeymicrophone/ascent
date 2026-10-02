@@ -61,8 +61,7 @@ class Views::Mountains::CandidateColumn < Views::Components::Base
 
     {
       role: "rating-area",
-      action: "pointerdown->mountain-editor#startRatingDrag pointermove->mountain-editor#dragRating pointerup->mountain-editor#stopRatingDrag pointercancel->mountain-editor#stopRatingDrag"
+      action: "pointerdown->mountain-editor#startRatingDrag"
     }
   end
-
 end

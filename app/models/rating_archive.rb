@@ -15,6 +15,6 @@ class RatingArchive < ApplicationRecord
   end
   
   def was_approved?(baseline)
-    rating >= baseline
+    rating > baseline
   end
 end

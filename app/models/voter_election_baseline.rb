@@ -22,7 +22,7 @@ class VoterElectionBaseline < ApplicationRecord
   def approved_candidacies
     election.candidacies.joins(:ratings)
            .where(ratings: { voter: voter })
-           .where("ratings.rating >= ?", baseline)
+           .where("ratings.rating > ?", baseline)
   end
 
   # Count of approved candidates

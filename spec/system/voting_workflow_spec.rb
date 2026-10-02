@@ -57,7 +57,7 @@ RSpec.describe "Voting Workflow", type: :system do
       end
 
       it "reflects ratings in election results" do
-        # Alice should have 1 approval vote (350 >= 250 baseline)
+        # Alice should have 1 approval vote (350 > 250 baseline)
         # Bob should have 0 approval votes (200 < 250 baseline)
         results = election.aggregate_votes
         

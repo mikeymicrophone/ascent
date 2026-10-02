@@ -94,7 +94,7 @@ class Views::Pages::GlossaryView < Views::ApplicationView
         },
         {
           term: "VoterElectionBaseline",
-          definition: "A voter's approval threshold for one election. Any candidate in that election with a rating at or above the baseline counts as approved."
+          definition: "A voter's approval threshold for one election. A candidate in that election receives an approval vote only when their rating exceeds the baseline."
         },
         {
           term: "RatingArchive",

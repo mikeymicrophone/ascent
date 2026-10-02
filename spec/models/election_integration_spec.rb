@@ -130,7 +130,7 @@ RSpec.describe Election, type: :model do
       original_count = original_results[candidacy]
       
       # Case 1: Rating above baseline should count as approval
-      if original_rating >= baseline.baseline
+      if original_rating > baseline.baseline
         # Lower the rating below baseline
         sample_rating.update!(rating: baseline.baseline - 1)
         new_results = election.aggregate_votes

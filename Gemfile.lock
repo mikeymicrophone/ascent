@@ -179,7 +179,7 @@ GEM
     minitest (6.0.1)
       prism (~> 1.5)
     msgpack (1.8.0)
-    net-imap (0.5.8)
+    net-imap (0.6.6)
       date
       net-protocol
     net-pop (0.1.2)
@@ -219,10 +219,11 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
-    phlex (2.3.1)
+    phlex (2.4.1)
+      refract (~> 1.0)
       zeitwerk (~> 2.7)
-    phlex-rails (2.3.1)
-      phlex (~> 2.3.0)
+    phlex-rails (2.4.0)
+      phlex (~> 2.4.0)
       railties (>= 7.1, < 9)
       zeitwerk (~> 2.7)
     pp (0.6.2)
@@ -291,6 +292,9 @@ GEM
     rdoc (6.14.1)
       erb
       psych (>= 4.0.0)
+    refract (1.1.0)
+      prism
+      zeitwerk
     regexp_parser (2.10.0)
     reline (0.6.1)
       io-console (~> 0.5)
@@ -469,8 +473,8 @@ DEPENDENCIES
   literal
   pagy
   pg (~> 1.1)
-  phlex
-  phlex-rails
+  phlex (~> 2.4)
+  phlex-rails (~> 2.4)
   propshaft
   puma (>= 5.0)
   rails (~> 8.1, >= 8.1.2)
@@ -494,7 +498,7 @@ DEPENDENCIES
   web-console
 
 RUBY VERSION
-   ruby 4.0.1p0
+  ruby 4.0.1p0
 
 BUNDLED WITH
-   4.0.5
+  4.0.5

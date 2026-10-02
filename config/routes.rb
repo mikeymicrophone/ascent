@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get "glossary" => "pages#glossary", as: :glossary
   get "supporters" => "pages#supporters", as: :supporters
+  get "approval-voting" => "pages#approval_voting", as: :approval_voting
   resources :official_codes
   resources :policies
   resources :stances

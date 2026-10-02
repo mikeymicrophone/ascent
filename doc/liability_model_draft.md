@@ -85,6 +85,25 @@ That means the central questions are:
 - what conditions must be true?
 - what exceptions change the answer?
 
+## Start With Legible Propositions
+
+The product does not need to ingest the full text of every applicable code before it can become useful.
+
+The first useful artifact can be a curated, source-backed legal proposition with a consistent shape:
+
+> In **[jurisdiction]**, **[actor]** is **[allowed or prohibited]** to **[perform an action]** involving **[an object]**, in **[a place or situation]**, if **[conditions]**, unless **[an exception applies]**.
+
+Examples include:
+
+- in a particular jurisdiction, a person may perform an activity if they hold the required license
+- in a particular jurisdiction or restricted place, a person may not perform a specified activity
+
+The location where conduct occurs should remain distinct from the jurisdiction whose law applies. A license is one kind of condition, not a special case that needs to define the whole model.
+
+Each proposition should carry enough provenance to be checked and maintained, even when the complete source text has not yet been imported. At minimum, that means a citation or source URL, the relevant effective date when known, and a record of when the proposition was last reviewed.
+
+Full-text ingestion can deepen that provenance later without changing the user-facing proposition. This lets Ascent prove that the permission model is useful before undertaking comprehensive code ingestion.
+
 ## Proposed Namespace
 
 The strongest name is probably `Rule`.
@@ -350,12 +369,12 @@ That is enough to explain what is allowed without drifting into a fake adjudicat
 
 ## Recommended Development Order
 
-1. Build the `LU` source backbone.
-2. Ingest one narrow legal corpus.
-3. Create one `Rule::Topic`.
-4. Create a small set of `Rule::Statement` records.
-5. Attach conditions and source links.
-6. Build a user-facing `Guide` flow on top.
+1. Choose one narrow legal domain with concrete permissions, prohibitions, and licensing conditions.
+2. Create one `Rule::Topic` and a small set of curated `Rule::Statement` records.
+3. Attach conditions, scopes, exceptions, and enough source metadata to verify each proposition.
+4. Build a user-facing `Guide` flow on top.
+5. Ingest the relevant source-law slice into `LU` and connect the existing propositions to it.
+6. Expand source-law ingestion only as additional domains require it.
 
 ## Summary
 

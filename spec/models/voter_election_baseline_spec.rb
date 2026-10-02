@@ -64,11 +64,11 @@ RSpec.describe VoterElectionBaseline, type: :model do
 
     before do
       create(:rating, voter: voter, candidacy: high_rated_candidacy, rating: 400)
-      create(:rating, voter: voter, candidacy: low_rated_candidacy, rating: 200)
+      create(:rating, voter: voter, candidacy: low_rated_candidacy, rating: 300)
     end
 
     describe '#approved_candidacies' do
-      it 'returns candidacies with ratings at or above baseline' do
+      it 'returns candidacies with ratings strictly above the baseline' do
         approved = baseline.approved_candidacies
         expect(approved).to include(high_rated_candidacy)
         expect(approved).not_to include(low_rated_candidacy)
@@ -76,7 +76,7 @@ RSpec.describe VoterElectionBaseline, type: :model do
     end
 
     describe '#approval_count' do
-      it 'counts candidacies with ratings at or above baseline' do
+      it 'counts candidacies with ratings strictly above the baseline' do
         expect(baseline.approval_count).to eq(1)
       end
     end

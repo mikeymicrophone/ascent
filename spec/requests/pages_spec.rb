@@ -8,6 +8,7 @@ RSpec.describe "Pages", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Ascent helps communities test richer ways to vote before changing the real world.")
       expect(response.body).to include("For Philanthropic Partners")
+      expect(response.body).to include("About Approval Voting")
       expect(response.body).to include("Three ways Ascent turns election reform into something testable.")
     end
 
@@ -42,6 +43,18 @@ RSpec.describe "Pages", type: :request do
       expect(response.body).to include("An office can also sit in a GoverningBody")
       expect(response.body).to include("A voter&#39;s approval threshold for one election.")
       expect(response.body).to include("Separate namespace from the general Topic model.")
+    end
+  end
+
+  describe "GET /approval-voting" do
+    it "renders the case for approval voting from the content file" do
+      get approval_voting_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("The case for a ballot that can say yes to more than one candidate.")
+      expect(response.body).to include("The spoiler effect")
+      expect(response.body).to include("Approval voting is almost embarrassingly simple.")
+      expect(response.body).to include("This is a working thesis, not a finished proof.")
     end
   end
 end

@@ -8,8 +8,8 @@ class Rating < ApplicationRecord
   
   before_update :archive_previous_rating
   
-  scope :above_baseline, ->(baseline) { where("rating >= ?", baseline) }
-  scope :below_baseline, ->(baseline) { where("rating < ?", baseline) }
+  scope :above_baseline, ->(baseline) { where("rating > ?", baseline) }
+  scope :below_baseline, ->(baseline) { where("rating <= ?", baseline) }
   scope :for_election, ->(election) { joins(:candidacy).where(candidacies: { election: election }) }
   scope :for_voter_in_election, ->(voter, election) { 
     joins(:candidacy).where(voter: voter, candidacies: { election: election })
@@ -21,7 +21,7 @@ class Rating < ApplicationRecord
   def approved?(baseline = nil)
     baseline ||= voter_baseline_for_election
     return false unless baseline
-    rating >= baseline
+    rating > baseline
   end
   
   def name

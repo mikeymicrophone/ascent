@@ -75,7 +75,7 @@ RSpec.describe Election, type: :model do
         # Voter 1 ratings (baseline: 250)
         create(:rating, voter: voter1, candidacy: candidacy1, rating: 400) # Above baseline - COUNTS
         create(:rating, voter: voter1, candidacy: candidacy2, rating: 200) # Below baseline - doesn't count
-        create(:rating, voter: voter1, candidacy: candidacy3, rating: 250) # At baseline - COUNTS
+        create(:rating, voter: voter1, candidacy: candidacy3, rating: 250) # At baseline - does not count
 
         # Voter 2 ratings (baseline: 300)
         create(:rating, voter: voter2, candidacy: candidacy1, rating: 350) # Above baseline - COUNTS
@@ -91,9 +91,9 @@ RSpec.describe Election, type: :model do
       it 'correctly counts approval votes based on individual baselines' do
         results = election.aggregate_votes
         
-        expect(results[candidacy1]).to eq(2) # voter1(400≥250) + voter2(350≥300)
-        expect(results[candidacy2]).to eq(1) # voter3(450≥200)
-        expect(results[candidacy3]).to eq(2) # voter1(250≥250) + voter3(300≥200)
+        expect(results[candidacy1]).to eq(2) # voter1(400>250) + voter2(350>300)
+        expect(results[candidacy2]).to eq(1) # voter3(450>200)
+        expect(results[candidacy3]).to eq(1) # voter3(300>200)
       end
 
       it 'includes all candidacies even if they have no approval votes' do
