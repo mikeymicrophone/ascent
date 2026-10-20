@@ -16,10 +16,15 @@ class Views::Partials::StatePartial < Views::ApplicationView
         span { @state.code }
       end
       
-      # Cities expandable section
-      expandable(@state, :cities) do |cities|
-        ItemPreview(@state, :cities, 5) do |city|
-          link_to city.name, city, class: "link city"
+      expandable(@state, :counties) do |counties|
+        ItemPreview(@state, :counties, 5) do |county|
+          link_to county.name, county, class: "link county"
+        end
+      end
+
+      expandable(@state, :municipalities) do |municipalities|
+        ItemPreview(@state, :municipalities, 5) do |municipality|
+          link_to municipality.name, municipality, class: "link municipality"
         end
       end
     end

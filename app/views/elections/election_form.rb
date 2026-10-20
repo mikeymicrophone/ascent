@@ -8,13 +8,25 @@ class Views::Elections::ElectionForm < Views::ApplicationView
       render_errors if @election.errors.any?
       
       div do
-        form.label :office_id, "Office"
-        form.collection_select :office_id, 
-                               ::Office.all, 
-                               :id, 
-                               :name,
-                               { prompt: "Select a office" },
-                               { class: input_classes(@election.errors[:office_id]) }
+        form.label :name
+        form.text_field :name,
+                        class: input_classes(@election.errors[:name])
+      end
+
+      div do
+        form.label :jurisdiction_id, "Jurisdiction"
+        form.select :jurisdiction_id,
+                    jurisdiction_choices,
+                    { prompt: "Select a jurisdiction" },
+                    class: input_classes(@election.errors[:jurisdiction_id])
+      end
+
+      div do
+        form.label :kind
+        form.select :kind,
+                    %w[primary general special runoff].map { [ it.capitalize, it ] },
+                    { include_blank: "None" },
+                    class: input_classes(@election.errors[:kind])
       end
 
       div do
@@ -31,6 +43,18 @@ class Views::Elections::ElectionForm < Views::ApplicationView
         form.label :election_date
         form.date_field :election_date,
                                         class: input_classes(@election.errors[:election_date])
+      end
+
+      div do
+        form.label :early_voting_starts_on
+        form.date_field :early_voting_starts_on,
+                        class: input_classes(@election.errors[:early_voting_starts_on])
+      end
+
+      div do
+        form.label :early_voting_ends_on
+        form.date_field :early_voting_ends_on,
+                        class: input_classes(@election.errors[:early_voting_ends_on])
       end
 
       div do

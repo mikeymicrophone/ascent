@@ -1,6 +1,6 @@
 # Jurisdiction schema
 
-The jurisdiction migrations define the schema used by the updated models and factories. They do not convert existing jurisdiction references. Routes, views, and seeds still need updates before applying the migrations to the working application. A populated database with offices, residences, or governing bodies requires its data to be cleared or converted first.
+The jurisdiction migrations define the schema used by the updated models and factories. They do not convert existing jurisdiction references. Routes, controllers, and views use the new schema; seeds still need updates before applying the migrations to the working application. A populated database with offices, residences, or governing bodies requires its data to be cleared or converted first.
 
 ## Geographic entities
 
@@ -39,4 +39,4 @@ The Rails database adapter is `activerecord-postgis-adapter` 11.1 for Rails 8.1.
 
 RGeo uses GEOS for spatial objects. The application Dockerfile includes its build and runtime libraries, and the CI database service uses a PostGIS image. Database URLs using `postgres://` or `postgresql://` select the standard adapter and must use `postgis://` before spatial migrations or schema loading. For example, CI uses `postgis://postgres:postgres@localhost:5432/ascent_test`.
 
-The models now use Municipality, County, District, Jurisdiction, and JurisdictionBoundary. Residence still permits one active residence per voter; this update does not add address coordinates or classify district eligibility. These migrations have not been applied to the development database. Seed updates and the controller, route, and view changes remain follow-up work.
+The models now use Municipality, County, District, Jurisdiction, and JurisdictionBoundary. Residence still permits one active residence per voter; this update does not add address coordinates or classify district eligibility. These migrations have not been applied to the development database. The UI adds County, District, and Municipality pages. Creating a County or Municipality there also creates its Jurisdiction, parented to its County or State when that has one; a District's Jurisdiction starts without a parent. Office, Residence, Election, and GoverningBody forms choose from existing Jurisdictions. Seed updates remain follow-up work.

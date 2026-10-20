@@ -41,11 +41,12 @@ class Views::Partials::PersonPartial < Views::ApplicationView
   end
 
   def candidacy_item(candidacy)
-    election = candidacy.election
-    office = election.office
+    race = candidacy.race
+    election = race.election
+    office = race.office
 
     div(class: "candidacy-header") do
-      link_to election.name, election, class: "link election"
+      link_to election.name, race, class: "link election"
       span(class: "candidacy-office") { " for #{office.position.title}" }
     end
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Views::Pages::HomeView < Views::ApplicationView
-  def initialize(active_elections:, metrics:)
-    @active_elections = active_elections
+  def initialize(active_races:, metrics:)
+    @active_races = active_races
     @metrics = metrics
   end
 
@@ -12,7 +12,7 @@ class Views::Pages::HomeView < Views::ApplicationView
       render_metrics
       render_pillars
       render_trust_section
-      render_active_elections
+      render_active_races
     end
   end
 
@@ -87,30 +87,30 @@ class Views::Pages::HomeView < Views::ApplicationView
     end
   end
 
-  def render_active_elections
+  def render_active_races
     section(class: "story-section") do
       div(class: "story-section-heading") do
         p(class: "story-section-kicker") { "Current workspace" }
         h2(class: "story-section-title") { "Active election spaces ready for exploration." }
       end
 
-      if @active_elections.any?
+      if @active_races.any?
         div(class: "story-election-grid") do
-          @active_elections.each do |election|
+          @active_races.each do |race|
             article(class: "story-election-card") do
-              p(class: "story-election-context") { election_context(election) }
-              h3(class: "story-election-title") { election.name }
-              p(class: "story-election-summary") { election.description }
+              p(class: "story-election-context") { race_context(race) }
+              h3(class: "story-election-title") { race.election.name }
+              p(class: "story-election-summary") { race.description.presence || race.election.description }
               div(class: "story-card-actions") do
-                link_to "Open Mountain", mountain_path(election), class: "btn-primary"
-                link_to "See Election Data", election_path(election), class: "btn-secondary"
+                link_to "Open Mountain", mountain_path(race), class: "btn-primary"
+                link_to "See Race Data", race_path(race), class: "btn-secondary"
               end
             end
           end
         end
       else
         article(class: "story-callout") do
-          h3(class: "story-callout-title") { "No active elections are loaded yet." }
+          h3(class: "story-callout-title") { "No active races are loaded yet." }
           p(class: "story-callout-copy") do
             "The supporting data model is already in place, so the next step is to seed or model a live example and use the mountain interface to walk people through it."
           end

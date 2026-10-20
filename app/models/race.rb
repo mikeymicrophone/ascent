@@ -19,6 +19,7 @@ class Race < ApplicationRecord
   scope :with_full_details, -> { includes(:office, :candidates, :candidacies) }
   scope :with_candidacy_details, -> { includes(candidacies: [ :person, :ratings ]) }
   scope :with_office_context, -> { includes(office: :position) }
+  scope :with_naming_details, -> { includes(election: :year, office: [ :position, { jurisdiction: :jurisdictionable } ]) }
 
   delegate :election_date, :year, to: :election
   delegate :current_office_holder, to: :office

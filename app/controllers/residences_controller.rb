@@ -49,6 +49,6 @@ class ResidencesController < ApplicationController
   end
 
   def residence_params
-    params.require(:residence).permit(:registered_at, :status, :notes)
+    params.require(:residence).permit(:voter_id, :jurisdiction_id, :registered_at, :status, :notes)
   end
 end

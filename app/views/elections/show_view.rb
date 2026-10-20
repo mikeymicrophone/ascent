@@ -12,6 +12,8 @@ class Views::Elections::ShowView < Views::ApplicationView
       
       ElectionPartial(election: @election)
       
+      scaffold_new_resource_link "Add a race", new_race_path(election_id: @election.id), record: Race
+
       Ui::ResourceActions(resource: @election)
     end
   end

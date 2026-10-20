@@ -12,8 +12,10 @@ RSpec.describe "Pages", type: :request do
       expect(response.body).to include("Three ways Ascent turns election reform into something testable.")
     end
 
-    it "shows active election previews when data exists" do
-      election = create(:election, :active, description: "A model election for the landing page.")
+    it "shows active race previews when data exists" do
+      race = create(:race, :active)
+      election = race.election
+      election.update!(description: "A model election for the landing page.")
 
       get root_path
 
@@ -41,7 +43,7 @@ RSpec.describe "Pages", type: :request do
       expect(response.body).to include("How the current data model names the civic concepts in Ascent.")
       expect(response.body).to include("Each position belongs to a branch: legislative, executive, or judicial.")
       expect(response.body).to include("An office can also sit in a GoverningBody")
-      expect(response.body).to include("A voter&#39;s approval threshold for one election.")
+      expect(response.body).to include("A voter&#39;s approval threshold for one race.")
       expect(response.body).to include("Separate namespace from the general Topic model.")
     end
   end

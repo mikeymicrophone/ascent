@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   resources :governing_bodies
   resources :area_of_concerns
   resources :governance_types
-  resources :voter_election_baselines
+  resources :voter_race_baselines
   resources :ratings
 
   devise_for :voters
@@ -19,14 +19,21 @@ Rails.application.routes.draw do
   resources :residences
   resources :candidacies
   resources :people
-  resources :elections
+  resources :elections do
+    resources :races, only: [:index]
+  end
+  resources :races
   resources :years
   resources :offices do
-    resources :elections, only: [:index]
+    resources :races, only: [:index]
   end
   resources :positions
-  resources :cities
-  resources :states
+  resources :municipalities
+  resources :counties
+  resources :districts
+  resources :states do
+    resources :municipalities, only: [:index]
+  end
   resources :countries do
     resources :states, only: [:index]
   end

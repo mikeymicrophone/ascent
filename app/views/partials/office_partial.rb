@@ -9,7 +9,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
       div do
         span { "Jurisdiction:" }
         whitespace
-        link_to @office.jurisdiction.name, @office.jurisdiction, class: "link jurisdiction"
+        jurisdiction_link @office.jurisdiction
       end
       if @office.governing_body
         div do
@@ -37,7 +37,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
       end
       
       current_office_holder
-      election_history
+      race_history
     end
   end
 
@@ -56,61 +56,58 @@ class Views::Partials::OfficePartial < Views::ApplicationView
             span(class: "current-holder-party") { current_winner.party_affiliation }
             span { ", " }
           end
-          span { "elected #{current_winner.election.year.year}" }
+          span { "elected #{current_winner.race.year.year}" }
           span { ")" }
         end
       end
     end
   end
 
-  def election_history(office = @office)
-    expandable(office, :elections, title: "Election History & Timeline") do |elections|
+  def race_history(office = @office)
+    expandable(office, :races, title: "Election History & Timeline") do |races|
       div(class: "election-timeline") do
-        # Use database ordering instead of Ruby sorting for better performance
-        recent_elections = office.elections.order(election_date: :desc).limit(3)
-        
-        recent_elections.each do |election|
-          election_details(election)
+        office.races.recent.includes(:election).limit(3).each do |race|
+          race_details(race)
         end
         
-        if office.elections.count > 3
+        if office.races.count > 3
           div(class: "elections-view-all") do
-            link_to "View all #{office.elections.count} elections", [office, :elections], class: "link view-all"
+            link_to "View all #{office.races.count} races", [office, :races], class: "link view-all"
           end
         end
       end
     end
   end
 
-  def election_details(election)
+  def race_details(race)
     div(class: "election-timeline-item") do
       div(class: "election-header") do
         div(class: "election-main-info") do
-          link_to election.name, election, class: "link election-name"
+          link_to race.election.name, race, class: "link election-name"
           div(class: "election-meta") do
-            span(class: "election-date") { election.election_date.strftime("%B %d, %Y") }
+            span(class: "election-date") { race.election_date.strftime("%B %d, %Y") }
             span(class: "election-status") do
               whitespace
               span { "•" }
               whitespace
-              span(class: "status-indicator status-#{election.status}") { election.status.capitalize }
+              span(class: "status-indicator status-#{race.status}") { race.status.capitalize }
             end
           end
         end
       end
       
-      if election.status == "completed"
-        election_results(election)
-      elsif election.status == "upcoming"
-        election_schedule(election)
+      if race.status == "completed"
+        race_results(race)
+      elsif race.status == "upcoming"
+        race_schedule(race)
       end
       
-      voter_turnout_stats(election)
+      voter_turnout_stats(race)
     end
   end
 
-  def election_results(election)
-    results = election.approval_results
+  def race_results(race)
+    results = race.approval_results
     return if results.empty?
     
     div(class: "election-results") do
@@ -134,19 +131,19 @@ class Views::Partials::OfficePartial < Views::ApplicationView
       
       if results.count > 3
         div(class: "more-results") do
-          link_to "View full results", election, class: "link"
+          link_to "View full results", race, class: "link"
         end
       end
     end
   end
 
-  def election_schedule(election)
+  def race_schedule(race)
     div(class: "election-schedule") do
       span(class: "schedule-label") { "Scheduled:" }
       whitespace
-      span(class: "schedule-date") { election.election_date.strftime("%B %d, %Y") }
+      span(class: "schedule-date") { race.election_date.strftime("%B %d, %Y") }
       
-      days_until = (election.election_date - Date.current).to_i
+      days_until = (race.election_date - Date.current).to_i
       if days_until > 0
         span(class: "days-until") { " (#{days_until} days away)" }
       elsif days_until == 0
@@ -155,10 +152,10 @@ class Views::Partials::OfficePartial < Views::ApplicationView
     end
   end
 
-  def voter_turnout_stats(election)
-    return unless election.status == "completed" && election.voter_election_baselines.any?
+  def voter_turnout_stats(race)
+    return unless race.status == "completed" && race.voter_race_baselines.any?
     
-    summary = election.results_summary
+    summary = race.results_summary
     
     div(class: "turnout-stats") do
       h6 { "Voter Participation" }

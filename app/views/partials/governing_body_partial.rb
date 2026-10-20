@@ -12,12 +12,12 @@ class Views::Partials::GoverningBodyPartial < Views::ApplicationView
       div do
         span { "Jurisdiction type:" }
         whitespace
-        span { @governing_body.jurisdiction_type }
+        span { @governing_body.jurisdiction.jurisdictionable_type.titleize }
       end
       div do
         span { "Jurisdiction:" }
         whitespace
-        link_to @governing_body.jurisdiction.name, @governing_body.jurisdiction, class: "link jurisdiction"
+        jurisdiction_link @governing_body.jurisdiction
       end
       div do
         span { "Branch:" }

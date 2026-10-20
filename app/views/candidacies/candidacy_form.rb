@@ -18,13 +18,13 @@ class Views::Candidacies::CandidacyForm < Views::ApplicationView
       end
 
       div do
-        form.label :election_id, "Election"
-        form.collection_select :election_id, 
-                               ::Election.all, 
+        form.label :race_id, "Race"
+        form.collection_select :race_id, 
+                               ::Race.with_naming_details, 
                                :id, 
                                :name,
-                               { prompt: "Select a election" },
-                               { class: input_classes(@candidacy.errors[:election_id]) }
+                               { prompt: "Select a race" },
+                               { class: input_classes(@candidacy.errors[:race_id]) }
       end
 
       div do

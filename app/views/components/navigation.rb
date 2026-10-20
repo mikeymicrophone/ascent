@@ -49,7 +49,9 @@ class Views::Components::Navigation < Views::ApplicationView
     add_section("Jurisdictions") do |section|
       section.link("Countries", countries_path)
       section.link("States", states_path)
-      section.link("Cities", cities_path)
+      section.link("Counties", counties_path)
+      section.link("Municipalities", municipalities_path)
+      section.link("Districts", districts_path)
     end
     
     add_section("Governance") do |section|
@@ -72,6 +74,7 @@ class Views::Components::Navigation < Views::ApplicationView
     add_section("Elections") do |section|
       section.link("Years", years_path)
       section.link("Elections", elections_path)
+      section.link("Races", races_path)
       section.link("People", people_path)
       section.link("Candidacies", candidacies_path)
     end
@@ -80,7 +83,7 @@ class Views::Components::Navigation < Views::ApplicationView
       section.link("Voters", voters_path)
       section.link("Residences", residences_path)
       section.link("Ratings", ratings_path)
-      section.link("Baselines", voter_election_baselines_path)
+      section.link("Baselines", voter_race_baselines_path)
     end
   end
 

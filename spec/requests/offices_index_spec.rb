@@ -12,17 +12,17 @@ RSpec.describe "Offices Index", type: :request do
     end
 
     context "with multiple offices" do
-      let!(:country) { create(:country, name: "United States") }
-      let!(:state) { create(:state, name: "California", country: country) }
-      let!(:city) { create(:city, name: "San Francisco", state: state) }
+      let!(:country) { create(:country, :with_jurisdiction, name: "United States") }
+      let!(:state) { create(:state, :with_jurisdiction, name: "California", country: country) }
+      let!(:city) { create(:municipality, :with_jurisdiction, name: "San Francisco", state: state) }
       
       let!(:mayor_position) { create(:position, title: "Mayor") }
       let!(:council_position) { create(:position, title: "City Council Member") }
       let!(:governor_position) { create(:position, title: "Governor") }
       
-      let!(:mayor_office) { create(:office, position: mayor_position, jurisdiction: city, is_active: true) }
-      let!(:council_office) { create(:office, position: council_position, jurisdiction: city, is_active: true) }
-      let!(:governor_office) { create(:office, position: governor_position, jurisdiction: state, is_active: false) }
+      let!(:mayor_office) { create(:office, position: mayor_position, jurisdiction: city.jurisdiction, is_active: true) }
+      let!(:council_office) { create(:office, position: council_position, jurisdiction: city.jurisdiction, is_active: true) }
+      let!(:governor_office) { create(:office, position: governor_position, jurisdiction: state.jurisdiction, is_active: false) }
 
       it "renders successfully with office data" do
         get offices_path
@@ -57,11 +57,11 @@ RSpec.describe "Offices Index", type: :request do
       end
     end
 
-    context "with offices that have elections" do
+    context "with offices that have races" do
       let!(:office) { create(:office, :active) }
       let!(:year) { create(:year, year: 2024) }
-      let!(:upcoming_election) { create(:election, :upcoming, office: office, year: year) }
-      let!(:completed_election) { create(:election, :completed, office: office, year: year) }
+      let!(:upcoming_race) { create_race_for(office, :upcoming, year: year) }
+      let!(:completed_race) { create_race_for(office, :completed, year: year) }
 
       it "displays election information" do
         get offices_path
@@ -79,13 +79,13 @@ RSpec.describe "Offices Index", type: :request do
     end
 
     context "with offices at different jurisdiction levels" do
-      let!(:country) { create(:country, name: "United States") }
-      let!(:state) { create(:state, name: "California", country: country) }
-      let!(:city) { create(:city, name: "Los Angeles", state: state) }
+      let!(:country) { create(:country, :with_jurisdiction, name: "United States") }
+      let!(:state) { create(:state, :with_jurisdiction, name: "California", country: country) }
+      let!(:city) { create(:municipality, :with_jurisdiction, name: "Los Angeles", state: state) }
       
-      let!(:federal_office) { create(:office, jurisdiction: country) }
-      let!(:state_office) { create(:office, jurisdiction: state) }
-      let!(:city_office) { create(:office, jurisdiction: city) }
+      let!(:federal_office) { create(:office, jurisdiction: country.jurisdiction) }
+      let!(:state_office) { create(:office, jurisdiction: state.jurisdiction) }
+      let!(:city_office) { create(:office, jurisdiction: city.jurisdiction) }
 
       it "displays offices from all jurisdiction levels" do
         get offices_path
@@ -127,11 +127,11 @@ RSpec.describe "Offices Index", type: :request do
 
     context "with offices having candidates and elections" do
       let!(:office) { create(:office, :active) }
-      let!(:election) { create(:election, :active, office: office) }
+      let!(:race) { create_race_for(office, :active) }
       let!(:candidate1) { create(:person, :experienced_politician) }
       let!(:candidate2) { create(:person, :business_leader) }
-      let!(:candidacy1) { create(:candidacy, election: election, person: candidate1) }
-      let!(:candidacy2) { create(:candidacy, election: election, person: candidate2) }
+      let!(:candidacy1) { create(:candidacy, race: race, person: candidate1) }
+      let!(:candidacy2) { create(:candidacy, race: race, person: candidate2) }
 
       it "displays candidate information when available" do
         get offices_path
@@ -173,7 +173,7 @@ RSpec.describe "Offices Index", type: :request do
 
   context "error handling" do
     it "handles database errors gracefully" do
-      allow(Office).to receive(:includes).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
+      allow(Office).to receive(:with_elections_and_candidates).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
       
       expect { get offices_path }.to raise_error(ActiveRecord::StatementInvalid)
     end
@@ -190,8 +190,8 @@ RSpec.describe "Offices Index", type: :request do
     it "handles complex association queries" do
       # Create office with full association chain
       office = create(:office)
-      election = create(:election, office: office)
-      candidacy = create(:candidacy, election: election)
+      race = create_race_for(office)
+      candidacy = create(:candidacy, race: race)
       
       get offices_path
       
@@ -205,8 +205,8 @@ RSpec.describe "Offices Index", type: :request do
       # Create offices with varying complexity
       5.times do
         office = create(:office, :active)
-        election = create(:election, :active, office: office)
-        3.times { create(:candidacy, election: election) }
+        race = create_race_for(office, :active)
+        3.times { create(:candidacy, race: race) }
       end
     end
 
@@ -217,10 +217,10 @@ RSpec.describe "Offices Index", type: :request do
       expect(response.body).to include("Offices")
     end
 
-    it "handles offices with multiple elections" do
+    it "handles offices with multiple races" do
       office = create(:office)
-      create(:election, :completed, office: office)
-      create(:election, :upcoming, office: office)
+      create_race_for(office, :completed)
+      create_race_for(office, :upcoming)
       
       get offices_path
       

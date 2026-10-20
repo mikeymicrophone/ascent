@@ -48,13 +48,13 @@ RSpec.describe "People Index", type: :request do
 
     context "with people who are candidates" do
       let!(:office) { create(:office, :active) }
-      let!(:election) { create(:election, :upcoming, office: office) }
+      let!(:race) { create_race_for(office, :upcoming) }
       let!(:candidate1) { create(:person, :experienced_politician, first_name: "John", last_name: "Smith") }
       let!(:candidate2) { create(:person, :business_leader, first_name: "Jane", last_name: "Doe") }
       let!(:non_candidate) { create(:person, :community_activist, first_name: "Alex", last_name: "Wilson") }
       
-      let!(:candidacy1) { create(:candidacy, election: election, person: candidate1, party_affiliation: "Democratic") }
-      let!(:candidacy2) { create(:candidacy, election: election, person: candidate2, party_affiliation: "Republican") }
+      let!(:candidacy1) { create(:candidacy, race: race, person: candidate1, party_affiliation: "Democratic") }
+      let!(:candidacy2) { create(:candidacy, race: race, person: candidate2, party_affiliation: "Republican") }
 
       it "displays candidacy information for candidates" do
         get people_path
@@ -135,10 +135,10 @@ RSpec.describe "People Index", type: :request do
       let!(:person) { create(:person, :experienced_politician) }
       let!(:office1) { create(:office) }
       let!(:office2) { create(:office) }
-      let!(:election1) { create(:election, office: office1) }
-      let!(:election2) { create(:election, office: office2) }
-      let!(:candidacy1) { create(:candidacy, election: election1, person: person) }
-      let!(:candidacy2) { create(:candidacy, election: election2, person: person) }
+      let!(:race1) { create_race_for(office1) }
+      let!(:race2) { create_race_for(office2) }
+      let!(:candidacy1) { create(:candidacy, race: race1, person: person) }
+      let!(:candidacy2) { create(:candidacy, race: race2, person: person) }
 
       it "displays person with multiple candidacies" do
         get people_path
@@ -170,8 +170,8 @@ RSpec.describe "People Index", type: :request do
     it "handles candidate filtering if implemented" do
       # Create a candidate
       office = create(:office)
-      election = create(:election, office: office)
-      create(:candidacy, election: election, person: politician)
+      race = create_race_for(office)
+      create(:candidacy, race: race, person: politician)
       
       get people_path
       
@@ -213,8 +213,8 @@ RSpec.describe "People Index", type: :request do
       5.times do
         person = create(:person, :experienced_politician)
         office = create(:office)
-        election = create(:election, office: office)
-        candidacy = create(:candidacy, election: election, person: person)
+        race = create_race_for(office)
+        candidacy = create(:candidacy, race: race, person: person)
         # Add some ratings for electoral activity
         3.times do
           voter = create(:voter)
@@ -236,8 +236,8 @@ RSpec.describe "People Index", type: :request do
       # Create multiple candidacies across different elections
       3.times do
         office = create(:office)
-        election = create(:election, office: office)
-        create(:candidacy, election: election, person: person)
+        race = create_race_for(office)
+        create(:candidacy, race: race, person: person)
       end
       
       get people_path

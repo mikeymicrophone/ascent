@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   def home
     render Views::Pages::HomeView.new(
-      active_elections: active_elections,
+      active_races: active_races,
       metrics: project_metrics
     )
   end
@@ -12,7 +12,7 @@ class PagesController < ApplicationController
 
   def supporters
     render Views::Pages::SupportersView.new(
-      active_elections: active_elections,
+      active_races: active_races,
       metrics: project_metrics
     )
   end
@@ -25,8 +25,8 @@ class PagesController < ApplicationController
 
   private
 
-  def active_elections
-    @active_elections ||= Election.active.includes(office: [:position, :jurisdiction]).recent.limit(3)
+  def active_races
+    @active_races ||= Race.active.with_naming_details.recent.limit(3)
   end
 
   def project_metrics

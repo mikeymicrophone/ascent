@@ -20,12 +20,7 @@ class Views::Elections::IndexView < Views::ApplicationView
             div(id: dom_id(election, :list_item)) do
               ElectionPartial(election: election)
               
-              div do
-                button_to("Simulate Data", simulate_mountain_path(election), 
-                  method: :post, class: "btn-secondary", form: { style: "display: inline;" })
-                whitespace
-                Ui::ResourceActions(resource: election)
-              end
+              Ui::ResourceActions(resource: election)
             end
           end
         else

@@ -1,5 +1,5 @@
 module Views
-  module Cities
+  module Districts
     extend Phlex::Kit
   end
 end

@@ -11,7 +11,7 @@ module Statisticable
         active_elections: item.active_elections_count,
         total_offices: item.total_offices_count
       }
-    when State
+    when State, County
       {
         voters: item.voters.count,
         active_elections: item.active_elections_count,

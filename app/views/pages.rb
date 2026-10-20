@@ -15,8 +15,8 @@ module Views
       }.fetch(metric_key)
     end
 
-    def election_context(election)
-      [election.office.position.title, election.office.jurisdiction.name].compact.join(" in ")
+    def race_context(race)
+      [race.office.position.title, race.office.jurisdiction.name].compact.join(" in ")
     end
   end
 end

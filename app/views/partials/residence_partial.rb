@@ -9,7 +9,7 @@ class Views::Partials::ResidencePartial < Views::ApplicationView
       div do
         span { "Jurisdiction:" }
         whitespace
-        link_to @residence.jurisdiction.name, @residence.jurisdiction, class: "link jurisdiction"
+        jurisdiction_link @residence.jurisdiction
       end
       div do
         span { "Registered at:" }

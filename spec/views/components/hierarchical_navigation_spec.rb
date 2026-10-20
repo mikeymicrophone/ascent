@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
   let!(:country) { create(:country, name: "United States") }
   let!(:state) { create(:state, country: country, name: "California") }
-  let!(:city) { create(:city, state: state, name: "San Francisco") }
+  let!(:city) { create(:municipality, :with_jurisdiction, state: state, name: "San Francisco") }
   
   def render_component(component)
     view_context.render(component)
@@ -20,7 +20,7 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
   end
 
   describe 'breadcrumb navigation' do
-    context 'when displaying a city' do
+    context 'when displaying a municipality' do
       let(:component) { described_class.new(current_object: city) }
       let(:rendered) { render_component(component) }
 
@@ -86,10 +86,10 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
 
   describe 'quick stats display' do
     context 'with voter and office data' do
-      let!(:office) { create(:office, jurisdiction: city) }
-      let!(:voter_residence) { create(:residence, jurisdiction: city) }
+      let!(:office) { create(:office, jurisdiction: city.jurisdiction) }
+      let!(:voter_residence) { create(:residence, jurisdiction: city.jurisdiction) }
       let!(:voter) { create(:voter, residences: [voter_residence]) }
-      let!(:election) { create(:election, office: office, status: 'active') }
+      let!(:race) { create_race_for(office, :active) }
       
       let(:component) { described_class.new(current_object: city, show_stats: true) }
       let(:rendered) { render_component(component) }
@@ -151,8 +151,8 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
       end
     end
 
-    context 'for a state with cities' do
-      let!(:other_city) { create(:city, state: state, name: "Los Angeles") }
+    context 'for a state with municipalities' do
+      let!(:other_city) { create(:municipality, state: state, name: "Los Angeles") }
       let(:component) { described_class.new(current_object: state, expandable: true) }
       let(:rendered) { render_component(component) }
 
@@ -160,18 +160,18 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
         expect(rendered).to include("State Overview")
       end
 
-      it 'lists child cities' do
+      it 'lists child municipalities' do
         expect(rendered).to include("San Francisco")
         expect(rendered).to include("Los Angeles")
       end
     end
 
-    context 'for a city (no children)' do
+    context 'for a municipality (no children)' do
       let(:component) { described_class.new(current_object: city, expandable: true) }
       let(:rendered) { render_component(component) }
 
       it 'does not show drill-down section' do
-        expect(rendered).not_to include("City Overview")
+        expect(rendered).not_to include("Municipality Overview")
         expect(rendered).not_to include('class="children-preview"')
       end
     end
@@ -190,8 +190,8 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
   describe 'geographic summary stats' do
     context 'for a country with comprehensive data' do
       let!(:state2) { create(:state, country: country, name: "Texas") }
-      let!(:city2) { create(:city, state: state, name: "Los Angeles") }
-      let!(:city3) { create(:city, state: state2, name: "Houston") }
+      let!(:city2) { create(:municipality, state: state, name: "Los Angeles") }
+      let!(:city3) { create(:municipality, state: state2, name: "Houston") }
       
       let(:component) { described_class.new(current_object: country) }
       let(:rendered) { render_component(component) }
@@ -202,10 +202,10 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
         expect(summary_stats[:total_states]).to eq(2)
       end
 
-      it 'calculates total cities correctly' do
+      it 'calculates total municipalities correctly' do
         # Should count San Francisco, Los Angeles, Houston
         summary_stats = component.send(:calculate_comprehensive_stats, country)
-        expect(summary_stats[:total_cities]).to eq(3)
+        expect(summary_stats[:total_municipalities]).to eq(3)
       end
     end
   end

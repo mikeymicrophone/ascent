@@ -133,8 +133,8 @@
   --entity-country-bg: theme('colors.emerald.50');
   --entity-state: theme('colors.blue.600');
   --entity-state-bg: theme('colors.blue.50');
-  --entity-city: theme('colors.purple.600');
-  --entity-city-bg: theme('colors.purple.50');
+  --entity-municipality: theme('colors.purple.600');
+  --entity-municipality-bg: theme('colors.purple.50');
   --entity-election: theme('colors.orange.600');
   --entity-election-bg: theme('colors.orange.50');
   --entity-candidate: theme('colors.indigo.600');

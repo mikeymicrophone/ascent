@@ -12,19 +12,17 @@ class Views::Offices::OfficeForm < Views::ApplicationView
         form.collection_select :position_id, 
                                ::Position.all, 
                                :id, 
-                               :name,
+                               :title,
                                { prompt: "Select a position" },
                                { class: input_classes(@office.errors[:position_id]) }
       end
 
       div do
         form.label :jurisdiction_id, "Jurisdiction"
-        form.collection_select :jurisdiction_id, 
-                               ::Jurisdiction.all, 
-                               :id, 
-                               :name,
-                               { prompt: "Select a jurisdiction" },
-                               { class: input_classes(@office.errors[:jurisdiction_id]) }
+        form.select :jurisdiction_id,
+                    jurisdiction_choices,
+                    { prompt: "Select a jurisdiction" },
+                    class: input_classes(@office.errors[:jurisdiction_id])
       end
 
       div do

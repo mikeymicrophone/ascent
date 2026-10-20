@@ -4,17 +4,17 @@ class Views::Pages::GlossaryView < Views::ApplicationView
   FLOW_CARDS = [
     {
       title: "Geography",
-      chain: "Country -> State -> City",
-      copy: "These are the currently modeled jurisdiction records. Offices, residences, and governing bodies attach back to them polymorphically."
+      chain: "Country -> State -> County -> Municipality, plus District",
+      copy: "Each place owns one Jurisdiction record. Offices, elections, residences, and governing bodies attach to that Jurisdiction, and jurisdictions can nest under a parent."
     },
     {
       title: "Election structure",
-      chain: "Position -> Office -> Election -> Candidacy",
-      copy: "A reusable role becomes a concrete seat in a place, then a contest, then a candidate's run in that contest."
+      chain: "Position -> Office -> Race <- Election, then Race -> Candidacy",
+      copy: "A reusable role becomes a concrete seat in a place. An election is a dated event in a jurisdiction, each race in it is the contest for one office, and a candidacy is a run in that race."
     },
     {
       title: "Voter input",
-      chain: "Voter -> Residence -> Rating -> VoterElectionBaseline",
+      chain: "Voter -> Residence -> Rating -> VoterRaceBaseline",
       copy: "Residences establish voter context, ratings express preference, and baselines convert those ratings into approvals."
     },
     {
@@ -36,7 +36,7 @@ class Views::Pages::GlossaryView < Views::ApplicationView
       entries: [
         {
           term: "Jurisdiction",
-          definition: "A shared concept used by Office, Residence, and GoverningBody. It is not its own table in the current schema; it is a polymorphic link to Country, State, or City."
+          definition: "The shared identity of a place that can hold offices, elections, residences, and governing bodies. Each Country, State, County, Municipality, or District owns one Jurisdiction, which can have a parent and a dated history of PostGIS boundaries."
         },
         {
           term: "Country",
@@ -44,11 +44,19 @@ class Views::Pages::GlossaryView < Views::ApplicationView
         },
         {
           term: "State",
-          definition: "A subnational jurisdiction that belongs to a country. States own cities and can also directly own offices and residences."
+          definition: "A subnational jurisdiction that belongs to a country. States own counties and municipalities and can also directly own offices and residences."
         },
         {
-          term: "City",
-          definition: "A local jurisdiction that belongs to a state. Cities can hold offices, elections, and voter residences."
+          term: "County",
+          definition: "A jurisdiction within a state. Counties can contain municipalities."
+        },
+        {
+          term: "Municipality",
+          definition: "A local jurisdiction such as a city, town, or village. It belongs to a state and optionally to a county, and can hold offices, elections, and voter residences."
+        },
+        {
+          term: "District",
+          definition: "A jurisdiction drawn for a specific purpose, such as a ward, legislative district, or school district. District boundaries can overlap other jurisdictions."
         },
         {
           term: "Position",
@@ -64,7 +72,11 @@ class Views::Pages::GlossaryView < Views::ApplicationView
         },
         {
           term: "Election",
-          definition: "One contest for one office in one year. Elections carry the date and status, and they collect candidacies and voter baselines."
+          definition: "A dated voting event in one jurisdiction, such as a primary, general, or special election. It carries the election date, any early-voting period, and the races on its ballot."
+        },
+        {
+          term: "Race",
+          definition: "The contest for one office within an election. Races collect candidacies and voter baselines, and each has its own status and approval results."
         }
       ]
     },
@@ -78,7 +90,7 @@ class Views::Pages::GlossaryView < Views::ApplicationView
         },
         {
           term: "Voter",
-          definition: "An authenticated participant in the system. Voters own residences, ratings, and per-election baselines."
+          definition: "An authenticated participant in the system. Voters own residences, ratings, and per-race baselines."
         },
         {
           term: "Residence",
@@ -86,27 +98,27 @@ class Views::Pages::GlossaryView < Views::ApplicationView
         },
         {
           term: "Candidacy",
-          definition: "A person's run in a specific election. The same person can have many candidacies across different elections."
+          definition: "A person's run in a specific race. The same person can have many candidacies across different races and elections."
         },
         {
           term: "Rating",
           definition: "A voter's 0-500 score for one candidacy. Ratings capture intensity of support before they are converted into approvals."
         },
         {
-          term: "VoterElectionBaseline",
-          definition: "A voter's approval threshold for one election. A candidate in that election receives an approval vote only when their rating exceeds the baseline."
+          term: "VoterRaceBaseline",
+          definition: "A voter's approval threshold for one race. A candidate in that race receives an approval vote only when their rating exceeds the baseline."
         },
         {
           term: "RatingArchive",
           definition: "A historical snapshot of a prior rating value. The app writes these records when an existing rating changes."
         },
         {
-          term: "VoterElectionBaselineArchive",
-          definition: "A historical record of baseline changes or deletions for one voter-election pair."
+          term: "VoterRaceBaselineArchive",
+          definition: "A historical record of baseline changes or deletions for one voter-race pair."
         },
         {
           term: "Mountain",
-          definition: "A derived interface concept rather than a table. It visualizes how ratings and a baseline interact inside one election."
+          definition: "A derived interface concept rather than a table. It visualizes how ratings and a baseline interact inside one race."
         }
       ]
     },

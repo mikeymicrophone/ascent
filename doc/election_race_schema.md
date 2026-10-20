@@ -1,6 +1,6 @@
 # Election and Race schema
 
-`SeparateRacesFromElections` follows the jurisdiction migrations. The models and factories now use the split described below. Controllers, routes, views, and seeds still need updates before applying these migrations to the working application. The migration does not create Race records from existing Elections or convert existing references. Existing dependent records require conversion or removal first.
+`SeparateRacesFromElections` follows the jurisdiction migrations. The models and factories now use the split described below. Controllers, routes, and views use the split; seeds still need updates before applying these migrations to the working application. The migration does not create Race records from existing Elections or convert existing references. Existing dependent records require conversion or removal first.
 
 ## Ownership
 
@@ -44,4 +44,4 @@ The migration does not add registration deadlines, party eligibility, a general 
 - Define multi-seat and tied-result behavior before changing the existing single-winner calculation. This migration adds no seat count or tie-breaking rule.
 - Implement residency and eligibility classification, including historical participation snapshots, before presenting separate in-district and outside-district totals. Ratings accept outside opinions. The old always-true eligibility method and its Rating validation gate have been removed; this update does not classify opinions or treat them as verified local votes.
 
-The model rename, associations, and model query changes are implemented. Controller queries, route and view updates, UI grouping, and seeds remain follow-up work. The development database has not been migrated.
+The model rename, associations, and model query changes are implemented. Races have their own pages, nested indexes under offices and elections, and the forms for candidacies and baselines select a Race. The mountain voting interface is keyed by Race, because baselines belong to a Race, and lists active Races. Seeds remain follow-up work. The development database has not been migrated.

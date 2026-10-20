@@ -2,7 +2,10 @@ class CandidaciesController < ApplicationController
   before_action :set_candidacy, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @candidacies = pagy(Candidacy.all)
+    candidacies_scope = Candidacy.with_election_context
+    candidacies_scope = candidacies_scope.where(person_id: params[:person_id]) if params[:person_id]
+    candidacies_scope = candidacies_scope.where(race_id: params[:race_id]) if params[:race_id]
+    @pagy, @candidacies = pagy(candidacies_scope)
     render Views::Candidacies::IndexView.new(candidacies: @candidacies, pagy: @pagy, notice: notice)
   end
 
@@ -49,6 +52,6 @@ class CandidaciesController < ApplicationController
   end
 
   def candidacy_params
-    params.require(:candidacy).permit(:status, :announcement_date, :party_affiliation, :platform_summary)
+    params.require(:candidacy).permit(:person_id, :race_id, :status, :announcement_date, :party_affiliation, :platform_summary)
   end
 end

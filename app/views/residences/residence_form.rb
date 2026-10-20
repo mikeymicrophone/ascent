@@ -18,14 +18,11 @@ class Views::Residences::ResidenceForm < Views::ApplicationView
       end
 
       div do
-        form.hidden_field :jurisdiction_type, value: "City"
         form.label :jurisdiction_id, "Jurisdiction"
-        form.collection_select :jurisdiction_id, 
-                               ::City.all, 
-                               :id, 
-                               :name,
-                               { prompt: "Select a jurisdiction" },
-                               { class: input_classes(@residence.errors[:jurisdiction_id]) }
+        form.select :jurisdiction_id,
+                    jurisdiction_choices,
+                    { prompt: "Select a jurisdiction" },
+                    class: input_classes(@residence.errors[:jurisdiction_id])
       end
 
       div do

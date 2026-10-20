@@ -5,7 +5,7 @@
 #
 # Example usage:
 #   SmartFactory.create_or_reuse(:person, count: 5, reuse_likelihood: 7)
-#   SmartFactory.create_or_reuse(:candidacy, :democrat, count: 3, reuse_likelihood: 4, election: election)
+#   SmartFactory.create_or_reuse(:candidacy, :democrat, count: 3, reuse_likelihood: 4, race: race)
 #
 module SmartFactory
   class << self
@@ -53,7 +53,7 @@ module SmartFactory
         candidacy: 2,        # Very low reuse - each candidacy should be unique
         rating: 1,           # No reuse - each rating is voter-specific
         stance: 1,           # No reuse - each stance is candidacy-specific
-        voter_election_baseline: 8  # High reuse - voters often have similar standards
+        voter_race_baseline: 8      # High reuse - voters often have similar standards
       }
 
       reuse_likelihood = reuse_patterns[factory_name] || 5

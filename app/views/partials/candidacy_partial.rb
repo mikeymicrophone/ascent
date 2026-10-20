@@ -21,6 +21,10 @@ class Views::Partials::CandidacyPartial < Views::ApplicationView
         # Election and timing information
         div(class: "info-grid") do
           div(class: "info-item") do
+            span(class: "info-label") { "Race" }
+            link_to @candidacy.race.name, @candidacy.race, class: "link race info-value"
+          end
+          div(class: "info-item") do
             span(class: "info-label") { "Election" }
             link_to @candidacy.election.name, @candidacy.election, class: "link election info-value"
           end

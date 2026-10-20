@@ -1,11 +1,11 @@
 class MountainsController < ApplicationController
-  before_action :set_election, only: [:show, :edit, :update, :simulate]
+  before_action :set_race, only: [:show, :edit, :update, :simulate]
   before_action :set_voter, only: [:show, :edit, :update, :simulate]
   before_action :set_baseline, only: [:show, :edit, :update]
 
   def index
-    @elections = Election.active.with_candidacy_details
-    render Views::Mountains::IndexView.new(elections: @elections)
+    @races = Race.active.with_naming_details.includes(:candidacies)
+    render Views::Mountains::IndexView.new(races: @races)
   end
 
   def show
@@ -23,9 +23,9 @@ class MountainsController < ApplicationController
     end
 
     # Stay on the editable mountain so ratings remain draggable after save.
-    redirect_to mountain_path(@election, voter_id: @voter.id), notice: "Mountain ratings updated."
+    redirect_to mountain_path(@race, voter_id: @voter.id), notice: "Mountain ratings updated."
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
-    redirect_to mountain_path(@election, voter_id: @voter.id),
+    redirect_to mountain_path(@race, voter_id: @voter.id),
                 alert: "Could not save mountain ratings: #{e.message}"
   end
 
@@ -45,11 +45,11 @@ class MountainsController < ApplicationController
       
       # Use SmartFactory for candidacies (very low reuse - each should be unique)
       SmartFactory.create_for_mountain_simulation(:candidacy, [candidacy_traits], 
-                                                  person: person, election: @election)
+                                                  person: person, race: @race)
     end
 
     # Create realistic policy stances for each candidate
-    @election.candidacies.reload.each do |candidacy|
+    @race.candidacies.reload.each do |candidacy|
       # Skip if candidate already has stances
       next if candidacy.stances.any?
       
@@ -84,7 +84,7 @@ class MountainsController < ApplicationController
     end
 
     # Create realistic ratings with varied patterns
-    @election.candidacies.reload.each do |candidacy|
+    @race.candidacies.reload.each do |candidacy|
       # Skip if rating already exists for this voter-candidacy combination
       next if Rating.exists?(voter: @voter, candidacy: candidacy)
       
@@ -97,10 +97,10 @@ class MountainsController < ApplicationController
     end
 
     # Create realistic baseline for voter (high reuse - voters often have similar standards)
-    SmartFactory.create_for_mountain_simulation(:voter_election_baseline, [:realistic_distribution],
-                                                election: @election, voter: @voter)
+    SmartFactory.create_for_mountain_simulation(:voter_race_baseline, [:realistic_distribution],
+                                                race: @race, voter: @voter)
 
-    redirect_to mountain_path(@election, voter_id: @voter.id), notice: 'Simulation data generated successfully!'
+    redirect_to mountain_path(@race, voter_id: @voter.id), notice: 'Simulation data generated successfully!'
   end
 
   private
@@ -108,15 +108,15 @@ class MountainsController < ApplicationController
   def render_mountain_editor
     @mountain_data = build_mountain_data
     render Views::Mountains::EditView.new(
-      election: @election,
+      race: @race,
       voter: @voter,
       baseline: @baseline,
       mountain_data: @mountain_data
     )
   end
 
-  def set_election
-    @election = Election.find(params[:id])
+  def set_race
+    @race = Race.with_naming_details.find(params[:id])
   end
 
   def set_voter
@@ -130,11 +130,11 @@ class MountainsController < ApplicationController
   end
 
   def set_baseline
-    @baseline = @election.voter_election_baselines.find_by(voter: @voter)
+    @baseline = @race.voter_race_baselines.find_by(voter: @voter)
   end
 
   def build_mountain_data
-    @election.candidacies.active.with_rating_details.map do |candidacy|
+    @race.candidacies.active.with_rating_details.map do |candidacy|
       rating = candidacy.ratings.find_by(voter: @voter)
       
       {
@@ -156,7 +156,7 @@ class MountainsController < ApplicationController
     baseline_value = params[:baseline].presence
 
     if baseline_value
-      baseline_record = VoterElectionBaseline.find_or_initialize_by(voter: @voter, election: @election)
+      baseline_record = VoterRaceBaseline.find_or_initialize_by(voter: @voter, race: @race)
       baseline_record.update!(baseline: normalize_rating(baseline_value))
     else
       @baseline&.destroy
@@ -165,7 +165,7 @@ class MountainsController < ApplicationController
 
   def update_ratings
     rating_params.each do |candidacy_id, rating_value|
-      candidacy = @election.candidacies.find(candidacy_id)
+      candidacy = @race.candidacies.find(candidacy_id)
       rating_record = Rating.find_by(voter: @voter, candidacy: candidacy)
 
       if rating_value.present?

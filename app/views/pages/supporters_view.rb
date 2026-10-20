@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Views::Pages::SupportersView < Views::ApplicationView
-  def initialize(active_elections:, metrics:)
-    @active_elections = active_elections
+  def initialize(active_races:, metrics:)
+    @active_races = active_races
     @metrics = metrics
   end
 
@@ -87,14 +87,14 @@ class Views::Pages::SupportersView < Views::ApplicationView
           "The repository currently models #{@metrics[:active_elections]} active elections, #{@metrics[:offices]} offices, #{@metrics[:topics]} topics, and #{@metrics[:issues]} issues."
         end
 
-        if @active_elections.any?
+        if @active_races.any?
           div(class: "story-election-grid") do
-            @active_elections.each do |election|
+            @active_races.each do |race|
               article(class: "story-election-card story-election-card-inline") do
-                p(class: "story-election-context") { election_context(election) }
-                h3(class: "story-election-title") { election.name }
+                p(class: "story-election-context") { race_context(race) }
+                h3(class: "story-election-title") { race.election.name }
                 div(class: "story-card-actions") do
-                  link_to "Open Mountain", mountain_path(election), class: "btn-primary"
+                  link_to "Open Mountain", mountain_path(race), class: "btn-primary"
                 end
               end
             end

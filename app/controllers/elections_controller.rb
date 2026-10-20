@@ -2,9 +2,7 @@ class ElectionsController < ApplicationController
   before_action :set_election, only: %i[ show edit update destroy ]
 
   def index
-    elections_scope = Election.with_full_details
-    elections_scope = elections_scope.where(office_id: params[:office_id]) if params[:office_id]
-    @pagy, @elections = pagy(elections_scope)
+    @pagy, @elections = pagy(Election.with_full_details.recent)
     render Views::Elections::IndexView.new(elections: @elections, pagy: @pagy, notice: notice)
   end
 
@@ -51,6 +49,8 @@ class ElectionsController < ApplicationController
   end
 
   def election_params
-    params.require(:election).permit(:election_date, :status, :description, :is_mock, :is_historical)
+    params.require(:election).permit(:jurisdiction_id, :year_id, :name, :kind, :election_date,
+                                     :early_voting_starts_on, :early_voting_ends_on,
+                                     :status, :description, :is_mock, :is_historical)
   end
 end

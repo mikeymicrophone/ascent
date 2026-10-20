@@ -2,8 +2,7 @@ class OfficesController < ApplicationController
   before_action :set_office, only: %i[ show edit update destroy ]
 
   def index
-    offices_scope = Office.with_elections_and_candidates
-    @pagy, @offices = pagy(offices_scope)
+    @pagy, @offices = pagy(Office.with_elections_and_candidates.includes(jurisdiction: :jurisdictionable))
     render Views::Offices::IndexView.new(offices: @offices, pagy: @pagy, notice: notice)
   end
 
@@ -50,6 +49,6 @@ class OfficesController < ApplicationController
   end
 
   def office_params
-    params.require(:office).permit(:position_id, :jurisdiction_id, :jurisdiction_type, :governing_body_id, :chamber_id, :is_active, :notes)
+    params.require(:office).permit(:position_id, :jurisdiction_id, :governing_body_id, :chamber_id, :is_active, :notes)
   end
 end

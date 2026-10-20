@@ -44,10 +44,10 @@ RSpec.describe "Voters Index", type: :request do
 
     context "with voters having voting history" do
       let!(:voter) { create(:voter) }
-      let!(:election) { create(:election, :active) }
-      let!(:candidacy1) { create(:candidacy, election: election) }
-      let!(:candidacy2) { create(:candidacy, election: election) }
-      let!(:baseline) { create(:voter_election_baseline, voter: voter, election: election, baseline: 250) }
+      let!(:race) { create(:race, :active) }
+      let!(:candidacy1) { create(:candidacy, race: race) }
+      let!(:candidacy2) { create(:candidacy, race: race) }
+      let!(:baseline) { create(:voter_race_baseline, voter: voter, race: race, baseline: 250) }
       let!(:rating1) { create(:rating, candidacy: candidacy1, voter: voter, rating: 300) }
       let!(:rating2) { create(:rating, candidacy: candidacy2, voter: voter, rating: 400) }
 

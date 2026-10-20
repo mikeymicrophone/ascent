@@ -8,8 +8,11 @@
 /* Enhanced partial containers with breathing room for 3D effects */
 .country-partial,
 .state-partial,
-.city-partial,
+.county-partial,
+.municipality-partial,
+.district-partial,
 .election-partial,
+.race-partial,
 .person-partial,
 .candidacy-partial,
 .voter-partial,
@@ -64,15 +67,15 @@
 }
 
 /* Cities preview */
-.cities-preview {
+.municipalities-preview {
   @apply space-y-1;
 }
 
-.city-preview-item {
+.municipality-preview-item {
   @apply py-1;
 }
 
-.cities-view-all {
+.municipalities-view-all {
   @apply mt-3 pt-2 border-t;
   border-color: var(--expandable-border);
 }

@@ -14,15 +14,11 @@ class Views::GoverningBodies::GoverningBodyForm < Views::ApplicationView
       end
 
       div do
-        form.label :jurisdiction_type
-        form.text_field :jurisdiction_type,
-                                        class: input_classes(@governing_body.errors[:jurisdiction_type])
-      end
-
-      div do
-        form.label :jurisdiction_id
-        form.number_field :jurisdiction_id,
-                                        class: input_classes(@governing_body.errors[:jurisdiction_id])
+        form.label :jurisdiction_id, "Jurisdiction"
+        form.select :jurisdiction_id,
+                    jurisdiction_choices,
+                    { prompt: "Select a jurisdiction" },
+                    class: input_classes(@governing_body.errors[:jurisdiction_id])
       end
 
       div do

@@ -52,12 +52,12 @@ RSpec.describe SmartFactory do
 
     context 'with different factory types' do
       let(:person) { create(:person) }
-      let(:election) { create(:election) }
+      let(:race) { create(:race) }
 
       it 'works with candidacy factory' do
         expect {
           SmartFactory.create_for_mountain_simulation(:candidacy, [:democrat], 
-                                                     person: person, election: election)
+                                                     person: person, race: race)
         }.to change(Candidacy, :count).by(1)
       end
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Views::Mountains::MountainChart < Views::ApplicationView
-  def initialize(election:, voter: nil, baseline: nil, mountain_data: nil, editable: false)
-    @election = election
+  def initialize(race:, voter: nil, baseline: nil, mountain_data: nil, editable: false)
+    @race = race
     @voter = voter
     @baseline = baseline
     @mountain_data = mountain_data

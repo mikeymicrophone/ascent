@@ -1,16 +1,16 @@
-class Views::Cities::CityForm < Views::ApplicationView
-  def initialize(city:)
-    @city = city
+class Views::Counties::CountyForm < Views::ApplicationView
+  def initialize(county:)
+    @county = county
   end
 
   def view_template(&)
-    form_with(model: @city, id: dom_id(@city, :form)) do |form|
-      render_errors if @city.errors.any?
+    form_with(model: @county, id: dom_id(@county, :form)) do |form|
+      render_errors if @county.errors.any?
       
       div do
         form.label :name
         form.text_field :name,
-                        class: input_classes(@city.errors[:name])
+                        class: input_classes(@county.errors[:name])
       end
 
       div do
@@ -20,7 +20,13 @@ class Views::Cities::CityForm < Views::ApplicationView
                                :id, 
                                :name,
                                { prompt: "Select a state" },
-                               { class: input_classes(@city.errors[:state_id]) }
+                               { class: input_classes(@county.errors[:state_id]) }
+      end
+
+      div do
+        form.label :code
+        form.text_field :code,
+                        class: input_classes(@county.errors[:code])
       end
 
       div do
@@ -33,10 +39,10 @@ class Views::Cities::CityForm < Views::ApplicationView
 
   def render_errors
     div(id: "error_explanation") do
-      h2 { "#{pluralize(@city.errors.count, 'error')} prohibited this city from being saved:" }
+      h2 { "#{pluralize(@county.errors.count, 'error')} prohibited this county from being saved:" }
       
       ul(class: "list-disc ml-6") do
-        @city.errors.each do |error|
+        @county.errors.each do |error|
           li { error.full_message }
         end
       end

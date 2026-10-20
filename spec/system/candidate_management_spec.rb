@@ -6,11 +6,13 @@ RSpec.describe "Candidate Management", type: :system do
   end
 
   let!(:country) { create(:country, name: "United States") }
+  let!(:california) { create(:state, :with_jurisdiction, name: "California", country: country) }
   let!(:year) { create(:year, year: 2024) }
-  let!(:office) { create(:office, name: "Governor of California") }
-  let!(:election) { create(:election, :upcoming, office: office, year: year) }
+  let!(:governor) { create(:position, title: "Governor", description: "Chief executive of the state") }
+  let!(:office) { create(:office, position: governor, jurisdiction: california.jurisdiction) }
+  let!(:race) { create_race_for(office, :upcoming, year: year) }
   
-  let!(:person) { create(:person, first_name: "Sarah", last_name: "Martinez", bio: "Experienced public servant") }
+  let!(:person) { create(:person, first_name: "Sarah", middle_name: nil, last_name: "Martinez", bio: "Experienced public servant") }
 
   describe "person registration and candidacy announcement" do
     it "shows person profiles in the system" do
@@ -28,7 +30,7 @@ RSpec.describe "Candidate Management", type: :system do
     end
 
     context "when person becomes a candidate" do
-      let!(:candidacy) { create(:candidacy, :announced, person: person, election: election, announcement_date: 1.month.ago) }
+      let!(:candidacy) { create(:candidacy, status: "announced", person: person, race: race, announcement_date: 1.month.ago) }
 
       it "shows candidacy in the candidacies listing" do
         visit candidacies_path
@@ -42,7 +44,7 @@ RSpec.describe "Candidate Management", type: :system do
         visit candidacy_path(candidacy)
         
         expect(page).to have_content("Sarah Martinez")
-        expect(page).to have_content("Governor of California")
+        expect(page).to have_content("Governor - California")
         expect(page).to have_content("announced")
       end
 
@@ -63,21 +65,22 @@ RSpec.describe "Candidate Management", type: :system do
     end
   end
 
-  describe "multiple candidates in election" do
-    let!(:candidate1) { create(:person, first_name: "Alice", last_name: "Johnson") }
-    let!(:candidate2) { create(:person, first_name: "Bob", last_name: "Wilson") }
-    let!(:candidate3) { create(:person, first_name: "Carol", last_name: "Davis") }
+  describe "multiple candidates in a race" do
+    let!(:candidate1) { create(:person, first_name: "Alice", middle_name: nil, last_name: "Johnson") }
+    let!(:candidate2) { create(:person, first_name: "Bob", middle_name: nil, last_name: "Wilson") }
+    let!(:candidate3) { create(:person, first_name: "Carol", middle_name: nil, last_name: "Davis") }
     
-    let!(:candidacy1) { create(:candidacy, :active, person: candidate1, election: election) }
-    let!(:candidacy2) { create(:candidacy, :active, person: candidate2, election: election) }
-    let!(:candidacy3) { create(:candidacy, :withdrawn, person: candidate3, election: election) }
+    let!(:candidacy1) { create(:candidacy, :active, person: candidate1, race: race) }
+    let!(:candidacy2) { create(:candidacy, :active, person: candidate2, race: race) }
+    let!(:candidacy3) { create(:candidacy, :withdrawn, person: candidate3, race: race) }
 
-    it "shows all candidates for an election" do
-      visit election_path(election)
+    it "shows all candidates for a race" do
+      visit race_path(race)
       
-      expect(page).to have_content("Alice Johnson")
-      expect(page).to have_content("Bob Wilson")
-      expect(page).to have_content("Carol Davis")
+      # Candidates render inside a collapsed expandable section.
+      expect(page).to have_text(:all, "Alice Johnson")
+      expect(page).to have_text(:all, "Bob Wilson")
+      expect(page).to have_text(:all, "Carol Davis")
     end
 
     it "differentiates candidate statuses" do
@@ -89,18 +92,18 @@ RSpec.describe "Candidate Management", type: :system do
     end
 
     it "filters candidates by status" do
-      active_candidacies = election.candidacies.active
+      active_candidacies = race.candidacies.active
       expect(active_candidacies).to include(candidacy1, candidacy2)
       expect(active_candidacies).not_to include(candidacy3)
       
-      withdrawn_candidacies = election.candidacies.withdrawn
+      withdrawn_candidacies = race.candidacies.withdrawn
       expect(withdrawn_candidacies).to include(candidacy3)
       expect(withdrawn_candidacies).not_to include(candidacy1, candidacy2)
     end
   end
 
   describe "candidate performance tracking" do
-    let!(:candidacy) { create(:candidacy, :active, person: person, election: election) }
+    let!(:candidacy) { create(:candidacy, :active, person: person, race: race) }
     let!(:voter1) { create(:voter) }
     let!(:voter2) { create(:voter) }
     let!(:voter3) { create(:voter) }
@@ -137,15 +140,12 @@ RSpec.describe "Candidate Management", type: :system do
   end
 
   describe "office and position context" do
-    let!(:position) { create(:position, title: "Governor", description: "Chief executive of the state") }
-    let!(:office_with_position) { create(:office, position: position, name: "Governor of California") }
-    let!(:election_with_context) { create(:election, office: office_with_position, year: year) }
-    let!(:candidacy) { create(:candidacy, person: person, election: election_with_context) }
+    let!(:candidacy) { create(:candidacy, person: person, race: race) }
 
     it "shows office and position information" do
       visit offices_path
       
-      expect(page).to have_content("Governor of California")
+      expect(page).to have_content("California")
       expect(page).to have_content("Governor")
     end
 

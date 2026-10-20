@@ -15,10 +15,10 @@ RSpec.describe "States Index", type: :request do
       let!(:usa) { create(:country, name: "United States", code: "US") }
       let!(:canada) { create(:country, name: "Canada", code: "CA") }
       
-      let!(:california) { create(:state, name: "California", state_code: "CA", country: usa) }
-      let!(:texas) { create(:state, name: "Texas", state_code: "TX", country: usa) }
-      let!(:ontario) { create(:state, name: "Ontario", state_code: "ON", country: canada) }
-      let!(:quebec) { create(:state, name: "Quebec", state_code: "QC", country: canada) }
+      let!(:california) { create(:state, name: "California", code: "CA", country: usa) }
+      let!(:texas) { create(:state, name: "Texas", code: "TX", country: usa) }
+      let!(:ontario) { create(:state, name: "Ontario", code: "ON", country: canada) }
+      let!(:quebec) { create(:state, name: "Quebec", code: "QC", country: canada) }
 
       it "renders successfully with state data" do
         get states_path
@@ -56,13 +56,13 @@ RSpec.describe "States Index", type: :request do
       end
     end
 
-    context "with states that have cities" do
+    context "with states that have municipalities" do
       let!(:country) { create(:country, name: "United States") }
       let!(:state) { create(:state, name: "California", country: country) }
-      let!(:city1) { create(:city, name: "Los Angeles", state: state) }
-      let!(:city2) { create(:city, name: "San Francisco", state: state) }
+      let!(:municipality1) { create(:municipality, name: "Los Angeles", state: state) }
+      let!(:municipality2) { create(:municipality, name: "San Francisco", state: state) }
 
-      it "displays city count information" do
+      it "displays municipality count information" do
         get states_path
         
         expect(response).to have_http_status(200)

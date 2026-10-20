@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Views::Mountains::EditView < Views::ApplicationView
-  def initialize(election:, voter:, baseline:, mountain_data:)
-    @election = election
+  def initialize(race:, voter:, baseline:, mountain_data:)
+    @race = race
     @voter = voter
     @baseline = baseline
     @mountain_data = mountain_data
@@ -18,7 +18,7 @@ class Views::Mountains::EditView < Views::ApplicationView
       end
       
       form_with(
-        url: mountain_path(@election, voter_id: @voter.id),
+        url: mountain_path(@race, voter_id: @voter.id),
         method: :patch,
         class: "mountain-form",
         data: {
@@ -33,7 +33,7 @@ class Views::Mountains::EditView < Views::ApplicationView
           render_empty_state
         else
           render MountainChart.new(
-            election: @election,
+            race: @race,
             voter: @voter,
             baseline: @baseline,
             mountain_data: @mountain_data,
@@ -59,12 +59,12 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   def render_header
     div(class: "mountain-header") do
-      h1(class: "election-title") { @election.name }
+      h1(class: "election-title") { @race.name }
 
       div(class: "election-context") do
         span { "Election:" }
         whitespace
-        link_to @election.name, @election, class: "link"
+        link_to @race.election.name, @race.election, class: "link"
       end
       
       div(class: "voter-info") do
@@ -81,17 +81,17 @@ class Views::Mountains::EditView < Views::ApplicationView
   def render_save_controls
     div(class: "save-controls") do
       button(class: "btn-primary", type: "submit") { "Save Changes" }
-      link_to("Back to Elections", mountains_path, class: "btn-secondary")
+      link_to("Back to Races", mountains_path, class: "btn-secondary")
     end
   end
 
   def render_empty_state
     div(class: "mountain-empty") do
-      p { "No candidates yet for this election." }
+      p { "No candidates yet for this race." }
       div(class: "mountain-empty-actions") do
-        link_to("Simulate Data", simulate_mountain_path(@election),
+        link_to("Simulate Data", simulate_mountain_path(@race),
                 data: { turbo_method: :post }, class: "btn-primary")
-        link_to("Back to Election", @election, class: "btn-tertiary")
+        link_to("Back to Race", @race, class: "btn-tertiary")
       end
     end
   end
