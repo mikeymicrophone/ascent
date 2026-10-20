@@ -10,9 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "postgis"
 
   create_table "approaches", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -35,14 +37,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
   create_table "candidacies", force: :cascade do |t|
     t.date "announcement_date"
     t.datetime "created_at", null: false
-    t.bigint "election_id", null: false
     t.string "party_affiliation"
     t.bigint "person_id", null: false
     t.text "platform_summary"
+    t.bigint "race_id", null: false
     t.string "status"
     t.datetime "updated_at", null: false
-    t.index ["election_id"], name: "index_candidacies_on_election_id"
     t.index ["person_id"], name: "index_candidacies_on_person_id"
+    t.index ["race_id"], name: "index_candidacies_on_race_id"
   end
 
   create_table "chambers", force: :cascade do |t|
@@ -55,12 +57,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
     t.index ["governing_body_id"], name: "index_chambers_on_governing_body_id"
   end
 
-  create_table "cities", force: :cascade do |t|
+  create_table "counties", force: :cascade do |t|
+    t.string "code"
     t.datetime "created_at", null: false
-    t.string "name"
+    t.string "name", null: false
     t.bigint "state_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["state_id"], name: "index_cities_on_state_id"
+    t.index ["state_id"], name: "index_counties_on_state_id"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -71,18 +74,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "districts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "kind", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "elections", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
-    t.date "election_date"
+    t.date "early_voting_ends_on"
+    t.date "early_voting_starts_on"
+    t.date "election_date", null: false
     t.boolean "is_historical"
     t.boolean "is_mock"
-    t.bigint "office_id", null: false
+    t.bigint "jurisdiction_id", null: false
+    t.string "kind"
+    t.string "name", null: false
     t.string "status"
     t.datetime "updated_at", null: false
     t.bigint "year_id", null: false
-    t.index ["office_id"], name: "index_elections_on_office_id"
+    t.index ["jurisdiction_id"], name: "index_elections_on_jurisdiction_id"
     t.index ["year_id"], name: "index_elections_on_year_id"
+    t.check_constraint "early_voting_starts_on <= early_voting_ends_on", name: "elections_early_voting_dates_ordered"
+    t.check_constraint "early_voting_starts_on <= election_date AND early_voting_ends_on <= election_date", name: "elections_early_voting_before_election_date"
   end
 
   create_table "governance_types", force: :cascade do |t|
@@ -100,12 +116,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
     t.date "established_date"
     t.bigint "governance_type_id", null: false
     t.boolean "is_active"
-    t.integer "jurisdiction_id"
-    t.string "jurisdiction_type"
+    t.bigint "jurisdiction_id", null: false
     t.string "meeting_schedule"
     t.string "name"
     t.datetime "updated_at", null: false
     t.index ["governance_type_id"], name: "index_governing_bodies_on_governance_type_id"
+    t.index ["jurisdiction_id"], name: "index_governing_bodies_on_jurisdiction_id"
   end
 
   create_table "issues", force: :cascade do |t|
@@ -117,19 +133,53 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
     t.index ["topic_id"], name: "index_issues_on_topic_id"
   end
 
+  create_table "jurisdiction_boundaries", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.geometry "geometry", limit: {srid: 4326, type: "multi_polygon"}, null: false
+    t.bigint "jurisdiction_id", null: false
+    t.datetime "updated_at", null: false
+    t.date "valid_from", null: false
+    t.date "valid_until"
+    t.index ["geometry"], name: "index_jurisdiction_boundaries_on_geometry", using: :gist
+    t.index ["jurisdiction_id"], name: "index_jurisdiction_boundaries_on_jurisdiction_id"
+    t.check_constraint "st_isvalid(geometry) AND NOT st_isempty(geometry)", name: "jurisdiction_boundaries_valid_geometry"
+    t.check_constraint "valid_until IS NULL OR valid_until > valid_from", name: "jurisdiction_boundaries_valid_dates"
+    t.exclusion_constraint "jurisdiction_id WITH =, daterange(valid_from, valid_until, '[)'::text) WITH &&", using: :gist, name: "jurisdiction_boundaries_cannot_overlap_in_time"
+  end
+
+  create_table "jurisdictions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "jurisdictionable_id", null: false
+    t.string "jurisdictionable_type", null: false
+    t.bigint "parent_id"
+    t.datetime "updated_at", null: false
+    t.index ["jurisdictionable_type", "jurisdictionable_id"], name: "index_jurisdictions_on_jurisdictionable", unique: true
+    t.index ["parent_id"], name: "index_jurisdictions_on_parent_id"
+    t.check_constraint "parent_id <> id", name: "jurisdictions_cannot_parent_themselves"
+  end
+
+  create_table "municipalities", force: :cascade do |t|
+    t.bigint "county_id"
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.bigint "state_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["county_id"], name: "index_municipalities_on_county_id"
+    t.index ["state_id"], name: "index_municipalities_on_state_id"
+  end
+
   create_table "offices", force: :cascade do |t|
     t.bigint "chamber_id"
     t.datetime "created_at", null: false
     t.bigint "governing_body_id"
     t.boolean "is_active"
     t.bigint "jurisdiction_id", null: false
-    t.string "jurisdiction_type", null: false
     t.text "notes"
     t.bigint "position_id", null: false
     t.datetime "updated_at", null: false
     t.index ["chamber_id"], name: "index_offices_on_chamber_id"
     t.index ["governing_body_id"], name: "index_offices_on_governing_body_id"
-    t.index ["jurisdiction_type", "jurisdiction_id"], name: "index_offices_on_jurisdiction"
+    t.index ["jurisdiction_id"], name: "index_offices_on_jurisdiction_id"
     t.index ["position_id"], name: "index_offices_on_position_id"
   end
 
@@ -184,6 +234,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "races", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.bigint "election_id", null: false
+    t.bigint "office_id", null: false
+    t.string "status", default: "upcoming", null: false
+    t.datetime "updated_at", null: false
+    t.index ["election_id"], name: "index_races_on_election_id"
+    t.index ["office_id"], name: "index_races_on_office_id"
+  end
+
   create_table "rating_archives", force: :cascade do |t|
     t.datetime "archived_at"
     t.bigint "candidacy_id", null: false
@@ -209,13 +270,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
   create_table "residences", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "jurisdiction_id", null: false
-    t.string "jurisdiction_type", null: false
     t.text "notes"
     t.datetime "registered_at"
     t.string "status"
     t.datetime "updated_at", null: false
     t.bigint "voter_id", null: false
-    t.index ["jurisdiction_type", "jurisdiction_id"], name: "index_residences_on_jurisdiction"
+    t.index ["jurisdiction_id"], name: "index_residences_on_jurisdiction_id"
     t.index ["voter_id"], name: "index_residences_on_voter_id"
   end
 
@@ -299,30 +359,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "voter_election_baseline_archives", force: :cascade do |t|
+  create_table "voter_race_baseline_archives", force: :cascade do |t|
     t.datetime "archived_at", null: false
     t.integer "baseline", null: false
     t.datetime "created_at", null: false
-    t.bigint "election_id", null: false
     t.integer "new_baseline"
     t.integer "previous_baseline"
+    t.bigint "race_id", null: false
     t.string "reason", null: false
     t.datetime "updated_at", null: false
     t.bigint "voter_id", null: false
-    t.index ["archived_at"], name: "index_voter_election_baseline_archives_on_archived_at"
-    t.index ["election_id"], name: "index_voter_election_baseline_archives_on_election_id"
-    t.index ["voter_id", "election_id"], name: "index_baseline_archives_on_voter_and_election"
-    t.index ["voter_id"], name: "index_voter_election_baseline_archives_on_voter_id"
+    t.index ["archived_at"], name: "index_voter_race_baseline_archives_on_archived_at"
+    t.index ["race_id"], name: "index_voter_race_baseline_archives_on_race_id"
+    t.index ["voter_id", "race_id"], name: "index_baseline_archives_on_voter_and_race"
+    t.index ["voter_id"], name: "index_voter_race_baseline_archives_on_voter_id"
   end
 
-  create_table "voter_election_baselines", force: :cascade do |t|
+  create_table "voter_race_baselines", force: :cascade do |t|
     t.integer "baseline"
     t.datetime "created_at", null: false
-    t.bigint "election_id", null: false
+    t.bigint "race_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "voter_id", null: false
-    t.index ["election_id"], name: "index_voter_election_baselines_on_election_id"
-    t.index ["voter_id"], name: "index_voter_election_baselines_on_voter_id"
+    t.index ["race_id"], name: "index_voter_race_baselines_on_race_id"
+    t.index ["voter_id", "race_id"], name: "index_voter_race_baselines_on_voter_and_race", unique: true
+    t.index ["voter_id"], name: "index_voter_race_baselines_on_voter_id"
   end
 
   create_table "voters", force: :cascade do |t|
@@ -361,33 +422,42 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_02_010444) do
   end
 
   add_foreign_key "approaches", "issues"
-  add_foreign_key "candidacies", "elections"
   add_foreign_key "candidacies", "people"
+  add_foreign_key "candidacies", "races"
   add_foreign_key "chambers", "governing_bodies"
-  add_foreign_key "cities", "states"
-  add_foreign_key "elections", "offices"
+  add_foreign_key "counties", "states"
+  add_foreign_key "elections", "jurisdictions"
   add_foreign_key "elections", "years"
   add_foreign_key "governing_bodies", "governance_types"
+  add_foreign_key "governing_bodies", "jurisdictions"
   add_foreign_key "issues", "topics"
+  add_foreign_key "jurisdiction_boundaries", "jurisdictions"
+  add_foreign_key "jurisdictions", "jurisdictions", column: "parent_id"
+  add_foreign_key "municipalities", "counties"
+  add_foreign_key "municipalities", "states"
   add_foreign_key "offices", "chambers"
   add_foreign_key "offices", "governing_bodies"
+  add_foreign_key "offices", "jurisdictions"
   add_foreign_key "offices", "positions"
   add_foreign_key "official_codes", "policies"
   add_foreign_key "policies", "approaches"
   add_foreign_key "policies", "area_of_concerns"
   add_foreign_key "policies", "governing_bodies"
+  add_foreign_key "races", "elections"
+  add_foreign_key "races", "offices"
   add_foreign_key "rating_archives", "candidacies"
   add_foreign_key "rating_archives", "voters"
   add_foreign_key "ratings", "candidacies"
   add_foreign_key "ratings", "voters"
+  add_foreign_key "residences", "jurisdictions"
   add_foreign_key "residences", "voters"
   add_foreign_key "rule_conditions", "rule_statements", column: "statement_id"
   add_foreign_key "rule_statements", "rule_topics", column: "topic_id"
   add_foreign_key "stances", "approaches"
   add_foreign_key "stances", "candidacies"
   add_foreign_key "states", "countries"
-  add_foreign_key "voter_election_baseline_archives", "elections"
-  add_foreign_key "voter_election_baseline_archives", "voters"
-  add_foreign_key "voter_election_baselines", "elections"
-  add_foreign_key "voter_election_baselines", "voters"
+  add_foreign_key "voter_race_baseline_archives", "races"
+  add_foreign_key "voter_race_baseline_archives", "voters"
+  add_foreign_key "voter_race_baselines", "races"
+  add_foreign_key "voter_race_baselines", "voters"
 end

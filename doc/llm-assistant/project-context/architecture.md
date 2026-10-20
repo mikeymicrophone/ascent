@@ -1,5 +1,7 @@
 # Architecture Overview
 
+The sections below describe the existing application. The pending [jurisdiction schema](../../jurisdiction_schema.md) replaces City with Municipality and introduces County, District, and shared spatial Jurisdiction records. The subsequent [Election and Race split](../../election_race_schema.md) separates shared voting events from office contests. Application models and seeds have not yet been updated for these migrations.
+
 ## Core Election Models Hierarchy
 
 The Ascent platform is built around a hierarchical model structure that represents elections across different types of jurisdictions. The foundation consists of jurisdictions, positions, offices, elections, and candidacies.

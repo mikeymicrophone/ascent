@@ -21,6 +21,10 @@ Since we give voters a way to opine about specific policy proposals, it is a nud
 
 A pretty interesting side benefit would be if we established a decent way for citizens to understand what is legal for them, as well as what services they can access.
 
+## Database requirements
+
+The pending [jurisdiction schema](doc/jurisdiction_schema.md) uses PostGIS within PostgreSQL. Install the PostGIS server extension and GEOS before applying it. The subsequent [Election and Race split](doc/election_race_schema.md) separates shared voting events from office contests. These schema migrations do not convert existing data or update the application models and seeds; complete that follow-up work before applying them to the working application.
+
 ## Seed Data
 
 Ascent has two explicit seed layers:
