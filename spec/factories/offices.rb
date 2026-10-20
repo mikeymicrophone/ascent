@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :office do
     association :position
-    association :jurisdiction, factory: :city
+    association :jurisdiction
     governing_body { nil }
     chamber { nil }
     is_active { true }
@@ -18,17 +18,17 @@ FactoryBot.define do
     end
 
     trait :city_level do
-      association :jurisdiction, factory: :city
+      association :jurisdiction
       notes { "Municipal office serving city residents" }
     end
 
     trait :state_level do
-      association :jurisdiction, factory: :state
+      association :jurisdiction, factory: [:jurisdiction, :state]
       notes { "State office serving all state residents" }
     end
 
     trait :country_level do
-      association :jurisdiction, factory: :country
+      association :jurisdiction, factory: [:jurisdiction, :country]
       notes { "National office serving the entire country" }
     end
 

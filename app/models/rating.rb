@@ -4,22 +4,22 @@ class Rating < ApplicationRecord
   
   validates :rating, presence: true, inclusion: { in: 0..500 }
   validates :voter_id, uniqueness: { scope: :candidacy_id, message: "can only rate each candidacy once" }
-  validate :voter_eligible_for_election
   
   before_update :archive_previous_rating
   
   scope :above_baseline, ->(baseline) { where("rating > ?", baseline) }
   scope :below_baseline, ->(baseline) { where("rating <= ?", baseline) }
-  scope :for_election, ->(election) { joins(:candidacy).where(candidacies: { election: election }) }
+  scope :for_race, ->(race) { joins(:candidacy).where(candidacies: { race: race }) }
+  scope :for_election, ->(election) { joins(candidacy: :race).where(races: { election: election }) }
   scope :for_voter_in_election, ->(voter, election) { 
-    joins(:candidacy).where(voter: voter, candidacies: { election: election })
+    joins(candidacy: :race).where(voter: voter, races: { election: election })
   }
   scope :with_election_context, -> { 
-    joins(candidacy: [election: [office: :position]])
+    joins(candidacy: { race: [:election, { office: :position }] })
   }
   
   def approved?(baseline = nil)
-    baseline ||= voter_baseline_for_election
+    baseline ||= voter_baseline_for_race
     return false unless baseline
     rating > baseline
   end
@@ -32,17 +32,11 @@ class Rating < ApplicationRecord
     (rating / 500.0 * 100).round(1)
   end
   
-  def voter_baseline_for_election
-    voter.voter_election_baselines.find_by(election: candidacy.election)&.baseline
+  def voter_baseline_for_race
+    voter.voter_race_baselines.find_by(race: candidacy.race)&.baseline
   end
   
   private
-  
-  def voter_eligible_for_election
-    unless voter.eligible_for_election?(candidacy.election)
-      errors.add(:voter, "is not eligible to vote in this election")
-    end
-  end
   
   def archive_previous_rating
     if rating_changed?

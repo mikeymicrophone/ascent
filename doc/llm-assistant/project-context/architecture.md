@@ -1,6 +1,6 @@
 # Architecture Overview
 
-The sections below describe the existing application. The pending [jurisdiction schema](../../jurisdiction_schema.md) replaces City with Municipality and introduces County, District, and shared spatial Jurisdiction records. The subsequent [Election and Race split](../../election_race_schema.md) separates shared voting events from office contests. Application models and seeds have not yet been updated for these migrations.
+The sections below describe the application before the jurisdiction and Election/Race changes. The current [jurisdiction models](../../jurisdiction_schema.md) replace City with Municipality and introduce County, District, and shared spatial Jurisdiction records. The [Election and Race split](../../election_race_schema.md) separates shared voting events from office contests. Models and factories are updated; migrations remain unapplied to development while controller, route, view, and seed updates are pending.
 
 ## Core Election Models Hierarchy
 

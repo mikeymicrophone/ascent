@@ -1,6 +1,8 @@
 class Candidacy < ApplicationRecord
   belongs_to :person
-  belongs_to :election
+  belongs_to :race
+  has_one :election, through: :race
+  has_one :office, through: :race
   has_many :ratings, dependent: :destroy
   has_many :rating_archives, dependent: :destroy
   has_many :stances, dependent: :destroy
@@ -15,10 +17,10 @@ class Candidacy < ApplicationRecord
   scope :disqualified, -> { where(status: 'disqualified') }
   
   scope :with_rating_details, -> { includes(:person, :ratings) }
-  scope :with_election_context, -> { includes(election: [office: :position]) }
+  scope :with_election_context, -> { includes(race: [:election, { office: :position }]) }
   
   def name
-    "#{person.full_name} for #{election.office.position.title}"
+    "#{person.full_name} for #{office.position.title}"
   end
   
   def average_rating

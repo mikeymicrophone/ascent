@@ -1,6 +1,8 @@
 FactoryBot.define do
   factory :election do
-    association :office
+    association :jurisdiction
+    name { "#{jurisdiction.name} General Election #{year.year}" }
+    kind { "general" }
     association :year
     election_date { 1.year.from_now }
     status { "upcoming" }
@@ -64,7 +66,7 @@ FactoryBot.define do
 
     trait :distant_future do
       election_date { 2.years.from_now }
-      status { "planned" }
+      status { "upcoming" }
     end
 
     # Named factories for common scenarios

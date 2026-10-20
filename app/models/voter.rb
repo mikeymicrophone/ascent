@@ -7,16 +7,17 @@ class Voter < ApplicationRecord
   has_many :residences, dependent: :destroy
   has_many :jurisdictions, through: :residences
   has_many :ratings, dependent: :destroy
-  has_many :voter_election_baselines, dependent: :destroy
+  has_many :voter_race_baselines, dependent: :destroy
+  has_many :voter_race_baseline_archives, dependent: :delete_all
   
   validates :first_name, presence: true
   validates :last_name, presence: true
   # validates :is_verified, inclusion: { in: [true, false] }
   
   scope :with_voting_activity, -> {
-    includes(:ratings, :voter_election_baselines, 
-             ratings: [candidacy: [election: [office: :position]]],
-             voter_election_baselines: [election: [office: :position]])
+    includes(:ratings, :voter_race_baselines,
+             ratings: { candidacy: { race: [:election, { office: :position }] } },
+             voter_race_baselines: { race: [:election, { office: :position }] })
   }
   scope :with_residence_details, -> { includes(residences: :jurisdiction) }
 
@@ -40,29 +41,4 @@ class Voter < ApplicationRecord
     residences.order(registered_at: :desc)
   end
   
-  def eligible_for_election?(election)
-    return true
-    return false unless current_residence
-    
-    # Check if voter's current jurisdiction is eligible for this election
-    office_jurisdiction = election.office.jurisdiction
-    voter_jurisdiction = current_residence.jurisdiction
-    
-    # Direct match
-    return true if voter_jurisdiction == office_jurisdiction
-    
-    # Hierarchical match (e.g., voter in city can vote for state/country elections)
-    case office_jurisdiction
-    when Country
-      # Country elections: voter must be in that country (via state/city)
-      voter_jurisdiction.is_a?(State) && voter_jurisdiction.country == office_jurisdiction ||
-      voter_jurisdiction.is_a?(City) && voter_jurisdiction.state.country == office_jurisdiction
-    when State
-      # State elections: voter must be in that state (directly or via city)
-      voter_jurisdiction == office_jurisdiction ||
-      (voter_jurisdiction.is_a?(City) && voter_jurisdiction.state == office_jurisdiction)
-    else
-      false
-    end
-  end
 end

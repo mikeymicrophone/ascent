@@ -1,6 +1,6 @@
 class Residence < ApplicationRecord
   belongs_to :voter
-  belongs_to :jurisdiction, polymorphic: true
+  belongs_to :jurisdiction
   
   validates :status, presence: true, inclusion: { in: %w[active inactive moved suspended] }
   validates :registered_at, presence: true

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe VoterElectionBaselineArchive, type: :model do
+RSpec.describe VoterRaceBaselineArchive, type: :model do
   describe 'validations' do
-    subject { build(:voter_election_baseline_archive) }
-    
+    subject { build(:voter_race_baseline_archive) }
+
     it { should validate_presence_of(:baseline) }
     it { should validate_inclusion_of(:baseline).in_range(0..500) }
     it { should validate_presence_of(:archived_at) }
@@ -14,22 +14,22 @@ RSpec.describe VoterElectionBaselineArchive, type: :model do
 
   describe 'associations' do
     it { should belong_to(:voter) }
-    it { should belong_to(:election) }
+    it { should belong_to(:race) }
   end
 
   describe 'scopes' do
-    let!(:recent_archive) { create(:voter_election_baseline_archive, archived_at: 1.hour.ago) }
-    let!(:older_archive) { create(:voter_election_baseline_archive, archived_at: 1.day.ago) }
+    let!(:recent_archive) { create(:voter_race_baseline_archive, archived_at: 1.hour.ago) }
+    let!(:older_archive) { create(:voter_race_baseline_archive, archived_at: 1.day.ago) }
 
     describe '.recent' do
       it 'orders archives by archived_at descending' do
-        expect(VoterElectionBaselineArchive.recent.first).to eq(recent_archive)
+        expect(VoterRaceBaselineArchive.recent.first).to eq(recent_archive)
       end
     end
   end
 
   describe 'utility methods' do
-    let(:archive) { build(:voter_election_baseline_archive, baseline: 300, previous_baseline: 200, new_baseline: 400) }
+    let(:archive) { build(:voter_race_baseline_archive, baseline: 300, previous_baseline: 200, new_baseline: 400) }
 
     describe '#baseline_percentage' do
       it 'calculates baseline as percentage of 500' do

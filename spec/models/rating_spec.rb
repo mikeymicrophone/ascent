@@ -21,36 +21,6 @@ RSpec.describe Rating, type: :model do
     end
   end
 
-  describe 'custom validations' do
-    describe '#voter_eligible_for_election' do
-      let(:voter) { create(:voter) }
-      let(:candidacy) { create(:candidacy) }
-
-      context 'when voter is eligible for election' do
-        before do
-          allow(voter).to receive(:eligible_for_election?).with(candidacy.election).and_return(true)
-        end
-
-        it 'is valid' do
-          rating = build(:rating, voter: voter, candidacy: candidacy)
-          expect(rating).to be_valid
-        end
-      end
-
-      context 'when voter is not eligible for election' do
-        before do
-          allow(voter).to receive(:eligible_for_election?).with(candidacy.election).and_return(false)
-        end
-
-        it 'is invalid' do
-          rating = build(:rating, voter: voter, candidacy: candidacy)
-          expect(rating).not_to be_valid
-          expect(rating.errors[:voter]).to include("is not eligible to vote in this election")
-        end
-      end
-    end
-  end
-
   describe 'scopes' do
     let!(:high_rating) { create(:rating, rating: 400) }
     let!(:medium_rating) { create(:rating, rating: 250) }
@@ -79,8 +49,8 @@ RSpec.describe Rating, type: :model do
     describe '.for_election' do
       let(:election1) { create(:election) }
       let(:election2) { create(:election) }
-      let(:candidacy1) { create(:candidacy, election: election1) }
-      let(:candidacy2) { create(:candidacy, election: election2) }
+      let(:candidacy1) { create(:candidacy, race: create(:race, election: election1)) }
+      let(:candidacy2) { create(:candidacy, race: create(:race, election: election2)) }
       let!(:rating1) { create(:rating, candidacy: candidacy1) }
       let!(:rating2) { create(:rating, candidacy: candidacy2) }
 
@@ -93,8 +63,8 @@ RSpec.describe Rating, type: :model do
       let(:voter1) { create(:voter) }
       let(:voter2) { create(:voter) }
       let(:election) { create(:election) }
-      let(:candidacy1) { create(:candidacy, election: election) }
-      let(:candidacy2) { create(:candidacy, election: election) }
+      let(:candidacy1) { create(:candidacy, race: create(:race, election: election)) }
+      let(:candidacy2) { create(:candidacy, race: create(:race, election: election)) }
       let!(:rating1) { create(:rating, voter: voter1, candidacy: candidacy1) }
       let!(:rating2) { create(:rating, voter: voter1, candidacy: candidacy2) }
       let!(:rating3) { create(:rating, voter: voter2, candidacy: candidacy1) }
@@ -147,7 +117,7 @@ RSpec.describe Rating, type: :model do
 
   describe 'instance methods' do
     let(:voter) { create(:voter, first_name: "John", last_name: "Doe") }
-    let(:person) { create(:person, first_name: "Jane", last_name: "Smith") }
+    let(:person) { create(:person, first_name: "Jane", middle_name: nil, last_name: "Smith") }
     let(:candidacy) { create(:candidacy, person: person) }
     let(:rating) { create(:rating, voter: voter, candidacy: candidacy, rating: 350) }
 
@@ -188,8 +158,8 @@ RSpec.describe Rating, type: :model do
     end
 
     describe '#approved?' do
-      let(:election) { candidacy.election }
-      let!(:baseline) { create(:voter_election_baseline, voter: voter, election: election, baseline: 300) }
+      let(:race) { candidacy.race }
+      let!(:baseline) { create(:voter_race_baseline, voter: voter, race: race, baseline: 300) }
 
       context 'with rating above baseline' do
         it 'returns true' do
@@ -229,30 +199,30 @@ RSpec.describe Rating, type: :model do
       end
     end
 
-    describe '#voter_baseline_for_election' do
-      let(:election) { candidacy.election }
-      let!(:baseline) { create(:voter_election_baseline, voter: voter, election: election, baseline: 275) }
+    describe '#voter_baseline_for_race' do
+      let(:race) { candidacy.race }
+      let!(:baseline) { create(:voter_race_baseline, voter: voter, race: race, baseline: 275) }
 
       it 'returns the voter baseline for the candidacy election' do
-        expect(rating.voter_baseline_for_election).to eq(275)
+        expect(rating.voter_baseline_for_race).to eq(275)
       end
 
       context 'with no baseline for election' do
         before { baseline.destroy }
         
         it 'returns nil' do
-          expect(rating.voter_baseline_for_election).to be_nil
+          expect(rating.voter_baseline_for_race).to be_nil
         end
       end
 
       context 'with baseline for different election' do
-        let(:other_election) { create(:election) }
+        let(:other_race) { create(:race) }
         before do
-          baseline.update(election: other_election)
+          baseline.update(race: other_race)
         end
         
         it 'returns nil' do
-          expect(rating.voter_baseline_for_election).to be_nil
+          expect(rating.voter_baseline_for_race).to be_nil
         end
       end
     end

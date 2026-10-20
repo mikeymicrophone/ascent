@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Candidacy, type: :model do
   describe 'associations' do
     it { should belong_to(:person) }
-    it { should belong_to(:election) }
+    it { should belong_to(:race) }
     it { should have_many(:ratings).dependent(:destroy) }
     it { should have_many(:rating_archives).dependent(:destroy) }
     it { should have_many(:stances).dependent(:destroy) }
@@ -54,17 +54,17 @@ RSpec.describe Candidacy, type: :model do
 
     describe '.with_election_context' do
       it 'includes election, office, and position details' do
-        expect(Candidacy.with_election_context.includes_values).to include(:election)
+        expect(Candidacy.with_election_context.includes_values).to include(race: [:election, { office: :position }])
       end
     end
   end
 
   describe 'instance methods' do
-    let(:person) { create(:person, first_name: "John", last_name: "Smith") }
+    let(:person) { create(:person, first_name: "John", middle_name: nil, last_name: "Smith") }
     let(:position) { create(:position, title: "Mayor") }
     let(:office) { create(:office, position: position) }
-    let(:election) { create(:election, office: office) }
-    let(:candidacy) { create(:candidacy, person: person, election: election) }
+    let(:race) { create(:race, office: office, election: create(:election, jurisdiction: office.jurisdiction)) }
+    let(:candidacy) { create(:candidacy, person: person, race: race) }
 
     describe '#name' do
       it 'combines person name with office position title' do

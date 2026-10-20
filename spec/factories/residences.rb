@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :residence do
     association :voter
-    association :jurisdiction, factory: :city
+    association :jurisdiction
     registered_at { 3.years.ago }
     status { "active" }
     notes { "Standard residence registration for voting purposes" }
@@ -31,12 +31,12 @@ FactoryBot.define do
     end
 
     trait :in_state do
-      association :jurisdiction, factory: :state
+      association :jurisdiction, factory: [:jurisdiction, :state]
       notes { "State-level residence registration" }
     end
 
     trait :in_country do
-      association :jurisdiction, factory: :country
+      association :jurisdiction, factory: [:jurisdiction, :country]
       notes { "Country-level residence registration for national elections" }
     end
 

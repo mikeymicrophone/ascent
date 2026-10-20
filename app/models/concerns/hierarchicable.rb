@@ -14,16 +14,16 @@ module Hierarchicable
       children_path: ->(item, context) { [item, :states] }
     },
     'State' => {
-      children_relation: :cities,
+      children_relation: :municipalities,
       display_name: 'State',
-      child_type_name: 'City',
-      child_route_name: :cities,
-      children_scope: ->(item) { item.cities.with_office_data.order(:name) },
-      children_path: ->(item, context) { context.respond_to?(:cities_path) ? context.cities_path : '/cities' }
+      child_type_name: 'Municipality',
+      child_route_name: :municipalities,
+      children_scope: ->(item) { item.municipalities.with_office_data.order(:name) },
+      children_path: ->(item, context) { context.respond_to?(:municipalities_path) ? context.municipalities_path : '/municipalities' }
     },
-    'City' => {
+    'Municipality' => {
       children_relation: nil,
-      display_name: 'City',
+      display_name: 'Municipality',
       child_type_name: nil,
       child_route_name: nil,
       children_scope: ->(_item) { [] },
@@ -154,7 +154,9 @@ module Hierarchicable
       
       # Use string-based class matching to avoid Rails autoloading issues
       current = case current.class.name
-               when 'City'
+               when 'Municipality'
+                 current.county || current.state
+               when 'County'
                  current.state
                when 'State'
                  current.country

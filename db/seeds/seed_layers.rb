@@ -6,6 +6,7 @@ module SeedLayers
     position_seeder
     year_seeder
     gubernatorial_race_seeder
+    ballot_line_seeder
   ].freeze
 
   SIMULATED_SEEDER_FILES = %w[
@@ -43,6 +44,7 @@ module SeedLayers
     PositionSeeder.seed
     YearSeeder.seed
     GubernatorialRaceSeeder.seed
+    BallotLineSeeder.seed
     puts "✅ Reference data seeded"
   end
 

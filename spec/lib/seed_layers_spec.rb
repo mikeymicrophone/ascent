@@ -17,6 +17,7 @@ RSpec.describe SeedLayers do
       expect(PositionSeeder).to receive(:seed)
       expect(YearSeeder).to receive(:seed)
       expect(GubernatorialRaceSeeder).to receive(:seed)
+      expect(BallotLineSeeder).to receive(:seed)
       expect(VoterSeeder).not_to receive(:seed)
       expect(ElectionSeeder).not_to receive(:seed)
 

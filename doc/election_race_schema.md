@@ -1,6 +1,6 @@
 # Election and Race schema
 
-`SeparateRacesFromElections` follows the jurisdiction migrations. It prepares the schema without changing application models, routes, views, factories, or seeds. It does not create Race records from existing Elections or convert existing references. Apply these migrations to an empty database when the application and seed updates are ready. Existing dependent records require conversion or removal first.
+`SeparateRacesFromElections` follows the jurisdiction migrations. The models and factories now use the split described below. Controllers, routes, views, and seeds still need updates before applying these migrations to the working application. The migration does not create Race records from existing Elections or convert existing references. Existing dependent records require conversion or removal first.
 
 ## Ownership
 
@@ -21,11 +21,15 @@ The schema permits an Election with no Races while its contests are being assemb
 
 ## Candidacies and baselines
 
-`candidacies.race_id` replaces `candidacies.election_id`. Person, candidacy status, party affiliation, announcement date, and platform summary remain on Candidacy. Ratings, rating archives, and stances retain their Candidacy references. Their Race and Election context will come through Candidacy when the models are updated.
+`candidacies.race_id` replaces `candidacies.election_id`. Person, candidacy status, party affiliation, announcement date, and platform summary remain on Candidacy. Ratings, rating archives, and stances retain their Candidacy references. Candidacy exposes its Election and Office through Race. Person exposes distinct Races and Elections through candidacies.
 
 `voter_election_baselines` becomes `voter_race_baselines`, and `voter_election_baseline_archives` becomes `voter_race_baseline_archives`. Both receive required Race references in place of Election references. A unique index permits one current baseline per voter and Race. The same voter can set different baselines for different Races within one Election. Archive records can repeat for the same voter and Race.
 
-Approval aggregation, winner selection, and Office's current-office-holder lookup belong to Race in the subsequent model changes. This migration does not move those Ruby methods or change the existing rating-above-baseline rule.
+`Race` now owns approval aggregation, winner selection, and result summaries. Office's current-office-holder lookup uses its most recent completed Race. `Rating.approved?` reads the voter's `VoterRaceBaseline` for its Candidacy's Race. A rating must remain strictly above the baseline to count. `Rating.for_race(race)` filters one contest; `Rating.for_election(election)` includes ratings from every Race in the event.
+
+Baseline value changes and deletions create VoterRaceBaselineArchive records. Destroying a Race removes its candidacies, ratings, baselines, and baseline archives while leaving its Election and sibling Races in place. Removing a voter baseline alone preserves its archive history.
+
+Race aggregation currently includes every participant with a Race baseline, without residency filtering. `results_summary[:total_registered_voters]` counts baseline records, not verified voter registrations. Consumers must account for this until residency and eligibility classification is implemented.
 
 ## Calendar boundaries
 
@@ -33,11 +37,11 @@ The early-voting fields store jurisdiction-local dates, not daily opening hours.
 
 The migration does not add registration deadlines, party eligibility, a general rules document, or per-Race calendar overrides.
 
-## Remaining application decisions
+## Model boundaries and remaining work
 
-- Enforce that each Race's Office represents its Election's Jurisdiction when the models are updated. These foreign keys ensure that referenced records exist; they do not enforce that cross-record match.
-- Define the Race status vocabulary and its relationship to Election status. The schema stores the statuses independently and does not propagate changes between them.
+- Race validates that its Office represents its Election's Jurisdiction. Election and Office also reject jurisdiction changes that would invalidate attached Races. Foreign keys alone do not enforce this cross-record match for direct SQL writes.
+- Election and Race accept `upcoming`, `active`, `completed`, and `cancelled` statuses independently. Changing one does not propagate a status change to the other. More detailed certification or result states remain undecided.
 - Define multi-seat and tied-result behavior before changing the existing single-winner calculation. This migration adds no seat count or tie-breaking rule.
-- Implement residency and eligibility classification, including historical participation snapshots, before presenting separate in-district and outside-district totals. This schema does not classify existing opinions or treat them as verified local votes.
+- Implement residency and eligibility classification, including historical participation snapshots, before presenting separate in-district and outside-district totals. Ratings accept outside opinions. The old always-true eligibility method and its Rating validation gate have been removed; this update does not classify opinions or treat them as verified local votes.
 
-The application rename, query changes, UI grouping, and seed updates remain follow-up work. The development database has not been migrated.
+The model rename, associations, and model query changes are implemented. Controller queries, route and view updates, UI grouping, and seeds remain follow-up work. The development database has not been migrated.

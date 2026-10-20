@@ -1,10 +1,10 @@
 FactoryBot.define do
-  factory :voter_election_baseline_archive do
+  factory :voter_race_baseline_archive do
     association :voter
-    association :election
+    association :race
     baseline { Faker::Number.between(from: 100, to: 400) }
     archived_at { Faker::Time.between(from: 1.month.ago, to: Time.current) }
-    reason { "Baseline changed during testing" }
+    reason { "Reconsidered support after reviewing candidate platforms" }
     previous_baseline { Faker::Number.between(from: 100, to: 400) }
     new_baseline { Faker::Number.between(from: 100, to: 400) }
 
@@ -52,12 +52,12 @@ FactoryBot.define do
     end
 
     # Named factories for common scenarios
-    factory :baseline_increase_archive, traits: [:baseline_increase]
-    factory :baseline_decrease_archive, traits: [:baseline_decrease]
-    factory :baseline_deletion_archive, traits: [:baseline_deleted]
-    factory :recent_baseline_change, traits: [:recent_change, :baseline_increase]
-    factory :historic_baseline_change, traits: [:historic_change, :baseline_decrease]
-    factory :major_baseline_change, traits: [:large_change]
-    factory :minor_baseline_change, traits: [:minor_change]
+    factory :baseline_increase_archive, traits: [ :baseline_increase ]
+    factory :baseline_decrease_archive, traits: [ :baseline_decrease ]
+    factory :baseline_deletion_archive, traits: [ :baseline_deleted ]
+    factory :recent_baseline_change, traits: [ :recent_change, :baseline_increase ]
+    factory :historic_baseline_change, traits: [ :historic_change, :baseline_decrease ]
+    factory :major_baseline_change, traits: [ :large_change ]
+    factory :minor_baseline_change, traits: [ :minor_change ]
   end
 end

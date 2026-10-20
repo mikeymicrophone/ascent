@@ -1,7 +1,7 @@
 FactoryBot.define do
-  factory :voter_election_baseline do
+  factory :voter_race_baseline do
     association :voter
-    association :election
+    association :race
     baseline { Faker::Number.between(from: 150, to: 350) } # Most voters have moderate baselines
 
     trait :high_standards do
@@ -33,7 +33,7 @@ FactoryBot.define do
     end
 
     trait :realistic_distribution do
-      baseline { 
+      baseline {
         # Generate realistic baseline distribution
         # Most voters cluster around 200-300, with fewer at extremes
         case rand(100)
@@ -51,16 +51,16 @@ FactoryBot.define do
       }
     end
 
-    trait :election_type_adjusted do
-      baseline { 
-        # Adjust baseline based on election importance
+    trait :race_type_adjusted do
+      baseline {
+        # Adjust baseline based on race importance
         base_value = Faker::Number.between(from: 150, to: 350)
-        
+
         # Add variance based on voter personality
         personality_modifier = case rand(5)
         when 0 # Very demanding voter
           50
-        when 1 # Demanding voter  
+        when 1 # Demanding voter
           25
         when 2 # Average voter
           0
@@ -69,28 +69,28 @@ FactoryBot.define do
         else   # Very lenient voter
           -50
         end
-        
-        [base_value + personality_modifier, 0].max.to_i.clamp(0, 500)
+
+        [ base_value + personality_modifier, 0 ].max.to_i.clamp(0, 500)
       }
     end
 
-    trait :for_local_election do
-      association :election, factory: [:election, :local]
-      baseline { Faker::Number.between(from: 150, to: 250) } # Lower standards for local elections
+    trait :for_local_race do
+      association :race, factory: [ :race, :local ]
+      baseline { Faker::Number.between(from: 150, to: 250) } # Lower standards for local races
     end
 
-    trait :for_national_election do
-      association :election, factory: [:election, :national]
-      baseline { Faker::Number.between(from: 250, to: 400) } # Higher standards for national elections
+    trait :for_national_race do
+      association :race, factory: [ :race, :national ]
+      baseline { Faker::Number.between(from: 250, to: 400) } # Higher standards for national races
     end
 
     # Named factories for common scenarios
-    factory :high_standards_baseline, traits: [:high_standards]
-    factory :moderate_baseline, traits: [:moderate_standards]
-    factory :low_standards_baseline, traits: [:low_standards]
-    factory :realistic_baseline, traits: [:realistic_distribution]
-    factory :personality_based_baseline, traits: [:election_type_adjusted]
-    factory :local_election_baseline, traits: [:for_local_election]
-    factory :national_election_baseline, traits: [:for_national_election]
+    factory :high_standards_baseline, traits: [ :high_standards ]
+    factory :moderate_baseline, traits: [ :moderate_standards ]
+    factory :low_standards_baseline, traits: [ :low_standards ]
+    factory :realistic_baseline, traits: [ :realistic_distribution ]
+    factory :personality_based_baseline, traits: [ :race_type_adjusted ]
+    factory :local_race_baseline, traits: [ :for_local_race ]
+    factory :national_race_baseline, traits: [ :for_national_race ]
   end
 end
