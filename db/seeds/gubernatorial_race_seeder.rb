@@ -21,12 +21,11 @@ class GubernatorialRaceSeeder
     end
 
     election = SeedJurisdictions.general_election(jurisdiction, race_data.fetch("general_election_date"))
-    race = Race.find_or_initialize_by(election: election, office: office)
-    race.assign_attributes(
-      status: race_data.fetch("status"),
-      description: description_for(state, race_data)
-    )
-    race.save!
+    # A race the ballot manifests already imported keeps its official-source description.
+    Race.find_or_create_by!(election: election, office: office) do |race|
+      race.status = race_data.fetch("status")
+      race.description = description_for(state, race_data)
+    end
   end
 
   def self.description_for(state, race_data)

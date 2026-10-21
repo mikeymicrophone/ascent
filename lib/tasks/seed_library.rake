@@ -1,7 +1,9 @@
 namespace :seed_library do
   def seed_library_paths
-    root = Pathname.new(ENV.fetch("SEED_LIBRARY_ROOT", Rails.root.join("db/seeds/ascent_seed_data/manifests").to_s))
-    paths = Dir.glob(root.join("**/*.{yaml,yml,json}").to_s).sort
+    require Rails.root.join("db", "seeds", "data_paths").to_s
+    require Rails.root.join("db", "seeds", "seed_manifests").to_s
+    root = ENV.fetch("SEED_LIBRARY_ROOT", Rails.root.join("db/seeds/ascent_seed_data/manifests").to_s)
+    paths = SeedManifests.paths(root)
     raise "No seed manifests in #{root}" if paths.empty?
 
     paths

@@ -56,6 +56,7 @@ module Seeds
       records = read(paths)
       validate_records!(records)
       ApplicationRecord.transaction do
+        load_bindings
         pending = records
         until pending.empty?
           deferred = []
@@ -75,15 +76,17 @@ module Seeds
     rescue StandardError
       @report = empty_report
       raise
+    ensure
+      @bindings = @records = nil
     end
 
     def resolve_code(type, code)
       model = MODELS.fetch(type) { raise Error, "Unsupported entity type #{type}" }
-      binding = EntityCode.find_by(namespace: @namespace, catalog: @catalog, code: local_code(code))
+      binding = binding_for(local_code(code))
       if binding
         raise Error, "#{code} identifies #{binding.record_type}, not #{type}" unless binding.record_type == type
 
-        target = binding.resolved_record || model.find_by(entity_code: binding.canonical_code)
+        target = cached_record(binding.canonical_code) { binding.resolved_record || model.find_by(entity_code: binding.canonical_code) }
         return target if target
       end
       model.find_by(entity_code: local_code(code))
@@ -93,6 +96,25 @@ module Seeds
 
     def empty_report
       EMPTY_REPORT.transform_values(&:dup)
+    end
+
+    # During an import every binding in the catalog is held in memory, along with the records
+    # it has resolved, so a manifest's thousands of references do not each query the database.
+    def load_bindings
+      @bindings = EntityCode.where(namespace: @namespace, catalog: @catalog).index_by(&:code)
+      @records = {}
+    end
+
+    def binding_for(code)
+      return @bindings[code] if @bindings
+
+      EntityCode.find_by(namespace: @namespace, catalog: @catalog, code: code)
+    end
+
+    def cached_record(canonical_code)
+      return yield unless @records
+
+      @records[canonical_code] ||= yield
     end
 
     def validate_records!(records)
@@ -188,7 +210,7 @@ module Seeds
       parent = jurisdiction_parent(record, desired) if JURISDICTION_OWNERS.include?(record.type)
       lines = resolved_ballot_lines(record) if record.attributes.key?("ballot_lines")
       codes = ([ record.code ] + record.aliases).uniq
-      bindings = EntityCode.where(namespace: @namespace, catalog: @catalog, code: codes).lock.to_a
+      bindings = codes.filter_map { |code| binding_for(code) }
       bindings.each do |binding|
         raise Error, "#{binding.code} already identifies #{binding.record_type}" unless binding.record_type == record.type
       end
@@ -221,21 +243,24 @@ module Seeds
     end
 
     def register_codes(codes, canonical_code, target)
+      @records[canonical_code] = target if @records
       codes.each do |code|
-        binding = EntityCode.find_or_initialize_by(namespace: @namespace, catalog: @catalog, code: code)
+        binding = binding_for(code) || EntityCode.new(namespace: @namespace, catalog: @catalog, code: code)
         raise Error, "#{code} is permanently bound to #{binding.canonical_code}" if binding.persisted? && binding.canonical_code != canonical_code
 
         report[:aliases_added] << code if binding.new_record? && code != canonical_code
         binding.assign_attributes(canonical_code: canonical_code, record: target)
         binding.save! if binding.new_record? || binding.changed?
+        @bindings[code] = binding if @bindings
       end
     end
 
     # Lines are added, never removed, so a partial capture cannot clear another line.
     # A differing existing line is reported rather than changed.
     def import_ballot_lines(candidacy, lines, record, canonical_code)
+      existing_lines = candidacy.ballot_lines.index_by(&:label)
       lines.each.with_index(1) do |line, position|
-        existing = candidacy.ballot_lines.find_by(label: line["label"])
+        existing = existing_lines[line["label"]]
         if existing.nil?
           candidacy.ballot_lines.create!(line.merge("position" => position))
           report[:ballot_lines_added] << "#{canonical_code}: #{line["label"]}"
