@@ -13,7 +13,6 @@ RSpec.describe Candidacy, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:status) }
     it { should validate_inclusion_of(:status).in_array(%w[announced active withdrawn disqualified]) }
-    it { should validate_presence_of(:announcement_date) }
   end
 
   describe 'scopes' do
@@ -201,10 +200,8 @@ RSpec.describe Candidacy, type: :model do
   end
 
   describe 'announcement date validation' do
-    it 'requires announcement date' do
-      candidacy = build(:candidacy, announcement_date: nil)
-      expect(candidacy).not_to be_valid
-      expect(candidacy.errors[:announcement_date]).to include("can't be blank")
+    it 'allows a missing announcement date, which ballot sources do not publish' do
+      expect(build(:candidacy, announcement_date: nil)).to be_valid
     end
 
     it 'accepts valid announcement date' do

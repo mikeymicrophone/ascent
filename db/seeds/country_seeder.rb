@@ -7,6 +7,7 @@ class CountrySeeder
         c.name = country_data['name']
         c.description = country_data['description']
       end
+      SeedJurisdictions.ensure(country)
       
       puts "Seeded country: #{country.name} (#{country.code})"
     end

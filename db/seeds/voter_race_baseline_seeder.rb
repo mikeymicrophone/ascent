@@ -1,40 +1,40 @@
-class VoterElectionBaselineSeeder
+class VoterRaceBaselineSeeder
   def self.seed
-    # Create baselines for voters in elections they have ratings for
+    # Create baselines for voters in races they have ratings for
     create_baselines_for_existing_ratings
     
-    puts "Seeded #{VoterElectionBaseline.count} voter election baselines"
+    puts "Seeded #{VoterRaceBaseline.count} voter race baselines"
   end
   
   private
   
   def self.create_baselines_for_existing_ratings
-    # Get all unique voter-election combinations from existing ratings
-    voter_election_combinations = Rating.joins(:candidacy)
-                                        .distinct
-                                        .pluck(:voter_id, "candidacies.election_id")
+    # Get all unique voter-race combinations from existing ratings
+    voter_race_combinations = Rating.joins(:candidacy)
+                                    .distinct
+                                    .pluck(:voter_id, "candidacies.race_id")
     
-    voter_election_combinations.each do |voter_id, election_id|
+    voter_race_combinations.each do |voter_id, race_id|
       voter = Voter.find(voter_id)
-      election = Election.find(election_id)
+      race = Race.find(race_id)
       
       # Skip if baseline already exists
-      next if VoterElectionBaseline.exists?(voter: voter, election: election)
+      next if VoterRaceBaseline.exists?(voter: voter, race: race)
       
-      # Create a realistic baseline for this voter-election combination
-      baseline = generate_realistic_baseline(voter, election)
+      # Create a realistic baseline for this voter-race combination
+      baseline = generate_realistic_baseline(voter, race)
       
-      VoterElectionBaseline.create!(
+      VoterRaceBaseline.create!(
         voter: voter,
-        election: election,
+        race: race,
         baseline: baseline
       )
     end
   end
   
-  def self.generate_realistic_baseline(voter, election)
-    # Generate baselines that vary by election type and voter characteristics
-    base_baseline = case election.office.position.title
+  def self.generate_realistic_baseline(voter, race)
+    # Generate baselines that vary by race type and voter characteristics
+    base_baseline = case race.office.position.title
     when "President"
       # Presidential elections tend to have higher engagement, moderate baselines
       rand(250..350)

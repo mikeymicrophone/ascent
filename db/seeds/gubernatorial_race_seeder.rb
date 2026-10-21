@@ -15,24 +15,18 @@ class GubernatorialRaceSeeder
       countries: { code: race_data.fetch("country_code") }
     )
     position = Position.find_by!(title: "Governor")
-    year = Year.find_or_create_by!(year: Date.iso8601(race_data.fetch("general_election_date")).year) do |record|
-      record.is_even_year = true
-      record.is_presidential_year = false
-      record.description = "Midterm election year."
-    end
-    office = Office.find_or_create_by!(position: position, jurisdiction: state) do |record|
+    jurisdiction = SeedJurisdictions.ensure(state, parent: state.country.jurisdiction)
+    office = Office.find_or_create_by!(position: position, jurisdiction: jurisdiction, notes: nil) do |record|
       record.is_active = true
-      record.notes = "Governor of #{state.name}"
     end
 
-    election = Election.find_or_initialize_by(office: office, year: year, is_mock: false)
-    election.assign_attributes(
-      election_date: Date.iso8601(race_data.fetch("general_election_date")),
+    election = SeedJurisdictions.general_election(jurisdiction, race_data.fetch("general_election_date"))
+    race = Race.find_or_initialize_by(election: election, office: office)
+    race.assign_attributes(
       status: race_data.fetch("status"),
-      is_historical: false,
       description: description_for(state, race_data)
     )
-    election.save!
+    race.save!
   end
 
   def self.description_for(state, race_data)

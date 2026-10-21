@@ -2,7 +2,7 @@ module SeedLayers
   REFERENCE_SEEDER_FILES = %w[
     country_seeder
     state_seeder
-    city_seeder
+    municipality_seeder
     position_seeder
     year_seeder
     gubernatorial_race_seeder
@@ -26,7 +26,7 @@ module SeedLayers
     voter_seeder
     residence_seeder
     rating_seeder
-    voter_election_baseline_seeder
+    voter_race_baseline_seeder
   ].freeze
 
   module_function
@@ -40,7 +40,7 @@ module SeedLayers
       SeedDataPaths.file("us_states.yml"),
       SeedDataPaths.file("canadian_provinces.yml")
     ])
-    CitySeeder.seed
+    MunicipalitySeeder.seed
     PositionSeeder.seed
     YearSeeder.seed
     GubernatorialRaceSeeder.seed
@@ -68,7 +68,7 @@ module SeedLayers
     VoterSeeder.seed
     ResidenceSeeder.seed
     RatingSeeder.seed
-    VoterElectionBaselineSeeder.seed
+    VoterRaceBaselineSeeder.seed
     puts "✅ Simulated data seeded"
   end
 
@@ -77,6 +77,7 @@ module SeedLayers
 
     require Rails.root.join("db", "seeds", "data_paths")
     require Rails.root.join("db", "seeds", "simulated_data_paths")
+    require Rails.root.join("db", "seeds", "seed_jurisdictions")
 
     (REFERENCE_SEEDER_FILES + SIMULATED_SEEDER_FILES).each do |seeder_file|
       require Rails.root.join("db", "seeds", seeder_file)

@@ -1,5 +1,6 @@
 require "rails_helper"
 require Rails.root.join("db", "seeds", "data_paths")
+require Rails.root.join("db", "seeds", "seed_jurisdictions")
 require Rails.root.join("db", "seeds", "gubernatorial_race_seeder")
 
 RSpec.describe GubernatorialRaceSeeder do
@@ -20,8 +21,9 @@ RSpec.describe GubernatorialRaceSeeder do
     end
   end
 
-  it "creates source-backed elections without candidates" do
+  it "creates a source-backed governor race in each state's general election, without candidates" do
     country = Country.find_or_create_by!(code: "US") { |record| record.name = "United States" }
+    Year.create!(year: 2026, is_even_year: true, is_presidential_year: false)
     Position.find_or_create_by!(title: "Governor") do |record|
       record.description = "State executive"
       record.branch = :executive
@@ -37,9 +39,11 @@ RSpec.describe GubernatorialRaceSeeder do
 
     described_class.seed(paths)
 
-    elections = Election.joins(:office).where(year: Year.find_by!(year: 2026), offices: { jurisdiction_type: "State" })
-    expect(elections.count).to eq(36)
-    expect(elections).to all(have_attributes(is_mock: false, status: "upcoming"))
-    expect(elections.map { |election| election.candidacies.count }).to all(eq(0))
+    races = Race.joins(office: :position).where(positions: { title: "Governor" })
+    expect(races.count).to eq(36)
+    expect(races).to all(have_attributes(status: "upcoming"))
+    expect(races.map(&:election)).to all(have_attributes(is_mock: false, status: "upcoming", kind: "general", election_date: Date.new(2026, 11, 3)))
+    expect(races.map { |race| race.election.jurisdiction.jurisdictionable }).to all(be_a(State))
+    expect(races.map { |race| race.candidacies.count }).to all(eq(0))
   end
 end

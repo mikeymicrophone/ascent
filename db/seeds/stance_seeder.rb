@@ -184,8 +184,9 @@ class StanceSeeder
     ]
     
     stance_configurations.each do |config|
-      # Find the candidacy by searching for candidacies with elections for offices with matching position titles
-      candidacy = Candidacy.joins(election: { office: :position })
+      # Simulated stances only attach to candidacies in mock elections, never to real candidates.
+      candidacy = Candidacy.joins(race: [ :election, { office: :position } ])
+                          .merge(Election.mock)
                           .where(positions: { title: config[:candidacy_title] })
                           .first
       

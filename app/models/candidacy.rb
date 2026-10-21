@@ -9,7 +9,6 @@ class Candidacy < ApplicationRecord
   has_many :voters, through: :ratings
   
   validates :status, presence: true, inclusion: { in: %w[announced active withdrawn disqualified] }
-  validates :announcement_date, presence: true
   
   scope :announced, -> { where(status: 'announced') }
   scope :active, -> { where(status: 'active') }

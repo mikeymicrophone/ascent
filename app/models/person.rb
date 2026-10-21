@@ -3,9 +3,9 @@ class Person < ApplicationRecord
   has_many :races, -> { distinct }, through: :candidacies
   has_many :elections, -> { distinct }, through: :races
   
-  validates :first_name, presence: true
+  # Ballots name candidates without contact details, and some print only a surname.
   validates :last_name, presence: true
-  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   
   scope :with_candidacy_details, -> { includes(candidacies: { race: [:election, { office: :position }] }) }
   scope :with_recent_candidacies, -> { 

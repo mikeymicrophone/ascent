@@ -15,11 +15,11 @@ class GoverningBodySeeder
     florida = State.find_by(code: "FL")
     
     # Get some cities for municipal bodies
-    san_francisco = City.find_by(name: "San Francisco", state: california)
-    los_angeles = City.find_by(name: "Los Angeles", state: california)
-    new_york_city = City.find_by(name: "New York", state: new_york)
-    austin = City.find_by(name: "Austin", state: texas)
-    miami = City.find_by(name: "Miami", state: florida)
+    san_francisco = Municipality.find_by(name: "San Francisco", state: california)
+    los_angeles = Municipality.find_by(name: "Los Angeles", state: california)
+    new_york_city = Municipality.find_by(name: "New York", state: new_york)
+    austin = Municipality.find_by(name: "Austin", state: texas)
+    miami = Municipality.find_by(name: "Miami", state: florida)
     
     governing_bodies = []
     
@@ -27,8 +27,7 @@ class GoverningBodySeeder
     if us && legislature
       governing_bodies << {
         name: "United States Congress",
-        jurisdiction_type: "Country",
-        jurisdiction_id: us.id,
+        jurisdiction: us.jurisdiction,
         governance_type_id: legislature.id,
         branch: :legislative,
         description: "The bicameral legislature of the federal government of the United States consisting of the House of Representatives and the Senate.",
@@ -45,8 +44,7 @@ class GoverningBodySeeder
     if us && court
       governing_bodies << {
         name: "Supreme Court of the United States",
-        jurisdiction_type: "Country",
-        jurisdiction_id: us.id,
+        jurisdiction: us.jurisdiction,
         governance_type_id: court.id,
         branch: :judicial,
         description: "The court of last resort of the United States, responsible for interpreting the Constitution and federal law.",
@@ -59,8 +57,7 @@ class GoverningBodySeeder
     if us && executive
       governing_bodies << {
         name: "Executive Office of the President",
-        jurisdiction_type: "Country",
-        jurisdiction_id: us.id,
+        jurisdiction: us.jurisdiction,
         governance_type_id: executive.id,
         branch: :executive,
         description: "The executive institution of the United States federal government, headed by the President.",
@@ -84,8 +81,7 @@ class GoverningBodySeeder
       if legislature
         governing_bodies << {
           name: "#{state.name} State Legislature",
-          jurisdiction_type: "State",
-          jurisdiction_id: state.id,
+          jurisdiction: state.jurisdiction,
           governance_type_id: legislature.id,
           branch: :legislative,
           description: "The state legislature of #{state.name}, responsible for making state laws and appropriating the state budget.",
@@ -108,8 +104,7 @@ class GoverningBodySeeder
       if court
         governing_bodies << {
           name: court_name(state, abbrev),
-          jurisdiction_type: "State",
-          jurisdiction_id: state.id,
+          jurisdiction: state.jurisdiction,
           governance_type_id: court.id,
           branch: :judicial,
           description: "The court of last resort of #{state.name}.",
@@ -128,8 +123,7 @@ class GoverningBodySeeder
       if executive
         governing_bodies << {
           name: "Office of the Governor of #{state.name}",
-          jurisdiction_type: "State",
-          jurisdiction_id: state.id,
+          jurisdiction: state.jurisdiction,
           governance_type_id: executive.id,
           branch: :executive,
           description: "The executive institution of #{state.name} state government, headed by the Governor.",
@@ -160,8 +154,7 @@ class GoverningBodySeeder
       
       governing_bodies << {
         name: "#{city.name} City Council",
-        jurisdiction_type: "City",
-        jurisdiction_id: city.id,
+        jurisdiction: city.jurisdiction,
         governance_type_id: council.id,
         branch: :legislative,
         description: "The legislative body of the City of #{city.name}, responsible for local ordinances, budget approval, and municipal policy.",
@@ -181,8 +174,7 @@ class GoverningBodySeeder
       if executive
         governing_bodies << {
           name: "#{county} County Executive",
-          jurisdiction_type: "City", # Using city as proxy for county
-          jurisdiction_id: city.id,
+          jurisdiction: city.jurisdiction, # Using city as proxy for county
           governance_type_id: executive.id,
           branch: :executive,
           description: "The chief executive officer of #{county} County, responsible for implementing county policies and managing county operations.",
@@ -207,8 +199,7 @@ class GoverningBodySeeder
       
       governing_bodies << {
         name: "#{name} Board",
-        jurisdiction_type: "City",
-        jurisdiction_id: city.id,
+        jurisdiction: city.jurisdiction,
         governance_type_id: board.id,
         branch: nil,
         description: "The governing board of #{name}, responsible for educational policy, budget oversight, and superintendent selection.",
@@ -222,8 +213,7 @@ class GoverningBodySeeder
     if board && san_francisco
       governing_bodies << {
         name: "San Francisco Bay Area Rapid Transit District Board",
-        jurisdiction_type: "City",
-        jurisdiction_id: san_francisco.id,
+        jurisdiction: san_francisco.jurisdiction,
         governance_type_id: board.id,
         branch: nil,
         description: "The governing board of BART, responsible for transit policy, fare setting, and system expansion decisions.",
@@ -236,8 +226,7 @@ class GoverningBodySeeder
     if board && los_angeles
       governing_bodies << {
         name: "Metropolitan Water District of Southern California Board",
-        jurisdiction_type: "City",
-        jurisdiction_id: los_angeles.id,
+        jurisdiction: los_angeles.jurisdiction,
         governance_type_id: board.id,
         branch: nil,
         description: "The governing board responsible for water supply management and infrastructure for Southern California region.",
@@ -252,8 +241,7 @@ class GoverningBodySeeder
       chambers = gb_attrs.delete(:chambers)
       governing_body = GoverningBody.find_or_initialize_by(
         name: gb_attrs[:name],
-        jurisdiction_type: gb_attrs[:jurisdiction_type],
-        jurisdiction_id: gb_attrs[:jurisdiction_id]
+        jurisdiction: gb_attrs[:jurisdiction]
       )
       governing_body.assign_attributes(gb_attrs)
 

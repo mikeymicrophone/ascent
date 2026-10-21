@@ -21,7 +21,7 @@ class OfficeSeeder
     if president_position
       office = Office.find_or_create_by(
         position: president_position,
-        jurisdiction: us
+        jurisdiction: us.jurisdiction
       ) do |record|
         record.is_active = true
         record.notes = "President of the United States"
@@ -38,7 +38,7 @@ class OfficeSeeder
     State.find_each do |state|
       office = Office.find_or_create_by(
         position: governor_position,
-        jurisdiction: state
+        jurisdiction: state.jurisdiction
       ) do |record|
         record.is_active = true
         record.notes = "Governor of #{state.name}"
@@ -53,7 +53,7 @@ class OfficeSeeder
         2.times do |i|
           office = Office.find_or_create_by(
             position: senator_position,
-            jurisdiction: state,
+            jurisdiction: state.jurisdiction,
             notes: "U.S. Senator from #{state.name} - Seat #{i + 1}"
           ) do |record|
             record.is_active = true
@@ -69,14 +69,14 @@ class OfficeSeeder
     mayor_position = Position.find_by(title: "Mayor")
     return unless mayor_position
     
-    # Find some cities to create mayor offices for
+    # Find some municipalities to create mayor offices for
     ["Los Angeles", "New York City", "Chicago", "Houston", "Phoenix"].each do |city_name|
-      city = City.find_by(name: city_name)
+      city = Municipality.find_by(name: city_name)
       next unless city
       
       Office.find_or_create_by(
         position: mayor_position,
-        jurisdiction: city
+        jurisdiction: city.jurisdiction
       ) do |office|
         office.is_active = true
         office.notes = "Mayor of #{city.name}"

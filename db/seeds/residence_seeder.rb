@@ -24,7 +24,7 @@ class ResidenceSeeder
     # Original residence in California (home state)
     Residence.find_or_create_by(
       voter: student,
-      jurisdiction: california,
+      jurisdiction: california.jurisdiction,
       status: "inactive"
     ) do |res|
       res.registered_at = 5.years.ago
@@ -34,7 +34,7 @@ class ResidenceSeeder
     # Current residence in New York (college state)
     Residence.find_or_create_by(
       voter: student,
-      jurisdiction: new_york,
+      jurisdiction: new_york.jurisdiction,
       status: "active"
     ) do |res|
       res.registered_at = 2.years.ago
@@ -55,7 +55,7 @@ class ResidenceSeeder
     # Original residence in Florida
     Residence.find_or_create_by(
       voter: professional,
-      jurisdiction: florida,
+      jurisdiction: florida.jurisdiction,
       status: "moved"
     ) do |res|
       res.registered_at = 8.years.ago
@@ -65,7 +65,7 @@ class ResidenceSeeder
     # Current residence in California
     Residence.find_or_create_by(
       voter: professional,
-      jurisdiction: california,
+      jurisdiction: california.jurisdiction,
       status: "active"
     ) do |res|
       res.registered_at = 3.years.ago
@@ -86,7 +86,7 @@ class ResidenceSeeder
     # Long-term residence in Georgia
     Residence.find_or_create_by(
       voter: retiree,
-      jurisdiction: georgia,
+      jurisdiction: georgia.jurisdiction,
       status: "moved"
     ) do |res|
       res.registered_at = 25.years.ago
@@ -96,7 +96,7 @@ class ResidenceSeeder
     # Current residence in Florida
     Residence.find_or_create_by(
       voter: retiree,
-      jurisdiction: florida,
+      jurisdiction: florida.jurisdiction,
       status: "active"
     ) do |res|
       res.registered_at = 1.year.ago
@@ -123,7 +123,7 @@ class ResidenceSeeder
       
       Residence.find_or_create_by(
         voter: voter,
-        jurisdiction: state,
+        jurisdiction: state.jurisdiction,
         status: "active"
       ) do |res|
         res.registered_at = rand(15..30).years.ago
@@ -132,7 +132,7 @@ class ResidenceSeeder
     end
     
     # Also create some city-level residences
-    cities = City.limit(5)
+    cities = Municipality.limit(5)
     remaining_voters = Voter.where.not(
       email: stable_voters + [
         "emily.johnson@email.com",
@@ -147,7 +147,7 @@ class ResidenceSeeder
       
       Residence.find_or_create_by(
         voter: voter,
-        jurisdiction: city,
+        jurisdiction: city.jurisdiction,
         status: "active"
       ) do |res|
         res.registered_at = rand(2..10).years.ago

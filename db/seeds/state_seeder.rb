@@ -11,6 +11,7 @@ class StateSeeder
       ) do |s|
         s.name = state_data['name']
       end
+      SeedJurisdictions.ensure(state, parent: country.jurisdiction)
       
       puts "Seeded state: #{state.name} (#{state.code}) in #{country.name}"
     end
