@@ -11,10 +11,12 @@ class Views::Partials::VoterPartial < Views::ApplicationView
         whitespace
         span { @voter.last_name }
       end
-      div do
-        span { "Birth date:" }
-        whitespace
-        span { @voter.birth_date.to_fs(:display) }
+      if @voter.birth_date
+        div do
+          span { "Birth date:" }
+          whitespace
+          span { @voter.birth_date.to_fs(:display) }
+        end
       end
       div do
         span { "Is verified:" }

@@ -28,9 +28,11 @@ class Views::Partials::CandidacyPartial < Views::ApplicationView
             span(class: "info-label") { "Election" }
             link_to @candidacy.election.name, @candidacy.election, class: "link election info-value"
           end
-          div(class: "info-item") do
-            span(class: "info-label") { "Announced" }
-            span(class: "info-value") { @candidacy.announcement_date.to_fs(:display) }
+          if @candidacy.announcement_date
+            div(class: "info-item") do
+              span(class: "info-label") { "Announced" }
+              span(class: "info-value") { @candidacy.announcement_date.to_fs(:display) }
+            end
           end
         end
         
