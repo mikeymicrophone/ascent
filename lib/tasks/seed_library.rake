@@ -18,6 +18,21 @@ namespace :seed_library do
     puts summary.to_json
   end
 
+  desc "Export the catalog contract contributors validate against (CHECK=1 verifies it is current; run with RAILS_ENV=test)"
+  task contract: :environment do
+    path = Rails.root.join("db/seeds/ascent_seed_data/schemas/asc.contract.json")
+    contents = JSON.pretty_generate(Seeds::CatalogContract.document) + "\n"
+    if ENV["CHECK"] == "1"
+      raise "Stale catalog contract: #{path}" unless path.file? && path.read == contents
+
+      puts "The published catalog contract matches the importer."
+    else
+      FileUtils.mkdir_p(path.dirname)
+      path.write(contents)
+      puts "Exported #{path}"
+    end
+  end
+
   desc "Validate micharisma-seeds/v1 manifests for the Ascent catalog (SEED_LIBRARY_ROOT selects a folder)"
   task validate: :environment do
     puts Seeds::LibraryImporter.new.validate(seed_library_paths).to_json
