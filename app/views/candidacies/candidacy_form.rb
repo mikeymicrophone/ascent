@@ -40,9 +40,11 @@ class Views::Candidacies::CandidacyForm < Views::ApplicationView
       end
 
       div do
-        form.label :party_affiliation
-        form.text_field :party_affiliation,
-                                        class: input_classes(@candidacy.errors[:party_affiliation])
+        form.label :participation
+        form.select :participation,
+                    [ [ "Active", "active" ], [ "Inactive", "inactive" ], [ "Off-ballot, approvable", "off_ballot" ] ],
+                    {},
+                    class: input_classes(@candidacy.errors[:participation])
       end
 
       div do

@@ -67,7 +67,7 @@ class RatingSeeder
   
   def self.generate_realistic_rating(candidacy)
     # Generate realistic ratings based on party affiliation and baseline
-    base_preference = case candidacy.party_affiliation&.downcase
+    base_preference = case candidacy.ballot_lines.first&.label&.downcase
     when "democratic"
       rand(180..450)
     when "republican"

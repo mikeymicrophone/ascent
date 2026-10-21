@@ -71,7 +71,9 @@ RSpec.describe BallotLineSeeder do
       expect(race.election).to have_attributes(name: "New York Congressional District 1 General Election 2026", kind: "general", is_mock: false)
       expect(race.office.position.title).to eq("Representative")
       lalota = race.candidacies.joins(:person).find_by!(people: { last_name: "Lalota" })
-      expect(lalota.party_affiliation).to eq("Conservative; Republican")
+      expect(lalota.ballot_labels).to eq("Conservative; Republican")
+      expect(lalota.ballot_lines.map(&:kind)).to all(eq("unclassified"))
+      expect(lalota.endorsements).to be_empty
       expect(race.description).to include("Vote for: 1.", "Source status: certified.", "Retrieved: 2026-10-01.")
 
       healey = Person.find_by!(last_name: "Healey")

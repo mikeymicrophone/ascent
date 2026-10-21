@@ -25,14 +25,17 @@ class CandidacySeeder
         person = Person.find_by(email: candidate_data[:person_email])
         next unless person
         
-        Candidacy.find_or_create_by(
+        candidacy = Candidacy.find_or_create_by(
           person: person,
           race: race
         ) do |candidacy|
           candidacy.status = "active"
           candidacy.announcement_date = Date.new(2024, 1, 15)
-          candidacy.party_affiliation = candidate_data[:party]
           candidacy.platform_summary = candidate_data[:platform]
+        end
+        candidacy.ballot_lines.find_or_create_by!(label: candidate_data[:party]) do |line|
+          line.kind = "party"
+          line.position = 1
         end
       end
     end

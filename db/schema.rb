@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_20_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_21_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -34,11 +34,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_130000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "ballot_lines", force: :cascade do |t|
+    t.bigint "candidacy_id", null: false
+    t.datetime "created_at", null: false
+    t.string "kind", default: "unclassified", null: false
+    t.string "label", null: false
+    t.bigint "party_id"
+    t.integer "position"
+    t.datetime "updated_at", null: false
+    t.index ["candidacy_id", "label"], name: "index_ballot_lines_on_candidacy_id_and_label", unique: true
+    t.index ["candidacy_id"], name: "index_ballot_lines_on_candidacy_id"
+    t.index ["party_id"], name: "index_ballot_lines_on_party_id"
+  end
+
   create_table "candidacies", force: :cascade do |t|
     t.date "announcement_date"
     t.datetime "created_at", null: false
     t.string "entity_code"
-    t.string "party_affiliation"
+    t.string "participation", default: "active", null: false
     t.bigint "person_id", null: false
     t.text "platform_summary"
     t.bigint "race_id", null: false
@@ -109,6 +122,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_130000) do
     t.index ["year_id"], name: "index_elections_on_year_id"
     t.check_constraint "early_voting_starts_on <= early_voting_ends_on", name: "elections_early_voting_dates_ordered"
     t.check_constraint "early_voting_starts_on <= election_date AND early_voting_ends_on <= election_date", name: "elections_early_voting_before_election_date"
+  end
+
+  create_table "endorsements", force: :cascade do |t|
+    t.bigint "ballot_line_id"
+    t.bigint "candidacy_id", null: false
+    t.datetime "created_at", null: false
+    t.date "endorsed_on"
+    t.bigint "endorser_id", null: false
+    t.string "endorser_type", null: false
+    t.string "kind", default: "public", null: false
+    t.text "notes"
+    t.integer "strength"
+    t.datetime "updated_at", null: false
+    t.date "withdrawn_on"
+    t.index ["ballot_line_id"], name: "index_endorsements_on_ballot_line_id", unique: true
+    t.index ["candidacy_id", "endorser_type", "endorser_id", "kind"], name: "index_endorsements_on_candidacy_endorser_and_kind", unique: true
+    t.index ["candidacy_id"], name: "index_endorsements_on_candidacy_id"
+    t.index ["endorser_type", "endorser_id"], name: "index_endorsements_on_endorser"
   end
 
   create_table "entity_codes", force: :cascade do |t|
@@ -227,6 +258,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_130000) do
     t.index ["policy_id"], name: "index_official_codes_on_policy_id"
   end
 
+  create_table "parties", force: :cascade do |t|
+    t.string "abbreviation"
+    t.datetime "created_at", null: false
+    t.string "entity_code"
+    t.string "name", null: false
+    t.bigint "state_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_parties_on_entity_code", unique: true
+    t.index ["state_id", "name"], name: "index_parties_on_state_id_and_name", unique: true
+    t.index ["state_id"], name: "index_parties_on_state_id"
+  end
+
   create_table "people", force: :cascade do |t|
     t.text "bio"
     t.date "birth_date"
@@ -271,6 +314,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_130000) do
   end
 
   create_table "races", force: :cascade do |t|
+    t.string "certification_status"
     t.datetime "created_at", null: false
     t.text "description"
     t.bigint "election_id", null: false
@@ -462,12 +506,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_130000) do
   end
 
   add_foreign_key "approaches", "issues"
+  add_foreign_key "ballot_lines", "candidacies"
+  add_foreign_key "ballot_lines", "parties"
   add_foreign_key "candidacies", "people"
   add_foreign_key "candidacies", "races"
   add_foreign_key "chambers", "governing_bodies"
   add_foreign_key "counties", "states"
   add_foreign_key "elections", "jurisdictions"
   add_foreign_key "elections", "years"
+  add_foreign_key "endorsements", "ballot_lines"
+  add_foreign_key "endorsements", "candidacies"
   add_foreign_key "governing_bodies", "governance_types"
   add_foreign_key "governing_bodies", "jurisdictions"
   add_foreign_key "issues", "topics"
@@ -480,6 +528,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_130000) do
   add_foreign_key "offices", "jurisdictions"
   add_foreign_key "offices", "positions"
   add_foreign_key "official_codes", "policies"
+  add_foreign_key "parties", "states"
   add_foreign_key "policies", "approaches"
   add_foreign_key "policies", "area_of_concerns"
   add_foreign_key "policies", "governing_bodies"

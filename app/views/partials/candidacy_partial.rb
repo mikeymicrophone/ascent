@@ -10,8 +10,8 @@ class Views::Partials::CandidacyPartial < Views::ApplicationView
         h3(class: "partial-title") { @candidacy.person.full_name }
         div(class: "header-indicators") do
           span(class: "status-indicator status-#{@candidacy.status.downcase}") { @candidacy.status }
-          if @candidacy.party_affiliation.present?
-            span(class: "status-indicator status-party") { @candidacy.party_affiliation }
+          if @candidacy.ballot_labels.present?
+            span(class: "status-indicator status-party") { @candidacy.ballot_labels }
           end
         end
       end

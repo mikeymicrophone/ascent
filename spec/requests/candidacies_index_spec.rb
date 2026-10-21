@@ -19,9 +19,9 @@ RSpec.describe "Candidacies Index", type: :request do
       let!(:candidate2) { create(:person, :business_leader, first_name: "Michael", last_name: "Chen") }
       let!(:candidate3) { create(:person, :young_candidate, first_name: "Jordan", last_name: "Taylor") }
       
-      let!(:candidacy1) { create(:candidacy, election: election, person: candidate1, party_affiliation: "Democratic", status: "active") }
-      let!(:candidacy2) { create(:candidacy, election: election, person: candidate2, party_affiliation: "Republican", status: "active") }
-      let!(:candidacy3) { create(:candidacy, election: election, person: candidate3, party_affiliation: "Independent", status: "announced") }
+      let!(:candidacy1) { create(:candidacy, election: election, person: candidate1, party_label: "Democratic", status: "active") }
+      let!(:candidacy2) { create(:candidacy, election: election, person: candidate2, party_label: "Republican", status: "active") }
+      let!(:candidacy3) { create(:candidacy, election: election, person: candidate3, party_label: "Independent", status: "announced") }
 
       it "renders successfully with candidacy data" do
         get candidacies_path
@@ -71,8 +71,8 @@ RSpec.describe "Candidacies Index", type: :request do
       let!(:election2) { create(:election, :active, office: office2) }
       
       let!(:person) { create(:person, :experienced_politician) }
-      let!(:candidacy1) { create(:candidacy, election: election1, person: person, party_affiliation: "Democratic") }
-      let!(:candidacy2) { create(:candidacy, election: election2, person: person, party_affiliation: "Democratic") }
+      let!(:candidacy1) { create(:candidacy, election: election1, person: person, party_label: "Democratic") }
+      let!(:candidacy2) { create(:candidacy, election: election2, person: person, party_label: "Democratic") }
 
       it "displays candidacies from different elections" do
         get candidacies_path
@@ -182,8 +182,8 @@ RSpec.describe "Candidacies Index", type: :request do
   context "filtering and search capabilities" do
     let!(:election1) { create(:election, :upcoming) }
     let!(:election2) { create(:election, :active) }
-    let!(:candidacy1) { create(:candidacy, election: election1, party_affiliation: "Democratic") }
-    let!(:candidacy2) { create(:candidacy, election: election2, party_affiliation: "Republican") }
+    let!(:candidacy1) { create(:candidacy, election: election1, party_label: "Democratic") }
+    let!(:candidacy2) { create(:candidacy, election: election2, party_label: "Republican") }
 
     it "handles election filtering if implemented" do
       get candidacies_path, params: { election_id: election1.id }

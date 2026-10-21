@@ -4,17 +4,25 @@ FactoryBot.define do
     association :race
     status { "active" }
     announcement_date { Faker::Date.between(from: 1.year.ago, to: 1.month.ago) }
-    party_affiliation { 
-      [
-        "Independent", 
-        "Democratic Party", 
-        "Republican Party", 
-        "Green Party", 
-        "Libertarian Party",
-        "Working Families Party",
-        "Progressive Party"
-      ].sample 
-    }
+    transient do
+      # The printed label of the candidacy's one ballot line; nil leaves it without lines.
+      party_label {
+        [
+          "Independent",
+          "Democratic Party",
+          "Republican Party",
+          "Green Party",
+          "Libertarian Party",
+          "Working Families Party",
+          "Progressive Party"
+        ].sample
+      }
+    end
+
+    after(:build) do |candidacy, evaluator|
+      candidacy.ballot_lines.build(label: evaluator.party_label, kind: "party", position: 1) if evaluator.party_label
+    end
+
     platform_summary { 
       focus_areas = [
         "economic development and job creation",
@@ -64,7 +72,7 @@ FactoryBot.define do
     end
 
     trait :democrat do
-      party_affiliation { "Democratic Party" }
+      party_label { "Democratic Party" }
       platform_summary { 
         priorities = [
           "expanding healthcare access",
@@ -82,7 +90,7 @@ FactoryBot.define do
     end
 
     trait :republican do
-      party_affiliation { "Republican Party" }
+      party_label { "Republican Party" }
       platform_summary { 
         priorities = [
           "fiscal responsibility",
@@ -100,14 +108,14 @@ FactoryBot.define do
     end
 
     trait :independent do
-      party_affiliation { "Independent" }
+      party_label { "Independent" }
       platform_summary { 
         "Non-partisan approach focusing on practical solutions and community needs, working across party lines to get things done."
       }
     end
 
     trait :green do
-      party_affiliation { "Green Party" }
+      party_label { "Green Party" }
       platform_summary { 
         priorities = [
           "environmental sustainability",

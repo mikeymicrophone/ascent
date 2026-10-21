@@ -52,8 +52,8 @@ class Views::Partials::OfficePartial < Views::ApplicationView
         span(class: "current-holder-details") do
           whitespace
           span { "(" }
-          if current_winner.party_affiliation.present?
-            span(class: "current-holder-party") { current_winner.party_affiliation }
+          if current_winner.ballot_labels.present?
+            span(class: "current-holder-party") { current_winner.ballot_labels }
             span { ", " }
           end
           span { "elected #{current_winner.race.year.year}" }
@@ -118,8 +118,8 @@ class Views::Partials::OfficePartial < Views::ApplicationView
             span(class: "result-rank") { "#{index + 1}." }
             whitespace
             link_to candidacy.person.name, candidacy.person, class: "link candidate-name"
-            if candidacy.party_affiliation.present?
-              span(class: "candidate-party") { " (#{candidacy.party_affiliation})" }
+            if candidacy.ballot_labels.present?
+              span(class: "candidate-party") { " (#{candidacy.ballot_labels})" }
             end
             span(class: "vote-count") { " - #{vote_count} votes" }
             if index == 0

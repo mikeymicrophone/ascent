@@ -27,9 +27,9 @@ RSpec.describe "Elections Index", type: :request do
       let!(:candidate2) { create(:person, :business_leader, first_name: "Jane", last_name: "Doe") }
       let!(:candidate3) { create(:person, :young_candidate, first_name: "Alex", last_name: "Johnson") }
       
-      let!(:candidacy1) { create(:candidacy, race: active_race, person: candidate1, party_affiliation: "Democratic") }
-      let!(:candidacy2) { create(:candidacy, race: active_race, person: candidate2, party_affiliation: "Republican") }
-      let!(:candidacy3) { create(:candidacy, race: completed_race, person: candidate3, party_affiliation: "Independent") }
+      let!(:candidacy1) { create(:candidacy, race: active_race, person: candidate1, party_label: "Democratic") }
+      let!(:candidacy2) { create(:candidacy, race: active_race, person: candidate2, party_label: "Republican") }
+      let!(:candidacy3) { create(:candidacy, race: completed_race, person: candidate3, party_label: "Independent") }
 
       it "renders successfully with election data" do
         get elections_path

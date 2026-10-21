@@ -48,6 +48,8 @@ class BallotLineSeeder
     "Public Defender" => [ "Public Defender", "Judicial Circuit" ]
   }.freeze
 
+  LABEL_KINDS = { "Write-In" => "write_in", "Petitioning Candidate" => "petition" }.freeze
+
   NAME_SUFFIX = /\A(?:jr|sr|ii|iii|iv|v|esq|esquire)\.?\z/i
 
   def self.seed(paths = SeedDataPaths.glob(*DATA_GLOB))
@@ -153,10 +155,23 @@ class BallotLineSeeder
     person = race.candidacies.joins(:person).find_by(people: parts)&.person || Person.create!(parts)
     candidacy = Candidacy.find_or_initialize_by(race: race, person: person)
     candidacy.status = "active"
-    candidacy.party_affiliation = candidate_rows.map { |row| row.fetch("party") }.compact_blank.uniq.join("; ").presence
     candidacy.save!
+    seed_ballot_lines(candidacy, candidate_rows.map { |row| row.fetch("party") }.compact_blank.uniq)
   end
   private_class_method :seed_candidacy
+
+  # Lines are added, never removed: a partial capture must not clear another line.
+  # Telling parties from political designations needs each state's party list, so
+  # labels other than write-ins and petitions stay unclassified until conversion.
+  def self.seed_ballot_lines(candidacy, labels)
+    labels.each.with_index(1) do |label, position|
+      candidacy.ballot_lines.find_or_create_by!(label: label) do |line|
+        line.kind = LABEL_KINDS.fetch(label, "unclassified")
+        line.position = position
+      end
+    end
+  end
+  private_class_method :seed_ballot_lines
 
   def self.race_description(rows)
     [

@@ -54,8 +54,8 @@ class Views::Partials::PersonPartial < Views::ApplicationView
       span(class: "election-date") { election.election_date.strftime("%B %d, %Y") }
       span(class: "status-indicator status-#{candidacy.status}") { candidacy.status.capitalize }
 
-      if candidacy.party_affiliation.present?
-        span(class: "candidacy-party") { " (#{candidacy.party_affiliation})" }
+      if candidacy.ballot_labels.present?
+        span(class: "candidacy-party") { " (#{candidacy.ballot_labels})" }
       end
     end
   end

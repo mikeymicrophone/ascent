@@ -47,8 +47,8 @@ class Views::Partials::RacePartial < Views::ApplicationView
             ItemPreview(@race, :candidacies, 5) do |candidacy|
               div(class: "candidate-preview-item") do
                 link_to candidacy.name, candidacy, class: "link candidate"
-                if candidacy.party_affiliation.present?
-                  span(class: "candidate-party") { " (#{candidacy.party_affiliation})" }
+                if candidacy.ballot_labels.present?
+                  span(class: "candidate-party") { " (#{candidacy.ballot_labels})" }
                 end
               end
             end

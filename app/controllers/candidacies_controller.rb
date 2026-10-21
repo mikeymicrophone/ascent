@@ -52,6 +52,6 @@ class CandidaciesController < ApplicationController
   end
 
   def candidacy_params
-    params.require(:candidacy).permit(:person_id, :race_id, :status, :announcement_date, :party_affiliation, :platform_summary)
+    params.require(:candidacy).permit(:person_id, :race_id, :status, :announcement_date, :participation, :platform_summary)
   end
 end

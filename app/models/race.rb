@@ -7,6 +7,8 @@ class Race < ApplicationRecord
   has_many :voter_race_baseline_archives, dependent: :delete_all
 
   validates :status, presence: true, inclusion: { in: %w[upcoming active completed cancelled] }
+  # An updateable fact about the source's list, kept out of the race's identity and code.
+  validates :certification_status, inclusion: { in: %w[certified tentative unofficial] }, allow_nil: true
   validate :office_matches_election_jurisdiction
 
   scope :upcoming, -> { where(status: 'upcoming') }

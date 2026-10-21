@@ -1,0 +1,92 @@
+# The Ascent adapter sketch's historical example: Anna Kelles on the Democratic and
+# Working Families lines for New York Assembly District 125 in the 2024 general election.
+# Source: NYS Board of Elections amended certification for November 5, 2024, page 127.
+format: micharisma-seeds/v1
+namespace: MIC
+catalog: ASC
+source:
+  url: https://elections.ny.gov/certification-november-5-2024-general-election
+records:
+  - type: Country
+    code: COUNTRY-USA
+    attributes:
+      code: US
+      name: United States
+  - type: Position
+    code: POSITION-STATE_REPRESENTATIVE
+    attributes:
+      title: State Representative
+      branch: legislative
+groups:
+  - scope:
+      country: COUNTRY-USA
+    records:
+      - type: State
+        code: STATE-USA-NY
+        attributes:
+          code: NY
+          name: New York
+  - scope:
+      state: STATE-USA-NY
+    records:
+      - type: District
+        code: DISTRICT-USA-NY-ASSEMBLY-AD_125
+        attributes:
+          name: New York Assembly District 125
+          kind: assembly district
+      - type: Party
+        code: PARTY-USA-NY-DEMOCRATIC
+        attributes:
+          name: Democratic
+      - type: Party
+        code: PARTY-USA-NY-WORKING_FAMILIES
+        attributes:
+          name: Working Families
+      - type: Person
+        code: PERSON-KELLES_ANNA_NY_AD_125
+        attributes:
+          username: kelles_anna_ny_ad_125
+          username_status: provisional
+          first_name: Anna
+          last_name: Kelles
+      - type: Office
+        code: OFFICE-USA-NY-ASSEMBLY-AD_125
+        attributes:
+          seat_code: AD_125
+          is_active: true
+        references:
+          position: POSITION-STATE_REPRESENTATIVE
+          jurisdiction: DISTRICT-USA-NY-ASSEMBLY-AD_125
+      - type: Election
+        code: ELECTION-USA-NY-ASSEMBLY-AD_125-2024_GENERAL
+        attributes:
+          name: New York Assembly District 125 General Election 2024
+          kind: general
+          election_date: "2024-11-05"
+          status: completed
+          is_mock: false
+          is_historical: true
+        references:
+          jurisdiction: DISTRICT-USA-NY-ASSEMBLY-AD_125
+          year: YEAR-2024
+      - type: Race
+        code: RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL
+        attributes:
+          status: completed
+          certification_status: certified
+        references:
+          election: ELECTION-USA-NY-ASSEMBLY-AD_125-2024_GENERAL
+          office: OFFICE-USA-NY-ASSEMBLY-AD_125
+      - type: Candidacy
+        code: CANDIDACY-USA-NY-ASSEMBLY-AD_125-2024_GENERAL-KELLES_ANNA_NY_AD_125
+        attributes:
+          status: active
+          participation: active
+          ballot_lines:
+            - label: Democratic
+              party: PARTY-USA-NY-DEMOCRATIC
+            - label: Working Families
+              party: PARTY-USA-NY-WORKING_FAMILIES
+        references:
+          race: RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL
+          person: PERSON-KELLES_ANNA_NY_AD_125

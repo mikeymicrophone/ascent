@@ -53,8 +53,8 @@ RSpec.describe "People Index", type: :request do
       let!(:candidate2) { create(:person, :business_leader, first_name: "Jane", last_name: "Doe") }
       let!(:non_candidate) { create(:person, :community_activist, first_name: "Alex", last_name: "Wilson") }
       
-      let!(:candidacy1) { create(:candidacy, race: race, person: candidate1, party_affiliation: "Democratic") }
-      let!(:candidacy2) { create(:candidacy, race: race, person: candidate2, party_affiliation: "Republican") }
+      let!(:candidacy1) { create(:candidacy, race: race, person: candidate1, party_label: "Democratic") }
+      let!(:candidacy2) { create(:candidacy, race: race, person: candidate2, party_label: "Republican") }
 
       it "displays candidacy information for candidates" do
         get people_path
