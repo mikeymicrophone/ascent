@@ -5,7 +5,7 @@ class Views::GovernanceTypes::GovernanceTypeForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @governance_type, id: dom_id(@governance_type, :form)) do |form|
-      render_errors if @governance_type.errors.any?
+      FormErrors(record: @governance_type)
       
       div do
         form.label :name
@@ -34,23 +34,7 @@ class Views::GovernanceTypes::GovernanceTypeForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@governance_type.errors.count, 'error')} prohibited this governance_type from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @governance_type.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

@@ -3,13 +3,13 @@ class StancesController < ApplicationController
 
   # GET /stances or /stances.json
   def index
-    @stances = Stance.all
-    render Views::Stances::IndexView.new(stances: @stances, notice: notice)
+    @pagy, @stances = pagy(Stance.includes(:issue, :approach, candidacy: :person))
+    render Views::Stances::IndexView.new(stances: @stances, pagy: @pagy)
   end
 
   # GET /stances/1 or /stances/1.json
   def show
-    render Views::Stances::ShowView.new(stance: @stance, notice: notice)
+    render Views::Stances::ShowView.new(stance: @stance)
   end
 
   # GET /stances/new

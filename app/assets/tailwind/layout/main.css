@@ -31,3 +31,7 @@ body {
     --nav-clearance: 10.5rem;
   }
 }
+
+.flash-messages {
+  @apply flex flex-col;
+}

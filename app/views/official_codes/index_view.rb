@@ -1,14 +1,11 @@
 class Views::OfficialCodes::IndexView < Views::ApplicationView
-  def initialize(official_codes:, pagy: nil, notice: nil)
+  def initialize(official_codes:, pagy: nil)
     @official_codes = official_codes
     @pagy = pagy
-    @notice = notice
   end
 
   def view_template(&)
     div(class: "scaffold official_codes-index", id: "index_official_codes") do
-      render_notice if @notice.present?
-      
       div do
         h1 { "Official codes" }
         scaffold_new_resource_link "New official code", new_official_code_path, record: OfficialCode
@@ -19,7 +16,7 @@ class Views::OfficialCodes::IndexView < Views::ApplicationView
           @official_codes.each do |official_code|
             div(id: dom_id(official_code, :list_item)) do
               OfficialCodePartial(official_code: official_code)
-              
+
               Ui::ResourceActions(resource: official_code)
             end
           end
@@ -29,14 +26,6 @@ class Views::OfficialCodes::IndexView < Views::ApplicationView
       end
 
       Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

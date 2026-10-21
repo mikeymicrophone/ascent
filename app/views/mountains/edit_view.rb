@@ -10,13 +10,12 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   def view_template
     div(class: "mountain-edit") do
-      render_flash
       render_header
-      
+
       div(class: "edit-instructions") do
         p { "Click or drag in a candidate column to set their rating. Drag the Baseline label on the right to set your approval threshold. Save when ready — you can keep editing after save." }
       end
-      
+
       form_with(
         url: mountain_path(@race, voter_id: @voter.id),
         method: :patch,
@@ -40,22 +39,13 @@ class Views::Mountains::EditView < Views::ApplicationView
             editable: true
           )
         end
-        
+
         render_save_controls
       end
     end
   end
 
   private
-
-  def render_flash
-    if flash[:notice].present?
-      div(class: "flash-notice", role: "status") { flash[:notice] }
-    end
-    if flash[:alert].present?
-      div(class: "flash-alert", role: "alert") { flash[:alert] }
-    end
-  end
 
   def render_header
     div(class: "mountain-header") do
@@ -66,7 +56,7 @@ class Views::Mountains::EditView < Views::ApplicationView
         whitespace
         link_to @race.election.name, @race.election, class: "link"
       end
-      
+
       div(class: "voter-info") do
         p { "Voter: #{@voter.name}" }
         if @baseline

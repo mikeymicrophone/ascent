@@ -5,7 +5,7 @@ class Views::GoverningBodies::GoverningBodyForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @governing_body, id: dom_id(@governing_body, :form)) do |form|
-      render_errors if @governing_body.errors.any?
+      FormErrors(record: @governing_body)
       
       div do
         form.label :name
@@ -71,18 +71,6 @@ class Views::GoverningBodies::GoverningBodyForm < Views::ApplicationView
   end
 
   private
-
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@governing_body.errors.count, 'error')} prohibited this governing_body from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @governing_body.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
 
   def input_classes(errors)
     errors.any? ? "error" : ""

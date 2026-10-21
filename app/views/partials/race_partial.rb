@@ -30,7 +30,7 @@ class Views::Partials::RacePartial < Views::ApplicationView
           end
           div(class: "info-item") do
             span(class: "info-label") { "Election Date" }
-            span(class: "info-value") { @race.election_date.strftime("%B %d, %Y") }
+            span(class: "info-value") { @race.election_date.to_fs(:display) }
           end
         end
 

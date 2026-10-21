@@ -1,14 +1,11 @@
 class Views::Offices::IndexView < Views::ApplicationView
-  def initialize(offices:, pagy: nil, notice: nil)
+  def initialize(offices:, pagy: nil)
     @offices = offices
     @pagy = pagy
-    @notice = notice
   end
 
   def view_template(&)
     div(class: "scaffold offices-index", id: "index_offices") do
-      render_notice if @notice.present?
-      
       div do
         h1 { "Offices" }
         scaffold_new_resource_link "New office", new_office_path, record: Office
@@ -19,7 +16,7 @@ class Views::Offices::IndexView < Views::ApplicationView
           @offices.each do |office|
             div(id: dom_id(office, :list_item)) do
               OfficePartial(office: office)
-              
+
               Ui::ResourceActions(resource: office)
             end
           end
@@ -29,14 +26,6 @@ class Views::Offices::IndexView < Views::ApplicationView
       end
 
       Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

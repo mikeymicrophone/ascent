@@ -1,14 +1,11 @@
 class Views::People::IndexView < Views::ApplicationView
-  def initialize(people:, pagy: nil, notice: nil)
+  def initialize(people:, pagy: nil)
     @people = people
     @pagy = pagy
-    @notice = notice
   end
 
   def view_template(&)
     div(class: "scaffold people-index", id: "index_people") do
-      render_notice if @notice.present?
-      
       div do
         h1 { "People" }
         scaffold_new_resource_link "New person", new_person_path, record: Person
@@ -19,7 +16,7 @@ class Views::People::IndexView < Views::ApplicationView
           @people.each do |person|
             div(id: dom_id(person, :list_item)) do
               PersonPartial(person: person)
-              
+
               Ui::ResourceActions(resource: person)
             end
           end
@@ -29,14 +26,6 @@ class Views::People::IndexView < Views::ApplicationView
       end
 
       Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

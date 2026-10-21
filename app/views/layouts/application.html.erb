@@ -34,6 +34,7 @@
     <%= render Views::Components::Navigation.new %>
     <script>document.documentElement.style.setProperty('--nav-clearance', document.querySelector('.main-navigation').offsetHeight + 'px');</script>
     <main class="main-content">
+      <%= render Views::Components::FlashMessages.new %>
       <%= yield %>
     </main>
   </body>

@@ -19,7 +19,7 @@ class Views::Partials::CountryPartial < Views::ApplicationView
       div do
         span { "Description:" }
         whitespace
-        div(class: "mt-1") { simple_format(@country.description) }
+        div(class: "formatted-text") { simple_format(@country.description) }
       end
     end
   end

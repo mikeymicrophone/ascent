@@ -3,11 +3,11 @@ class GovernanceTypesController < ApplicationController
 
   def index
     @pagy, @governance_types = pagy(GovernanceType.all)
-    render Views::GovernanceTypes::IndexView.new(governance_types: @governance_types, pagy: @pagy, notice: notice)
+    render Views::GovernanceTypes::IndexView.new(governance_types: @governance_types, pagy: @pagy)
   end
 
   def show
-    render Views::GovernanceTypes::ShowView.new(governance_type: @governance_type, notice: notice)
+    render Views::GovernanceTypes::ShowView.new(governance_type: @governance_type)
   end
 
   def new

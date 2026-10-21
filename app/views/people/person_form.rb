@@ -5,7 +5,7 @@ class Views::People::PersonForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @person, id: dom_id(@person, :form)) do |form|
-      render_errors if @person.errors.any?
+      FormErrors(record: @person)
       
       div do
         form.label :first_name
@@ -52,23 +52,7 @@ class Views::People::PersonForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@person.errors.count, 'error')} prohibited this person from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @person.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

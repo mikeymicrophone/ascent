@@ -3,11 +3,11 @@ class OfficialCodesController < ApplicationController
 
   def index
     @pagy, @official_codes = pagy(OfficialCode.all)
-    render Views::OfficialCodes::IndexView.new(official_codes: @official_codes, pagy: @pagy, notice: notice)
+    render Views::OfficialCodes::IndexView.new(official_codes: @official_codes, pagy: @pagy)
   end
 
   def show
-    render Views::OfficialCodes::ShowView.new(official_code: @official_code, notice: notice)
+    render Views::OfficialCodes::ShowView.new(official_code: @official_code)
   end
 
   def new

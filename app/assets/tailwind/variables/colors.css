@@ -16,6 +16,14 @@
 }
 
 :root {
+  /* Flash message colors */
+  --flash-notice-bg: theme('colors.green.50');
+  --flash-notice-border: theme('colors.green.200');
+  --flash-notice-text: theme('colors.green.800');
+  --flash-alert-bg: theme('colors.red.50');
+  --flash-alert-border: theme('colors.red.200');
+  --flash-alert-text: theme('colors.red.800');
+
   /* Link colors */
   --link-color: theme('colors.blue.600');
   --link-hover: theme('colors.blue.800');

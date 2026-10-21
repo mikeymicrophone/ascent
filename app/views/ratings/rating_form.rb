@@ -5,7 +5,7 @@ class Views::Ratings::RatingForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @rating, id: dom_id(@rating, :form)) do |form|
-      render_errors if @rating.errors.any?
+      FormErrors(record: @rating)
       
       div do
         form.label :voter_id, "Voter"
@@ -41,23 +41,7 @@ class Views::Ratings::RatingForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@rating.errors.count, 'error')} prohibited this rating from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @rating.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

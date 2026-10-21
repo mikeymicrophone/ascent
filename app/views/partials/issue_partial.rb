@@ -14,7 +14,7 @@ class Views::Partials::IssuePartial < Views::ApplicationView
       div do
         span { "Description:" }
         whitespace
-        div(class: "mt-1") { simple_format(@issue.description) }
+        div(class: "formatted-text") { simple_format(@issue.description) }
       end
       
       if @show_topic

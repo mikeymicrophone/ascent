@@ -35,11 +35,6 @@
     @apply bg-white;
   }
   
-  /* Notice Colors */
-  #notice {
-    @apply bg-green-50 text-green-500;
-  }
-  
   /* Form Input Colors */
   input,
   textarea,

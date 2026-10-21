@@ -14,7 +14,7 @@ class Views::Partials::ResidencePartial < Views::ApplicationView
       div do
         span { "Registered at:" }
         whitespace
-        span { @residence.registered_at.strftime("%B %d, %Y") }
+        span { @residence.registered_at.to_fs(:display) }
       end
       div do
         span { "Status:" }
@@ -24,7 +24,7 @@ class Views::Partials::ResidencePartial < Views::ApplicationView
       div do
         span { "Notes:" }
         whitespace
-        div(class: "mt-1") { simple_format(@residence.notes) }
+        div(class: "formatted-text") { simple_format(@residence.notes) }
       end
     end
   end

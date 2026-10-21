@@ -3,11 +3,11 @@ class DistrictsController < ApplicationController
 
   def index
     @pagy, @districts = pagy(District.order(:name))
-    render Views::Districts::IndexView.new(districts: @districts, pagy: @pagy, notice: notice)
+    render Views::Districts::IndexView.new(districts: @districts, pagy: @pagy)
   end
 
   def show
-    render Views::Districts::ShowView.new(district: @district, notice: notice)
+    render Views::Districts::ShowView.new(district: @district)
   end
 
   def new

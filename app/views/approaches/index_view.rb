@@ -1,14 +1,11 @@
 class Views::Approaches::IndexView < Views::ApplicationView
-  def initialize(approaches:, pagy: nil, notice: nil)
+  def initialize(approaches:, pagy: nil)
     @approaches = approaches
     @pagy = pagy
-    @notice = notice
   end
 
   def view_template(&)
     div(class: "scaffold approaches-index", id: "index_approaches") do
-      render_notice if @notice.present?
-      
       div do
         h1 { "Approaches" }
         scaffold_new_resource_link "New approach", new_approach_path, record: Approach
@@ -19,7 +16,7 @@ class Views::Approaches::IndexView < Views::ApplicationView
           @approaches.each do |approach|
             div(id: dom_id(approach, :list_item)) do
               ApproachPartial(approach: approach)
-              
+
               Ui::ResourceActions(resource: approach)
             end
           end
@@ -29,14 +26,6 @@ class Views::Approaches::IndexView < Views::ApplicationView
       end
 
       Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

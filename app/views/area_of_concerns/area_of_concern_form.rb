@@ -5,7 +5,7 @@ class Views::AreaOfConcerns::AreaOfConcernForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @area_of_concern, id: dom_id(@area_of_concern, :form)) do |form|
-      render_errors if @area_of_concern.errors.any?
+      FormErrors(record: @area_of_concern)
       
       div do
         form.label :name
@@ -40,23 +40,7 @@ class Views::AreaOfConcerns::AreaOfConcernForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@area_of_concern.errors.count, 'error')} prohibited this area_of_concern from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @area_of_concern.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

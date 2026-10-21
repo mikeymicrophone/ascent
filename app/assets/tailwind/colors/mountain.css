@@ -106,11 +106,3 @@
   @apply border-gray-200;
   @apply text-gray-700;
 }
-
-.flash-notice {
-  @apply bg-green-50 border-green-200 text-green-800;
-}
-
-.flash-alert {
-  @apply bg-red-50 border-red-200 text-red-800;
-}

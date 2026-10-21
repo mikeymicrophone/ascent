@@ -4,11 +4,11 @@ class StatesController < ApplicationController
   def index
     states_scope = State.includes(:counties, :municipalities).in_country(params[:country_id])
     @pagy, @states = pagy(states_scope)
-    render Views::States::IndexView.new(states: @states, pagy: @pagy, notice: notice)
+    render Views::States::IndexView.new(states: @states, pagy: @pagy)
   end
 
   def show
-    render Views::States::ShowView.new(state: @state, notice: notice)
+    render Views::States::ShowView.new(state: @state)
   end
 
   def new

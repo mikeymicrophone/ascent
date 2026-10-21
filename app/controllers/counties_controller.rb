@@ -3,11 +3,11 @@ class CountiesController < ApplicationController
 
   def index
     @pagy, @counties = pagy(County.includes(:state).order(:name))
-    render Views::Counties::IndexView.new(counties: @counties, pagy: @pagy, notice: notice)
+    render Views::Counties::IndexView.new(counties: @counties, pagy: @pagy)
   end
 
   def show
-    render Views::Counties::ShowView.new(county: @county, notice: notice)
+    render Views::Counties::ShowView.new(county: @county)
   end
 
   def new

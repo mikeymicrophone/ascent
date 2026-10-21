@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Views::Components::HierarchicalNavigation < Views::ApplicationView
-  include Statisticable
-
   def initialize(current_object:, show_stats: true, expandable: true, &drill_down_block)
     @current_object = current_object
     @show_stats = show_stats
@@ -61,45 +59,7 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
         span(class: "breadcrumb-current") { item.name }
       end
 
-      if @show_stats
-        quick_stats(item)
-      end
-    end
-  end
-
-  def quick_stats(item)
-    stats = electorate_stats_for(item)
-
-    div(class: "quick-stats") do
-      div(class: "stats-row") do
-        if stats[:voters] > 0
-          span(class: "stat-item voter-count") do
-            span(class: "stat-value") { stats[:voters] }
-            span(class: "stat-label") { "voters" }
-          end
-        end
-
-        if stats[:active_elections] > 0
-          span(class: "stat-item election-count") do
-            span(class: "stat-value") { stats[:active_elections] }
-            span(class: "stat-label") { "active elections" }
-          end
-        end
-
-        if stats[:total_offices] > 0
-          span(class: "stat-item office-count") do
-            span(class: "stat-value") { stats[:total_offices] }
-            span(class: "stat-label") { "offices" }
-          end
-        end
-
-        @custom_stats.each do |custom_stat|
-          span(class: "stat-item custom-stat") do
-            span(class: "stat-value") { custom_stat[:value] }
-            span(class: "stat-label") { custom_stat[:label] }
-          end
-        end
-      end
+      QuickStats(item: item, custom_stats: @custom_stats) if @show_stats
     end
   end
 

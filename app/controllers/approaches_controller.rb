@@ -3,13 +3,13 @@ class ApproachesController < ApplicationController
 
   # GET /approaches or /approaches.json
   def index
-    @approaches = Approach.all
-    render Views::Approaches::IndexView.new(approaches: @approaches, notice: notice)
+    @pagy, @approaches = pagy(Approach.all)
+    render Views::Approaches::IndexView.new(approaches: @approaches, pagy: @pagy)
   end
 
   # GET /approaches/1 or /approaches/1.json
   def show
-    render Views::Approaches::ShowView.new(approach: @approach, notice: notice)
+    render Views::Approaches::ShowView.new(approach: @approach)
   end
 
   # GET /approaches/new

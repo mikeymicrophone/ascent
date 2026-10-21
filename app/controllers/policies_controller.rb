@@ -3,11 +3,11 @@ class PoliciesController < ApplicationController
 
   def index
     @pagy, @policies = pagy(Policy.all)
-    render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy, notice: notice)
+    render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy)
   end
 
   def show
-    render Views::Policies::ShowView.new(policy: @policy, notice: notice)
+    render Views::Policies::ShowView.new(policy: @policy)
   end
 
   def new

@@ -5,7 +5,7 @@ class Views::States::StateForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @state, id: dom_id(@state, :form)) do |form|
-      render_errors if @state.errors.any?
+      FormErrors(record: @state)
       
       div do
         form.label :name
@@ -37,23 +37,7 @@ class Views::States::StateForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@state.errors.count, 'error')} prohibited this state from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @state.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

@@ -3,11 +3,11 @@ class VoterRaceBaselinesController < ApplicationController
 
   def index
     @pagy, @voter_race_baselines = pagy(VoterRaceBaseline.all)
-    render Views::VoterRaceBaselines::IndexView.new(voter_race_baselines: @voter_race_baselines, pagy: @pagy, notice: notice)
+    render Views::VoterRaceBaselines::IndexView.new(voter_race_baselines: @voter_race_baselines, pagy: @pagy)
   end
 
   def show
-    render Views::VoterRaceBaselines::ShowView.new(voter_race_baseline: @voter_race_baseline, notice: notice)
+    render Views::VoterRaceBaselines::ShowView.new(voter_race_baseline: @voter_race_baseline)
   end
 
   def new

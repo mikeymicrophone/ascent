@@ -3,11 +3,11 @@ class PositionsController < ApplicationController
 
   def index
     @pagy, @positions = pagy(Position.all)
-    render Views::Positions::IndexView.new(positions: @positions, pagy: @pagy, notice: notice)
+    render Views::Positions::IndexView.new(positions: @positions, pagy: @pagy)
   end
 
   def show
-    render Views::Positions::ShowView.new(position: @position, notice: notice)
+    render Views::Positions::ShowView.new(position: @position)
   end
 
   def new

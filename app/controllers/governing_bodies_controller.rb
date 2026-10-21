@@ -3,11 +3,11 @@ class GoverningBodiesController < ApplicationController
 
   def index
     @pagy, @governing_bodies = pagy(GoverningBody.all)
-    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy, notice: notice)
+    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy)
   end
 
   def show
-    render Views::GoverningBodies::ShowView.new(governing_body: @governing_body, notice: notice)
+    render Views::GoverningBodies::ShowView.new(governing_body: @governing_body)
   end
 
   def new

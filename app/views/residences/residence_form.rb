@@ -5,7 +5,7 @@ class Views::Residences::ResidenceForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @residence, id: dom_id(@residence, :form)) do |form|
-      render_errors if @residence.errors.any?
+      FormErrors(record: @residence)
       
       div do
         form.label :voter_id, "Voter"
@@ -52,23 +52,7 @@ class Views::Residences::ResidenceForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@residence.errors.count, 'error')} prohibited this residence from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @residence.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

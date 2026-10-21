@@ -46,11 +46,6 @@
     @apply font-['Sora'] font-medium;
   }
   
-  /* Notice Text */
-  #notice {
-    @apply font-['Source_Serif_4'] font-medium;
-  }
-  
   /* Empty State Text */
   p:only-child {
     @apply text-center;

@@ -13,14 +13,13 @@ class MunicipalitiesController < ApplicationController
     @pagy, @municipalities = pagy(municipalities_scope)
     render Views::Municipalities::IndexView.new(
       municipalities: @municipalities, 
-      pagy: @pagy, 
-      notice: notice,
+      pagy: @pagy,
       filtered_state: @state
     )
   end
 
   def show
-    render Views::Municipalities::ShowView.new(municipality: @municipality, notice: notice)
+    render Views::Municipalities::ShowView.new(municipality: @municipality)
   end
 
   def new

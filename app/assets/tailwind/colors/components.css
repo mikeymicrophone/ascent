@@ -269,11 +269,11 @@ select.error {
   border-color: var(--quick-stats-border);
 }
 
-.stat-item .stat-value {
+.quick-stats .stat-value {
   color: var(--quick-stats-value);
 }
 
-.stat-item .stat-label {
+.quick-stats .stat-label {
   color: var(--quick-stats-label);
 }
 
@@ -283,11 +283,11 @@ select.error {
   border-color: var(--geo-summary-border);
 }
 
-.summary-value {
+.summary-grid .stat-value {
   color: var(--geo-summary-value);
 }
 
-.summary-label {
+.summary-grid .stat-label {
   color: var(--geo-summary-label);
 }
 
@@ -407,4 +407,17 @@ select.error {
   border-color: var(--card-border);
   @apply border;
   box-shadow: var(--shadow-soft);
+}
+
+/* Flash message colors */
+.flash-notice {
+  background-color: var(--flash-notice-bg);
+  border-color: var(--flash-notice-border);
+  color: var(--flash-notice-text);
+}
+
+.flash-alert {
+  background-color: var(--flash-alert-bg);
+  border-color: var(--flash-alert-border);
+  color: var(--flash-alert-text);
 }

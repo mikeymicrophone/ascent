@@ -1,14 +1,11 @@
 class Views::States::IndexView < Views::ApplicationView
-  def initialize(states:, pagy: nil, notice: nil)
+  def initialize(states:, pagy: nil)
     @states = states
     @pagy = pagy
-    @notice = notice
   end
 
   def view_template(&)
     div(class: "scaffold states-index", id: "index_states") do
-      render_notice if @notice.present?
-      
       div do
         h1 { "States" }
         scaffold_new_resource_link "New state", new_state_path, record: State
@@ -19,7 +16,7 @@ class Views::States::IndexView < Views::ApplicationView
           @states.each do |state|
             div(id: dom_id(state, :list_item)) do
               StatePartial(state: state)
-              
+
               Ui::ResourceActions(resource: state)
             end
           end
@@ -29,14 +26,6 @@ class Views::States::IndexView < Views::ApplicationView
       end
 
       Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

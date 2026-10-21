@@ -30,7 +30,7 @@ class Views::Partials::CandidacyPartial < Views::ApplicationView
           end
           div(class: "info-item") do
             span(class: "info-label") { "Announced" }
-            span(class: "info-value") { @candidacy.announcement_date.strftime("%B %d, %Y") }
+            span(class: "info-value") { @candidacy.announcement_date.to_fs(:display) }
           end
         end
         

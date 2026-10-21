@@ -6,11 +6,11 @@ class RacesController < ApplicationController
     races_scope = races_scope.where(office_id: params[:office_id]) if params[:office_id]
     races_scope = races_scope.where(election_id: params[:election_id]) if params[:election_id]
     @pagy, @races = pagy(races_scope)
-    render Views::Races::IndexView.new(races: @races, pagy: @pagy, notice: notice)
+    render Views::Races::IndexView.new(races: @races, pagy: @pagy)
   end
 
   def show
-    render Views::Races::ShowView.new(race: @race, notice: notice)
+    render Views::Races::ShowView.new(race: @race)
   end
 
   def new

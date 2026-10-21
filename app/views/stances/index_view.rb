@@ -1,14 +1,11 @@
 class Views::Stances::IndexView < Views::ApplicationView
-  def initialize(stances:, pagy: nil, notice: nil)
+  def initialize(stances:, pagy: nil)
     @stances = stances
     @pagy = pagy
-    @notice = notice
   end
 
   def view_template(&)
     div(class: "scaffold stances-index", id: "index_stances") do
-      render_notice if @notice.present?
-      
       div do
         h1 { "Stances" }
         scaffold_new_resource_link "New stance", new_stance_path, record: Stance
@@ -19,7 +16,7 @@ class Views::Stances::IndexView < Views::ApplicationView
           @stances.each do |stance|
             div(id: dom_id(stance, :list_item)) do
               StancePartial(stance: stance)
-              
+
               Ui::ResourceActions(resource: stance)
             end
           end
@@ -29,14 +26,6 @@ class Views::Stances::IndexView < Views::ApplicationView
       end
 
       Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

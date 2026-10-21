@@ -5,7 +5,7 @@ class Views::Years::YearForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @year, id: dom_id(@year, :form)) do |form|
-      render_errors if @year.errors.any?
+      FormErrors(record: @year)
       
       div do
         form.label :year
@@ -39,18 +39,6 @@ class Views::Years::YearForm < Views::ApplicationView
   end
 
   private
-
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@year.errors.count, 'error')} prohibited this year from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @year.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
 
   def input_classes(errors)
     errors.any? ? "error" : ""

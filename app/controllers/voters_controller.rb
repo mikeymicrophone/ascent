@@ -4,11 +4,11 @@ class VotersController < ApplicationController
   def index
     voters_scope = Voter.with_voting_activity
     @pagy, @voters = pagy(voters_scope)
-    render Views::Voters::IndexView.new(voters: @voters, pagy: @pagy, notice: notice)
+    render Views::Voters::IndexView.new(voters: @voters, pagy: @pagy)
   end
 
   def show
-    render Views::Voters::ShowView.new(voter: @voter, notice: notice)
+    render Views::Voters::ShowView.new(voter: @voter)
   end
 
   def new

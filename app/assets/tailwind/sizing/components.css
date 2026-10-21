@@ -331,15 +331,15 @@ select:focus {
   @apply grid grid-cols-3 gap-3 mt-2;
 }
 
-.stat-item {
+.stats-grid .stat-item {
   @apply text-center;
 }
 
-.stat-label {
+.stats-grid .stat-label {
   @apply text-xs;
 }
 
-.stat-value {
+.stats-grid .stat-value {
   @apply text-sm;
 }
 
@@ -368,12 +368,12 @@ select:focus {
   @apply gap-3;
 }
 
-.stat-item {
+.quick-stats .stat-item {
   @apply gap-1;
 }
 
-.stat-value,
-.stat-label {
+.quick-stats .stat-value,
+.quick-stats .stat-label {
   @apply text-xs;
 }
 
@@ -404,15 +404,15 @@ select:focus {
   @apply grid grid-cols-2 gap-3 mt-2;
 }
 
-.summary-stat {
+.summary-grid .stat-item {
   @apply text-center;
 }
 
-.summary-value {
+.summary-grid .stat-value {
   @apply text-lg;
 }
 
-.summary-label {
+.summary-grid .stat-label {
   @apply text-xs;
 }
 
@@ -467,4 +467,14 @@ select:focus {
 
 .results-container {
   @apply space-y-3;
+}
+
+/* Multi-paragraph text from simple_format */
+.formatted-text {
+  @apply mt-1;
+}
+
+/* Form error list */
+.error-messages {
+  @apply ml-6;
 }

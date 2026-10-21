@@ -19,7 +19,7 @@ class Views::Partials::PolicyPartial < Views::ApplicationView
         helpers.link_to_name @policy.approach, class: "link approach"
       end
       div do
-        div(class: "mt-1") { simple_format(@policy.description) }
+        div(class: "formatted-text") { simple_format(@policy.description) }
       end
       div do
         span { "Status:" }

@@ -10,7 +10,6 @@ class Views::Mountains::ShowView < Views::ApplicationView
 
   def view_template
     div(class: "mountain-show") do
-      render_flash
       render_header
       if @mountain_data.empty?
         render_empty_state
@@ -28,15 +27,6 @@ class Views::Mountains::ShowView < Views::ApplicationView
 
   private
 
-  def render_flash
-    if flash[:notice].present?
-      div(class: "flash-notice", role: "status") { flash[:notice] }
-    end
-    if flash[:alert].present?
-      div(class: "flash-alert", role: "alert") { flash[:alert] }
-    end
-  end
-
   def render_header
     div(class: "mountain-header") do
       h1(class: "election-title") { @race.name }
@@ -46,7 +36,7 @@ class Views::Mountains::ShowView < Views::ApplicationView
         whitespace
         link_to @race.election.name, @race.election, class: "link"
       end
-      
+
       div(class: "voter-info") do
         p { "Voter: #{@voter.name}" }
         if @baseline
@@ -71,9 +61,9 @@ class Views::Mountains::ShowView < Views::ApplicationView
 
   def render_controls
     div(class: "mountain-controls") do
-      link_to("Edit Ratings", edit_mountain_path(@race, voter_id: @voter.id), 
+      link_to("Edit Ratings", edit_mountain_path(@race, voter_id: @voter.id),
               class: "btn-primary")
-      link_to("Simulate More Data", simulate_mountain_path(@race), 
+      link_to("Simulate More Data", simulate_mountain_path(@race),
               data: { turbo_method: :post }, class: "btn-secondary")
       link_to("Back to Races", mountains_path, class: "btn-tertiary")
     end

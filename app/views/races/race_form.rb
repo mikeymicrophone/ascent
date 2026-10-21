@@ -5,7 +5,7 @@ class Views::Races::RaceForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @race, id: dom_id(@race, :form)) do |form|
-      render_errors if @race.errors.any?
+      FormErrors(record: @race)
       
       div do
         form.label :election_id, "Election"
@@ -49,18 +49,6 @@ class Views::Races::RaceForm < Views::ApplicationView
   end
 
   private
-
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@race.errors.count, 'error')} prohibited this race from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @race.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
 
   def input_classes(errors)
     errors.any? ? "error" : ""

@@ -77,7 +77,7 @@ class Views::Partials::StancePartial < Views::ApplicationView
         div do
           span { "Explanation:" }
           whitespace
-          div(class: "mt-1") { simple_format(@stance.explanation) }
+          div(class: "formatted-text") { simple_format(@stance.explanation) }
         end
       }
     }
@@ -105,7 +105,7 @@ class Views::Partials::StancePartial < Views::ApplicationView
         div do
           span { "Evidence links:" }
           whitespace
-          div(class: "mt-1") { simple_format(@stance.evidence_links) }
+          div(class: "formatted-text") { simple_format(@stance.evidence_links) }
         end
       }
     }

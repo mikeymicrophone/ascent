@@ -12,7 +12,7 @@ class Views::Partials::ApproachPartial < Views::ApplicationView
       div do
         span { "Description:" }
         whitespace
-        div(class: "mt-1") { simple_format(@approach.description) }
+        div(class: "formatted-text") { simple_format(@approach.description) }
       end
       div do
         span { "Issue:" }

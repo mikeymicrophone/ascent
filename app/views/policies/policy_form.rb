@@ -5,7 +5,7 @@ class Views::Policies::PolicyForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @policy, id: dom_id(@policy, :form)) do |form|
-      render_errors if @policy.errors.any?
+      FormErrors(record: @policy)
       
       div do
         form.label :governing_body_id, "Governing body"
@@ -78,23 +78,7 @@ class Views::Policies::PolicyForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@policy.errors.count, 'error')} prohibited this policy from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @policy.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

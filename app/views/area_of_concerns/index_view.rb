@@ -1,14 +1,11 @@
 class Views::AreaOfConcerns::IndexView < Views::ApplicationView
-  def initialize(area_of_concerns:, pagy: nil, notice: nil)
+  def initialize(area_of_concerns:, pagy: nil)
     @area_of_concerns = area_of_concerns
     @pagy = pagy
-    @notice = notice
   end
 
   def view_template(&)
     div(class: "scaffold area_of_concerns-index", id: "index_area_of_concerns") do
-      render_notice if @notice.present?
-      
       div do
         h1 { "Area of concerns" }
         scaffold_new_resource_link "New area of concern", new_area_of_concern_path, record: AreaOfConcern
@@ -19,7 +16,7 @@ class Views::AreaOfConcerns::IndexView < Views::ApplicationView
           @area_of_concerns.each do |area_of_concern|
             div(id: dom_id(area_of_concern, :list_item)) do
               render AreaOfConcernPartial.new(area_of_concern: area_of_concern)
-              
+
               Ui::ResourceActions(resource: area_of_concern)
             end
           end
@@ -29,14 +26,6 @@ class Views::AreaOfConcerns::IndexView < Views::ApplicationView
       end
 
       Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

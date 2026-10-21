@@ -3,11 +3,11 @@ class OfficesController < ApplicationController
 
   def index
     @pagy, @offices = pagy(Office.with_elections_and_candidates.includes(jurisdiction: :jurisdictionable))
-    render Views::Offices::IndexView.new(offices: @offices, pagy: @pagy, notice: notice)
+    render Views::Offices::IndexView.new(offices: @offices, pagy: @pagy)
   end
 
   def show
-    render Views::Offices::ShowView.new(office: @office, notice: notice)
+    render Views::Offices::ShowView.new(office: @office)
   end
 
   def new

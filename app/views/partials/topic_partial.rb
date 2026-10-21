@@ -12,7 +12,7 @@ class Views::Partials::TopicPartial < Views::ApplicationView
       div do
         span { "Description:" }
         whitespace
-        div(class: "mt-1") { simple_format(@topic.description) }
+        div(class: "formatted-text") { simple_format(@topic.description) }
       end
       
       expandable(@topic, :issues) do |issues|

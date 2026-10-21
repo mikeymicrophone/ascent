@@ -5,7 +5,7 @@ class Views::Elections::ElectionForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @election, id: dom_id(@election, :form)) do |form|
-      render_errors if @election.errors.any?
+      FormErrors(record: @election)
       
       div do
         form.label :name
@@ -89,18 +89,6 @@ class Views::Elections::ElectionForm < Views::ApplicationView
   end
 
   private
-
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@election.errors.count, 'error')} prohibited this election from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @election.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
 
   def input_classes(errors)
     errors.any? ? "error" : ""

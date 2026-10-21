@@ -5,7 +5,7 @@ class Views::Positions::PositionForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @position, id: dom_id(@position, :form)) do |form|
-      render_errors if @position.errors.any?
+      FormErrors(record: @position)
       
       div do
         form.label :title
@@ -42,23 +42,7 @@ class Views::Positions::PositionForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@position.errors.count, 'error')} prohibited this position from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @position.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

@@ -3,3 +3,12 @@
 .main-content {
   @apply px-5 pb-10;
 }
+
+.flash-messages {
+  @apply gap-2 mb-5;
+}
+
+.flash-notice,
+.flash-alert {
+  @apply rounded-md border px-4 py-3;
+}

@@ -171,11 +171,11 @@
 }
 
 /* Geographic summary typography */
-.summary-value {
+.summary-grid .stat-value {
   @apply font-['IBM_Plex_Mono'] font-bold;
 }
 
-.summary-label {
+.summary-grid .stat-label {
   @apply font-['Sora'] font-normal uppercase tracking-wide;
 }
 
@@ -269,4 +269,15 @@
 .status-historical,
 .status-party {
   @apply font-['Sora'] font-medium text-xs;
+}
+
+/* Flash message typography */
+.flash-notice,
+.flash-alert {
+  @apply font-['Source_Serif_4'] font-medium;
+}
+
+/* Form error list typography */
+.error-messages {
+  @apply list-disc;
 }

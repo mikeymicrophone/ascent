@@ -5,7 +5,7 @@ class Views::Offices::OfficeForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @office, id: dom_id(@office, :form)) do |form|
-      render_errors if @office.errors.any?
+      FormErrors(record: @office)
       
       div do
         form.label :position_id, "Position"
@@ -65,18 +65,6 @@ class Views::Offices::OfficeForm < Views::ApplicationView
   end
 
   private
-
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@office.errors.count, 'error')} prohibited this office from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @office.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
 
   def input_classes(errors)
     errors.any? ? "error" : ""

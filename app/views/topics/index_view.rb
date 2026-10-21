@@ -1,14 +1,11 @@
 class Views::Topics::IndexView < Views::ApplicationView
-  def initialize(topics:, pagy: nil, notice: nil)
+  def initialize(topics:, pagy: nil)
     @topics = topics
     @pagy = pagy
-    @notice = notice
   end
 
   def view_template(&)
     div(class: "scaffold topics-index", id: "index_topics") do
-      render_notice if @notice.present?
-      
       div do
         h1 { "Topics" }
         scaffold_new_resource_link "New topic", new_topic_path, record: Topic
@@ -19,7 +16,7 @@ class Views::Topics::IndexView < Views::ApplicationView
           @topics.each do |topic|
             div(id: dom_id(topic, :list_item)) do
               TopicPartial(topic: topic)
-              
+
               Ui::ResourceActions(resource: topic)
             end
           end
@@ -29,14 +26,6 @@ class Views::Topics::IndexView < Views::ApplicationView
       end
 
       Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

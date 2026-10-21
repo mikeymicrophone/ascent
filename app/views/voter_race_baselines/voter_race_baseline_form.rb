@@ -5,7 +5,7 @@ class Views::VoterRaceBaselines::VoterRaceBaselineForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @voter_race_baseline, id: dom_id(@voter_race_baseline, :form)) do |form|
-      render_errors if @voter_race_baseline.errors.any?
+      FormErrors(record: @voter_race_baseline)
       
       div do
         form.label :voter_id, "Voter"
@@ -41,23 +41,7 @@ class Views::VoterRaceBaselines::VoterRaceBaselineForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@voter_race_baseline.errors.count, 'error')} prohibited this voter_race_baseline from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @voter_race_baseline.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

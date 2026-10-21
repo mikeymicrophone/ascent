@@ -5,7 +5,7 @@ class Views::Stances::StanceForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @stance, id: dom_id(@stance, :form)) do |form|
-      render_errors if @stance.errors.any?
+      FormErrors(record: @stance)
       
       div do
         form.label :candidacy_id, "Candidacy"
@@ -55,21 +55,7 @@ class Views::Stances::StanceForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@stance.errors.count, 'error')} prohibited this stance from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @stance.errors.each { li { it.full_message } }
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

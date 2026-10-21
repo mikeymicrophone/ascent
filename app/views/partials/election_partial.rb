@@ -33,7 +33,7 @@ class Views::Partials::ElectionPartial < Views::ApplicationView
           end
           div(class: "info-item") do
             span(class: "info-label") { "Election Date" }
-            span(class: "info-value") { @election.election_date.strftime("%B %d, %Y") }
+            span(class: "info-value") { @election.election_date.to_fs(:display) }
           end
           early_voting_period if @election.early_voting_starts_on || @election.early_voting_ends_on
         end
@@ -70,7 +70,7 @@ class Views::Partials::ElectionPartial < Views::ApplicationView
       span(class: "info-label") { "Early Voting" }
       span(class: "info-value") do
         [ @election.early_voting_starts_on, @election.early_voting_ends_on ]
-          .map { it&.strftime("%B %d, %Y") || "TBD" }
+          .map { it&.to_fs(:display) || "TBD" }
           .join(" – ")
       end
     end

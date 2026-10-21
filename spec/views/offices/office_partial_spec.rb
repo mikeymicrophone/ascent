@@ -234,8 +234,8 @@ RSpec.describe Views::Partials::OfficePartial, type: :view do
       it 'shows voter turnout statistics' do
         expect(rendered).to include('Voter Participation')
         expect(rendered).to include('class="turnout-stats"')
-        expect(rendered).to include('Registered Voters:')
-        expect(rendered).to include('Total Approvals:')
+        expect(rendered).to include('Registered Voters')
+        expect(rendered).to include('Total Approvals')
       end
 
       it 'includes winner indicator for top candidate' do

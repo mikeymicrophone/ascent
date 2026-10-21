@@ -6,11 +6,11 @@ class CandidaciesController < ApplicationController
     candidacies_scope = candidacies_scope.where(person_id: params[:person_id]) if params[:person_id]
     candidacies_scope = candidacies_scope.where(race_id: params[:race_id]) if params[:race_id]
     @pagy, @candidacies = pagy(candidacies_scope)
-    render Views::Candidacies::IndexView.new(candidacies: @candidacies, pagy: @pagy, notice: notice)
+    render Views::Candidacies::IndexView.new(candidacies: @candidacies, pagy: @pagy)
   end
 
   def show
-    render Views::Candidacies::ShowView.new(candidacy: @candidacy, notice: notice)
+    render Views::Candidacies::ShowView.new(candidacy: @candidacy)
   end
 
   def new

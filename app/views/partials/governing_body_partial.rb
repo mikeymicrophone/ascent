@@ -42,7 +42,7 @@ class Views::Partials::GoverningBodyPartial < Views::ApplicationView
       div do
         span { "Description:" }
         whitespace
-        div(class: "mt-1") { simple_format(@governing_body.description) }
+        div(class: "formatted-text") { simple_format(@governing_body.description) }
       end
       div do
         span { "Meeting schedule:" }

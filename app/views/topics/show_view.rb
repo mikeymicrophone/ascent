@@ -1,7 +1,6 @@
 class Views::Topics::ShowView < Views::ApplicationView
-  def initialize(topic:, notice: nil)
+  def initialize(topic:)
     @topic = topic
-    @notice = notice
     @content_sections = []
   end
 
@@ -11,21 +10,19 @@ class Views::Topics::ShowView < Views::ApplicationView
     else
       render_default_content
     end
-    
+
     div(class: "scaffold topic-show", id: dom_id(@topic, :show)) do
-      render_notice if @notice.present?
-      
       h1 { "Showing topic" }
-      
+
       TopicPartial(topic: @topic)
-      
+
       @content_sections.each do |section|
         div(class: "topic-content-section topic-#{section[:key]}") do
           h2 { section[:title] }
           section[:content].call
         end
       end
-      
+
       Ui::ResourceActions(resource: @topic)
     end
   end
@@ -49,21 +46,13 @@ class Views::Topics::ShowView < Views::ApplicationView
         end
       end
     end
-    
+
     if @topic.stances.any?
       content_section("Candidate Positions on this Topic", key: "stances") do
         @topic.stances.includes(:candidacy, :issue, :approach).each do |stance|
           StancePartial(stance: stance, show_candidacy: true, show_issue: true, show_approach: true)
         end
       end
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

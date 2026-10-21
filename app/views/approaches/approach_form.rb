@@ -5,7 +5,7 @@ class Views::Approaches::ApproachForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @approach, id: dom_id(@approach, :form)) do |form|
-      render_errors if @approach.errors.any?
+      FormErrors(record: @approach)
       
       div do
         form.label :title
@@ -38,23 +38,7 @@ class Views::Approaches::ApproachForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@approach.errors.count, 'error')} prohibited this approach from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @approach.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

@@ -33,7 +33,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
       div do
         span { "Notes:" }
         whitespace
-        div(class: "mt-1") { simple_format(@office.notes) }
+        div(class: "formatted-text") { simple_format(@office.notes) }
       end
       
       current_office_holder
@@ -85,7 +85,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
         div(class: "election-main-info") do
           link_to race.election.name, race, class: "link election-name"
           div(class: "election-meta") do
-            span(class: "election-date") { race.election_date.strftime("%B %d, %Y") }
+            span(class: "election-date") { race.election_date.to_fs(:display) }
             span(class: "election-status") do
               whitespace
               span { "•" }
@@ -141,7 +141,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
     div(class: "election-schedule") do
       span(class: "schedule-label") { "Scheduled:" }
       whitespace
-      span(class: "schedule-date") { race.election_date.strftime("%B %d, %Y") }
+      span(class: "schedule-date") { race.election_date.to_fs(:display) }
       
       days_until = (race.election_date - Date.current).to_i
       if days_until > 0
@@ -160,21 +160,9 @@ class Views::Partials::OfficePartial < Views::ApplicationView
     div(class: "turnout-stats") do
       h6 { "Voter Participation" }
       div(class: "stats-grid") do
-        div(class: "stat-item") do
-          span(class: "stat-label") { "Registered Voters:" }
-          whitespace
-          span(class: "stat-value") { summary[:total_registered_voters] }
-        end
-        div(class: "stat-item") do
-          span(class: "stat-label") { "Total Approvals:" }
-          whitespace
-          span(class: "stat-value") { summary[:total_approval_votes] }
-        end
-        div(class: "stat-item") do
-          span(class: "stat-label") { "Avg Approvals/Voter:" }
-          whitespace
-          span(class: "stat-value") { summary[:average_approvals_per_voter] }
-        end
+        Stat(value: summary[:total_registered_voters], label: "Registered Voters")
+        Stat(value: summary[:total_approval_votes], label: "Total Approvals")
+        Stat(value: summary[:average_approvals_per_voter], label: "Avg Approvals/Voter")
       end
     end
   end

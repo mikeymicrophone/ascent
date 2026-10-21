@@ -5,7 +5,7 @@ class Views::Issues::IssueForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @issue, id: dom_id(@issue, :form)) do |form|
-      render_errors if @issue.errors.any?
+      FormErrors(record: @issue)
       
       div do
         form.label :title
@@ -38,23 +38,7 @@ class Views::Issues::IssueForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@issue.errors.count, 'error')} prohibited this issue from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @issue.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

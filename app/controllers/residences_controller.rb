@@ -3,11 +3,11 @@ class ResidencesController < ApplicationController
 
   def index
     @pagy, @residences = pagy(Residence.all)
-    render Views::Residences::IndexView.new(residences: @residences, pagy: @pagy, notice: notice)
+    render Views::Residences::IndexView.new(residences: @residences, pagy: @pagy)
   end
 
   def show
-    render Views::Residences::ShowView.new(residence: @residence, notice: notice)
+    render Views::Residences::ShowView.new(residence: @residence)
   end
 
   def new

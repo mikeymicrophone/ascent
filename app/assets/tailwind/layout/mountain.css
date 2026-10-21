@@ -19,11 +19,6 @@
   @apply container mx-auto px-4 py-8;
 }
 
-.flash-notice,
-.flash-alert {
-  @apply mb-4 rounded border px-4 py-3;
-}
-
 .mountain-header {
   @apply mb-8;
 }

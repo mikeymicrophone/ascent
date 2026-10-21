@@ -4,11 +4,11 @@ class PeopleController < ApplicationController
   def index
     people_scope = Person.with_candidacy_details
     @pagy, @people = pagy(people_scope)
-    render Views::People::IndexView.new(people: @people, pagy: @pagy, notice: notice)
+    render Views::People::IndexView.new(people: @people, pagy: @pagy)
   end
 
   def show
-    render Views::People::ShowView.new(person: @person, notice: notice)
+    render Views::People::ShowView.new(person: @person)
   end
 
   def new

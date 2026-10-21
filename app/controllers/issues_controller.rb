@@ -3,13 +3,13 @@ class IssuesController < ApplicationController
 
   # GET /issues or /issues.json
   def index
-    @issues = Issue.all
-    render Views::Issues::IndexView.new(issues: @issues, notice: notice)
+    @pagy, @issues = pagy(Issue.includes(:topic))
+    render Views::Issues::IndexView.new(issues: @issues, pagy: @pagy)
   end
 
   # GET /issues/1 or /issues/1.json
   def show
-    render Views::Issues::ShowView.new(issue: @issue, notice: notice)
+    render Views::Issues::ShowView.new(issue: @issue)
   end
 
   # GET /issues/new

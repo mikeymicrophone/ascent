@@ -297,12 +297,15 @@ select {
   @apply grid;
 }
 
-.stat-item {
+.stats-grid .stat-item,
+.summary-grid .stat-item {
   @apply block;
 }
 
-.stat-label,
-.stat-value {
+.stats-grid .stat-label,
+.stats-grid .stat-value,
+.summary-grid .stat-label,
+.summary-grid .stat-value {
   @apply block;
 }
 
@@ -345,15 +348,15 @@ select {
   /* Spread stats across available space */
 }
 
-.stat-item {
+.quick-stats .stat-item {
   @apply flex items-center px-3 py-1 rounded-full;
   /* More distinct stat items */
   background-color: var(--quick-stats-bg);
   border: 1px solid var(--quick-stats-border);
 }
 
-.stat-value,
-.stat-label {
+.quick-stats .stat-value,
+.quick-stats .stat-label {
   @apply inline;
 }
 
@@ -385,15 +388,6 @@ select {
 
 .summary-grid {
   @apply grid;
-}
-
-.summary-stat {
-  @apply block;
-}
-
-.summary-value,
-.summary-label {
-  @apply block;
 }
 
 /* Enhanced partial layout system */

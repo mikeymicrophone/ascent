@@ -5,7 +5,7 @@ class Views::OfficialCodes::OfficialCodeForm < Views::ApplicationView
 
   def view_template(&)
     form_with(model: @official_code, id: dom_id(@official_code, :form)) do |form|
-      render_errors if @official_code.errors.any?
+      FormErrors(record: @official_code)
       
       div do
         form.label :policy_id, "Policy"
@@ -77,23 +77,7 @@ class Views::OfficialCodes::OfficialCodeForm < Views::ApplicationView
 
   private
 
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@official_code.errors.count, 'error')} prohibited this official_code from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @official_code.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
   def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
     errors.any? ? "error" : ""
   end
 end

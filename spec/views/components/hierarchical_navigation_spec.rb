@@ -198,13 +198,13 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
 
       it 'calculates total states correctly' do
         # Should count California and Texas
-        summary_stats = component.send(:calculate_comprehensive_stats, country)
+        summary_stats = Views::Components::GeographicSummary.new(current_object: country).send(:calculate_comprehensive_stats, country)
         expect(summary_stats[:total_states]).to eq(2)
       end
 
       it 'calculates total municipalities correctly' do
         # Should count San Francisco, Los Angeles, Houston
-        summary_stats = component.send(:calculate_comprehensive_stats, country)
+        summary_stats = Views::Components::GeographicSummary.new(current_object: country).send(:calculate_comprehensive_stats, country)
         expect(summary_stats[:total_municipalities]).to eq(3)
       end
     end

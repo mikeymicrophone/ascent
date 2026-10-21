@@ -10,7 +10,7 @@ class Views::Partials::PersonPartial < Views::ApplicationView
         span { @person.email }
       end
       div do
-        div(class: "mt-1") { simple_format(@person.bio) }
+        div(class: "formatted-text") { simple_format(@person.bio) }
       end
 
       expandable(@person, :candidacies, title: "Elections") do |candidacies|
@@ -51,7 +51,7 @@ class Views::Partials::PersonPartial < Views::ApplicationView
     end
 
     div(class: "candidacy-details") do
-      span(class: "election-date") { election.election_date.strftime("%B %d, %Y") }
+      span(class: "election-date") { election.election_date.to_fs(:display) }
       span(class: "status-indicator status-#{candidacy.status}") { candidacy.status.capitalize }
 
       if candidacy.ballot_labels.present?

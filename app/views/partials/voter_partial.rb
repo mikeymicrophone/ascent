@@ -14,7 +14,7 @@ class Views::Partials::VoterPartial < Views::ApplicationView
       div do
         span { "Birth date:" }
         whitespace
-        span { @voter.birth_date.strftime("%B %d, %Y") }
+        span { @voter.birth_date.to_fs(:display) }
       end
       div do
         span { "Is verified:" }
@@ -66,7 +66,7 @@ class Views::Partials::VoterPartial < Views::ApplicationView
     
     div(class: "voting-activity-details") do
       # Election date
-      span(class: "election-date") { race.election_date.strftime("%B %d, %Y") }
+      span(class: "election-date") { race.election_date.to_fs(:display) }
       
       # Voting participation info
       span(class: "voting-participation") { "#{ratings_count} ratings" }

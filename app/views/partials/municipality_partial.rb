@@ -25,7 +25,7 @@ class Views::Partials::MunicipalityPartial < Views::ApplicationView
           div(class: "election-status") do
             span(class: "status-indicator status-#{election.status}") { election.status.capitalize }
             if election.election_date
-              span(class: "election-date") { " - #{election.election_date.strftime("%B %d, %Y")}" }
+              span(class: "election-date") { " - #{election.election_date.to_fs(:display)}" }
             end
           end
         end

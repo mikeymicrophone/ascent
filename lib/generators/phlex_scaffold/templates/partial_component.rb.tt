@@ -13,7 +13,7 @@ class Views::<%= controller_class_name %>::<%= class_name %>Partial < Views::App
         span { "<%= attribute.human_name %>:" }
         whitespace
 <% if attribute.field_type == :text || attribute.field_type == :textarea -%>
-        div(class: "mt-1") { simple_format(@<%= singular_table_name %>.<%= attribute.column_name %>) }
+        div(class: "formatted-text") { simple_format(@<%= singular_table_name %>.<%= attribute.column_name %>) }
 <% elsif attribute.reference? || attribute.foreign_key? -%>
 <% association_name = attribute.reference? ? attribute.singular_name : attribute.singular_name -%>
 <% model_class_name = association_name.downcase -%>

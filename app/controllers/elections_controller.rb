@@ -3,11 +3,11 @@ class ElectionsController < ApplicationController
 
   def index
     @pagy, @elections = pagy(Election.with_full_details.recent)
-    render Views::Elections::IndexView.new(elections: @elections, pagy: @pagy, notice: notice)
+    render Views::Elections::IndexView.new(elections: @elections, pagy: @pagy)
   end
 
   def show
-    render Views::Elections::ShowView.new(election: @election, notice: notice)
+    render Views::Elections::ShowView.new(election: @election)
   end
 
   def new
