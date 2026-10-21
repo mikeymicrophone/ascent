@@ -6,6 +6,9 @@ class Person < ApplicationRecord
   # Ballots name candidates without contact details, and some print only a surname.
   validates :last_name, presence: true
   validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
+  # Generated usernames stay provisional until a verified handle replaces them.
+  validates :username, uniqueness: true, format: { with: /\A[a-z0-9_]+\z/ }, allow_blank: true
+  validates :username_status, inclusion: { in: %w[provisional verified] }, if: :username?
   
   scope :with_candidacy_details, -> { includes(candidacies: { race: [:election, { office: :position }] }) }
   scope :with_recent_candidacies, -> { 

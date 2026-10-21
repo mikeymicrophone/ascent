@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_20_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -37,12 +37,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
   create_table "candidacies", force: :cascade do |t|
     t.date "announcement_date"
     t.datetime "created_at", null: false
+    t.string "entity_code"
     t.string "party_affiliation"
     t.bigint "person_id", null: false
     t.text "platform_summary"
     t.bigint "race_id", null: false
     t.string "status"
     t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_candidacies_on_entity_code", unique: true
     t.index ["person_id"], name: "index_candidacies_on_person_id"
     t.index ["race_id"], name: "index_candidacies_on_race_id"
   end
@@ -60,9 +62,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
   create_table "counties", force: :cascade do |t|
     t.string "code"
     t.datetime "created_at", null: false
+    t.string "entity_code"
     t.string "name", null: false
     t.bigint "state_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_counties_on_entity_code", unique: true
     t.index ["state_id"], name: "index_counties_on_state_id"
   end
 
@@ -70,15 +74,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
     t.string "code"
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "entity_code"
     t.string "name"
     t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_countries_on_entity_code", unique: true
   end
 
   create_table "districts", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "entity_code"
     t.string "kind", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_districts_on_entity_code", unique: true
   end
 
   create_table "elections", force: :cascade do |t|
@@ -87,6 +95,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
     t.date "early_voting_ends_on"
     t.date "early_voting_starts_on"
     t.date "election_date", null: false
+    t.string "entity_code"
     t.boolean "is_historical"
     t.boolean "is_mock"
     t.bigint "jurisdiction_id", null: false
@@ -95,10 +104,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
     t.string "status"
     t.datetime "updated_at", null: false
     t.bigint "year_id", null: false
+    t.index ["entity_code"], name: "index_elections_on_entity_code", unique: true
     t.index ["jurisdiction_id"], name: "index_elections_on_jurisdiction_id"
     t.index ["year_id"], name: "index_elections_on_year_id"
     t.check_constraint "early_voting_starts_on <= early_voting_ends_on", name: "elections_early_voting_dates_ordered"
     t.check_constraint "early_voting_starts_on <= election_date AND early_voting_ends_on <= election_date", name: "elections_early_voting_before_election_date"
+  end
+
+  create_table "entity_codes", force: :cascade do |t|
+    t.string "canonical_code", null: false
+    t.string "catalog", null: false
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.string "namespace", null: false
+    t.bigint "record_id"
+    t.string "record_type"
+    t.datetime "updated_at", null: false
+    t.index ["namespace", "catalog", "canonical_code"], name: "index_entity_codes_on_namespace_and_catalog_and_canonical_code"
+    t.index ["namespace", "catalog", "code"], name: "index_entity_codes_on_namespace_and_catalog_and_code", unique: true
+    t.index ["record_type", "record_id"], name: "index_entity_codes_on_record"
   end
 
   create_table "governance_types", force: :cascade do |t|
@@ -161,23 +185,28 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
   create_table "municipalities", force: :cascade do |t|
     t.bigint "county_id"
     t.datetime "created_at", null: false
+    t.string "entity_code"
     t.string "name"
     t.bigint "state_id", null: false
     t.datetime "updated_at", null: false
     t.index ["county_id"], name: "index_municipalities_on_county_id"
+    t.index ["entity_code"], name: "index_municipalities_on_entity_code", unique: true
     t.index ["state_id"], name: "index_municipalities_on_state_id"
   end
 
   create_table "offices", force: :cascade do |t|
     t.bigint "chamber_id"
     t.datetime "created_at", null: false
+    t.string "entity_code"
     t.bigint "governing_body_id"
     t.boolean "is_active"
     t.bigint "jurisdiction_id", null: false
     t.text "notes"
     t.bigint "position_id", null: false
+    t.string "seat_code"
     t.datetime "updated_at", null: false
     t.index ["chamber_id"], name: "index_offices_on_chamber_id"
+    t.index ["entity_code"], name: "index_offices_on_entity_code", unique: true
     t.index ["governing_body_id"], name: "index_offices_on_governing_body_id"
     t.index ["jurisdiction_id"], name: "index_offices_on_jurisdiction_id"
     t.index ["position_id"], name: "index_offices_on_position_id"
@@ -203,10 +232,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
     t.date "birth_date"
     t.datetime "created_at", null: false
     t.string "email"
+    t.string "entity_code"
     t.string "first_name"
     t.string "last_name"
     t.string "middle_name"
     t.datetime "updated_at", null: false
+    t.string "username"
+    t.string "username_status"
+    t.index ["entity_code"], name: "index_people_on_entity_code", unique: true
+    t.index ["username"], name: "index_people_on_username", unique: true
   end
 
   create_table "policies", force: :cascade do |t|
@@ -229,19 +263,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
     t.integer "branch"
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "entity_code"
     t.integer "term_length_years"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_positions_on_entity_code", unique: true
   end
 
   create_table "races", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
     t.bigint "election_id", null: false
+    t.string "entity_code"
     t.bigint "office_id", null: false
     t.string "status", default: "upcoming", null: false
     t.datetime "updated_at", null: false
     t.index ["election_id"], name: "index_races_on_election_id"
+    t.index ["entity_code"], name: "index_races_on_entity_code", unique: true
     t.index ["office_id"], name: "index_races_on_office_id"
   end
 
@@ -347,9 +385,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_20_120200) do
     t.string "code"
     t.bigint "country_id", null: false
     t.datetime "created_at", null: false
+    t.string "entity_code"
     t.string "name"
     t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_states_on_country_id"
+    t.index ["entity_code"], name: "index_states_on_entity_code", unique: true
   end
 
   create_table "topics", force: :cascade do |t|
