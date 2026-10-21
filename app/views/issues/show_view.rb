@@ -1,15 +1,7 @@
 class Views::Issues::ShowView < Views::ApplicationView
-  def initialize(issue:)
-    @issue = issue
-  end
+  prop :issue, Issue
 
-  def view_template(&)
-    div(class: "scaffold issue-show", id: dom_id(@issue, :show)) do
-      h1 { "Showing issue" }
-
-      IssuePartial(issue: @issue)
-
-      Ui::ResourceActions(resource: @issue)
-    end
+  def view_template
+    ResourceShow(record: @issue) { IssuePartial(issue: @issue) }
   end
 end

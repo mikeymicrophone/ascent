@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Views::Components::Base < Phlex::HTML
+  extend Literal::Properties
+
   # Include all Rails view helpers to make them available in all components
   include ScaffoldUiHelper
   include Phlex::Rails::Helpers::DOMID

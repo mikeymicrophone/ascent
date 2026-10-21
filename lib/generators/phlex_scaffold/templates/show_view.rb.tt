@@ -1,15 +1,9 @@
 class Views::<%= controller_class_name %>::ShowView < Views::ApplicationView
-  def initialize(<%= singular_table_name %>:)
-    @<%= singular_table_name %> = <%= singular_table_name %>
-  end
+  prop :<%= singular_table_name %>, <%= class_name %>
 
-  def view_template(&)
-    div(class: "scaffold <%= singular_table_name %>-show", id: dom_id(@<%= singular_table_name %>, :show)) do
-      h1 { "Showing <%= human_name.downcase %>" }
-      
+  def view_template
+    ResourceShow(record: @<%= singular_table_name %>) do
       Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: @<%= singular_table_name %>)
-      
-      Ui::ResourceActions(resource: @<%= singular_table_name %>)
     end
   end
 end

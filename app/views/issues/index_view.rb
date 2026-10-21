@@ -1,31 +1,8 @@
 class Views::Issues::IndexView < Views::ApplicationView
-  def initialize(issues:, pagy: nil)
-    @issues = issues
-    @pagy = pagy
-  end
+  prop :issues, ActiveRecord::Relation
+  prop :pagy, _Nilable(Pagy)
 
-  def view_template(&)
-    div(class: "scaffold issues-index", id: "index_issues") do
-      div do
-        h1 { "Issues" }
-        scaffold_new_resource_link "New issue", new_issue_path, record: Issue
-      end
-
-      div(id: "issues") do
-        if @issues.any?
-          @issues.each do |issue|
-            div(id: dom_id(issue, :list_item)) do
-              IssuePartial(issue: issue)
-
-              Ui::ResourceActions(resource: issue)
-            end
-          end
-        else
-          p { "No issues found." }
-        end
-      end
-
-      Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
+  def view_template
+    ResourceIndex(collection: @issues, pagy: @pagy) { IssuePartial(issue: it) }
   end
 end

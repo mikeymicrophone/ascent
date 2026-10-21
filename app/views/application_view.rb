@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Views::ApplicationView < Phlex::HTML
+  # Declare arguments with `prop :name, Type` instead of writing an initializer.
+  extend Literal::Properties
+
   # Common helpers are included here to be available in all views.
   include ScaffoldUiHelper
   include Phlex::Rails::Helpers::DOMID
