@@ -7,6 +7,15 @@ namespace :seed_library do
     paths
   end
 
+  desc "Convert a state's sourced 2026 ballot rows into manifests (STATE=new_york, SELECTION=pilot or all)"
+  task convert: :environment do
+    summary = Seeds::BallotManifestConverter.new(
+      state_dir: ENV.fetch("STATE"),
+      selection: ENV.fetch("SELECTION", "pilot").to_sym
+    ).call
+    puts summary.to_json
+  end
+
   desc "Validate micharisma-seeds/v1 manifests for the Ascent catalog (SEED_LIBRARY_ROOT selects a folder)"
   task validate: :environment do
     puts Seeds::LibraryImporter.new.validate(seed_library_paths).to_json

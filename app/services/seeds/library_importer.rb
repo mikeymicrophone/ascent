@@ -179,9 +179,14 @@ module Seeds
       raise Error, "#{record.location}: duplicate ballot line labels" if labels.uniq.length != labels.length
     end
 
+    # Every reference, including a place's parent jurisdiction and its ballot lines' parties,
+    # resolves before anything is written, so a record retried for a missing dependency never
+    # leaves a partial write behind.
     def import_record(record)
       model = MODELS.fetch(record.type)
       desired = desired_attributes(record).merge(associations_for(record))
+      parent = jurisdiction_parent(record, desired) if JURISDICTION_OWNERS.include?(record.type)
+      lines = resolved_ballot_lines(record) if record.attributes.key?("ballot_lines")
       codes = ([ record.code ] + record.aliases).uniq
       bindings = EntityCode.where(namespace: @namespace, catalog: @catalog, code: codes).lock.to_a
       bindings.each do |binding|
@@ -210,8 +215,8 @@ module Seeds
           report[:conflicts] << { code: canonical_code, differences: differences, source: record.source }
         end
       end
-      ensure_jurisdiction(target, record) if JURISDICTION_OWNERS.include?(record.type)
-      import_ballot_lines(target, record, canonical_code) if record.attributes.key?("ballot_lines")
+      target.jurisdiction || target.create_jurisdiction!(parent: parent) if JURISDICTION_OWNERS.include?(record.type)
+      import_ballot_lines(target, lines, record, canonical_code) if lines
       register_codes(codes, canonical_code, target)
     end
 
@@ -228,8 +233,8 @@ module Seeds
 
     # Lines are added, never removed, so a partial capture cannot clear another line.
     # A differing existing line is reported rather than changed.
-    def import_ballot_lines(candidacy, record, canonical_code)
-      nested_attributes(record).fetch("ballot_lines").each.with_index(1) do |line, position|
+    def import_ballot_lines(candidacy, lines, record, canonical_code)
+      lines.each.with_index(1) do |line, position|
         existing = candidacy.ballot_lines.find_by(label: line["label"])
         if existing.nil?
           candidacy.ballot_lines.create!(line.merge("position" => position))
@@ -244,29 +249,39 @@ module Seeds
       end
     end
 
+    # Definitions are compared as declared, so validation needs no database lookups.
     def nested_attributes(record)
-      return {} unless record.attributes.key?("ballot_lines")
+      record.attributes.key?("ballot_lines") ? { "ballot_lines" => record.attributes["ballot_lines"] } : {}
+    end
 
-      lines = record.attributes["ballot_lines"].map do |line|
+    def resolved_ballot_lines(record)
+      record.attributes["ballot_lines"].map do |line|
         party = required_code("Party", line["party"], record) if line["party"]
         { "label" => line["label"], "kind" => line["kind"] || (party ? "party" : "unclassified"), "party" => party }
       end
-      { "ballot_lines" => lines }
-    rescue MissingReference
-      # Validation only compares definitions; unresolved parties are retried during import.
-      { "ballot_lines" => record.attributes["ballot_lines"] }
     end
 
-    def ensure_jurisdiction(owner, record)
-      return if owner.jurisdiction
+    # A place nests under the jurisdiction of the place that contains it; a District's comes from its state scope.
+    def jurisdiction_parent(record, desired)
+      parent_owner = case record.type
+                     when "State" then desired["country"]
+                     when "County" then desired["state"]
+                     when "Municipality" then desired["county"] || desired["state"]
+                     when "District" then (scoped_owner("State", "state", record) if record.scope["state"])
+                     end
+      parent_owner && jurisdiction_of(parent_owner)
+    end
+
+    # A place created by another seeder may still lack its jurisdiction.
+    def jurisdiction_of(owner)
+      return owner.jurisdiction if owner.jurisdiction
 
       parent_owner = case owner
                      when State then owner.country
                      when County then owner.state
                      when Municipality then owner.county || owner.state
-                     when District then (scoped_owner("State", "state", record) if record.scope["state"])
                      end
-      owner.create_jurisdiction!(parent: parent_owner && jurisdiction_of(parent_owner, record))
+      owner.create_jurisdiction!(parent: parent_owner && jurisdiction_of(parent_owner))
     end
 
     def cast_attributes(model, attributes)
@@ -311,7 +326,7 @@ module Seeds
         reference = reference.fetch("code")
       end
       case model.reflect_on_association(key.to_sym).klass.name
-      when "Jurisdiction" then jurisdiction_of(owner_for(reference, record), record)
+      when "Jurisdiction" then jurisdiction_of(owner_for(reference, record))
       when "Year" then year_for(reference, record)
       else required_code(model.reflect_on_association(key.to_sym).klass.name, reference, record)
       end
@@ -326,11 +341,6 @@ module Seeds
       raise Error, "#{record.location}: #{code} does not identify a jurisdiction" unless JURISDICTION_OWNERS.include?(type)
 
       required_code(type, code, record)
-    end
-
-    def jurisdiction_of(owner, record)
-      ensure_jurisdiction(owner, record)
-      owner.jurisdiction
     end
 
     def scoped_owner(type, key, record)

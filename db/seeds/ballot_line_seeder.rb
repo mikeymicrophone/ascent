@@ -181,7 +181,6 @@ class BallotLineSeeder
       labelled("Sources", rows.map { |row| row.fetch("source_url") })
     ].compact.join(" ")
   end
-  private_class_method :race_description
 
   def self.labelled(label, values)
     values = values.compact_blank.uniq

@@ -92,6 +92,41 @@ RSpec.describe Seeds::LibraryImporter do
     expect(importer.resolve_code("Person", "MIC-ASC-PERSON-KELLES_ANNA")).to eq(Person.find_by!(username: "kelles_anna_ny_ad_125"))
   end
 
+  it "writes nothing for a record until its dependencies exist" do
+    district = write_manifest("a_district.yml", <<~YAML)
+      format: micharisma-seeds/v1
+      namespace: MIC
+      catalog: ASC
+      scope:
+        state: STATE-USA-NY
+      records:
+        - type: District
+          code: DISTRICT-USA-NY-ASSEMBLY-AD_125
+          attributes:
+            name: New York Assembly District 125
+            kind: assembly district
+    YAML
+    state = write_manifest("b_state.yml", <<~YAML)
+      format: micharisma-seeds/v1
+      namespace: MIC
+      catalog: ASC
+      records:
+        - type: Country
+          code: COUNTRY-USA
+          attributes: {code: US, name: United States}
+        - type: State
+          code: STATE-USA-NY
+          attributes: {code: NY, name: New York}
+          references: {country: COUNTRY-USA}
+    YAML
+
+    report = importer.call([ district, state ])
+
+    expect(report[:created]).to eq(%w[COUNTRY-USA STATE-USA-NY DISTRICT-USA-NY-ASSEMBLY-AD_125])
+    expect(report[:unchanged]).to be_empty
+    expect(District.sole.jurisdiction.parent.jurisdictionable).to eq(State.sole)
+  end
+
   it "rejects attributes that are not part of the catalog contract" do
     invalid = write_manifest("invalid.yml", <<~YAML)
       format: micharisma-seeds/v1

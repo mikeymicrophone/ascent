@@ -92,3 +92,5 @@ group :test do
 end
 
 gem "ruby-lsp", "~> 0.24.2"
+
+gem "csv", "~> 3.3"
