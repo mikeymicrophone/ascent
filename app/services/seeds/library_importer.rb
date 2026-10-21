@@ -11,20 +11,23 @@ module Seeds
     MODELS = {
       "Country" => Country, "State" => State, "County" => County, "Municipality" => Municipality,
       "District" => District, "Party" => Party, "Position" => Position, "Office" => Office,
-      "Election" => Election, "Race" => Race, "Person" => Person, "Candidacy" => Candidacy
+      "Election" => Election, "Race" => Race, "Person" => Person, "Candidacy" => Candidacy,
+      "Topic" => Topic, "Issue" => Issue, "Approach" => Approach
     }.freeze
     JURISDICTION_OWNERS = %w[Country State County Municipality District].freeze
     SCOPE_ASSOCIATIONS = {
       "State" => %w[country], "County" => %w[state], "Municipality" => %w[state county],
       "Party" => %w[state], "Office" => %w[position jurisdiction], "Election" => %w[jurisdiction year],
-      "Race" => %w[election office], "Candidacy" => %w[race person]
+      "Race" => %w[election office], "Candidacy" => %w[race person],
+      "Issue" => %w[topic], "Approach" => %w[issue]
     }.freeze
     # Keys that identify an uncoded record created by another seeder, so it can adopt its code.
     NATURAL_KEYS = {
       Country => %w[code], State => %w[country code], County => %w[state name],
       Municipality => %w[state name], District => %w[name], Party => %w[state name],
       Position => %w[title], Person => %w[username], Office => %w[position jurisdiction seat_code],
-      Election => %w[jurisdiction election_date kind], Race => %w[election office], Candidacy => %w[race person]
+      Election => %w[jurisdiction election_date kind], Race => %w[election office], Candidacy => %w[race person],
+      Topic => %w[title], Issue => %w[topic title], Approach => %w[issue title]
     }.freeze
     BLANK_NATURAL_KEYS = { Office => %w[seat_code] }.freeze
     NESTED_ATTRIBUTES = { "Candidacy" => %w[ballot_lines] }.freeze

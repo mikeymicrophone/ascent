@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_21_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_21_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -19,9 +19,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_120000) do
   create_table "approaches", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "entity_code"
     t.bigint "issue_id", null: false
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_approaches_on_entity_code", unique: true
     t.index ["issue_id"], name: "index_approaches_on_issue_id"
   end
 
@@ -182,9 +184,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_120000) do
   create_table "issues", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "entity_code"
     t.string "title"
     t.bigint "topic_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_issues_on_entity_code", unique: true
     t.index ["topic_id"], name: "index_issues_on_topic_id"
   end
 
@@ -439,8 +443,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_120000) do
   create_table "topics", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
+    t.string "entity_code"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_topics_on_entity_code", unique: true
   end
 
   create_table "voter_race_baseline_archives", force: :cascade do |t|

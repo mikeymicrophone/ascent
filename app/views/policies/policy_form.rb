@@ -52,8 +52,10 @@ class Views::Policies::PolicyForm < Views::ApplicationView
 
       div do
         form.label :status
-        form.text_field :status,
-                                        class: input_classes(@policy.errors[:status])
+        form.select :status,
+                    Policy.statuses.keys.map { |status| [ status.capitalize, status ] },
+                    {},
+                    class: input_classes(@policy.errors[:status])
       end
 
       div do

@@ -12,9 +12,6 @@ module SeedLayers
   SIMULATED_SEEDER_FILES = %w[
     governance_type_seeder
     area_of_concern_seeder
-    topic_seeder
-    issue_seeder
-    approach_seeder
     governing_body_seeder
     policy_seeder
     official_code_seeder
@@ -54,9 +51,6 @@ module SeedLayers
     puts "\n🎭 Seeding simulated data..."
     GovernanceTypeSeeder.seed
     AreaOfConcernSeeder.seed
-    TopicSeeder.seed
-    IssueSeeder.seed
-    ApproachSeeder.seed
     GoverningBodySeeder.seed
     PolicySeeder.seed
     OfficialCodeSeeder.seed

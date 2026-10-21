@@ -4,7 +4,8 @@ class Policy < ApplicationRecord
   belongs_to :approach
   has_many :official_codes
 
-  enum :status, { pending: 0, enacted: 1, repealed: 2 }
+  # The status column stores these words, so the enum maps each value to itself.
+  enum :status, { pending: "pending", enacted: "enacted", repealed: "repealed" }, validate: true
 
   alias_attribute :name, :title
 end

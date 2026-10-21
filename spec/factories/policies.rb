@@ -100,7 +100,7 @@ FactoryBot.define do
       association :governing_body, factory: :city_council
       title { "Local Business Development Incentives" }
       description { "Municipal policy providing tax incentives, fee reductions, and technical assistance to support local business growth and job creation." }
-      status { "active" }
+      status { "enacted" }
       enacted_date { 18.months.ago }
     end
     factory :proposed_policy, traits: [:proposed]
