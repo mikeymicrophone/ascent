@@ -1,6 +1,6 @@
 [submodule "db/seeds/ascent_seed_data"]
 	path = db/seeds/ascent_seed_data
-	url = /Users/michaelschwab/1 Projects/Ascent/ascent_seed_data
+	url = https://github.com/MICharisma/ascent_seed_data.git
 [submodule "lib/micharisma_seeders"]
 	path = lib/micharisma_seeders
 	url = https://github.com/mikeymicrophone/micharisma_seeders.git
