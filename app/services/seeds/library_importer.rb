@@ -12,28 +12,34 @@ module Seeds
       "Country" => Country, "State" => State, "County" => County, "Municipality" => Municipality,
       "District" => District, "Party" => Party, "Position" => Position, "Office" => Office,
       "Election" => Election, "Race" => Race, "Person" => Person, "Candidacy" => Candidacy,
-      "Topic" => Topic, "Issue" => Issue, "Approach" => Approach
+      "Topic" => Topic, "Issue" => Issue, "Approach" => Approach, "Stance" => Stance,
+      "Channel" => Channel, "Communication" => Communication, "StanceEvidence" => StanceEvidence
     }.freeze
     JURISDICTION_OWNERS = %w[Country State County Municipality District].freeze
     SCOPE_ASSOCIATIONS = {
       "State" => %w[country], "County" => %w[state], "Municipality" => %w[state county],
       "Party" => %w[state], "Office" => %w[position jurisdiction], "Election" => %w[jurisdiction year],
       "Race" => %w[election office], "Candidacy" => %w[race person],
-      "Issue" => %w[topic], "Approach" => %w[issue]
+      "Issue" => %w[topic], "Approach" => %w[issue], "Stance" => %w[candidacy approach],
+      "Communication" => %w[channel], "StanceEvidence" => %w[stance communication]
     }.freeze
+    # The types a polymorphic reference may name, recognized by their registered code or its marker.
+    POLYMORPHIC_TYPES = { [ "Channel", "owner" ] => Channel::OWNER_TYPES }.freeze
     # Keys that identify an uncoded record created by another seeder, so it can adopt its code.
     NATURAL_KEYS = {
       Country => %w[code], State => %w[country code], County => %w[state name],
       Municipality => %w[state name], District => %w[name], Party => %w[state name],
       Position => %w[title], Person => %w[username], Office => %w[position jurisdiction seat_code],
       Election => %w[jurisdiction election_date kind], Race => %w[election office], Candidacy => %w[race person],
-      Topic => %w[title], Issue => %w[topic title], Approach => %w[issue title]
+      Topic => %w[title], Issue => %w[topic title], Approach => %w[issue title],
+      Stance => %w[candidacy approach], Channel => %w[platform handle], Communication => %w[url],
+      StanceEvidence => %w[stance communication]
     }.freeze
     BLANK_NATURAL_KEYS = { Office => %w[seat_code] }.freeze
-    NESTED_ATTRIBUTES = { "Candidacy" => %w[ballot_lines] }.freeze
+    NESTED_ATTRIBUTES = { "Candidacy" => %w[ballot_lines], "Communication" => %w[featured_candidacies] }.freeze
     BALLOT_LINE_KEYS = %w[label kind party].freeze
     PROTECTED_ATTRIBUTES = %w[id entity_code created_at updated_at].freeze
-    EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [] }.freeze
+    EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [], features_added: [] }.freeze
 
     attr_reader :report
 
@@ -184,6 +190,9 @@ module Seeds
         raise Error, "#{record.location}: unsupported #{record.type} reference #{key}" unless model.reflect_on_association(key.to_sym)&.macro == :belongs_to
       end
       validate_ballot_lines!(record) if record.attributes.key?("ballot_lines")
+      if record.attributes.key?("featured_candidacies") && !(record.attributes["featured_candidacies"].is_a?(Array) && record.attributes["featured_candidacies"].all?(String))
+        raise Error, "#{record.location}: featured_candidacies must be a list of candidacy codes"
+      end
       sequences = [ record.entity_sequence ] + record.references.values.filter_map { |reference| reference["entity_sequence"] if reference.is_a?(Hash) }
       if sequences.compact.any?
         raise Error, "#{record.location}: entity-sequence lookups are not supported by the Ascent importer yet; use exact codes"
@@ -212,6 +221,7 @@ module Seeds
       desired = desired_attributes(record).merge(associations_for(record))
       parent = jurisdiction_parent(record, desired) if JURISDICTION_OWNERS.include?(record.type)
       lines = resolved_ballot_lines(record) if record.attributes.key?("ballot_lines")
+      featured = record.attributes["featured_candidacies"]&.map { |code| required_code("Candidacy", code, record) }
       codes = ([ record.code ] + record.aliases).uniq
       bindings = codes.filter_map { |code| binding_for(code) }
       bindings.each do |binding|
@@ -242,6 +252,7 @@ module Seeds
       end
       target.jurisdiction || target.create_jurisdiction!(parent: parent) if JURISDICTION_OWNERS.include?(record.type)
       import_ballot_lines(target, lines, record, canonical_code) if lines
+      import_features(target, featured, canonical_code) if featured
       register_codes(codes, canonical_code, target)
     end
 
@@ -278,8 +289,17 @@ module Seeds
     end
 
     # Definitions are compared as declared, so validation needs no database lookups.
+    # Featured candidacies are added, never removed, like ballot lines.
+    def import_features(communication, candidacies, canonical_code)
+      existing = communication.communication_features.pluck(:candidacy_id)
+      candidacies.reject { |candidacy| existing.include?(candidacy.id) }.each do |candidacy|
+        communication.communication_features.create!(candidacy: candidacy)
+        report[:features_added] << "#{canonical_code}: #{candidacy.entity_code}"
+      end
+    end
+
     def nested_attributes(record)
-      record.attributes.key?("ballot_lines") ? { "ballot_lines" => record.attributes["ballot_lines"] } : {}
+      record.attributes.slice(*NESTED_ATTRIBUTES.fetch(record.type, []))
     end
 
     def resolved_ballot_lines(record)
@@ -353,11 +373,24 @@ module Seeds
         end
         reference = reference.fetch("code")
       end
-      case model.reflect_on_association(key.to_sym).klass.name
+      association = model.reflect_on_association(key.to_sym)
+      return required_code(polymorphic_type(model, key, reference, record), reference, record) if association.polymorphic?
+
+      case association.klass.name
       when "Jurisdiction" then jurisdiction_of(owner_for(reference, record))
       when "Year" then year_for(reference, record)
-      else required_code(model.reflect_on_association(key.to_sym).klass.name, reference, record)
+      else required_code(association.klass.name, reference, record)
       end
+    end
+
+    def polymorphic_type(model, key, code, record)
+      allowed = POLYMORPHIC_TYPES.fetch([ model.name, key ]) { raise Error, "Unsupported polymorphic reference #{model.name}.#{key}" }
+      code = local_code(code)
+      type = binding_for(code)&.record_type || @reference_types[code] ||
+             allowed.find { |candidate| code.start_with?("#{candidate.upcase}-") }
+      raise Error, "#{record.location}: #{code} is not a #{allowed.join(", ")} code for #{model.name}.#{key}" unless allowed.include?(type)
+
+      type
     end
 
     # A jurisdiction is referenced by the code of the place that owns it.
@@ -396,10 +429,11 @@ module Seeds
     end
 
     def comparison_value(model, key, value)
-      return value unless model.reflect_on_association(key.to_sym)&.macro == :belongs_to
+      association = model.reflect_on_association(key.to_sym)
+      return value unless association&.macro == :belongs_to
       return unless value
 
-      value.id
+      association.polymorphic? ? [ value.class.name, value.id ] : value.id
     end
 
     def local_code(code)

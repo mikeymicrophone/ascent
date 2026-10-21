@@ -8,6 +8,8 @@ class Candidacy < ApplicationRecord
   has_many :stances, dependent: :destroy
   has_many :ballot_lines, -> { printed_order }, dependent: :destroy
   has_many :endorsements, dependent: :destroy
+  has_many :communication_features, dependent: :destroy
+  has_many :featured_communications, through: :communication_features, source: :communication
   has_many :voters, through: :ratings
   
   validates :status, presence: true, inclusion: { in: %w[announced active withdrawn disqualified] }

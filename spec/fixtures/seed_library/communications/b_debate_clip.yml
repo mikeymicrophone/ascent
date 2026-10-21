@@ -1,0 +1,27 @@
+# A second contributor adds evidence to the same stance by referring to it, without redefining it.
+format: micharisma-seeds/v1
+namespace: MIC
+catalog: ASC
+source:
+  contributor: Example Debate Watch
+  url: https://example.com/debates
+  captured_on: "2026-10-16"
+records:
+  - type: Channel
+    code: CHANNEL-YOUTUBE-EXAMPLEDEBATES
+    attributes: {platform: youtube, handle: exampledebates, official: false}
+  - type: Communication
+    code: COMMUNICATION-YOUTUBE-EXAMPLEDEBATES-2026_10_08-DISTRICT_1_DEBATE
+    attributes:
+      kind: debate
+      title: District 1 candidate debate
+      published_on: "2026-10-08"
+      url: https://example.com/debates/district-1
+      featured_candidacies: [CANDIDACY-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1]
+    references: {channel: CHANNEL-YOUTUBE-EXAMPLEDEBATES}
+  - type: StanceEvidence
+    code: EVIDENCE-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM-YOUTUBE-EXAMPLEDEBATES-2026_10_08-DISTRICT_1_DEBATE
+    attributes: {relation: clarifies, quote: "Two years, then the legislature decides again with the data in hand.", offset_seconds: 1505}
+    references:
+      stance: STANCE-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM
+      communication: COMMUNICATION-YOUTUBE-EXAMPLEDEBATES-2026_10_08-DISTRICT_1_DEBATE

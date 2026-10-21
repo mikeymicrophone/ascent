@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_21_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_21_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -72,6 +72,51 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_130000) do
     t.datetime "updated_at", null: false
     t.index ["governing_body_id", "name"], name: "index_chambers_on_governing_body_id_and_name", unique: true
     t.index ["governing_body_id"], name: "index_chambers_on_governing_body_id"
+  end
+
+  create_table "channels", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "entity_code"
+    t.string "handle", null: false
+    t.boolean "official", default: false, null: false
+    t.bigint "owner_id"
+    t.string "owner_type"
+    t.string "platform", null: false
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.index ["entity_code"], name: "index_channels_on_entity_code", unique: true
+    t.index ["owner_type", "owner_id"], name: "index_channels_on_owner"
+    t.index ["platform", "handle"], name: "index_channels_on_platform_and_handle", unique: true
+  end
+
+  create_table "communication_features", force: :cascade do |t|
+    t.bigint "candidacy_id", null: false
+    t.bigint "communication_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["candidacy_id"], name: "index_communication_features_on_candidacy_id"
+    t.index ["communication_id", "candidacy_id"], name: "idx_on_communication_id_candidacy_id_1b61ee98d8", unique: true
+    t.index ["communication_id"], name: "index_communication_features_on_communication_id"
+  end
+
+  create_table "communications", force: :cascade do |t|
+    t.string "archived_url"
+    t.string "availability", default: "available", null: false
+    t.bigint "channel_id"
+    t.datetime "created_at", null: false
+    t.integer "duration_seconds"
+    t.string "entity_code"
+    t.string "kind", null: false
+    t.string "language"
+    t.string "platform_id"
+    t.date "published_on", null: false
+    t.text "summary"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.index ["channel_id"], name: "index_communications_on_channel_id"
+    t.index ["entity_code"], name: "index_communications_on_entity_code", unique: true
+    t.index ["url"], name: "index_communications_on_url", unique: true
   end
 
   create_table "counties", force: :cascade do |t|
@@ -417,16 +462,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_130000) do
     t.index ["slug"], name: "index_rule_topics_on_slug", unique: true
   end
 
+  create_table "stance_evidences", force: :cascade do |t|
+    t.bigint "communication_id", null: false
+    t.datetime "created_at", null: false
+    t.string "entity_code"
+    t.integer "offset_seconds"
+    t.text "quote"
+    t.string "relation", default: "states", null: false
+    t.bigint "stance_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["communication_id"], name: "index_stance_evidences_on_communication_id"
+    t.index ["entity_code"], name: "index_stance_evidences_on_entity_code", unique: true
+    t.index ["stance_id", "communication_id"], name: "index_stance_evidences_on_stance_id_and_communication_id", unique: true
+    t.index ["stance_id"], name: "index_stance_evidences_on_stance_id"
+  end
+
   create_table "stances", force: :cascade do |t|
     t.bigint "approach_id", null: false
     t.bigint "candidacy_id", null: false
     t.datetime "created_at", null: false
+    t.string "entity_code"
     t.text "evidence_links"
     t.text "explanation"
     t.string "priority_level"
     t.datetime "updated_at", null: false
     t.index ["approach_id"], name: "index_stances_on_approach_id"
+    t.index ["candidacy_id", "approach_id"], name: "index_stances_on_candidacy_id_and_approach_id", unique: true
     t.index ["candidacy_id"], name: "index_stances_on_candidacy_id"
+    t.index ["entity_code"], name: "index_stances_on_entity_code", unique: true
   end
 
   create_table "states", force: :cascade do |t|
@@ -517,6 +580,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_130000) do
   add_foreign_key "candidacies", "people"
   add_foreign_key "candidacies", "races"
   add_foreign_key "chambers", "governing_bodies"
+  add_foreign_key "communication_features", "candidacies"
+  add_foreign_key "communication_features", "communications"
+  add_foreign_key "communications", "channels"
   add_foreign_key "counties", "states"
   add_foreign_key "elections", "jurisdictions"
   add_foreign_key "elections", "years"
@@ -548,6 +614,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_130000) do
   add_foreign_key "residences", "voters"
   add_foreign_key "rule_conditions", "rule_statements", column: "statement_id"
   add_foreign_key "rule_statements", "rule_topics", column: "topic_id"
+  add_foreign_key "stance_evidences", "communications"
+  add_foreign_key "stance_evidences", "stances"
   add_foreign_key "stances", "approaches"
   add_foreign_key "stances", "candidacies"
   add_foreign_key "states", "countries"
