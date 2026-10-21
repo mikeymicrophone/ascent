@@ -36,14 +36,23 @@ Candidates receive provisional usernames, generated as `{surname}_{given}_{state
 
 Open before the first replacement: how handles containing periods are encoded, and how conflicting update requests are resolved.
 
+## Ballot lines and endorsements
+
+Decided October 21, 2026. A printed ballot line is an official fact; an endorsement is voluntary support. They are separate records, linked where they overlap.
+
+- **BallotLine:** one per printed line on a Candidacy, recording the label exactly as the source prints it. Its kind is party, political designation (Massachusetts labels such as "Gulf War Veteran"), petition (Connecticut's "Petitioning Candidate"), write-in, or none; a party line references its Party. A fusion candidate keeps one Candidacy, the single thing voters approve, with several BallotLines. BallotLines are refreshed from official sources and carry no codes of their own, consistent with the decision record's exclusion of coded `BallotLine` entities.
+- **Endorsement:** an endorser (Party, Person, or Organization) supporting a Candidacy, with the strength and dates planned in the approval-voting PRD's multi-endorsement party tools. A party can endorse several candidates in one race, and can endorse where it has no line, such as Florida's nonpartisan judicial races.
+- **The link:** a party's BallotLine also counts as that party's endorsement. It appears as an Endorsement of kind `ballot_line`, created and refreshed with its BallotLine, so a party's endorsements include its fusion lines. Endorsements of other kinds are never changed by a seed refresh of the official lines.
+- **Party:** a ballot-qualified party within a state, coded `PARTY-{state path}-{party}` (for example `PARTY-USA-NY-WORKING_FAMILIES`). The same name in two states is two Parties.
+
 ## Phases
 
 1. **Foundation (done October 20, 2026).**
    - `lib/micharisma_seeders` is a submodule of [micharisma_seeders](https://github.com/mikeymicrophone/micharisma_seeders), pinned to `main`. It is excluded from `autoload_lib`, and `MICharisma` is an inflection acronym. AthleteAce pins a later commit on `codex/published-seed-schemas` that adds schema-export tooling.
    - `AddEntityCodes` adds `entity_code` to countries, states, counties, municipalities, districts, positions, offices, elections, races, people, and candidacies; creates `entity_codes`; and adds `people.username`, `people.username_status`, and `offices.seat_code`.
-2. **Importer.** Port AthleteAce's `Seeds::LibraryImporter` as Ascent's persistence adapter: allow the coded types above, resolve references by code, order dependencies, create missing records, preserve differing existing values and report the conflicts, and register preferred codes and aliases. Add the fields it first writes: `Candidacy.parties` (replacing the joined `party_affiliation` string), `Candidacy.participation` (active, inactive, or off-ballot but approvable), and `Race.certification_status`. Prove it on the adapter sketch's Anna Kelles manifest.
-3. **Converter and New York pilot.** Convert the raw ballot rows in `ascent_seed_data/races/2026/` into manifests: consolidate fusion lines, mark specials, issue provisional usernames, and write a judgments report (name discrepancies through a source-spelling disambiguation file, disputed candidates included as off-ballot but approvable, unmapped fields, missing evidence). Pilot on New York's statewide races plus competitive Assembly, Senate, and House races.
-4. **Full conversion.** Convert all five states. The reference seed layer imports manifests, and `BallotLineSeeder` becomes the converter's row reader.
+2. **Importer.** Port AthleteAce's `Seeds::LibraryImporter` as Ascent's persistence adapter: allow the coded types above, resolve references by code, order dependencies, create missing records, preserve differing existing values and report the conflicts, and register preferred codes and aliases. Add the records and fields it first writes: Party (with `entity_code`), BallotLine, and Endorsement as described above, replacing the joined `party_affiliation` string; `Candidacy.participation` (active, inactive, or off-ballot but approvable); and `Race.certification_status`. Prove it on the adapter sketch's Anna Kelles manifest, whose Democratic and Working Families lines become two BallotLines and two `ballot_line` Endorsements on one Candidacy.
+3. **Converter and New York pilot.** Convert the raw ballot rows in `ascent_seed_data/races/2026/` into manifests: one Candidacy per person per race with a BallotLine for each printed line, a Party for each state's party labels (designations, petitions, and write-ins are BallotLine kinds, not Parties), mark specials, issue provisional usernames, and write a judgments report (name discrepancies through a source-spelling disambiguation file, disputed candidates included as off-ballot but approvable, unmapped fields, missing evidence). Pilot on New York's statewide races plus competitive Assembly, Senate, and House races.
+4. **Full conversion.** Convert all five states. The reference seed layer imports manifests, and `BallotLineSeeder` becomes the converter's row reader, renamed so it is not confused with the BallotLine model.
 5. **Later.** Username update requests, public `/entities/:code` addresses that resolve aliases, fan lookup, and per-attribute update rules.
 
 ## Sequence registry
