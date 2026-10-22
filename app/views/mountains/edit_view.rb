@@ -65,6 +65,26 @@ class Views::Mountains::EditView < Views::ApplicationView
           p(class: "no-baseline") { "No baseline set yet — drag the Baseline handle to set one" }
         end
       end
+
+      render_primary_candidates_toggle
+    end
+  end
+
+  # Candidates the primaries eliminated stay off the mountain until the voter includes them.
+  def render_primary_candidates_toggle
+    count = @race.candidacies.from_primaries.active.count
+    return if count.zero?
+
+    included = @voter.includes_primary_candidates?(@race)
+    div(class: "primary-candidates-toggle") do
+      p(class: "primary-candidates-note") do
+        "#{pluralize(count, "candidate")} ran in this office's primaries but #{count == 1 ? "is" : "are"} not on the general ballot."
+      end
+      button_to(included ? "Remove primary candidates" : "Include primary candidates",
+                primary_candidates_mountain_path(@race),
+                method: :patch,
+                params: { voter_id: @voter.id, included: included ? "0" : "1" },
+                class: "btn-secondary")
     end
   end
 

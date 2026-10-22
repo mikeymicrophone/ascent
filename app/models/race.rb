@@ -7,6 +7,7 @@ class Race < ApplicationRecord
   has_many :candidates, through: :candidacies, source: :person
   has_many :voter_race_baselines, dependent: :destroy
   has_many :voter_race_baseline_archives, dependent: :delete_all
+  has_many :voter_race_preferences, dependent: :delete_all
 
   validates :status, presence: true, inclusion: { in: %w[upcoming active completed cancelled] }
   # An updateable fact about the source's list, kept out of the race's identity and code.
@@ -41,8 +42,7 @@ class Race < ApplicationRecord
       voter = baseline.voter
       voter_baseline = baseline.baseline
 
-      voter_ratings = Rating.joins(:candidacy)
-                           .where(voter: voter, candidacies: { race: self })
+      voter_ratings = Rating.where(voter: voter, candidacy: candidacies_for(voter))
                            .includes(:candidacy)
 
       voter_ratings.each do |rating|
@@ -57,6 +57,11 @@ class Race < ApplicationRecord
 
   def approval_results
     aggregate_votes.sort_by { |candidacy, votes| -votes }
+  end
+
+  # The candidacies a voter sees and rates: those the primaries eliminated only if they opted in.
+  def candidacies_for(voter)
+    voter&.includes_primary_candidates?(self) ? candidacies : candidacies.not_from_primaries
   end
 
   # The same year's primaries for this office's nominations, such as each party's primary for governor.

@@ -1,6 +1,6 @@
 class MountainsController < ApplicationController
-  before_action :set_race, only: [:show, :edit, :update, :simulate]
-  before_action :set_voter, only: [:show, :edit, :update, :simulate]
+  before_action :set_race, only: [:show, :edit, :update, :simulate, :primary_candidates]
+  before_action :set_voter, only: [:show, :edit, :update, :simulate, :primary_candidates]
   before_action :set_baseline, only: [:show, :edit, :update]
 
   def index
@@ -27,6 +27,13 @@ class MountainsController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
     redirect_to mountain_path(@race, voter_id: @voter.id),
                 alert: "Could not save mountain ratings: #{e.message}"
+  end
+
+  def primary_candidates
+    included = params[:included] == "1"
+    @voter.include_primary_candidates!(@race, included)
+    redirect_to mountain_path(@race, voter_id: @voter.id),
+                notice: included ? "Primary candidates added to your mountain." : "Primary candidates removed from your mountain."
   end
 
   def simulate
@@ -134,7 +141,7 @@ class MountainsController < ApplicationController
   end
 
   def build_mountain_data
-    @race.candidacies.active.with_rating_details.map do |candidacy|
+    @race.candidacies_for(@voter).active.with_rating_details.map do |candidacy|
       rating = candidacy.ratings.find_by(voter: @voter)
       
       {
@@ -165,7 +172,7 @@ class MountainsController < ApplicationController
 
   def update_ratings
     rating_params.each do |candidacy_id, rating_value|
-      candidacy = @race.candidacies.find(candidacy_id)
+      candidacy = @race.candidacies_for(@voter).find(candidacy_id)
       rating_record = Rating.find_by(voter: @voter, candidacy: candidacy)
 
       if rating_value.present?

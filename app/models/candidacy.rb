@@ -27,6 +27,7 @@ class Candidacy < ApplicationRecord
   scope :disqualified, -> { where(status: 'disqualified') }
   scope :still_running, -> { where.not(status: %w[withdrawn disqualified]) }
   scope :from_primaries, -> { where.not(primary_candidacy_id: nil) }
+  scope :not_from_primaries, -> { where(primary_candidacy_id: nil) }
   
   scope :with_rating_details, -> { includes(:person, :ratings, :ballot_lines) }
   scope :with_election_context, -> { includes(race: [:election, { office: :position }]) }

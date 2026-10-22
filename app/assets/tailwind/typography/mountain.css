@@ -29,6 +29,11 @@
   @apply mb-1;
 }
 
+.primary-candidates-note {
+  @apply font-['Source_Serif_4'];
+  @apply text-sm text-gray-600;
+}
+
 .no-baseline {
   @apply text-orange-600;
   @apply font-medium;

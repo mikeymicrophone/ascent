@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   resources :mountains, only: [:index, :show, :edit, :update] do
     member do
       post :simulate
+      patch :primary_candidates
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

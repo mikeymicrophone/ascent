@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_160000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -564,6 +564,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_160000) do
     t.index ["voter_id"], name: "index_voter_race_baselines_on_voter_id"
   end
 
+  create_table "voter_race_preferences", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "include_primary_candidates", default: false, null: false
+    t.bigint "race_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "voter_id", null: false
+    t.index ["race_id"], name: "index_voter_race_preferences_on_race_id"
+    t.index ["voter_id", "race_id"], name: "index_voter_race_preferences_on_voter_id_and_race_id", unique: true
+  end
+
   create_table "voters", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
     t.date "birth_date"
@@ -652,4 +662,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_160000) do
   add_foreign_key "voter_race_baseline_archives", "voters"
   add_foreign_key "voter_race_baselines", "races"
   add_foreign_key "voter_race_baselines", "voters"
+  add_foreign_key "voter_race_preferences", "races", on_delete: :cascade
+  add_foreign_key "voter_race_preferences", "voters", on_delete: :cascade
 end
