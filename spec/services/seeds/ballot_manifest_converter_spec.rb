@@ -48,8 +48,13 @@ RSpec.describe Seeds::BallotManifestConverter do
 
   after { FileUtils.rm_rf(root) }
 
-  def convert
-    described_class.new(state_dir: "new_york", selection: :all, root: root).call
+  def convert(random: Random.new)
+    described_class.new(state_dir: "new_york", selection: :all, root: root, random: random).call
+  end
+
+  # A username is the surname, the given name's first letter and next consonant, and a disambiguator.
+  def username_like(base)
+    /\A#{base}_[2-9][a-hj-np-z]\z/
   end
 
   it "writes manifests that the importer turns into races, ballot lines, and endorsements" do
@@ -63,7 +68,8 @@ RSpec.describe Seeds::BallotManifestConverter do
     expect(governor.election).to have_attributes(entity_code: "ELECTION-USA-NY-2026_GENERAL", name: "New York General Election 2026")
     expect(governor.certification_status).to eq("certified")
     hochul = governor.candidacies.joins(:person).find_by!(people: { last_name: "Hochul" })
-    expect(hochul.person.username).to eq("hochul_kathy_ny_governor")
+    expect(hochul.person.username).to match(username_like("hochul_kt"))
+    expect(hochul.person.entity_code).to eq("PERSON-#{hochul.person.username.upcase}")
     expect(hochul.ballot_labels).to eq("Democratic; Working Families")
     expect(hochul.endorsements.map { |endorsement| endorsement.endorser.entity_code })
       .to contain_exactly("PARTY-USA-NY-DEMOCRATIC", "PARTY-USA-NY-WORKING_FAMILIES")
@@ -82,10 +88,11 @@ RSpec.describe Seeds::BallotManifestConverter do
   it "reports its judgments and keeps issued usernames on later runs" do
     convert
     usernames = YAML.load_file(root.join("conversion/2026/new_york/usernames.yml"))
-    expect(usernames).to include("Representative in Congress|15|Ritchie J. Torres" => "torres_ritchie_ny_cd_15")
+    torres = usernames.fetch("Representative in Congress|15|Ritchie J. Torres")
+    expect(torres).to match(username_like("torres_rt"))
 
     spellings = YAML.load_file(root.join("conversion/2026/new_york/name_spellings.yml"))
-    expect(spellings.sole).to include("username" => "torres_ritchie_ny_cd_15", "other_spelling" => "TORRES, RITCHIE")
+    expect(spellings.sole).to include("username" => torres, "other_spelling" => "TORRES, RITCHIE")
 
     judgments = root.join("conversion/2026/new_york/judgments.md").read
     expect(judgments).to include("Paul Mailhot (Governor)", "- designation: Speak The Truth", "- party: Democratic, Working Families")
@@ -112,7 +119,7 @@ RSpec.describe Seeds::BallotManifestConverter do
     expect(report[:conflicts]).to be_empty
     sheriff = Race.find_by!(entity_code: "RACE-USA-NY-COUNTY_ERIE-SHERIFF-2026_GENERAL")
     expect(sheriff.office.jurisdiction.jurisdictionable).to eq(County.find_by!(name: "Erie County"))
-    expect(sheriff.candidacies.sole.person.username).to eq("garcia_john_ny_county_erie_sheriff")
+    expect(sheriff.candidacies.sole.person.username).to match(username_like("garcia_jh"))
 
     aurora = Municipality.find_by!(name: "Aurora")
     expect(aurora.county.name).to eq("Erie County")
@@ -173,14 +180,15 @@ RSpec.describe Seeds::BallotManifestConverter do
     convert
 
     usernames = YAML.load_file(root.join("conversion/2026/new_york/usernames.yml"))
-    expect(usernames.values_at("District Court of Appeal|1|Joseph Lewis Jr.", "District Court of Appeal|1|Rachel Nordby"))
-      .to eq(%w[lewis_joseph_ny_dca_1_retention nordby_rachel_ny_dca_1_retention])
+    lewis, nordby = usernames.values_at("District Court of Appeal|1|Joseph Lewis Jr.", "District Court of Appeal|1|Rachel Nordby")
+    expect(lewis).to match(username_like("lewis_js"))
+    expect(nordby).to match(username_like("nordby_rc"))
     judicial = root.join("manifests/2026/new_york/judicial.yml").read
     expect(judicial).to include("RACE-USA-NY-APPEAL-DCA_1-APPELLATE_JUDGE-RETENTION_OF_JOSEPH_LEWIS_JR-2026_GENERAL",
                                 "RACE-USA-NY-APPEAL-DCA_1-APPELLATE_JUDGE-RETENTION_OF_RACHEL_NORDBY-2026_GENERAL")
   end
 
-  it "gives a second person with the same printed name a numbered username" do
+  it "gives two people with the same printed name the same name code and different disambiguators" do
     write("races/2026/new_york/state/state_senator.yml", [
       row("State Senator", "1", "John Smith", "Republican"),
       row("State Senator", "2", "John Smith", "Republican")
@@ -189,6 +197,36 @@ RSpec.describe Seeds::BallotManifestConverter do
     convert
 
     usernames = YAML.load_file(root.join("conversion/2026/new_york/usernames.yml"))
-    expect(usernames.values_at("State Senator|1|John Smith", "State Senator|2|John Smith")).to eq(%w[smith_john_ny_sd_1 smith_john_ny_sd_2])
+    first, second = usernames.values_at("State Senator|1|John Smith", "State Senator|2|John Smith")
+    expect([ first, second ]).to all(match(username_like("smith_jh")))
+    expect(first).not_to eq(second)
+  end
+
+  it "abbreviates the given name to its first letter and next consonant" do
+    write("races/2026/new_york/state/attorney_general.yml", [
+      row("Attorney General", "", "Letitia A. James", "Democratic"),
+      row("Attorney General", "", "Ann Yee", "Republican")
+    ].to_yaml)
+
+    convert
+
+    usernames = YAML.load_file(root.join("conversion/2026/new_york/usernames.yml"))
+    expect(usernames.fetch("Attorney General||Letitia A. James")).to match(username_like("james_lt"))
+    expect(usernames.fetch("Attorney General||Ann Yee")).to match(username_like("yee_an"))
+  end
+
+  # Usernames name no state, so a disambiguator already issued in another state is never reissued.
+  it "skips a username another state has already issued" do
+    write("conversion/2026/florida/usernames.yml", { "Governor||Kathy Hochul" => "hochul_kt_2a" }.to_yaml)
+    # Draws the first disambiguator twice, then the last one.
+    exhausted = Class.new do
+      def initialize = @calls = 0
+      def rand(max) = (@calls += 1) <= 2 ? 0 : max - 1
+    end.new
+
+    convert(random: exhausted)
+
+    usernames = YAML.load_file(root.join("conversion/2026/new_york/usernames.yml"))
+    expect(usernames.fetch("Governor||Kathy Hochul")).to eq("hochul_kt_9z")
   end
 end

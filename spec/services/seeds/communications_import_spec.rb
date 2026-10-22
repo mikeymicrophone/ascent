@@ -17,7 +17,7 @@ RSpec.describe "Importing communications and stance evidence" do
       .to contain_exactly([ "states", "1:42" ], [ "clarifies", "25:05" ])
     expect(stance.communications.map(&:kind)).to contain_exactly("video", "debate")
 
-    channel = Channel.find_by!(entity_code: "CHANNEL-WEBSITE-AVERYEXAMPLE_EXAMPLE_COM")
+    channel = Channel.find_by!(entity_code: "CHANNEL-WEB-AVERYEXAMPLE_EXAMPLE_COM")
     expect(channel).to have_attributes(official: true, owner: Person.find_by!(username: "example_avery_ny_ed_1"))
     expect(stance.candidacy.featured_communications.count).to eq(2)
   end
@@ -43,12 +43,12 @@ RSpec.describe "Importing communications and stance evidence" do
       catalog: ASC
       records:
         - type: Channel
-          code: CHANNEL-WEBSITE-AVERY_FOR_ASSEMBLY
+          code: CHANNEL-WEB-AVERY_FOR_ASSEMBLY
           attributes: {platform: website, handle: averyexample.example.com, official: true}
     YAML
 
     expect { Seeds::LibraryImporter.new.call([ path.to_s ]) }
-      .to raise_error(Seeds::LibraryImporter::Error, /names the same Channel as CHANNEL-WEBSITE-AVERYEXAMPLE_EXAMPLE_COM; use that code or list CHANNEL-WEBSITE-AVERY_FOR_ASSEMBLY in its aliases/)
+      .to raise_error(Seeds::LibraryImporter::Error, /names the same Channel as CHANNEL-WEB-AVERYEXAMPLE_EXAMPLE_COM; use that code or list CHANNEL-WEB-AVERY_FOR_ASSEMBLY in its aliases/)
     expect(Channel.count).to eq(1)
   end
 

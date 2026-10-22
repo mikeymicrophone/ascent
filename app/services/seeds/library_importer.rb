@@ -43,6 +43,9 @@ module Seeds
     PROTECTED_ATTRIBUTES = %w[id entity_code created_at updated_at].freeze
     EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [], features_added: [] }.freeze
 
+    # A Person's code ends in a disambiguator issued once, like PERSON-JAMES_LT_6J; a submission may leave it off.
+    PERSON_DISAMBIGUATOR = /_[2-9][A-HJ-NP-Z]\z/
+
     attr_reader :report
 
     # The columns a model's belongs_to associations fill, which manifests set through references.
@@ -108,8 +111,9 @@ module Seeds
         target = cached_record(binding.canonical_code) { binding.resolved_record || model.find_by(entity_code: binding.canonical_code) }
         return target if target
       end
-      model.find_by(entity_code: local_code(code))
+      model.find_by(entity_code: local_code(code)) || (person_by_name_code(local_code(code)) if type == "Person")
     end
+
 
     private
 
@@ -128,6 +132,23 @@ module Seeds
       return @bindings[code] if @bindings
 
       EntityCode.find_by(namespace: @namespace, catalog: @catalog, code: code)
+    end
+
+    # PERSON-JAMES_LT names the one person whose code adds a disambiguator to JAMES_LT.
+    def person_by_name_code(code)
+      return if code.match?(PERSON_DISAMBIGUATOR)
+
+      matches = codes_starting("#{code}_").select { |candidate| candidate.delete_prefix(code).match?(/\A#{PERSON_DISAMBIGUATOR.source}/) }
+                                          .map { |candidate| binding_for(candidate).canonical_code }.uniq
+      raise Error, "#{code} could be #{matches.sort.join(" or ")}; use the full code" if matches.many?
+
+      resolve_code("Person", matches.first) if matches.one?
+    end
+
+    def codes_starting(prefix)
+      return @bindings.keys.select { it.start_with?(prefix) } if @bindings
+
+      EntityCode.where(namespace: @namespace, catalog: @catalog).where("code LIKE ?", "#{EntityCode.sanitize_sql_like(prefix)}%").pluck(:code)
     end
 
     def cached_record(canonical_code)

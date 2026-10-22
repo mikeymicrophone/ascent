@@ -55,11 +55,11 @@ groups:
         attributes: {status: active, participation: active}
         references: {race: RACE-USA-NY-EXAMPLE-ED_1-2026_GENERAL, person: PERSON-EXAMPLE_AVERY_NY_ED_1}
       - type: Channel
-        code: CHANNEL-WEBSITE-AVERYEXAMPLE_EXAMPLE_COM
+        code: CHANNEL-WEB-AVERYEXAMPLE_EXAMPLE_COM
         attributes: {platform: website, handle: averyexample.example.com, url: https://example.com/avery-example, official: true}
         references: {owner: PERSON-EXAMPLE_AVERY_NY_ED_1}
       - type: Communication
-        code: COMMUNICATION-WEBSITE-AVERYEXAMPLE_EXAMPLE_COM-2026_09_14-TOWN_HALL
+        code: COMMUNICATION-WEB-AVERYEXAMPLE_EXAMPLE_COM-2026_09_14-TOWN_HALL
         attributes:
           kind: video
           title: Town hall on energy-intensive mining
@@ -67,7 +67,7 @@ groups:
           url: https://example.com/avery-example/town-hall
           duration_seconds: 2710
           featured_candidacies: [CANDIDACY-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1]
-        references: {channel: CHANNEL-WEBSITE-AVERYEXAMPLE_EXAMPLE_COM}
+        references: {channel: CHANNEL-WEB-AVERYEXAMPLE_EXAMPLE_COM}
       - type: Stance
         code: STANCE-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM
         attributes: {priority_level: high}
@@ -79,4 +79,4 @@ groups:
         attributes: {relation: states, quote: "We should pause new permits until we know what they cost our water.", offset_seconds: 102}
         references:
           stance: STANCE-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM
-          communication: COMMUNICATION-WEBSITE-AVERYEXAMPLE_EXAMPLE_COM-2026_09_14-TOWN_HALL
+          communication: COMMUNICATION-WEB-AVERYEXAMPLE_EXAMPLE_COM-2026_09_14-TOWN_HALL

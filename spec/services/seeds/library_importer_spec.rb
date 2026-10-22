@@ -131,6 +131,33 @@ RSpec.describe Seeds::LibraryImporter do
     expect(Municipality.find_by!(entity_code: "MUNICIPALITY-USA-OH-WASHINGTON_TOWNSHIP_MUSKINGUM")).not_to eq(seeded)
   end
 
+  describe "a person's name code without its disambiguator" do
+    def people(*codes)
+      write_manifest("people.yml", <<~YAML)
+        format: micharisma-seeds/v1
+        namespace: MIC
+        catalog: ASC
+        records:
+        #{codes.map { |code| "  - {type: Person, code: PERSON-#{code}, attributes: {username: #{code.downcase}, username_status: provisional, first_name: Letitia, last_name: James}}" }.join("\n")}
+      YAML
+    end
+
+    it "names the one person whose code adds a disambiguator to it" do
+      importer.call([ people("JAMES_LT_6J") ])
+
+      expect(importer.resolve_code("Person", "PERSON-JAMES_LT")).to eq(Person.find_by!(username: "james_lt_6j"))
+      expect(importer.resolve_code("Person", "MIC-ASC-PERSON-JAMES_LT")).to eq(Person.find_by!(username: "james_lt_6j"))
+      expect(importer.resolve_code("Person", "PERSON-JAMES")).to be_nil
+    end
+
+    it "asks for the full code when two people share the name code" do
+      importer.call([ people("JAMES_LT_6J", "JAMES_LT_4K") ])
+
+      expect { importer.resolve_code("Person", "PERSON-JAMES_LT") }
+        .to raise_error(described_class::Error, "PERSON-JAMES_LT could be PERSON-JAMES_LT_4K or PERSON-JAMES_LT_6J; use the full code")
+    end
+  end
+
   it "reports a differing existing value instead of overwriting it" do
     importer.call([ manifest ])
     Race.find_by!(entity_code: "RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL").update!(certification_status: "tentative")

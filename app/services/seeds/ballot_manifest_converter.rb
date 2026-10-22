@@ -10,7 +10,8 @@ module Seeds
   # Writes  manifests/foundation.yml, manifests/2026/<state>/**/*.yml, and
   #         conversion/2026/<state>/{usernames.yml,name_spellings.yml,judgments.md}.
   #
-  # Usernames already recorded in usernames.yml are reused, so a username never changes once issued.
+  # Usernames already recorded in usernames.yml are reused, so a username never changes once issued,
+  # and a new one is checked against every state's usernames.yml.
   class BallotManifestConverter
     class Error < StandardError; end
 
@@ -36,8 +37,12 @@ module Seeds
 
     attr_reader :summary
 
-    def initialize(state_dir:, selection: :pilot, root: SeedDataPaths.primary_root)
-      @state_dir, @selection, @root = state_dir, selection, Pathname.new(root)
+    # Disambiguators skip look-alike characters: 0 and 1, I and O.
+    DISAMBIGUATOR_DIGITS = ("2".."9").to_a.freeze
+    DISAMBIGUATOR_LETTERS = (("A".."Z").to_a - %w[I O]).map(&:downcase).freeze
+
+    def initialize(state_dir:, selection: :pilot, root: SeedDataPaths.primary_root, random: Random.new)
+      @state_dir, @selection, @root, @random = state_dir, selection, Pathname.new(root), random
     end
 
     def call
@@ -185,7 +190,6 @@ module Seeds
           position_code: position_code(position_title), place: state_place,
           office_path: [ "#{@state_path}-#{position_token}", (token(retention) if retention) ].compact.join("-"),
           seat_code: (token(retention) if retention),
-          username_seat: [ position_token, ("RETENTION" if retention) ].compact.join("_").downcase,
           file: "statewide"
         }
       end
@@ -197,13 +201,12 @@ module Seeds
       place = district_place("#{@state_path}-#{chamber}-#{district_token}", "#{@state_name} #{district_kind}#{numeric ? " " : ": "}#{number}", district_kind)
       seat = retention || group
       if single_seat && seat.nil?
-        office_path, seat_code, username_seat = place[:path], district_token, district_token.downcase
+        office_path, seat_code = place[:path], district_token
       else
         office_path = [ place[:path], position_token, (token(seat) if seat) ].compact.join("-")
         seat_code = [ district_token, (token(seat) if seat) ].compact.join("_")
-        username_seat = [ district_token, (retention ? "RETENTION" : token(seat || position_title)) ].join("_").downcase
       end
-      { position_code: position_code(position_title), place: place, office_path: office_path, seat_code: seat_code, username_seat: username_seat, file: file }
+      { position_code: position_code(position_title), place: place, office_path: office_path, seat_code: seat_code, file: file }
     end
 
     # Local offices belong to the most specific single place the source names. Contests spanning
@@ -232,7 +235,7 @@ module Seeds
       office_path = [ place[:path], (token(office_title) unless office_district), (token(seat) if seat) ].compact.join("-")
       {
         position_code: position_code(office_title, local: true), place: place, office_path: office_path,
-        seat_code: (token(seat) if seat), username_seat: office_path.delete_prefix("#{@state_path}-").downcase.tr("-", "_"),
+        seat_code: (token(seat) if seat),
         file: "local/#{counties.one? ? counties.first[:file] : "multi_county"}"
       }
     end
@@ -324,7 +327,7 @@ module Seeds
 
     def candidate_records(name, rows, key, placed, participation)
       parts = BallotRows.name_parts(name)
-      username = username_for(key, parts, placed[:username_seat])
+      username = username_for(key, parts)
       person = record("Person", "PERSON-#{username.upcase}",
                       { "username" => username, "username_status" => "provisional" }.merge(parts.transform_keys(&:to_s).compact))
       lines = rows.filter_map { |row| ballot_line(row) }.uniq { |line| line["label"] }
@@ -388,17 +391,43 @@ module Seeds
       mapped.uniq.one? ? mapped.first : nil
     end
 
-    def username_for(key, parts, seat)
+    # A person's username is a version of their name and a disambiguator issued once at random,
+    # like Letitia James's james_lt_6j. It names no state or office, so it outlasts any one race.
+    def username_for(key, parts)
       return @usernames.fetch(key) if @usernames.key?(key)
 
+      base = name_code(parts)
+      username = loop do
+        candidate = "#{base}_#{DISAMBIGUATOR_DIGITS.sample(random: @random)}#{DISAMBIGUATOR_LETTERS.sample(random: @random)}"
+        break candidate unless taken_usernames.include?(candidate)
+      end
+      taken_usernames << username
+      @issued[key] = @usernames[key] = username
+    end
+
+    # The surname, then the given name's first letter and its next consonant: Letitia James is james_lt.
+    def name_code(parts)
       surname_words = parts[:last_name].delete(",").split
       surname_words.pop if surname_words.size > 1 && surname_words.last.match?(BallotRows::NAME_SUFFIX)
-      base = [ slug(surname_words.last), (slug(parts[:first_name]) if parts[:first_name]), @state_code.downcase, seat ].compact_blank.join("_").squeeze("_")
-      @taken ||= @usernames.values.to_set
-      username = base
-      username = "#{base}_#{(2..).find { |n| !@taken.include?("#{base}_#{n}") }}" if @taken.include?(base)
-      @taken << username
-      @issued[key] = @usernames[key] = username
+      [ slug(surname_words.last), given_letters(parts[:first_name]) ].compact_blank.join("_")
+    end
+
+    def given_letters(first_name)
+      letters = slug(first_name).delete("_")
+      return if letters.empty?
+
+      letters[0] + (letters[1..][/[^aeiou0-9]/] || letters[1].to_s)
+    end
+
+    # Every username issued in any state, and any a contribution already uses, so no two people share one.
+    def taken_usernames
+      @taken_usernames ||= begin
+        issued = Dir.glob(@root.join("conversion", "*", "*", "usernames.yml").to_s).flat_map { |path| YAML.load_file(path).values }
+        contributed = Dir.glob(@root.join("manifests", "contributions", "**", "*.{yml,yaml}").to_s).flat_map do |path|
+          File.read(path).scan(/code: PERSON-([A-Z0-9_]+)/).flatten.map(&:downcase)
+        end
+        (issued + contributed + @usernames.values).to_set
+      end
     end
 
     def slug(text)

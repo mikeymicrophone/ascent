@@ -19,8 +19,8 @@ The entity-code design's sourced claim is the model: a subject, a predicate, an 
 | Topic | `TOPIC-HOUSING` | A broad subject |
 | Issue | `ISSUE-HOUSING-AFFORDABILITY` | A problem within a topic |
 | Approach | `APPROACH-HOUSING-AFFORDABILITY-INCLUSIONARY_ZONING`, or with a jurisdiction path when tied to one place: `APPROACH-USA-NY-CRYPTO_MINING-TIME_LIMITED_PERMIT_MORATORIUM` | A proposed response, described without reference to any candidate |
-| **Channel** | `CHANNEL-YOUTUBE-{handle}` | One account on one platform (YouTube, Instagram, TikTok, X, Bluesky, Facebook, a campaign website), its owner (a Person, Party, or campaign), and whether it is official |
-| **Communication** | `COMMUNICATION-{channel path}-{date}-{slug}`, for example `COMMUNICATION-YOUTUBE-{handle}-2026_10_02-DEBATE_OPENING` | One video, post, ad, speech, debate clip, interview, platform page, or mailer: its kind, publication date, canonical URL, platform ID, an archived copy's URL, and the candidacies it features |
+| **Channel** | `CHANNEL-{platform token}-{handle}`, with the tokens `WEB`, `YT`, `IG`, `TT`, `X`, `BSKY`, `FB`, and `THR`: `CHANNEL-IG-{handle}` | One account on one platform (YouTube, Instagram, TikTok, X, Bluesky, Facebook, a campaign website), its owner (a Person, Party, or campaign), and whether it is official |
+| **Communication** | `COMMUNICATION-{channel path}-{date}-{slug}`, for example `COMMUNICATION-YT-{handle}-2026_10_02-DEBATE_OPENING` | One video, post, ad, speech, debate clip, interview, platform page, or mailer: its kind, publication date, canonical URL, platform ID, an archived copy's URL, and the candidacies it features |
 | Stance | `STANCE-{candidacy path}-{approach path}` | A candidacy's position on an approach; one per candidacy and approach |
 | **StanceEvidence** | `EVIDENCE-{stance path}-{communication path}` | Which communication supports the stance, a short quote or a timestamp within a video, and its relation: `states`, `clarifies`, or `contradicts` |
 

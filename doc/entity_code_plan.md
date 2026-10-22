@@ -20,7 +20,7 @@ The design was written before Ascent separated races from elections. Its "Electi
 
 Other codes follow the design: `COUNTRY-USA`, `STATE-USA-NY`, `COUNTY-USA-NY-ERIE`, `MUNICIPALITY-USA-CT-HARTFORD`, `DISTRICT-USA-NY-ASSEMBLY-AD_125`, `POSITION-STATE_SENATOR`, `OFFICE-{office path}`, and `PERSON-{username}`. Local office path shapes should be settled on real rows during conversion.
 
-Codes use uppercase letters, digits, dashes, and underscores, so a Person's code uppercases its lowercase username (`PERSON-KELLES_ANNA_NY_AD_125`). Years are not coded: `YEAR-2024` names the year itself.
+Codes use uppercase letters, digits, dashes, and underscores, so a Person's code uppercases its lowercase username (`PERSON-JAMES_LT_6J`). Years are not coded: `YEAR-2024` names the year itself.
 
 ## Storage
 
@@ -29,14 +29,15 @@ Codes use uppercase letters, digits, dashes, and underscores, so a Person's code
 
 ## Person usernames
 
-Candidates receive provisional usernames, generated as `{surname}_{given}_{state}_{seat}`. Examples: `kuhn_dawn_ny_ad_7`, `lalota_nicholas_ny_cd_1`, and `healey_ma_governor` (the ballot prints only the surname). The rules:
+A person's username is a version of their name and a disambiguator issued to everyone in advance, as Signal does: Letitia James is `james_lt_6j`, so her code is `PERSON-JAMES_LT_6J`. A username names no state or office, because a person may later run somewhere else. The rules:
 
-- Lowercase letters, digits, and underscores. Middle names, nicknames, and suffixes are omitted; accents are converted to plain letters and punctuation is removed.
-- The seat is the office's seat code (`ad_125`), the position token for statewide offices, or place plus position for local offices.
-- Collisions take `_2`, `_3`, and so on; a shared name never merges two people. Once issued, a username is committed in the manifest and reused on every replay.
-- `username_status` is `provisional` until an update request replaces the username, for example with a verified Instagram handle. The Person keeps its identity; the old Person and Candidacy codes become aliases.
+- **Name code:** the surname, then the given name's first letter and its next consonant (Letitia → `lt`, Clyde → `cl`, Ann → `an`). A person printed with only a surname has the surname alone (`healey`). Middle names, nicknames, and suffixes are omitted; accents become plain letters and punctuation is removed.
+- **Disambiguator:** a digit and a letter drawn at random, skipping the look-alikes 0, 1, I, and O, so each name code has 192. It is checked against every username issued in any state and any person code in a contribution, committed in the state's `usernames.yml`, and reused on every replay.
+- **Submissions** may use the name code alone: `PERSON-JAMES_LT` resolves to the one person whose code adds a disambiguator to it. When two people share the name code, the importer refuses it and lists both full codes.
+- Social media handles belong to the person's Channel records, not their username.
+- `username_status` stays `provisional` until an update request confirms the person's identity.
 
-Open before the first replacement: how handles containing periods are encoded, and how conflicting update requests are resolved.
+Open: how conflicting update requests are resolved.
 
 ## Ballot lines and endorsements
 
