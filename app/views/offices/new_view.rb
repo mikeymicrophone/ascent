@@ -1,19 +1,7 @@
 class Views::Offices::NewView < Views::ApplicationView
-  def initialize(office:)
-    @office = office
-  end
+  prop :office, Office
 
-  def view_template(&)
-    div(class: "scaffold office-new", id: dom_id(@office, :new)) do
-      h1 { "New office" }
-      
-      Views::Offices::OfficeForm(office: @office)
-      
-      div do
-        link_to "Back to offices", 
-                offices_path,
-                class: "secondary"
-      end
-    end
+  def view_template
+    ResourceFormPage(record: @office) { render Views::Offices::OfficeForm.new(@office) }
   end
 end

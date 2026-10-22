@@ -1,19 +1,7 @@
 class Views::VoterRaceBaselines::NewView < Views::ApplicationView
-  def initialize(voter_race_baseline:)
-    @voter_race_baseline = voter_race_baseline
-  end
+  prop :voter_race_baseline, VoterRaceBaseline
 
-  def view_template(&)
-    div(class: "scaffold voter_race_baseline-new", id: dom_id(@voter_race_baseline, :new)) do
-      h1 { "New voter race baseline" }
-      
-      Views::VoterRaceBaselines::VoterRaceBaselineForm(voter_race_baseline: @voter_race_baseline)
-      
-      div do
-        link_to "Back to voter race baselines", 
-                voter_race_baselines_path,
-                class: "secondary"
-      end
-    end
+  def view_template
+    ResourceFormPage(record: @voter_race_baseline) { render Views::VoterRaceBaselines::VoterRaceBaselineForm.new(@voter_race_baseline) }
   end
 end

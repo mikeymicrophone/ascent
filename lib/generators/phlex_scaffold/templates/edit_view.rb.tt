@@ -1,22 +1,7 @@
 class Views::<%= controller_class_name %>::EditView < Views::ApplicationView
-  def initialize(<%= singular_table_name %>:)
-    @<%= singular_table_name %> = <%= singular_table_name %>
-  end
+  prop :<%= singular_table_name %>, <%= class_name %>
 
-  def view_template(&)
-    div(class: "scaffold <%= singular_table_name %>-edit", id: dom_id(@<%= singular_table_name %>, :edit)) do
-      h1 { "Editing <%= human_name.downcase %>" }
-      
-      Views::<%= controller_class_name %>::<%= class_name %>Form(<%= singular_table_name %>: @<%= singular_table_name %>)
-      
-      div do
-        link_to "Show this <%= human_name.downcase %>", 
-                @<%= singular_table_name %>,
-                class: "secondary"
-        link_to "Back to <%= human_name.pluralize.downcase %>", 
-                <%= plural_route_name %>_path,
-                class: "secondary"
-      end
-    end
+  def view_template
+    ResourceFormPage(record: @<%= singular_table_name %>) { render Views::<%= controller_class_name %>::<%= class_name %>Form.new(@<%= singular_table_name %>) }
   end
 end

@@ -1,83 +1,13 @@
-class Views::OfficialCodes::OfficialCodeForm < Views::ApplicationView
-  def initialize(official_code:)
-    @official_code = official_code
-  end
-
-  def view_template(&)
-    form_with(model: @official_code, id: dom_id(@official_code, :form)) do |form|
-      FormErrors(record: @official_code)
-      
-      div do
-        form.label :policy_id, "Policy"
-        form.collection_select :policy_id, 
-                               ::Policy.all, 
-                               :id, 
-                               :name,
-                               { prompt: "Select a policy" },
-                               { class: input_classes(@official_code.errors[:policy_id]) }
-      end
-
-      div do
-        form.label :code_number
-        form.text_field :code_number,
-                                        class: input_classes(@official_code.errors[:code_number])
-      end
-
-      div do
-        form.label :title
-        form.text_field :title,
-                                        class: input_classes(@official_code.errors[:title])
-      end
-
-      div do
-        form.label :full_text
-        form.textarea :full_text,
-                                        rows: 4,
-                                        class: input_classes(@official_code.errors[:full_text])
-      end
-
-      div do
-        form.label :summary
-        form.textarea :summary,
-                                        rows: 4,
-                                        class: input_classes(@official_code.errors[:summary])
-      end
-
-      div do
-        form.label :enforcement_mechanism
-        form.textarea :enforcement_mechanism,
-                                        rows: 4,
-                                        class: input_classes(@official_code.errors[:enforcement_mechanism])
-      end
-
-      div do
-        form.label :penalty_structure
-        form.textarea :penalty_structure,
-                                        rows: 4,
-                                        class: input_classes(@official_code.errors[:penalty_structure])
-      end
-
-      div do
-        form.label :effective_date
-        form.date_field :effective_date,
-                                        class: input_classes(@official_code.errors[:effective_date])
-      end
-
-      div do
-        form.label :status
-        form.text_field :status,
-                                        class: input_classes(@official_code.errors[:status])
-      end
-
-      div do
-        form.submit class: "primary"
-      end
-    end
-  end
-
-  private
-
-  def input_classes(errors)
-    errors.any? ? "error" : ""
+class Views::OfficialCodes::OfficialCodeForm < Views::Components::Forms::Base
+  def view_template
+    row field(:policy_id).collection_select(::Policy.all, text: :name, prompt: "Select a policy"), label: "Policy"
+    row field(:code_number).text
+    row field(:title).text
+    row field(:full_text).textarea(rows: 4)
+    row field(:summary).textarea(rows: 4)
+    row field(:enforcement_mechanism).textarea(rows: 4)
+    row field(:penalty_structure).textarea(rows: 4)
+    row field(:effective_date).date
+    row field(:status).text
   end
 end

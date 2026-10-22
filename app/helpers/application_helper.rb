@@ -3,10 +3,6 @@ module ApplicationHelper
   include Pagy::Frontend
   include ScaffoldUiHelper
 
-  def link_to_name(resource, options = {})
-    link_to resource.name, resource, options
-  end
-
   def load_google_fonts
     font_header +
     tag.link(rel: "stylesheet", href: font_url)

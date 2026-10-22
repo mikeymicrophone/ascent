@@ -1,19 +1,7 @@
 class Views::Counties::NewView < Views::ApplicationView
-  def initialize(county:)
-    @county = county
-  end
+  prop :county, County
 
-  def view_template(&)
-    div(class: "scaffold county-new", id: dom_id(@county, :new)) do
-      h1 { "New county" }
-      
-      Views::Counties::CountyForm(county: @county)
-      
-      div do
-        link_to "Back to counties", 
-                counties_path,
-                class: "secondary"
-      end
-    end
+  def view_template
+    ResourceFormPage(record: @county) { render Views::Counties::CountyForm.new(@county) }
   end
 end

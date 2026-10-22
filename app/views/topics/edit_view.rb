@@ -1,22 +1,7 @@
 class Views::Topics::EditView < Views::ApplicationView
-  def initialize(topic:)
-    @topic = topic
-  end
+  prop :topic, Topic
 
-  def view_template(&)
-    div(class: "scaffold topic-edit", id: dom_id(@topic, :edit)) do
-      h1 { "Editing topic" }
-      
-      Views::Topics::TopicForm(topic: @topic)
-      
-      div do
-        link_to "Show this topic", 
-                @topic,
-                class: "secondary"
-        link_to "Back to topics", 
-                topics_path,
-                class: "secondary"
-      end
-    end
+  def view_template
+    ResourceFormPage(record: @topic) { render Views::Topics::TopicForm.new(@topic) }
   end
 end

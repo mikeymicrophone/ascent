@@ -35,14 +35,6 @@ class Views::ApplicationView < Phlex::HTML
     ApplicationRecordPolicy
   end
 
-  def jurisdiction_choices
-    ::Jurisdiction.includes(:jurisdictionable).map { [ jurisdiction_label(it), it.id ] }.sort
-  end
-
-  def jurisdiction_label(jurisdiction)
-    "#{jurisdiction.name} (#{jurisdiction.jurisdictionable_type.titleize})"
-  end
-
   def jurisdiction_link(jurisdiction)
     link_to jurisdiction.name, jurisdiction.jurisdictionable, class: "link jurisdiction"
   end

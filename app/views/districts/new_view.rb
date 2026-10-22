@@ -1,19 +1,7 @@
 class Views::Districts::NewView < Views::ApplicationView
-  def initialize(district:)
-    @district = district
-  end
+  prop :district, District
 
-  def view_template(&)
-    div(class: "scaffold district-new", id: dom_id(@district, :new)) do
-      h1 { "New district" }
-      
-      Views::Districts::DistrictForm(district: @district)
-      
-      div do
-        link_to "Back to districts", 
-                districts_path,
-                class: "secondary"
-      end
-    end
+  def view_template
+    ResourceFormPage(record: @district) { render Views::Districts::DistrictForm.new(@district) }
   end
 end
