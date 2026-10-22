@@ -2,7 +2,7 @@ class GoverningBodiesController < ApplicationController
   before_action :set_governing_body, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @governing_bodies = pagy(GoverningBody.all)
+    @pagy, @governing_bodies = pagy(GoverningBody.by_governance_type(params[:governance_type_id]))
     render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy)
   end
 

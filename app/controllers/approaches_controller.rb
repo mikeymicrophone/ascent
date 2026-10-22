@@ -3,7 +3,7 @@ class ApproachesController < ApplicationController
 
   # GET /approaches or /approaches.json
   def index
-    @pagy, @approaches = pagy(Approach.all)
+    @pagy, @approaches = pagy(Approach.by_issue(params[:issue_id]))
     render Views::Approaches::IndexView.new(approaches: @approaches, pagy: @pagy)
   end
 

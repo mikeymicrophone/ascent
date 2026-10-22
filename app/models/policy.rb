@@ -8,4 +8,6 @@ class Policy < ApplicationRecord
   enum :status, { pending: "pending", enacted: "enacted", repealed: "repealed" }, validate: true
 
   alias_attribute :name, :title
+
+  scope :by_governing_body, ->(governing_body_id) { where(governing_body_id: governing_body_id) if governing_body_id.present? }
 end

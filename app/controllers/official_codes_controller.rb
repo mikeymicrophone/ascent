@@ -2,7 +2,7 @@ class OfficialCodesController < ApplicationController
   before_action :set_official_code, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @official_codes = pagy(OfficialCode.all)
+    @pagy, @official_codes = pagy(OfficialCode.by_policy(params[:policy_id]))
     render Views::OfficialCodes::IndexView.new(official_codes: @official_codes, pagy: @pagy)
   end
 

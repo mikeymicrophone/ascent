@@ -2,7 +2,7 @@ class PoliciesController < ApplicationController
   before_action :set_policy, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @policies = pagy(Policy.all)
+    @pagy, @policies = pagy(Policy.by_governing_body(params[:governing_body_id]))
     render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy)
   end
 

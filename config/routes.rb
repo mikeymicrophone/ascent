@@ -3,14 +3,24 @@ Rails.application.routes.draw do
   get "supporters" => "pages#supporters", as: :supporters
   get "approval-voting" => "pages#approval_voting", as: :approval_voting
   resources :official_codes
-  resources :policies
+  resources :policies do
+    resources :official_codes, only: [:index]
+  end
   resources :stances
   resources :approaches
-  resources :issues
-  resources :topics
-  resources :governing_bodies
+  resources :issues do
+    resources :approaches, only: [:index]
+  end
+  resources :topics do
+    resources :issues, only: [:index]
+  end
+  resources :governing_bodies do
+    resources :policies, only: [:index]
+  end
   resources :area_of_concerns
-  resources :governance_types
+  resources :governance_types do
+    resources :governing_bodies, only: [:index]
+  end
   resources :voter_race_baselines
   resources :ratings
 

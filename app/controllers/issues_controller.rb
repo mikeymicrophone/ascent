@@ -3,7 +3,7 @@ class IssuesController < ApplicationController
 
   # GET /issues or /issues.json
   def index
-    @pagy, @issues = pagy(Issue.includes(:topic))
+    @pagy, @issues = pagy(Issue.includes(:topic).by_topic(params[:topic_id]))
     render Views::Issues::IndexView.new(issues: @issues, pagy: @pagy)
   end
 
