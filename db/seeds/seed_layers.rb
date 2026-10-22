@@ -37,10 +37,11 @@ module SeedLayers
       SeedDataPaths.file("us_states.yml"),
       SeedDataPaths.file("canadian_provinces.yml")
     ])
-    MunicipalitySeeder.seed
     PositionSeeder.seed
     YearSeeder.seed
+    # Manifests first, so places they define arrive with their counties before cities.yml adopts them.
     SeedManifests.seed
+    MunicipalitySeeder.seed
     GubernatorialRaceSeeder.seed
     puts "✅ Reference data seeded"
   end
