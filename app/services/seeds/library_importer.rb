@@ -42,7 +42,9 @@ module Seeds
     NESTED_ATTRIBUTES = { "Candidacy" => %w[ballot_lines], "Communication" => %w[featured_candidacies] }.freeze
     BALLOT_LINE_KEYS = %w[label kind party].freeze
     PROTECTED_ATTRIBUTES = %w[id entity_code type created_at updated_at].freeze
-    EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [], features_added: [] }.freeze
+    # References Ascent derives after an import rather than reading from manifests.
+    DERIVED_REFERENCES = { "Candidacy" => %w[primary_candidacy] }.freeze
+    EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [], features_added: [], primary_candidates_added: [] }.freeze
 
     # A Person's code ends in a disambiguator issued once, like PERSON-JAMES_LT_6J; a submission may leave it off.
     PERSON_DISAMBIGUATOR = /_[2-9][A-HJ-NP-Z]\z/
@@ -51,6 +53,10 @@ module Seeds
 
     # The columns a model's belongs_to associations fill, which manifests set through references.
     # Other columns ending in _id, like a communication's platform_id, are ordinary attributes.
+    def self.seeded_reference?(type, model, name)
+      model.reflect_on_association(name.to_sym)&.macro == :belongs_to && !DERIVED_REFERENCES.fetch(type, []).include?(name.to_s)
+    end
+
     def self.association_columns(model)
       model.reflect_on_all_associations(:belongs_to).flat_map do |association|
         [ association.foreign_key.to_s, (association.foreign_type.to_s if association.polymorphic?) ].compact
@@ -94,6 +100,7 @@ module Seeds
 
           pending = deferred
         end
+        report[:primary_candidates_added] = Race.gather_primary_candidates!.map(&:name)
       end
       report
     rescue StandardError
@@ -228,7 +235,7 @@ module Seeds
         end
       end
       record.references.each_key do |key|
-        raise Error, "#{record.location}: unsupported #{record.type} reference #{key}" unless model.reflect_on_association(key.to_sym)&.macro == :belongs_to
+        raise Error, "#{record.location}: unsupported #{record.type} reference #{key}" unless self.class.seeded_reference?(record.type, model, key)
       end
       validate_ballot_lines!(record) if record.attributes.key?("ballot_lines")
       if record.attributes.key?("featured_candidacies") && !(record.attributes["featured_candidacies"].is_a?(Array) && record.attributes["featured_candidacies"].all?(String))
@@ -277,6 +284,11 @@ module Seeds
       if target.nil?
         refuse_second_uri!(model, desired, record)
         target = model.create!(desired.merge(entity_code: canonical_code))
+        report[:created] << canonical_code
+      elsif target.try(:primary_candidacy)
+        # The data now places a primary candidate in this race, so the off-ballot candidacy made for
+        # them takes the data's fields and keeps its ratings.
+        target.update!(desired.merge(entity_code: canonical_code, primary_candidacy: nil))
         report[:created] << canonical_code
       else
         differences = desired.each_with_object({}) do |(key, value), result|

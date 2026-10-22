@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -56,11 +56,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_140000) do
     t.string "participation", default: "active", null: false
     t.bigint "person_id", null: false
     t.text "platform_summary"
+    t.bigint "primary_candidacy_id"
     t.bigint "race_id", null: false
     t.string "status"
     t.datetime "updated_at", null: false
     t.index ["entity_code"], name: "index_candidacies_on_entity_code", unique: true
     t.index ["person_id"], name: "index_candidacies_on_person_id"
+    t.index ["primary_candidacy_id"], name: "index_candidacies_on_primary_candidacy_id"
+    t.index ["race_id", "person_id"], name: "index_candidacies_from_primaries_once_per_race_and_person", unique: true, where: "(primary_candidacy_id IS NOT NULL)"
     t.index ["race_id"], name: "index_candidacies_on_race_id"
   end
 
@@ -599,6 +602,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_140000) do
   add_foreign_key "approaches", "issues"
   add_foreign_key "ballot_lines", "candidacies"
   add_foreign_key "ballot_lines", "organizations", column: "party_id"
+  add_foreign_key "candidacies", "candidacies", column: "primary_candidacy_id"
   add_foreign_key "candidacies", "people"
   add_foreign_key "candidacies", "races"
   add_foreign_key "chambers", "governing_bodies"

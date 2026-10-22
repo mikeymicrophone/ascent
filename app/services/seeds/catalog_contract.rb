@@ -16,7 +16,7 @@ module Seeds
           [ column.name, column_schema(model, column) ]
         end.to_h
         attributes.merge!(nested_schemas(name))
-        [ name, { "attributes" => attributes.sort.to_h, "references" => model.reflect_on_all_associations(:belongs_to).map { |association| association.name.to_s }.sort } ]
+        [ name, { "attributes" => attributes.sort.to_h, "references" => model.reflect_on_all_associations(:belongs_to).map { |association| association.name.to_s }.select { LibraryImporter.seeded_reference?(name, model, it) }.sort } ]
       end
       { "namespace" => "MIC", "catalog" => "ASC", "entities" => entities }
     end

@@ -13,6 +13,9 @@ class Candidacy < ApplicationRecord
   has_many :communication_features, dependent: :destroy
   has_many :featured_communications, through: :communication_features, source: :communication
   has_many :voters, through: :ratings
+  # A general's off-ballot candidacy for someone who ran in a primary for its nomination.
+  belongs_to :primary_candidacy, class_name: "Candidacy", optional: true, inverse_of: :general_candidacies
+  has_many :general_candidacies, class_name: "Candidacy", foreign_key: :primary_candidacy_id, dependent: :destroy, inverse_of: :primary_candidacy
   
   validates :status, presence: true, inclusion: { in: %w[announced active withdrawn disqualified] }
   # Whether a simulated slate includes the candidacy; separate from its official status.
@@ -22,6 +25,8 @@ class Candidacy < ApplicationRecord
   scope :active, -> { where(status: 'active') }
   scope :withdrawn, -> { where(status: 'withdrawn') }
   scope :disqualified, -> { where(status: 'disqualified') }
+  scope :still_running, -> { where.not(status: %w[withdrawn disqualified]) }
+  scope :from_primaries, -> { where.not(primary_candidacy_id: nil) }
   
   scope :with_rating_details, -> { includes(:person, :ratings, :ballot_lines) }
   scope :with_election_context, -> { includes(race: [:election, { office: :position }]) }
@@ -33,6 +38,16 @@ class Candidacy < ApplicationRecord
   # The printed labels, in ballot order, for display.
   def ballot_labels
     ballot_lines.map(&:label).join("; ").presence
+  end
+
+  # The printed labels, or for a primary candidate gathered into a general, the primary they ran in.
+  def ballot_summary
+    ballot_labels || (primary_summary if primary_candidacy)
+  end
+
+  def primary_summary
+    organization = primary_candidacy.office.nominating_organization
+    "Off the ballot; ran in the #{organization.is_a?(Party) ? "#{organization.name} primary" : organization.name}"
   end
 
   def average_rating

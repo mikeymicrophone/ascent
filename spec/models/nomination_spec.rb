@@ -35,21 +35,49 @@ RSpec.describe "Nominations", type: :model do
     expect(nomination(democrats).name).to eq("Democratic Party nominee for Governor - Georgia")
   end
 
-  it "gathers every primary candidate into the general's field once" do
-    general = race_in("general", governor, Date.new(2026, 11, 3))
-    democratic_primary = race_in("primary", nomination(democrats), Date.new(2026, 5, 19))
-    republican_primary = race_in("primary", nomination(republicans), Date.new(2026, 5, 19))
-    marisol = candidacy(democratic_primary, "Marisol", "Okafor")
-    candidacy(democratic_primary, "Dwayne", "Pritchett")
-    candidacy(republican_primary, "Harlan", "Voss")
-    general_okafor = Candidacy.create!(race: general, person: marisol.person, status: "active")
-    general_voss = Candidacy.create!(race: general, person: Person.find_by!(last_name: "Voss"), status: "active")
+  describe "gathering primary candidates into the general" do
+    let(:general) { race_in("general", governor, Date.new(2026, 11, 3)) }
+    let(:democratic_primary) { race_in("primary", nomination(democrats), Date.new(2026, 5, 19)) }
+    let(:republican_primary) { race_in("primary", nomination(republicans), Date.new(2026, 5, 19)) }
+    let!(:okafor) { candidacy(democratic_primary, "Marisol", "Okafor") }
+    let!(:pritchett) { candidacy(democratic_primary, "Dwayne", "Pritchett") }
+    let!(:voss) { candidacy(republican_primary, "Harlan", "Voss") }
+    let!(:general_okafor) { Candidacy.create!(race: general, person: okafor.person, status: "active") }
 
-    field = general.field_with_primary_candidates
+    it "gives each primary candidate not on the general's ballot an off-ballot candidacy there" do
+      added = Race.gather_primary_candidates!
 
-    expect(field.first(2)).to eq([ general_okafor, general_voss ])
-    expect(field.map { it.person.last_name }).to contain_exactly("Okafor", "Voss", "Pritchett")
-    expect(general.nomination_races).to contain_exactly(democratic_primary, republican_primary)
+      expect(general.nomination_races).to contain_exactly(democratic_primary, republican_primary)
+      expect(added.map { it.person.last_name }).to contain_exactly("Pritchett", "Voss")
+      expect(general.candidacies.reload.map { [ it.person.last_name, it.participation, it.primary_candidacy ] })
+        .to contain_exactly([ "Okafor", "active", nil ], [ "Pritchett", "off_ballot", pritchett ], [ "Voss", "off_ballot", voss ])
+      expect(Race.gather_primary_candidates!).to be_empty
+      expect(general.candidacies.find_by!(primary_candidacy: voss).ballot_summary).to eq("Off the ballot; ran in the Republican Party primary")
+    end
+
+    it "includes a runoff candidate once and leaves out a primary candidate who withdrew" do
+      runoff = race_in("primary_runoff", democratic_primary.office, Date.new(2026, 6, 16))
+      candidacy(runoff, "Dwayne", "Pritchett").update!(person: pritchett.person)
+      voss.update!(status: "withdrawn")
+
+      Race.gather_primary_candidates!
+
+      expect(general.candidacies.from_primaries.map(&:primary_candidacy)).to contain_exactly(pritchett)
+    end
+
+    it "removes the off-ballot candidacy, and its ratings, of a candidate who leaves the primary" do
+      Race.gather_primary_candidates!
+      pritchett.update!(status: "disqualified")
+
+      expect { Race.gather_primary_candidates! }.to change { general.candidacies.count }.by(-1)
+      expect(general.candidacies.from_primaries.map(&:primary_candidacy)).to contain_exactly(voss)
+    end
+
+    it "leaves a primary's own field alone" do
+      Race.gather_primary_candidates!
+
+      expect(democratic_primary.candidacies.reload).to contain_exactly(okafor, pritchett)
+    end
   end
 
   it "lets a top-two primary nominate two through a placeholder organization" do

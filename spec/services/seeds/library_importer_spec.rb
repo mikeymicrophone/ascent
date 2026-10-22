@@ -213,6 +213,66 @@ RSpec.describe Seeds::LibraryImporter do
       expect { importer.resolve_code("Party", "ORGANIZATION-USA-GA-TOP_TWO_PRIMARY") }
         .to raise_error(described_class::Error, "ORGANIZATION-USA-GA-TOP_TWO_PRIMARY identifies Organization, not Party")
     end
+
+    describe "primary candidates in the general" do
+      let(:race) { "RACE-USA-GA-CONGRESS-CD_5-2026_GENERAL" }
+
+      def candidacy_record(person, race_code, participation = "active")
+        <<~YAML.indent(2)
+          - type: Candidacy
+            code: CANDIDACY-#{race_code.delete_prefix("RACE-")}-#{person}
+            attributes: {status: active, participation: #{participation}}
+            references: {race: #{race_code}, person: PERSON-#{person}}
+        YAML
+      end
+
+      let(:field) do
+        write_manifest("field.yml", <<~YAML + candidacy_record("BELL_TS", "RACE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY") + candidacy_record("ODOM_RN", "RACE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY") + candidacy_record("BELL_TS", race))
+          format: micharisma-seeds/v1
+          namespace: MIC
+          catalog: ASC
+          records:
+            - {type: Person, code: PERSON-BELL_TS, attributes: {username: bell_ts, username_status: provisional, first_name: Tasha, last_name: Bell}}
+            - {type: Person, code: PERSON-ODOM_RN, attributes: {username: odom_rn, username_status: provisional, first_name: Ronan, last_name: Odom}}
+            - type: Election
+              code: ELECTION-USA-GA-2026_GENERAL
+              attributes: {name: Georgia General Election 2026, kind: general, election_date: "2026-11-03", status: upcoming, is_mock: false, is_historical: false}
+              references: {jurisdiction: STATE-USA-GA, year: YEAR-2024}
+            - type: Race
+              code: #{race}
+              attributes: {status: upcoming}
+              references: {election: ELECTION-USA-GA-2026_GENERAL, office: OFFICE-USA-GA-CONGRESS-CD_5}
+        YAML
+      end
+
+      it "adds the primary's other candidates to the general off the ballot" do
+        importer.call([ primary, field ])
+
+        general = Race.find_by!(entity_code: race)
+        expect(general.candidacies.map { [ it.person.last_name, it.participation, it.entity_code.present? ] })
+          .to contain_exactly([ "Bell", "active", true ], [ "Odom", "off_ballot", false ])
+        expect(importer.report[:primary_candidates_added]).to contain_exactly("Ronan Odom for Representative")
+        expect { described_class.new.call([ primary, field ]) }.not_to change(Candidacy, :count)
+      end
+
+      it "lets the data place a primary candidate on the general's ballot, keeping their candidacy" do
+        importer.call([ primary, field ])
+        off_ballot = Candidacy.find_by!(race: Race.find_by!(entity_code: race), person: Person.find_by!(last_name: "Odom"))
+        independent = write_manifest("independent.yml", "format: micharisma-seeds/v1\nnamespace: MIC\ncatalog: ASC\nrecords:\n" + candidacy_record("ODOM_RN", race))
+
+        report = described_class.new.call([ primary, field, independent ])
+
+        expect(off_ballot.reload).to have_attributes(entity_code: "CANDIDACY-USA-GA-CONGRESS-CD_5-2026_GENERAL-ODOM_RN", participation: "active", primary_candidacy: nil)
+        expect(report[:conflicts]).to be_empty
+        expect(report[:primary_candidates_added]).to be_empty
+      end
+
+      it "does not take a primary candidacy from a manifest" do
+        bad = write_manifest("bad.yml", File.read(field).sub("references: {race: #{race}, person: PERSON-BELL_TS}", "references: {race: #{race}, person: PERSON-BELL_TS, primary_candidacy: CANDIDACY-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY-BELL_TS}"))
+
+        expect { importer.call([ primary, bad ]) }.to raise_error(described_class::Error, /unsupported Candidacy reference primary_candidacy/)
+      end
+    end
   end
 
   it "reports a differing existing value instead of overwriting it" do

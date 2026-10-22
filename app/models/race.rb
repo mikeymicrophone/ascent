@@ -64,12 +64,28 @@ class Race < ApplicationRecord
     Race.joins(:election).where(office: office.nominations, elections: { year_id: election.year_id })
   end
 
-  # Everyone a simulated general could put on one approval ballot: this race's candidacies, then
-  # each primary candidate who is not already on it, including those who lost their primary.
-  def field_with_primary_candidates
-    on_ballot = candidacies.to_a
-    seen = on_ballot.map(&:person_id).to_set
-    on_ballot + Candidacy.where(race: nomination_races).includes(:person).order(:id).select { seen.add?(it.person_id) }
+  # Gives everyone still running in this office's primaries a candidacy here, off the ballot unless
+  # the data places them on it, so a simulated approval vote can rate those the primary eliminated.
+  # Returns the candidacies it added.
+  def gather_primary_candidates!
+    running = Candidacy.where(race: nomination_races).still_running.order(:id).group_by(&:person_id)
+    gathered = candidacies.from_primaries.includes(:primary_candidacy).index_by(&:person_id)
+    gathered.each { |person_id, candidacy| candidacy.destroy! unless running.key?(person_id) }
+    placed = candidacies.pluck(:person_id).to_set
+    running.each do |person_id, primary_candidacies|
+      candidacy = gathered[person_id]
+      candidacy.update!(primary_candidacy: primary_candidacies.first) if candidacy && !primary_candidacies.include?(candidacy.primary_candidacy)
+    end
+    running.except(*placed).map do |_person_id, primary_candidacies|
+      candidacies.create!(person_id: primary_candidacies.first.person_id, primary_candidacy: primary_candidacies.first, status: "active", participation: "off_ballot")
+    end
+  end
+
+  # Every general with nominations, plus any that still holds candidacies from primaries since removed.
+  def self.gather_primary_candidates!
+    where(office_id: Office.nominations.select(:nominee_for_office_id)).or(where(id: Candidacy.from_primaries.select(:race_id)))
+      .where.not(election_id: Election.primaries.select(:id))
+      .includes(:election, :office).find_each.flat_map(&:gather_primary_candidates!)
   end
 
   def approval_winner

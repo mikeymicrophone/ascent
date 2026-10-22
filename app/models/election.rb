@@ -1,4 +1,7 @@
 class Election < ApplicationRecord
+  # Elections that decide nominations rather than offices.
+  PRIMARY_KINDS = %w[primary primary_runoff].freeze
+
   belongs_to :jurisdiction
   belongs_to :year
   has_many :races, dependent: :destroy
@@ -19,6 +22,7 @@ class Election < ApplicationRecord
   scope :historical, -> { where(is_historical: true) }
   scope :real, -> { where(is_mock: false, is_historical: false) }
   scope :recent, -> { order(election_date: :desc) }
+  scope :primaries, -> { where(kind: PRIMARY_KINDS) }
   scope :with_full_details, -> { includes(:jurisdiction, races: [ :office, :candidates, :candidacies ]) }
   scope :with_candidacy_details, -> { includes(races: { candidacies: [ :person, :ratings ] }) }
 
