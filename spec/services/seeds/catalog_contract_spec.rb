@@ -7,10 +7,16 @@ RSpec.describe Seeds::CatalogContract do
   it "exports the importer's types without database IDs or protected fields" do
     expect(contract.fetch("entities").keys).to match_array(Seeds::LibraryImporter::MODELS.keys)
     expect(contract.values_at("namespace", "catalog")).to eq(%w[MIC ASC])
-    contract.fetch("entities").each_value do |entity|
-      expect(entity.fetch("attributes").keys.grep(/_id\z/)).to be_empty
+    contract.fetch("entities").each do |name, entity|
+      model = Seeds::LibraryImporter::MODELS.fetch(name)
+      expect(entity.fetch("attributes").keys & Seeds::LibraryImporter.association_columns(model)).to be_empty
       expect(entity.fetch("attributes").keys & Seeds::LibraryImporter::PROTECTED_ATTRIBUTES).to be_empty
     end
+  end
+
+  # A post's ID on its platform ends in _id but is an ordinary attribute, not a reference.
+  it "offers a communication's platform_id" do
+    expect(contract.dig("entities", "Communication", "attributes", "platform_id")).to eq("anyOf" => [ { "type" => "string" }, { "type" => "null" } ])
   end
 
   it "lists allowed values and the nested lists the importer writes" do

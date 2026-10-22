@@ -32,6 +32,26 @@ RSpec.describe "Importing communications and stance evidence" do
     expect(importer.report[:features_added]).to be_empty
   end
 
+  # A platform and handle name one account, so a second code for it has to be declared as an alias.
+  it "refuses a second code for the same account" do
+    Seeds::LibraryImporter.new.call([ town_hall ])
+    path = Rails.root.join("tmp", "communications_import_spec", "second_code.yml")
+    FileUtils.mkdir_p(path.dirname)
+    path.write(<<~YAML)
+      format: micharisma-seeds/v1
+      namespace: MIC
+      catalog: ASC
+      records:
+        - type: Channel
+          code: CHANNEL-WEBSITE-AVERY_FOR_ASSEMBLY
+          attributes: {platform: website, handle: averyexample.example.com, official: true}
+    YAML
+
+    expect { Seeds::LibraryImporter.new.call([ path.to_s ]) }
+      .to raise_error(Seeds::LibraryImporter::Error, /names the same Channel as CHANNEL-WEBSITE-AVERYEXAMPLE_EXAMPLE_COM; use that code or list CHANNEL-WEBSITE-AVERY_FOR_ASSEMBLY in its aliases/)
+    expect(Channel.count).to eq(1)
+  end
+
   it "rejects a channel owner that is not a person, party, or candidacy" do
     path = Rails.root.join("tmp", "communications_import_spec", "bad_owner.yml")
     FileUtils.mkdir_p(path.dirname)

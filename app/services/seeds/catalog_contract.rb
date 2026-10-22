@@ -9,11 +9,9 @@ module Seeds
 
     def self.document
       entities = LibraryImporter::MODELS.sort.to_h do |name, model|
-        polymorphic_columns = model.reflect_on_all_associations(:belongs_to).filter_map do |association|
-          association.foreign_type if association.polymorphic?
-        end
+        association_columns = LibraryImporter.association_columns(model)
         attributes = model.columns.sort_by(&:name).filter_map do |column|
-          next if LibraryImporter::PROTECTED_ATTRIBUTES.include?(column.name) || column.name.end_with?("_id") || polymorphic_columns.include?(column.name)
+          next if LibraryImporter::PROTECTED_ATTRIBUTES.include?(column.name) || association_columns.include?(column.name)
 
           [ column.name, column_schema(model, column) ]
         end.to_h

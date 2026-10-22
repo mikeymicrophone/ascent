@@ -61,6 +61,76 @@ RSpec.describe Seeds::LibraryImporter do
     expect(Country.count).to eq(1)
   end
 
+  # Ohio has a Washington Township in dozens of counties; each is its own place with its own URI.
+  it "keeps records with different URIs apart even when their names match" do
+    townships = write_manifest("townships.yml", <<~YAML)
+      format: micharisma-seeds/v1
+      namespace: MIC
+      catalog: ASC
+      records:
+        - type: Country
+          code: COUNTRY-USA
+          attributes: { code: US, name: United States }
+        - type: State
+          code: STATE-USA-OH
+          attributes: { code: OH, name: Ohio }
+          references: { country: COUNTRY-USA }
+        - type: County
+          code: COUNTY-USA-OH-HOLMES
+          attributes: { name: Holmes County }
+          references: { state: STATE-USA-OH }
+        - type: County
+          code: COUNTY-USA-OH-MUSKINGUM
+          attributes: { name: Muskingum County }
+          references: { state: STATE-USA-OH }
+        - type: Municipality
+          code: MUNICIPALITY-USA-OH-WASHINGTON_TOWNSHIP_HOLMES
+          attributes: { name: Washington Township }
+          references: { state: STATE-USA-OH, county: COUNTY-USA-OH-HOLMES }
+        - type: Municipality
+          code: MUNICIPALITY-USA-OH-WASHINGTON_TOWNSHIP_MUSKINGUM
+          attributes: { name: Washington Township }
+          references: { state: STATE-USA-OH, county: COUNTY-USA-OH-MUSKINGUM }
+    YAML
+
+    importer.call([ townships ])
+
+    expect(importer.report[:conflicts]).to be_empty
+    expect(importer.report[:aliases_added]).to be_empty
+    expect(Municipality.where(name: "Washington Township").map { it.county.name }).to contain_exactly("Holmes County", "Muskingum County")
+  end
+
+  it "claims an uncoded place only once, leaving a second URI its own record" do
+    ohio = State.create!(code: "OH", name: "Ohio", country: Country.create!(code: "US", name: "United States"))
+    seeded = Municipality.create!(name: "Washington Township", state: ohio)
+    townships = write_manifest("townships.yml", <<~YAML)
+      format: micharisma-seeds/v1
+      namespace: MIC
+      catalog: ASC
+      records:
+        - type: Country
+          code: COUNTRY-USA
+          attributes: { code: US, name: United States }
+        - type: State
+          code: STATE-USA-OH
+          attributes: { code: OH, name: Ohio }
+          references: { country: COUNTRY-USA }
+        - type: Municipality
+          code: MUNICIPALITY-USA-OH-WASHINGTON_TOWNSHIP_HOLMES
+          attributes: { name: Washington Township }
+          references: { state: STATE-USA-OH }
+        - type: Municipality
+          code: MUNICIPALITY-USA-OH-WASHINGTON_TOWNSHIP_MUSKINGUM
+          attributes: { name: Washington Township }
+          references: { state: STATE-USA-OH }
+    YAML
+
+    importer.call([ townships ])
+
+    expect(seeded.reload.entity_code).to eq("MUNICIPALITY-USA-OH-WASHINGTON_TOWNSHIP_HOLMES")
+    expect(Municipality.find_by!(entity_code: "MUNICIPALITY-USA-OH-WASHINGTON_TOWNSHIP_MUSKINGUM")).not_to eq(seeded)
+  end
+
   it "reports a differing existing value instead of overwriting it" do
     importer.call([ manifest ])
     Race.find_by!(entity_code: "RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL").update!(certification_status: "tentative")

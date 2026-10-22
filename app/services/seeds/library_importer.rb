@@ -2,8 +2,10 @@ require Rails.root.join("lib/micharisma_seeders/lib/micharisma_seeders").to_s
 
 module Seeds
   # Imports micharisma-seeds/v1 manifests for the Ascent (ASC) catalog, ported from AthleteAce.
-  # Missing records are created, existing values are preserved and their differences reported,
-  # and every preferred code and alias is registered in EntityCode.
+  # A record is identified by its entity URI (MIC-ASC-<code>) or a declared alias, never by its
+  # name: two records with different URIs stay two records, however alike they look. Missing
+  # records are created, existing values are preserved and their differences reported, and every
+  # preferred code and alias is registered in EntityCode.
   class LibraryImporter
     class Error < StandardError; end
     class MissingReference < Error; end
@@ -42,6 +44,14 @@ module Seeds
     EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [], features_added: [] }.freeze
 
     attr_reader :report
+
+    # The columns a model's belongs_to associations fill, which manifests set through references.
+    # Other columns ending in _id, like a communication's platform_id, are ordinary attributes.
+    def self.association_columns(model)
+      model.reflect_on_all_associations(:belongs_to).flat_map do |association|
+        [ association.foreign_key.to_s, (association.foreign_type.to_s if association.polymorphic?) ].compact
+      end
+    end
 
     def initialize(namespace: "MIC", catalog: "ASC")
       @namespace, @catalog = namespace, catalog
@@ -182,7 +192,7 @@ module Seeds
       record.attributes.each_key do |key|
         next if NESTED_ATTRIBUTES.fetch(record.type, []).include?(key)
 
-        if PROTECTED_ATTRIBUTES.include?(key) || key.end_with?("_id", "_type") || !model.column_names.include?(key)
+        if PROTECTED_ATTRIBUTES.include?(key) || self.class.association_columns(model).include?(key) || !model.column_names.include?(key)
           raise Error, "#{record.location}: unsupported #{record.type} attribute #{key}; associations use references"
         end
       end
@@ -234,6 +244,7 @@ module Seeds
       canonical_code = target&.entity_code.presence || bindings.first&.canonical_code || record.code
       codes |= [ canonical_code ]
       if target.nil?
+        refuse_second_uri!(model, desired, record)
         target = model.create!(desired.merge(entity_code: canonical_code))
         report[:created] << canonical_code
       else
@@ -418,14 +429,44 @@ module Seeds
       resolve_code(type, code) || raise(MissingReference, "#{record.location}: missing #{type} #{code}")
     end
 
+    # A record that another seeder made without a URI can be claimed once by its natural key.
+    # A record that already has a URI is a different entity, so it is never claimed this way.
     def natural_target(model, desired)
+      return unless natural_key_complete?(model, desired)
+
+      model.where(entity_code: [ nil, "" ]).find_by(natural_key(model, desired))
+    end
+
+    def natural_key_complete?(model, desired)
       keys = NATURAL_KEYS[model]
-      return unless keys
+      return false unless keys
 
       blank_allowed = BLANK_NATURAL_KEYS.fetch(model, [])
-      return unless keys.all? { |key| desired[key].present? || desired.key?(key) && desired[key] == false || blank_allowed.include?(key) }
+      keys.all? { |key| desired[key].present? || desired.key?(key) && desired[key] == false || blank_allowed.include?(key) }
+    end
 
-      model.find_by(keys.to_h { |key| [ key, desired[key] ] })
+    def natural_key(model, desired)
+      NATURAL_KEYS.fetch(model).to_h { |key| [ key, desired[key] ] }
+    end
+
+    # Some natural keys can name only one record, such as a channel's platform and handle or a
+    # communication's URL. A new URI for that record must be declared as an alias of its code.
+    def refuse_second_uri!(model, desired, record)
+      return unless natural_key_complete?(model, desired) && unique_natural_key?(model)
+
+      existing = model.where.not(entity_code: [ nil, "" ]).find_by(natural_key(model, desired))
+      return unless existing
+
+      raise Error, "#{record.location}: #{record.code} names the same #{record.type} as #{existing.entity_code}; " \
+                   "use that code or list #{record.code} in its aliases"
+    end
+
+    def unique_natural_key?(model)
+      @unique_natural_keys ||= {}
+      @unique_natural_keys.fetch(model) do
+        columns = NATURAL_KEYS.fetch(model).map { |key| model.reflect_on_association(key.to_sym)&.foreign_key&.to_s || key }
+        @unique_natural_keys[model] = model.connection.indexes(model.table_name).any? { |index| index.unique && index.columns.sort == columns.sort }
+      end
     end
 
     def comparison_value(model, key, value)
