@@ -3,7 +3,7 @@ class StancesController < ApplicationController
 
   # GET /stances or /stances.json
   def index
-    @pagy, @stances = pagy(Stance.includes(:issue, :approach, candidacy: :person))
+    @pagy, @stances = pagy(Stance.includes(:issue, :approach, candidacy: :person).visible_to(current_voter))
     render Views::Stances::IndexView.new(stances: @stances, pagy: @pagy)
   end
 

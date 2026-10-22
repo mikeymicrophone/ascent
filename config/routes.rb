@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get "glossary" => "pages#glossary", as: :glossary
   get "supporters" => "pages#supporters", as: :supporters
   get "approval-voting" => "pages#approval_voting", as: :approval_voting
+  resources :engagements, only: [:index, :create, :destroy], path: "saved"
   resources :official_codes
   resources :policies do
     resources :official_codes, only: [:index]

@@ -2,7 +2,7 @@ class CandidaciesController < ApplicationController
   before_action :set_candidacy, only: %i[ show edit update destroy ]
 
   def index
-    candidacies_scope = Candidacy.with_election_context
+    candidacies_scope = Candidacy.with_election_context.visible_to(current_voter)
     candidacies_scope = candidacies_scope.where(person_id: params[:person_id]) if params[:person_id]
     candidacies_scope = candidacies_scope.where(race_id: params[:race_id]) if params[:race_id]
     @pagy, @candidacies = pagy(candidacies_scope)

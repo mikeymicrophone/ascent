@@ -478,3 +478,37 @@ select:focus {
 .error-messages {
   @apply ml-6;
 }
+
+/* Action bar sizing */
+.action-bar {
+  @apply gap-2 my-3;
+}
+
+.action-bar .action-button {
+  @apply gap-1.5 px-3 py-1 rounded-full border;
+}
+
+.action-bar .action-count {
+  @apply px-1.5 rounded-full;
+}
+
+/* Saved page sizing */
+.saved-page h1 {
+  @apply mb-6;
+}
+
+.saved-section {
+  @apply gap-3 mb-8;
+}
+
+.saved-section h2 {
+  @apply mb-1;
+}
+
+.saved-item {
+  @apply gap-x-3 p-3 rounded-lg border;
+}
+
+.saved-item .action-bar {
+  @apply my-0 ml-auto;
+}

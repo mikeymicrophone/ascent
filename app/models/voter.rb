@@ -9,6 +9,7 @@ class Voter < ApplicationRecord
   has_many :ratings, dependent: :destroy
   has_many :voter_race_baselines, dependent: :destroy
   has_many :voter_race_baseline_archives, dependent: :delete_all
+  has_many :engagements, dependent: :destroy
   
   validates :first_name, presence: true
   validates :last_name, presence: true

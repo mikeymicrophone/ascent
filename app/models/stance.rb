@@ -1,4 +1,6 @@
 class Stance < ApplicationRecord
+  include Engageable
+
   belongs_to :candidacy
   belongs_to :approach
   has_one :issue, through: :approach

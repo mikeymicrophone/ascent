@@ -1,4 +1,6 @@
 class Person < ApplicationRecord
+  include Engageable
+
   has_many :candidacies, dependent: :destroy
   has_many :races, -> { distinct }, through: :candidacies
   has_many :elections, -> { distinct }, through: :races

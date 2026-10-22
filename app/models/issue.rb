@@ -1,4 +1,6 @@
 class Issue < ApplicationRecord
+  include Engageable
+
   belongs_to :topic
   has_many :approaches
   has_many :stances, through: :approaches

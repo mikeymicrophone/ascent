@@ -16,6 +16,18 @@
 }
 
 :root {
+  /* Action bar colors */
+  --action-bg: theme('colors.white');
+  --action-border: theme('colors.gray.300');
+  --action-text: theme('colors.gray.700');
+  --action-muted-text: theme('colors.gray.500');
+  --action-hover-bg: theme('colors.gray.50');
+  --action-count-bg: theme('colors.gray.100');
+  --action-marked-bg: theme('colors.blue.50');
+  --action-marked-hover-bg: theme('colors.blue.100');
+  --action-marked-border: theme('colors.blue.300');
+  --action-marked-text: theme('colors.blue.700');
+
   /* Flash message colors */
   --flash-notice-bg: theme('colors.green.50');
   --flash-notice-border: theme('colors.green.200');

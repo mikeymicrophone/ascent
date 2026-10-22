@@ -2,7 +2,7 @@ class RacesController < ApplicationController
   before_action :set_race, only: %i[ show edit update destroy ]
 
   def index
-    races_scope = Race.with_naming_details.includes(candidacies: :person).recent
+    races_scope = Race.with_naming_details.includes(candidacies: :person).recent.visible_to(current_voter)
     races_scope = races_scope.where(office_id: params[:office_id]) if params[:office_id]
     races_scope = races_scope.where(election_id: params[:election_id]) if params[:election_id]
     @pagy, @races = pagy(races_scope)

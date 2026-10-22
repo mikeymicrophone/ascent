@@ -421,3 +421,35 @@ select.error {
   border-color: var(--flash-alert-border);
   color: var(--flash-alert-text);
 }
+
+/* Action bar colors */
+.action-bar .action-button {
+  background-color: var(--action-bg);
+  border-color: var(--action-border);
+  color: var(--action-text);
+}
+
+.action-bar .action-button.marked {
+  background-color: var(--action-marked-bg);
+  border-color: var(--action-marked-border);
+  color: var(--action-marked-text);
+}
+
+.action-bar .action-count {
+  background-color: var(--action-count-bg);
+}
+
+.action-bar .action-status {
+  color: var(--action-marked-text);
+}
+
+/* Saved page colors */
+.saved-item {
+  background-color: var(--action-bg);
+  border-color: var(--action-border);
+}
+
+.saved-type,
+.saved-empty {
+  color: var(--action-muted-text);
+}

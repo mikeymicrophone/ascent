@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_21_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -187,6 +187,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_140000) do
     t.index ["candidacy_id", "endorser_type", "endorser_id", "kind"], name: "index_endorsements_on_candidacy_endorser_and_kind", unique: true
     t.index ["candidacy_id"], name: "index_endorsements_on_candidacy_id"
     t.index ["endorser_type", "endorser_id"], name: "index_endorsements_on_endorser"
+  end
+
+  create_table "engagements", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "engageable_id", null: false
+    t.string "engageable_type", null: false
+    t.string "kind", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "voter_id", null: false
+    t.index ["engageable_type", "engageable_id", "kind"], name: "index_engagements_on_record_and_kind"
+    t.index ["voter_id", "engageable_type", "engageable_id", "kind"], name: "index_engagements_once_per_voter_record_and_kind", unique: true
+    t.index ["voter_id"], name: "index_engagements_on_voter_id"
+    t.check_constraint "kind::text = ANY (ARRAY['bookmark'::character varying, 'favorite'::character varying, 'follow'::character varying, 'hide'::character varying]::text[])", name: "engagements_kind_is_known"
   end
 
   create_table "entity_codes", force: :cascade do |t|
@@ -588,6 +601,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_21_140000) do
   add_foreign_key "elections", "years"
   add_foreign_key "endorsements", "ballot_lines"
   add_foreign_key "endorsements", "candidacies"
+  add_foreign_key "engagements", "voters"
   add_foreign_key "governing_bodies", "governance_types"
   add_foreign_key "governing_bodies", "jurisdictions"
   add_foreign_key "issues", "topics"

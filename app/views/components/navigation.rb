@@ -10,7 +10,7 @@ class Views::Components::Navigation < Views::ApplicationView
       render_default_navigation
     end
     
-    nav(class: "main-navigation") do
+    nav(class: "main-navigation", data: { controller: "nav-clearance" }) do
       div(class: "nav-container") do
         div(class: "nav-topbar") do
           div(class: "nav-brand") do

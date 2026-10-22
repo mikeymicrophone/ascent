@@ -1,4 +1,6 @@
 class Race < ApplicationRecord
+  include Engageable
+
   belongs_to :election
   belongs_to :office
   has_many :candidacies, dependent: :destroy

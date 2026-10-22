@@ -1,4 +1,6 @@
 class Candidacy < ApplicationRecord
+  include Engageable
+
   belongs_to :person
   belongs_to :race
   has_one :election, through: :race

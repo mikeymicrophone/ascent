@@ -487,3 +487,30 @@ select {
 .candidate-preview-item {
   @apply flex items-center space-x-2;
 }
+
+/* Action bar layout */
+.action-bar {
+  @apply flex flex-wrap items-center;
+}
+
+.action-bar .action-form {
+  @apply inline-flex;
+}
+
+.action-bar .action-button {
+  @apply inline-flex items-center w-auto;
+}
+
+/* Saved page layout */
+.saved-section {
+  @apply flex flex-col;
+}
+
+.saved-item {
+  @apply flex flex-wrap items-center;
+}
+
+/* Off-screen field the share button copies through on http pages */
+.share-copy-buffer {
+  @apply fixed -left-[9999px] top-0 opacity-0;
+}

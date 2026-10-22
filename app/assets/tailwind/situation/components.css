@@ -222,3 +222,20 @@ select:focus {
   @apply scale-[1.01];
   box-shadow: var(--shadow-soft), 0 0 0 3px var(--shadow-color-primary);
 }
+/* Action bar states */
+.action-bar .action-button {
+  @apply transition-colors cursor-pointer;
+}
+
+.action-bar .action-button:hover {
+  background-color: var(--action-hover-bg);
+}
+
+.action-bar .action-button.marked:hover {
+  background-color: var(--action-marked-hover-bg);
+}
+
+.action-bar .action-button:focus-visible {
+  @apply outline-2 outline-offset-2;
+  outline-color: var(--action-marked-border);
+}

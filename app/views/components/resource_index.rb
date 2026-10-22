@@ -40,6 +40,8 @@ class Views::Components::ResourceIndex < Views::ApplicationView
     div(id: dom_id(record, :list_item)) do
       yield record
 
+      ActionBar(record: record, summary: engagement_summary) if engageable?
+
       if @extra_actions
         div do
           @extra_actions.call(record)
@@ -50,6 +52,14 @@ class Views::Components::ResourceIndex < Views::ApplicationView
         Ui::ResourceActions(resource: record)
       end
     end
+  end
+
+  def engageable?
+    model.include?(Engageable)
+  end
+
+  def engagement_summary
+    @engagement_summary ||= EngagementSummary.new(@collection.to_a, current_voter)
   end
 
   def default_heading

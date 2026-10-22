@@ -12,6 +12,8 @@ class Views::Components::ResourceShow < Views::ApplicationView
 
       yield
 
+      ActionBar(record: @record) if @record.is_a?(Engageable)
+
       Ui::ResourceActions(resource: @record)
     end
   end
