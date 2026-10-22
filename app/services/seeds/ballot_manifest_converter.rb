@@ -72,6 +72,7 @@ module Seeds
       @conflicts = conflicts_path.exist? ? CSV.read(conflicts_path, headers: true).map(&:to_h) : []
       load_rules(YAML.load_file(conversion_dir.join("rules.yml")))
       @usernames = (path = conversion_dir.join("usernames.yml")).exist? ? YAML.load_file(path) : {}
+      @county_equivalents = (path = conversion_dir.join("county_equivalents.yml")).exist? ? load_county_equivalents(YAML.load_file(path)) : nil
       # Titles defined in positions.yml keep their curated description, so manifests only reference them.
       @curated_titles = YAML.load_file(@root.join("positions.yml")).map { |position| position.fetch("title") }.to_set
       @positions = existing_foundation.select { |record| record["type"] == "Position" }.to_h do |record|
@@ -97,6 +98,17 @@ module Seeds
       @unprinted_labels = rules.fetch("unprinted_labels", [])
       @unprinted_levels = rules.fetch("unprinted_levels", [])
       @special_patterns = rules.fetch("special_elections", []).map { |pattern| Regexp.new(pattern, Regexp::IGNORECASE) }
+    end
+
+    # A state whose towns belong to county-equivalents, like Connecticut's planning regions, lists them;
+    # its towns then take their county from that list instead of the county a ballot row prints.
+    def load_county_equivalents(listing)
+      listing.fetch("counties").each_with_object({}) do |county, towns|
+        place = { code: county.fetch("code"), name: county.fetch("name") }
+        place[:path] = "#{@state_path}-COUNTY_#{place[:code].delete_prefix("COUNTY-#{@state_path}-")}"
+        place[:file] = place[:code].delete_prefix("COUNTY-#{@state_path}-").downcase
+        county.fetch("towns").each { |town| towns[town] = place }
+      end
     end
 
     def conversion_dir
@@ -201,7 +213,7 @@ module Seeds
       office_title = row.fetch("office")
       localities = BallotRows.places(row["jurisdiction"])
       towns = localities.reject { |place| BallotRows.county_name?(place) }
-      counties = (BallotRows.places(row["county"]) + (localities - towns)).uniq { |place| BallotRows.county_name(place) }
+      counties = local_counties(row, localities, towns)
       seat = row.fetch("district").presence
       office_district = towns.many? || counties.many? || (towns.empty? && counties.empty?)
 
@@ -213,7 +225,7 @@ module Seeds
                 covered, seat = seat, nil
                 district_place("#{@state_path}-#{token(office_title)}-#{token(covered)}", "#{@state_name} #{office_title}: #{covered}", "#{office_title} district")
               else
-                covered = towns.any? ? towns.map { |name| BallotRows.title_case(name) } : counties.map { |name| BallotRows.county_name(name) }
+                covered = towns.any? ? towns.map { |name| BallotRows.title_case(name) } : counties.map { it[:name] }
                 district_place("#{@state_path}-#{token(office_title)}-#{token(covered.join(" "))}", "#{@state_name} #{office_title} (#{covered.join(", ")})", "#{office_title} district")
               end
       # A district drawn for this office already carries its title.
@@ -221,7 +233,7 @@ module Seeds
       {
         position_code: position_code(office_title, local: true), place: place, office_path: office_path,
         seat_code: (token(seat) if seat), username_seat: office_path.delete_prefix("#{@state_path}-").downcase.tr("-", "_"),
-        file: "local/#{counties.one? ? slug(BallotRows.county_name(counties.first).delete_suffix(" County")) : "multi_county"}"
+        file: "local/#{counties.one? ? counties.first[:file] : "multi_county"}"
       }
     end
 
@@ -234,12 +246,26 @@ module Seeds
       { code: "DISTRICT-#{path}", path: path, name: name }
     end
 
-    def county_place(printed_name)
+    # The counties a local contest's rows name, or its towns' county-equivalents where the state lists them.
+    def local_counties(row, localities, towns)
+      if @county_equivalents
+        return towns.map do |town|
+          @county_equivalents.fetch(BallotRows.title_case(town)) { raise Error, "#{town} is missing from county_equivalents.yml" }
+        end.uniq
+      end
+
+      (BallotRows.places(row["county"]) + (localities - towns)).uniq { |place| BallotRows.county_name(place) }.map { printed_county(it) }
+    end
+
+    def printed_county(printed_name)
       name = BallotRows.county_name(printed_name)
       county_token = token(name.delete_suffix(" County"))
-      code = "COUNTY-#{@state_path}-#{county_token}"
-      add_place(code, record("County", code, { "name" => name }))
-      { code: code, path: "#{@state_path}-COUNTY_#{county_token}", name: name }
+      { code: "COUNTY-#{@state_path}-#{county_token}", path: "#{@state_path}-COUNTY_#{county_token}", name: name, file: slug(name.delete_suffix(" County")) }
+    end
+
+    def county_place(county)
+      add_place(county[:code], record("County", county[:code], { "name" => county[:name] }))
+      county.slice(:code, :path, :name)
     end
 
     def municipality_place(name, county)

@@ -127,6 +127,42 @@ RSpec.describe Seeds::BallotManifestConverter do
     expect(curated["attributes"]).to eq("title" => "Sheriff")
   end
 
+  # Connecticut's towns belong to planning regions rather than the counties its ballots still print.
+  # This made-up region stands in for one in the New York fixture.
+  describe "a state that lists county-equivalents" do
+    before do
+      write("conversion/2026/new_york/county_equivalents.yml", { "counties" => [
+        { "code" => "COUNTY-USA-NY-SOUTHTOWNS", "name" => "Southtowns Planning Region", "towns" => [ "Aurora", "Holland" ] }
+      ] }.to_yaml)
+    end
+
+    it "takes each town's county from the list instead of the printed county" do
+      write("races/2026/new_york/local/erie.yml", [
+        row("Town Supervisor", "Town of Aurora", "James J. Bach", "Nonpartisan", level: "local", county: "Erie", jurisdiction: "Aurora"),
+        row("Town Clerk", "", "Dana Wu", "Nonpartisan", level: "local", county: "Erie", jurisdiction: "Holland")
+      ].to_yaml)
+
+      convert
+      Year.create!(year: 2026, is_even_year: true, is_presidential_year: false)
+      report = Seeds::LibraryImporter.new.call(Dir.glob(root.join("manifests/**/*.yml").to_s))
+
+      expect(report[:conflicts]).to be_empty
+      expect(Municipality.find_by!(name: "Aurora").county.name).to eq("Southtowns Planning Region")
+      expect(Municipality.find_by!(name: "Holland").county.entity_code).to eq("COUNTY-USA-NY-SOUTHTOWNS")
+      expect(County.where(name: "Erie County")).not_to exist
+      expect(root.join("manifests/2026/new_york/local/southtowns.yml")).to exist
+      expect(Race.find_by!(entity_code: "RACE-USA-NY-AURORA-TOWN_SUPERVISOR-TOWN_OF_AURORA-2026_GENERAL")).to be_present
+    end
+
+    it "refuses a town the list leaves out" do
+      write("races/2026/new_york/local/erie.yml", [
+        row("Town Supervisor", "Town of Elma", "Ann Lee", "Nonpartisan", level: "local", county: "Erie", jurisdiction: "Elma")
+      ].to_yaml)
+
+      expect { convert }.to raise_error(Seeds::BallotManifestConverter::Error, /Elma is missing from county_equivalents.yml/)
+    end
+  end
+
   it "gives each judge standing for retention a race of their own" do
     retention_note = "appellate judge (Florida appellate judges stand for merit retention, yes/no)"
     write("races/2026/new_york/state/appeal.yml", [
