@@ -124,3 +124,33 @@
     @apply hidden;
   }
 }
+
+/* Brand mark and wordmark */
+.brand-link {
+  @apply gap-2;
+}
+
+.brand-mark {
+  @apply w-9 h-9;
+}
+
+.brand-mark-check {
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-group-arrow .icon {
+  @apply w-3.5 h-3.5;
+}
+
+/* Phone menu button */
+.nav-menu-toggle {
+  @apply gap-1.5 px-3 py-1.5 rounded-full border;
+}
+
+@media (max-width: 768px) {
+  .nav-topbar {
+    @apply gap-y-3;
+  }
+}

@@ -46,7 +46,7 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     div(class: "breadcrumb-chain") do
       @hierarchy_chain.each_with_index do |item, index|
         breadcrumb_item item, index
-        span(class: "breadcrumb-separator") { ">" } unless index == @hierarchy_chain.length - 1
+        span(class: "breadcrumb-separator") { icon(:chevron_right) } unless index == @hierarchy_chain.length - 1
       end
     end
   end

@@ -27,6 +27,7 @@
 @import "./typography/pages.css";
 
 /* Layer 3: Colors */
+@import "./colors/main.css";
 @import "./colors/scaffold.css";
 @import "./colors/navigation.css";
 @import "./colors/components.css";

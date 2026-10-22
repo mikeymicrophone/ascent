@@ -43,3 +43,22 @@
   background-color: var(--nav-link-hover-bg);
   color: var(--nav-link-hover-color);
 }
+
+/* Brand mark states */
+.brand-mark-check {
+  @apply transition-colors;
+}
+
+.brand-link:hover .brand-mark-check {
+  stroke: var(--brand-summit-deep);
+}
+
+/* Phone menu button states */
+.nav-menu-toggle {
+  @apply cursor-pointer transition-colors;
+}
+
+.nav-menu-toggle:hover,
+.main-navigation[data-menu-open="true"] .nav-menu-toggle {
+  background-color: var(--brand-glacier);
+}

@@ -63,9 +63,18 @@
   @apply transition-transform duration-200;
 }
 
+/* The menu button only appears on phones */
+.nav-menu-toggle {
+  @apply hidden;
+}
+
 @media (max-width: 768px) {
   .nav-topbar {
-    @apply flex-col items-start gap-3;
+    @apply flex-row flex-wrap items-center;
+  }
+
+  .nav-menu-toggle {
+    @apply inline-flex items-center;
   }
 
   .nav-links {
@@ -76,6 +85,17 @@
     @apply w-full justify-start;
   }
 
+  /* Folded until the menu button opens them */
+  .main-navigation:not([data-menu-open="true"]) .nav-auth,
+  .main-navigation:not([data-menu-open="true"]) .nav-links {
+    @apply hidden;
+  }
+
+  .main-navigation[data-menu-open="true"] .nav-menu-open-icon,
+  .main-navigation:not([data-menu-open="true"]) .nav-menu-close-icon {
+    @apply hidden;
+  }
+
   .nav-group-content {
     @apply left-0;
     @apply transform translate-x-0 -translate-y-2;
@@ -84,4 +104,13 @@
   .nav-group[data-dropdown-open="true"] .nav-group-content {
     @apply transform translate-x-0 translate-y-0;
   }
+}
+
+/* Brand mark and wordmark */
+.brand-link {
+  @apply inline-flex items-center;
+}
+
+.nav-group-arrow {
+  @apply inline-flex items-center;
 }

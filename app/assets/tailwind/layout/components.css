@@ -514,3 +514,12 @@ select {
 .share-copy-buffer {
   @apply fixed -left-[9999px] top-0 opacity-0;
 }
+
+/* Icons */
+.icon {
+  @apply inline-block flex-shrink-0;
+}
+
+.breadcrumb-separator {
+  @apply inline-flex items-center;
+}

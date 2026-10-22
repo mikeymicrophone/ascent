@@ -21,18 +21,18 @@
 }
 
 .btn-primary:hover {
-  @apply bg-blue-700;
-  @apply border-blue-700;
+  background-color: var(--btn-primary-hover);
+  border-color: var(--btn-primary-hover);
 }
 
 .btn-secondary:hover {
-  @apply bg-gray-700;
-  @apply border-gray-700;
+  background-color: var(--btn-secondary-hover);
+  border-color: var(--btn-secondary-hover);
 }
 
 .btn-tertiary:hover {
-  @apply bg-gray-50;
-  @apply border-gray-400;
+  background-color: var(--brand-glacier);
+  border-color: var(--brand-ink-soft);
 }
 
 /* Focus states for accessibility */

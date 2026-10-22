@@ -28,7 +28,7 @@ RSpec.describe "Engagements", type: :request do
       expect(lansing_voter.engagements.bookmark.where(engageable: housing_issue)).to exist
       expect(response.media_type).to eq("text/vnd.turbo-stream.html")
       expect(response.body).to include(%(<turbo-stream action="replace" target="action_bar_issue_#{housing_issue.id}">))
-      expect(response.body).to match(%r{aria-pressed="true"[^>]*><span class="action-label">Saved</span>})
+      expect(response.body).to match(%r{aria-pressed="true"[^>]*><svg[^>]*icon-bookmark-check.*?</svg><span class="action-label">Saved</span>})
     end
 
     it "keeps one mark of each kind however many times the button is pressed" do
@@ -68,7 +68,7 @@ RSpec.describe "Engagements", type: :request do
       delete engagement_path(favorite), headers: turbo_stream
 
       expect(Engagement.exists?(favorite.id)).to be(false)
-      expect(response.body).to match(%r{aria-pressed="false"[^>]*><span class="action-label">Favorite</span>})
+      expect(response.body).to match(%r{aria-pressed="false"[^>]*><svg[^>]*icon-heart.*?</svg><span class="action-label">Favorite</span>})
     end
 
     it "does not let another voter remove it" do
@@ -88,6 +88,7 @@ RSpec.describe "Engagements", type: :request do
 
     expect(response.body).to include('<span class="action-label">Favorite</span><span class="action-count">1</span>')
     expect(response.body).to include('<span class="action-label">Save</span></a>')
+    expect(response.body).not_to match(%r{<span class="action-label">Save</span><span class="action-count">})
   end
 
   it "takes a hidden record out of that voter's lists only" do

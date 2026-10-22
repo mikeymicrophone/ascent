@@ -493,6 +493,10 @@ select:focus {
 }
 
 /* Saved page sizing */
+.saved-page {
+  @apply pt-6;
+}
+
 .saved-page h1 {
   @apply mb-6;
 }
@@ -511,4 +515,17 @@ select:focus {
 
 .saved-item .action-bar {
   @apply my-0 ml-auto;
+}
+
+/* Icons */
+.icon {
+  @apply w-4 h-4;
+}
+
+.action-bar .icon {
+  @apply w-3.5 h-3.5;
+}
+
+.expandable-icon .icon {
+  @apply w-5 h-5;
 }

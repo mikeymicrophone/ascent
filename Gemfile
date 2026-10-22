@@ -23,7 +23,8 @@ gem "jbuilder"
 # Use Phlex for view components [https://github.com/phlex-rb/phlex]
 gem "phlex", "~> 2.4"
 gem "phlex-rails", "~> 2.4"
-# gem "phlex-icons"
+# Lucide icons as Phlex components [https://github.com/AliOsm/phlex-icons]
+gem "phlex-icons-lucide"
 gem "literal"
 gem "superform"
 

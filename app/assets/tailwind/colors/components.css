@@ -453,3 +453,8 @@ select.error {
 .saved-empty {
   color: var(--action-muted-text);
 }
+
+/* A favorited heart fills in */
+.action-bar .action-favorite.marked .icon-heart {
+  fill: currentColor;
+}

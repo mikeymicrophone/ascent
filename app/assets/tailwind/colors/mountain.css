@@ -75,21 +75,22 @@
 
 /* Button styling */
 .btn-primary {
-  @apply bg-blue-600;
-  @apply text-white;
-  @apply border border-blue-600;
+  background-color: var(--btn-primary-bg);
+  border-color: var(--btn-primary-bg);
+  @apply text-white border;
 }
 
 .btn-secondary {
-  @apply bg-gray-600;
-  @apply text-white;
-  @apply border border-gray-600;
+  background-color: var(--btn-secondary-bg);
+  border-color: var(--btn-secondary-bg);
+  @apply text-white border;
 }
 
 .btn-tertiary {
-  @apply bg-white;
-  @apply text-gray-700;
-  @apply border border-gray-300;
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+  color: var(--brand-ink);
+  @apply border;
 }
 
 /* Axis labels */

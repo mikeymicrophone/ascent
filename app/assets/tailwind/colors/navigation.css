@@ -42,3 +42,28 @@
   border: 1px solid rgba(148, 163, 184, 0.2);
   box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
 }
+
+/* Brand mark colors */
+.brand-mark-far {
+  fill: var(--brand-ink-soft);
+}
+
+.brand-mark-near {
+  fill: var(--brand-ink);
+}
+
+.brand-mark-snow {
+  fill: var(--brand-snow);
+}
+
+.brand-mark-check {
+  fill: none;
+  stroke: var(--brand-summit);
+}
+
+/* Phone menu button */
+.nav-menu-toggle {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+  color: var(--brand-ink);
+}

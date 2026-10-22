@@ -1,15 +1,31 @@
+/* Brand palette: alpine ink for structure and actions, summit gold for what a visitor has marked,
+   glacier and paper for quiet surfaces. Every other color below is named for its job and points here. */
 :root {
-  --nav-bg: theme('colors.white');
-  --nav-border: theme('colors.gray.200');
+  --brand-ink: #1c2c46;
+  --brand-ink-soft: #2e4a73;
+  --brand-link: #28518c;
+  --brand-summit: #b5862a;
+  --brand-summit-deep: #7d5c17;
+  --brand-summit-soft: #f7efdc;
+  --brand-summit-wash: #efe1bf;
+  --brand-glacier: #e9f0f6;
+  --brand-mist: #d3dde7;
+  --brand-paper: #fbfaf6;
+  --brand-snow: #ffffff;
+}
+
+:root {
+  --nav-bg: var(--brand-snow);
+  --nav-border: var(--brand-mist);
   --nav-shadow: theme('colors.gray.100');
-  --brand-color: theme('colors.gray.900');
-  --brand-hover: theme('colors.blue.600');
+  --brand-color: var(--brand-ink);
+  --brand-hover: var(--brand-summit-deep);
   --nav-link-color: theme('colors.gray.600');
   --nav-link-hover-bg: theme('colors.gray.50');
-  --nav-link-hover-color: theme('colors.blue.600');
-  --nav-link-active-bg: theme('colors.blue.50');
-  --nav-link-active-color: theme('colors.blue.600');
-  --nav-group-label-color: theme('colors.gray.700');
+  --nav-link-hover-color: var(--brand-link);
+  --nav-link-active-bg: var(--brand-glacier);
+  --nav-link-active-color: var(--brand-ink);
+  --nav-group-label-color: var(--brand-ink);
   --dropdown-bg: theme('colors.white');
   --dropdown-border: theme('colors.gray.200');
   --dropdown-shadow: theme('colors.gray.100');
@@ -18,15 +34,15 @@
 :root {
   /* Action bar colors */
   --action-bg: theme('colors.white');
-  --action-border: theme('colors.gray.300');
-  --action-text: theme('colors.gray.700');
+  --action-border: var(--brand-mist);
+  --action-text: var(--brand-ink);
   --action-muted-text: theme('colors.gray.500');
-  --action-hover-bg: theme('colors.gray.50');
+  --action-hover-bg: var(--brand-glacier);
   --action-count-bg: theme('colors.gray.100');
-  --action-marked-bg: theme('colors.blue.50');
-  --action-marked-hover-bg: theme('colors.blue.100');
-  --action-marked-border: theme('colors.blue.300');
-  --action-marked-text: theme('colors.blue.700');
+  --action-marked-bg: var(--brand-summit-soft);
+  --action-marked-hover-bg: var(--brand-summit-wash);
+  --action-marked-border: var(--brand-summit);
+  --action-marked-text: var(--brand-summit-deep);
 
   /* Flash message colors */
   --flash-notice-bg: theme('colors.green.50');
@@ -37,12 +53,12 @@
   --flash-alert-text: theme('colors.red.800');
 
   /* Link colors */
-  --link-color: theme('colors.blue.600');
-  --link-hover: theme('colors.blue.800');
+  --link-color: var(--brand-link);
+  --link-hover: var(--brand-ink);
 
   /* Button colors */
-  --btn-primary-bg: theme('colors.blue.600');
-  --btn-primary-hover: theme('colors.blue.700');
+  --btn-primary-bg: var(--brand-ink);
+  --btn-primary-hover: var(--brand-ink-soft);
   --btn-secondary-bg: theme('colors.gray.600');
   --btn-secondary-hover: theme('colors.gray.700');
   --btn-danger-bg: theme('colors.red.600');
@@ -50,13 +66,13 @@
 
   /* Form colors */
   --input-border: theme('colors.gray.300');
-  --input-focus-border: theme('colors.blue.500');
-  --input-focus-ring: theme('colors.blue.500');
+  --input-focus-border: var(--brand-link);
+  --input-focus-ring: var(--brand-link);
   --input-error-border: theme('colors.red.500');
 
   /* Card colors */
   --card-bg: theme('colors.white');
-  --card-border: theme('colors.gray.200');
+  --card-border: var(--brand-mist);
   --card-shadow: theme('colors.gray.100');
 
   /* Expandable section colors */
@@ -64,7 +80,9 @@
   --expandable-content-bg: theme('colors.white');
   --expandable-border: theme('colors.gray.200');
   
-  /* Text colors */
+  /* Page and text colors */
+  --page-bg: var(--brand-paper);
+  --page-text: var(--brand-ink);
   --text-muted: theme('colors.gray.500');
 
   /* Status colors */
@@ -94,14 +112,14 @@
   --status-party-text: theme('colors.indigo.800');
   
   /* Office holder colors */
-  --current-holder-bg: theme('colors.blue.50');
-  --current-holder-border: theme('colors.blue.200');
+  --current-holder-bg: var(--brand-glacier);
+  --current-holder-border: var(--brand-mist);
   --current-holder-party: theme('colors.gray.600');
   
   /* Election timeline colors */
   --election-timeline-border: theme('colors.gray.200');
   --election-meta: theme('colors.gray.500');
-  --winner-indicator: theme('colors.yellow.500');
+  --winner-indicator: var(--brand-summit);
   
   /* Voter stats colors */
   --stat-label: theme('colors.gray.600');
@@ -116,16 +134,16 @@
   /* Hierarchical navigation colors */
   --breadcrumb-bg: theme('colors.gray.50');
   --breadcrumb-border: theme('colors.gray.200');
-  --breadcrumb-link: theme('colors.blue.600');
-  --breadcrumb-link-hover: theme('colors.blue.800');
-  --breadcrumb-current: theme('colors.gray.900');
+  --breadcrumb-link: var(--brand-link);
+  --breadcrumb-link-hover: var(--brand-ink);
+  --breadcrumb-current: var(--brand-ink);
   --breadcrumb-separator: theme('colors.gray.400');
   
   /* Quick stats colors */
-  --quick-stats-bg: theme('colors.blue.50');
-  --quick-stats-border: theme('colors.blue.200');
-  --quick-stats-value: theme('colors.blue.700');
-  --quick-stats-label: theme('colors.blue.600');
+  --quick-stats-bg: var(--brand-glacier);
+  --quick-stats-border: var(--brand-mist);
+  --quick-stats-value: var(--brand-ink);
+  --quick-stats-label: var(--brand-ink-soft);
   
   /* Geographic summary colors */
   --geo-summary-bg: theme('colors.green.50');

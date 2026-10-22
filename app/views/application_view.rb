@@ -35,6 +35,11 @@ class Views::ApplicationView < Phlex::HTML
     ApplicationRecordPolicy
   end
 
+  # A Lucide icon by name, e.g. icon(:share_2). Hidden from screen readers; the text beside it carries the meaning.
+  def icon(name, **attributes)
+    render PhlexIcons::Lucide.const_get(name.to_s.camelize).new(class: "icon icon-#{name.to_s.dasherize}", aria: { hidden: true }, **attributes)
+  end
+
   def jurisdiction_link(jurisdiction)
     link_to jurisdiction.name, jurisdiction.jurisdictionable, class: "link jurisdiction"
   end

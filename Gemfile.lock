@@ -226,6 +226,8 @@ GEM
     phlex (2.4.1)
       refract (~> 1.0)
       zeitwerk (~> 2.7)
+    phlex-icons-lucide (2.56.0)
+      phlex (>= 1.11)
     phlex-rails (2.4.0)
       phlex (~> 2.4.0)
       railties (>= 7.1, < 9)
@@ -484,6 +486,7 @@ DEPENDENCIES
   pagy
   pg (~> 1.1)
   phlex (~> 2.4)
+  phlex-icons-lucide
   phlex-rails (~> 2.4)
   propshaft
   puma (>= 5.0)

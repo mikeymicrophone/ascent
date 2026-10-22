@@ -199,7 +199,7 @@ RSpec.describe Views::Partials::OfficePartial, type: :view do
       end
 
       it 'shows the winner from most recent completed election' do
-        expect(completed_rendered).to include(candidacy.person.name)
+        expect(completed_rendered).to include(ERB::Util.html_escape(candidacy.person.name))
         expect(completed_rendered).to include('current-holder-name')
       end
     end
@@ -228,7 +228,7 @@ RSpec.describe Views::Partials::OfficePartial, type: :view do
       it 'shows election results for completed elections' do
         expect(rendered).to include('Results')
         expect(rendered).to include('class="election-results"')
-        expect(rendered).to include(candidacy1.person.name)
+        expect(rendered).to include(ERB::Util.html_escape(candidacy1.person.name))
       end
 
       it 'shows voter turnout statistics' do

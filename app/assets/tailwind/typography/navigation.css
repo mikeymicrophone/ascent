@@ -29,3 +29,8 @@
 .voter-greeting {
   @apply font-['Source_Serif_4'] text-sm font-semibold;
 }
+
+/* Phone menu button */
+.nav-menu-toggle {
+  @apply font-['Sora'] text-sm font-semibold;
+}

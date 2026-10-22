@@ -1,0 +1,6 @@
+/* Main Colors - Layer 3: Page surface and base text */
+
+body {
+  background-color: var(--page-bg);
+  color: var(--page-text);
+}
