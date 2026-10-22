@@ -3,7 +3,7 @@ class GoverningBodiesController < ApplicationController
 
   def index
     @pagy, @governing_bodies = pagy(GoverningBody.by_governance_type(params[:governance_type_id]))
-    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy)
+    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy, parent: filtering_governance_type)
   end
 
   def show
@@ -43,6 +43,10 @@ class GoverningBodiesController < ApplicationController
   end
 
   private
+
+  def filtering_governance_type
+    GovernanceType.find(params[:governance_type_id]) if params[:governance_type_id]
+  end
 
   def set_governing_body
     @governing_body = GoverningBody.find(params[:id])

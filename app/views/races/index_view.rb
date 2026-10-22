@@ -1,36 +1,15 @@
 class Views::Races::IndexView < Views::ApplicationView
-  def initialize(races:, pagy: nil)
-    @races = races
-    @pagy = pagy
+  prop :races, ActiveRecord::Relation
+  prop :pagy, _Nilable(Pagy)
+
+  def view_template
+    ResourceIndex(collection: @races, pagy: @pagy, extra_actions: method(:simulate_button)) { RacePartial(race: it) }
   end
 
-  def view_template(&)
-    div(class: "scaffold races-index", id: "index_races") do
-      div do
-        h1 { "Races" }
-        scaffold_new_resource_link "New race", new_race_path, record: Race
-      end
+  private
 
-      div(id: "races") do
-        if @races.any?
-          @races.each do |race|
-            div(id: dom_id(race, :list_item)) do
-              RacePartial(race: race)
-
-              div do
-                button_to("Simulate Data", simulate_mountain_path(race),
-                  method: :post, class: "btn-secondary", form: { style: "display: inline;" })
-                whitespace
-                Ui::ResourceActions(resource: race)
-              end
-            end
-          end
-        else
-          p { "No races found." }
-        end
-      end
-
-      Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
+  def simulate_button(race)
+    button_to("Simulate Data", simulate_mountain_path(race),
+      method: :post, class: "btn-secondary", form: { style: "display: inline;" })
   end
 end

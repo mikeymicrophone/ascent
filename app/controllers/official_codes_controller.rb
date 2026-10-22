@@ -3,7 +3,7 @@ class OfficialCodesController < ApplicationController
 
   def index
     @pagy, @official_codes = pagy(OfficialCode.by_policy(params[:policy_id]))
-    render Views::OfficialCodes::IndexView.new(official_codes: @official_codes, pagy: @pagy)
+    render Views::OfficialCodes::IndexView.new(official_codes: @official_codes, pagy: @pagy, parent: filtering_policy)
   end
 
   def show
@@ -43,6 +43,10 @@ class OfficialCodesController < ApplicationController
   end
 
   private
+  def filtering_policy
+    Policy.find(params[:policy_id]) if params[:policy_id]
+  end
+
 
   def set_official_code
     @official_code = OfficialCode.find(params[:id])

@@ -1,15 +1,7 @@
 class Views::States::ShowView < Views::ApplicationView
-  def initialize(state:)
-    @state = state
-  end
+  prop :state, ::State
 
-  def view_template(&)
-    div(class: "scaffold state-show", id: dom_id(@state, :show)) do
-      h1 { "Showing state" }
-
-      StatePartial(state: @state)
-
-      Ui::ResourceActions(resource: @state)
-    end
+  def view_template
+    ResourceShow(record: @state) { StatePartial(state: @state) }
   end
 end

@@ -3,7 +3,7 @@ class PoliciesController < ApplicationController
 
   def index
     @pagy, @policies = pagy(Policy.by_governing_body(params[:governing_body_id]))
-    render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy)
+    render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy, parent: filtering_governing_body)
   end
 
   def show
@@ -43,6 +43,10 @@ class PoliciesController < ApplicationController
   end
 
   private
+  def filtering_governing_body
+    GoverningBody.find(params[:governing_body_id]) if params[:governing_body_id]
+  end
+
 
   def set_policy
     @policy = Policy.find(params[:id])

@@ -1,15 +1,7 @@
 class Views::Years::ShowView < Views::ApplicationView
-  def initialize(year:)
-    @year = year
-  end
+  prop :year, Year
 
-  def view_template(&)
-    div(class: "scaffold year-show", id: dom_id(@year, :show)) do
-      h1 { "Showing year" }
-
-      YearPartial(year: @year)
-
-      Ui::ResourceActions(resource: @year)
-    end
+  def view_template
+    ResourceShow(record: @year) { YearPartial(year: @year) }
   end
 end

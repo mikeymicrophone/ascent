@@ -26,6 +26,19 @@ RSpec.describe "Links to a record's children", type: :request do
       expect(response.body).to include("Grand Rapids City Council", "Ann Arbor City Council")
       expect(response.body).not_to include("Michigan Supreme Court")
     end
+
+    it "names the governance type in the heading and links back to every governing body" do
+      get governance_type_governing_bodies_path(council)
+
+      expect(response.body).to include("<h1>Governing bodies for #{council.name}</h1>")
+      expect(response.body).to include(%(href="#{governing_bodies_path}">View all governing bodies</a>))
+    end
+
+    it "answers not found for a governance type that does not exist" do
+      get governance_type_governing_bodies_path(governance_type_id: 0)
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   it "filters the other children indexes by their parent" do

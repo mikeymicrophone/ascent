@@ -4,10 +4,11 @@
 #   ResourceShow(record: @issue) { IssuePartial(issue: @issue) }
 class Views::Components::ResourceShow < Views::ApplicationView
   prop :record, ActiveRecord::Base
+  prop :heading, _Nilable(String)
 
   def view_template
     div(class: "scaffold #{model_name.singular}-show", id: dom_id(@record, :show)) do
-      h1 { "Showing #{model_name.human.downcase}" }
+      h1 { @heading || "Showing #{model_name.human.downcase}" }
 
       yield
 

@@ -1,31 +1,8 @@
 class Views::GovernanceTypes::IndexView < Views::ApplicationView
-  def initialize(governance_types:, pagy: nil)
-    @governance_types = governance_types
-    @pagy = pagy
-  end
+  prop :governance_types, ActiveRecord::Relation
+  prop :pagy, _Nilable(Pagy)
 
-  def view_template(&)
-    div(class: "scaffold governance_types-index", id: "index_governance_types") do
-      div do
-        h1 { "Governance types" }
-        scaffold_new_resource_link "New governance type", new_governance_type_path, record: GovernanceType
-      end
-
-      div(id: "governance_types") do
-        if @governance_types.any?
-          @governance_types.each do |governance_type|
-            div(id: dom_id(governance_type, :list_item)) do
-              GovernanceTypePartial(governance_type: governance_type)
-
-              Ui::ResourceActions(resource: governance_type)
-            end
-          end
-        else
-          p { "No governance types found." }
-        end
-      end
-
-      Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
+  def view_template
+    ResourceIndex(collection: @governance_types, pagy: @pagy) { GovernanceTypePartial(governance_type: it) }
   end
 end
