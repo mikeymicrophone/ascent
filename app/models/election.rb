@@ -25,8 +25,8 @@ class Election < ApplicationRecord
   private
 
   def race_offices_match_jurisdiction
-    if jurisdiction && races.joins(:office).where.not(offices: { jurisdiction_id: jurisdiction_id }).exists?
-      errors.add(:jurisdiction, 'must match the offices of its races')
+    if jurisdiction && races.joins(:office).where.not(offices: { jurisdiction_id: jurisdiction.self_and_descendants.select(:id) }).exists?
+      errors.add(:jurisdiction, "must contain the offices of its races")
     end
   end
 

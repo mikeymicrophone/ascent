@@ -1,6 +1,9 @@
 class Position < ApplicationRecord
   include GovernmentBranch
 
+  # The position of every nomination office: a place on a general ballot that a primary decides.
+  NOMINEE_TITLE = "Nominee".freeze
+
   has_many :offices, dependent: :destroy
 
   validates :title, presence: true

@@ -2,7 +2,8 @@
 # other kinds are entered independently and are never changed by a seed refresh.
 class Endorsement < ApplicationRecord
   KINDS = %w[ballot_line public].freeze
-  ENDORSER_TYPES = %w[Party Person].freeze
+  # Stored as each endorser's base class, so a party is an Organization.
+  ENDORSER_TYPES = %w[Organization Person].freeze
 
   belongs_to :candidacy
   belongs_to :endorser, polymorphic: true

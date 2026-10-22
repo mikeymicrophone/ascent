@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_22_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -294,6 +294,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
     t.bigint "governing_body_id"
     t.boolean "is_active"
     t.bigint "jurisdiction_id", null: false
+    t.bigint "nominating_organization_id"
+    t.integer "nominee_count"
+    t.bigint "nominee_for_office_id"
     t.text "notes"
     t.bigint "position_id", null: false
     t.string "seat_code"
@@ -302,7 +305,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
     t.index ["entity_code"], name: "index_offices_on_entity_code", unique: true
     t.index ["governing_body_id"], name: "index_offices_on_governing_body_id"
     t.index ["jurisdiction_id"], name: "index_offices_on_jurisdiction_id"
+    t.index ["nominating_organization_id"], name: "index_offices_on_nominating_organization_id"
+    t.index ["nominee_for_office_id"], name: "index_offices_on_nominee_for_office_id"
     t.index ["position_id"], name: "index_offices_on_position_id"
+    t.check_constraint "(nominee_for_office_id IS NULL) = (nominating_organization_id IS NULL) AND (nominee_for_office_id IS NULL) = (nominee_count IS NULL)", name: "nominations_name_their_office_organization_and_count"
   end
 
   create_table "official_codes", force: :cascade do |t|
@@ -320,16 +326,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
     t.index ["policy_id"], name: "index_official_codes_on_policy_id"
   end
 
-  create_table "parties", force: :cascade do |t|
+  create_table "organizations", force: :cascade do |t|
     t.string "abbreviation"
     t.datetime "created_at", null: false
     t.string "entity_code"
+    t.string "kind"
     t.string "name", null: false
-    t.bigint "state_id", null: false
+    t.bigint "state_id"
+    t.string "type", default: "Organization", null: false
     t.datetime "updated_at", null: false
-    t.index ["entity_code"], name: "index_parties_on_entity_code", unique: true
-    t.index ["state_id", "name"], name: "index_parties_on_state_id_and_name", unique: true
-    t.index ["state_id"], name: "index_parties_on_state_id"
+    t.index ["entity_code"], name: "index_organizations_on_entity_code", unique: true
+    t.index ["state_id", "name"], name: "index_organizations_on_state_id_and_name", unique: true
+    t.index ["state_id"], name: "index_organizations_on_state_id"
+    t.check_constraint "type::text <> 'Party'::text OR state_id IS NOT NULL", name: "parties_have_a_state"
   end
 
   create_table "people", force: :cascade do |t|
@@ -589,7 +598,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
 
   add_foreign_key "approaches", "issues"
   add_foreign_key "ballot_lines", "candidacies"
-  add_foreign_key "ballot_lines", "parties"
+  add_foreign_key "ballot_lines", "organizations", column: "party_id"
   add_foreign_key "candidacies", "people"
   add_foreign_key "candidacies", "races"
   add_foreign_key "chambers", "governing_bodies"
@@ -612,9 +621,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_120000) do
   add_foreign_key "offices", "chambers"
   add_foreign_key "offices", "governing_bodies"
   add_foreign_key "offices", "jurisdictions"
+  add_foreign_key "offices", "offices", column: "nominee_for_office_id"
+  add_foreign_key "offices", "organizations", column: "nominating_organization_id"
   add_foreign_key "offices", "positions"
   add_foreign_key "official_codes", "policies"
-  add_foreign_key "parties", "states"
+  add_foreign_key "organizations", "states"
   add_foreign_key "policies", "approaches"
   add_foreign_key "policies", "area_of_concerns"
   add_foreign_key "policies", "governing_bodies"

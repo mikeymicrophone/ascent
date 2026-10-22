@@ -19,6 +19,11 @@ class Jurisdiction < ApplicationRecord
       .distinct
   }
 
+  # This jurisdiction, or one nested anywhere within it.
+  def contains?(jurisdiction)
+    self_and_descendants.where(id: jurisdiction.id).exists?
+  end
+
   def self_and_descendants
     self.class.with_recursive(jurisdiction_tree: [
       self.class.where(id: id),

@@ -11,7 +11,7 @@ module Seeds
       entities = LibraryImporter::MODELS.sort.to_h do |name, model|
         association_columns = LibraryImporter.association_columns(model)
         attributes = model.columns.sort_by(&:name).filter_map do |column|
-          next if LibraryImporter::PROTECTED_ATTRIBUTES.include?(column.name) || association_columns.include?(column.name)
+          next if LibraryImporter::PROTECTED_ATTRIBUTES.include?(column.name) || association_columns.include?(column.name) || absent?(model, column.name)
 
           [ column.name, column_schema(model, column) ]
         end.to_h
@@ -19,6 +19,11 @@ module Seeds
         [ name, { "attributes" => attributes.sort.to_h, "references" => model.reflect_on_all_associations(:belongs_to).map { |association| association.name.to_s }.sort } ]
       end
       { "namespace" => "MIC", "catalog" => "ASC", "entities" => entities }
+    end
+
+    # A column the model requires to be blank, such as a party's kind, is not part of its contract.
+    def self.absent?(model, attribute)
+      model.validators_on(attribute.to_sym).any? { it.is_a?(ActiveModel::Validations::AbsenceValidator) }
     end
 
     def self.column_schema(model, column)

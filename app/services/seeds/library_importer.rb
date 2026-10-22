@@ -12,7 +12,7 @@ module Seeds
 
     MODELS = {
       "Country" => Country, "State" => State, "County" => County, "Municipality" => Municipality,
-      "District" => District, "Party" => Party, "Position" => Position, "Office" => Office,
+      "District" => District, "Organization" => Organization, "Party" => Party, "Position" => Position, "Office" => Office,
       "Election" => Election, "Race" => Race, "Person" => Person, "Candidacy" => Candidacy,
       "Topic" => Topic, "Issue" => Issue, "Approach" => Approach, "Stance" => Stance,
       "Channel" => Channel, "Communication" => Communication, "StanceEvidence" => StanceEvidence
@@ -20,17 +20,18 @@ module Seeds
     JURISDICTION_OWNERS = %w[Country State County Municipality District].freeze
     SCOPE_ASSOCIATIONS = {
       "State" => %w[country], "County" => %w[state], "Municipality" => %w[state county],
-      "Party" => %w[state], "Office" => %w[position jurisdiction], "Election" => %w[jurisdiction year],
+      "Organization" => %w[state], "Party" => %w[state], "Office" => %w[position jurisdiction], "Election" => %w[jurisdiction year],
       "Race" => %w[election office], "Candidacy" => %w[race person],
       "Issue" => %w[topic], "Approach" => %w[issue], "Stance" => %w[candidacy approach],
       "Communication" => %w[channel], "StanceEvidence" => %w[stance communication]
     }.freeze
     # The types a polymorphic reference may name, recognized by their registered code or its marker.
-    POLYMORPHIC_TYPES = { [ "Channel", "owner" ] => Channel::OWNER_TYPES }.freeze
+    # A party's code names a Party, which is stored as the Organization it is.
+    POLYMORPHIC_TYPES = { [ "Channel", "owner" ] => Channel::OWNER_TYPES + %w[Party] }.freeze
     # Keys that identify an uncoded record created by another seeder, so it can adopt its code.
     NATURAL_KEYS = {
       Country => %w[code], State => %w[country code], County => %w[state name],
-      Municipality => %w[state name], District => %w[name], Party => %w[state name],
+      Municipality => %w[state name], District => %w[name], Organization => %w[state name], Party => %w[state name],
       Position => %w[title], Person => %w[username], Office => %w[position jurisdiction seat_code],
       Election => %w[jurisdiction election_date kind], Race => %w[election office], Candidacy => %w[race person],
       Topic => %w[title], Issue => %w[topic title], Approach => %w[issue title],
@@ -40,7 +41,7 @@ module Seeds
     BLANK_NATURAL_KEYS = { Office => %w[seat_code] }.freeze
     NESTED_ATTRIBUTES = { "Candidacy" => %w[ballot_lines], "Communication" => %w[featured_candidacies] }.freeze
     BALLOT_LINE_KEYS = %w[label kind party].freeze
-    PROTECTED_ATTRIBUTES = %w[id entity_code created_at updated_at].freeze
+    PROTECTED_ATTRIBUTES = %w[id entity_code type created_at updated_at].freeze
     EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [], features_added: [] }.freeze
 
     # A Person's code ends in a disambiguator issued once, like PERSON-JAMES_LT_6J; a submission may leave it off.
@@ -106,10 +107,14 @@ module Seeds
       model = MODELS.fetch(type) { raise Error, "Unsupported entity type #{type}" }
       binding = binding_for(local_code(code))
       if binding
-        raise Error, "#{code} identifies #{binding.record_type}, not #{type}" unless binding.record_type == type
+        raise Error, "#{code} identifies #{binding.record_type}, not #{type}" unless same_kind?(binding.record_type, model)
 
         target = cached_record(binding.canonical_code) { binding.resolved_record || model.find_by(entity_code: binding.canonical_code) }
-        return target if target
+        if target
+          raise Error, "#{code} identifies #{target.class.name}, not #{type}" unless target.is_a?(model)
+
+          return target
+        end
       end
       model.find_by(entity_code: local_code(code)) || (person_by_name_code(local_code(code)) if type == "Person")
     end
@@ -143,6 +148,11 @@ module Seeds
       raise Error, "#{code} could be #{matches.sort.join(" or ")}; use the full code" if matches.many?
 
       resolve_code("Person", matches.first) if matches.one?
+    end
+
+    # A code's binding records its record's base class, so a party's binding says Organization.
+    def same_kind?(record_type, model)
+      record_type.safe_constantize&.base_class == model.base_class
     end
 
     def codes_starting(prefix)
@@ -256,7 +266,7 @@ module Seeds
       codes = ([ record.code ] + record.aliases).uniq
       bindings = codes.filter_map { |code| binding_for(code) }
       bindings.each do |binding|
-        raise Error, "#{binding.code} already identifies #{binding.record_type}" unless binding.record_type == record.type
+        raise Error, "#{binding.code} already identifies #{binding.record_type}" unless same_kind?(binding.record_type, model)
       end
       targets = codes.filter_map { |code| resolve_code(record.type, code) }.uniq(&:id)
       raise Error, "#{record.location}: aliases identify different #{record.type} records" if targets.length > 1

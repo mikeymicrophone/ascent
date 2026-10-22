@@ -59,6 +59,19 @@ class Race < ApplicationRecord
     aggregate_votes.sort_by { |candidacy, votes| -votes }
   end
 
+  # The same year's primaries for this office's nominations, such as each party's primary for governor.
+  def nomination_races
+    Race.joins(:election).where(office: office.nominations, elections: { year_id: election.year_id })
+  end
+
+  # Everyone a simulated general could put on one approval ballot: this race's candidacies, then
+  # each primary candidate who is not already on it, including those who lost their primary.
+  def field_with_primary_candidates
+    on_ballot = candidacies.to_a
+    seen = on_ballot.map(&:person_id).to_set
+    on_ballot + Candidacy.where(race: nomination_races).includes(:person).order(:id).select { seen.add?(it.person_id) }
+  end
+
   def approval_winner
     results = aggregate_votes
     return nil if results.empty? || results.values.all?(&:zero?)
@@ -87,9 +100,10 @@ class Race < ApplicationRecord
 
   private
 
+  # One election day can decide offices across its jurisdiction, such as a state primary's district nominations.
   def office_matches_election_jurisdiction
-    if office && election && office.jurisdiction != election.jurisdiction
-      errors.add(:office, "must belong to the election's jurisdiction")
+    if office && election && !election.jurisdiction.contains?(office.jurisdiction)
+      errors.add(:office, "must be within the election's jurisdiction")
     end
   end
 end

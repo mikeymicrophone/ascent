@@ -158,6 +158,63 @@ RSpec.describe Seeds::LibraryImporter do
     end
   end
 
+  describe "nominations and organizations" do
+    let(:primary) do
+      write_manifest("primary.yml", <<~YAML)
+        format: micharisma-seeds/v1
+        namespace: MIC
+        catalog: ASC
+        records:
+          - {type: Country, code: COUNTRY-USA, attributes: {code: US, name: United States}}
+          - {type: State, code: STATE-USA-GA, attributes: {code: GA, name: Georgia}, references: {country: COUNTRY-USA}}
+          - {type: District, code: DISTRICT-USA-GA-CONGRESS-CD_5, attributes: {name: Georgia Congressional District 5, kind: congressional district}, scope: {state: STATE-USA-GA}}
+          - {type: Position, code: POSITION-REPRESENTATIVE, attributes: {title: Representative, branch: legislative}}
+          - {type: Position, code: POSITION-NOMINEE, attributes: {title: Nominee, branch: legislative}}
+          - {type: Party, code: PARTY-USA-GA-DEMOCRATIC, attributes: {name: Democratic Party}, references: {state: STATE-USA-GA}}
+          - {type: Organization, code: ORGANIZATION-USA-GA-TOP_TWO_PRIMARY, attributes: {name: Georgia Top-Two Primary, kind: nonpartisan_primary}, references: {state: STATE-USA-GA}}
+          - type: Office
+            code: OFFICE-USA-GA-CONGRESS-CD_5
+            attributes: {seat_code: CD_5, is_active: true}
+            references: {position: POSITION-REPRESENTATIVE, jurisdiction: DISTRICT-USA-GA-CONGRESS-CD_5}
+          - type: Office
+            code: OFFICE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC
+            attributes: {nominee_count: 1, is_active: true}
+            references: {position: POSITION-NOMINEE, jurisdiction: DISTRICT-USA-GA-CONGRESS-CD_5, nominee_for: OFFICE-USA-GA-CONGRESS-CD_5, nominating_organization: PARTY-USA-GA-DEMOCRATIC}
+          - type: Election
+            code: ELECTION-USA-GA-2026_PRIMARY
+            attributes: {name: Georgia Primary Election 2026, kind: primary, election_date: "2026-05-19", status: completed, is_mock: false, is_historical: false}
+            references: {jurisdiction: STATE-USA-GA, year: YEAR-2024}
+          - type: Race
+            code: RACE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY
+            attributes: {status: completed}
+            references: {election: ELECTION-USA-GA-2026_PRIMARY, office: OFFICE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC}
+          - type: Channel
+            code: CHANNEL-WEB-GEORGIADEMOCRAT_EXAMPLE_COM
+            attributes: {platform: website, handle: georgiademocrat.example.com, official: true}
+            references: {owner: PARTY-USA-GA-DEMOCRATIC}
+      YAML
+    end
+
+    it "imports a district's nomination race into the statewide primary" do
+      importer.call([ primary ])
+
+      race = Race.find_by!(entity_code: "RACE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY")
+      expect(race.office).to have_attributes(nomination?: true, nominee_count: 1, nominating_organization: Party.find_by!(name: "Democratic Party"))
+      expect(race.office.nominee_for.entity_code).to eq("OFFICE-USA-GA-CONGRESS-CD_5")
+      expect(race.election.jurisdiction.jurisdictionable.name).to eq("Georgia")
+      expect(Organization.find_by!(entity_code: "ORGANIZATION-USA-GA-TOP_TWO_PRIMARY")).to have_attributes(kind: "nonpartisan_primary")
+      expect(Channel.find_by!(entity_code: "CHANNEL-WEB-GEORGIADEMOCRAT_EXAMPLE_COM").owner).to be_a(Party)
+      expect(importer.resolve_code("Organization", "PARTY-USA-GA-DEMOCRATIC")).to be_a(Party)
+    end
+
+    it "refuses an organization's code where a party is required" do
+      importer.call([ primary ])
+
+      expect { importer.resolve_code("Party", "ORGANIZATION-USA-GA-TOP_TWO_PRIMARY") }
+        .to raise_error(described_class::Error, "ORGANIZATION-USA-GA-TOP_TWO_PRIMARY identifies Organization, not Party")
+    end
+  end
+
   it "reports a differing existing value instead of overwriting it" do
     importer.call([ manifest ])
     Race.find_by!(entity_code: "RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL").update!(certification_status: "tentative")

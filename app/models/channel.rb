@@ -1,7 +1,8 @@
 # One account on one platform, such as a campaign's YouTube channel or a candidate's Instagram.
 class Channel < ApplicationRecord
   PLATFORMS = %w[website youtube instagram tiktok x bluesky facebook threads other].freeze
-  OWNER_TYPES = %w[Person Party Candidacy].freeze
+  # Stored as each owner's base class, so a party is an Organization.
+  OWNER_TYPES = %w[Person Organization Candidacy].freeze
 
   belongs_to :owner, polymorphic: true, optional: true
   has_many :communications, dependent: :restrict_with_error

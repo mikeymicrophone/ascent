@@ -26,11 +26,20 @@ RSpec.describe Race, type: :model do
     expect(voter.voter_race_baseline_archives.pluck(:race_id)).to eq([ mayor.id ])
   end
 
-  it 'rejects an Office belonging to a different jurisdiction' do
+  it 'rejects an Office outside the election\'s jurisdiction' do
     race = build(:race, election: create(:election), office: create(:office))
 
     expect(race).not_to be_valid
-    expect(race.errors[:office]).to include("must belong to the election's jurisdiction")
+    expect(race.errors[:office]).to include("must be within the election's jurisdiction")
+  end
+
+  # A state primary decides its districts' nominations on the same day.
+  it 'accepts an Office in a jurisdiction nested within the election\'s' do
+    state = create(:jurisdiction)
+    district = create(:jurisdiction, parent: state)
+    race = build(:race, election: create(:election, jurisdiction: state), office: create(:office, jurisdiction: district))
+
+    expect(race).to be_valid
   end
 
   it 'prevents jurisdiction changes from invalidating existing Races' do

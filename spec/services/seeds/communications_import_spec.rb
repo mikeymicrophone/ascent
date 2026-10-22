@@ -52,11 +52,11 @@ RSpec.describe "Importing communications and stance evidence" do
     expect(Channel.count).to eq(1)
   end
 
-  it "rejects a channel owner that is not a person, party, or candidacy" do
+  it "rejects a channel owner that is not a person, organization, or candidacy" do
     path = Rails.root.join("tmp", "communications_import_spec", "bad_owner.yml")
     FileUtils.mkdir_p(path.dirname)
     path.write(File.read(town_hall).sub("references: {owner: PERSON-EXAMPLE_AVERY_NY_ED_1}", "references: {owner: STATE-USA-NY}"))
 
-    expect { Seeds::LibraryImporter.new.call([ path.to_s ]) }.to raise_error(Seeds::LibraryImporter::Error, /not a Person, Party, Candidacy code/)
+    expect { Seeds::LibraryImporter.new.call([ path.to_s ]) }.to raise_error(Seeds::LibraryImporter::Error, /not a Person, Organization, Candidacy, Party code/)
   end
 end
