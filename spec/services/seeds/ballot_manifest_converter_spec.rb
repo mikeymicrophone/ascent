@@ -170,6 +170,54 @@ RSpec.describe Seeds::BallotManifestConverter do
     end
   end
 
+  # Ballots print "Town of Aurora"; the Census-based municipalities list the town as Aurora.
+  describe "places a contribution already lists" do
+    def contribute_places(*places)
+      write("manifests/contributions/census/ny_municipalities.yml", {
+        "format" => "micharisma-seeds/v1", "namespace" => "MIC", "catalog" => "ASC",
+        "records" => places.map { |code, name| { "type" => "Municipality", "code" => code, "attributes" => { "name" => name } } }
+      }.to_yaml)
+    end
+
+    def supervisor(jurisdiction)
+      write("races/2026/new_york/local/erie.yml", [
+        row("Town Supervisor", "", "James J. Bach", "Nonpartisan", level: "local", county: "Erie", jurisdiction: jurisdiction)
+      ].to_yaml)
+    end
+
+    it "uses the contribution's code and name instead of minting its own" do
+      contribute_places([ "MUNICIPALITY-USA-NY-AURORA", "Aurora" ])
+      supervisor("Town of Aurora")
+
+      convert
+
+      foundation = root.join("manifests/2026/new_york/foundation.yml").read
+      expect(foundation).not_to include("TOWN_OF_AURORA")
+      expect(root.join("manifests/2026/new_york/local/erie.yml").read).to include("OFFICE-USA-NY-AURORA-TOWN_SUPERVISOR", "office: OFFICE-USA-NY-AURORA-TOWN_SUPERVISOR")
+    end
+
+    it "settles a town and village of one name by the printed type" do
+      contribute_places([ "MUNICIPALITY-USA-NY-AURORA_TOWN", "Aurora" ], [ "MUNICIPALITY-USA-NY-AURORA_VILLAGE", "Aurora" ])
+      supervisor("Town of Aurora")
+
+      convert
+
+      expect(root.join("manifests/2026/new_york/local/erie.yml").read).to include("OFFICE-USA-NY-AURORA_TOWN-TOWN_SUPERVISOR")
+    end
+
+    it "asks place_codes.yml to settle a tie the printed name cannot" do
+      contribute_places([ "MUNICIPALITY-USA-NY-AURORA_TOWN", "Aurora" ], [ "MUNICIPALITY-USA-NY-AURORA_VILLAGE", "Aurora" ])
+      supervisor("Aurora")
+
+      expect { convert }.to raise_error(Seeds::BallotManifestConverter::Error, /Aurora could be MUNICIPALITY-USA-NY-AURORA_TOWN or MUNICIPALITY-USA-NY-AURORA_VILLAGE; choose one in place_codes.yml/)
+
+      write("conversion/2026/new_york/place_codes.yml", { "Aurora" => "MUNICIPALITY-USA-NY-AURORA_VILLAGE" }.to_yaml)
+      convert
+
+      expect(root.join("manifests/2026/new_york/local/erie.yml").read).to include("OFFICE-USA-NY-AURORA_VILLAGE-TOWN_SUPERVISOR")
+    end
+  end
+
   it "gives each judge standing for retention a race of their own" do
     retention_note = "appellate judge (Florida appellate judges stand for merit retention, yes/no)"
     write("races/2026/new_york/state/appeal.yml", [

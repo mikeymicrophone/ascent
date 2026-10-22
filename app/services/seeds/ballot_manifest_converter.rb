@@ -78,6 +78,7 @@ module Seeds
       load_rules(YAML.load_file(conversion_dir.join("rules.yml")))
       @usernames = (path = conversion_dir.join("usernames.yml")).exist? ? YAML.load_file(path) : {}
       @county_equivalents = (path = conversion_dir.join("county_equivalents.yml")).exist? ? load_county_equivalents(YAML.load_file(path)) : nil
+      @place_codes = (path = conversion_dir.join("place_codes.yml")).exist? ? YAML.load_file(path) : {}
       # Titles defined in positions.yml keep their curated description, so manifests only reference them.
       @curated_titles = YAML.load_file(@root.join("positions.yml")).map { |position| position.fetch("title") }.to_set
       @positions = existing_foundation.select { |record| record["type"] == "Position" }.to_h do |record|
@@ -272,6 +273,10 @@ module Seeds
     end
 
     def municipality_place(name, county)
+      if (canonical = canonical_place(name, county))
+        return { code: canonical[:code], path: canonical[:code].delete_prefix("MUNICIPALITY-"), name: canonical[:name] }
+      end
+
       code = "MUNICIPALITY-#{@state_path}-#{token(name)}"
       definition = record("Municipality", code, { "name" => name }, county ? { "county" => county[:code] } : {})
       if (existing = @places[code]) && existing["references"] != definition["references"]
@@ -282,6 +287,53 @@ module Seeds
         add_place(code, definition)
       end
       { code: code, path: "#{@state_path}-#{token(name)}", name: name }
+    end
+
+    # A town that a contribution already lists, such as the Census-based municipalities, keeps that
+    # contribution's code and name: ballots print "Town of Bolton" or "Bristol City" for the places
+    # listed as Bolton and Bristol. A tie the printed type and county can't settle is decided in
+    # the state's place_codes.yml.
+    def canonical_place(printed_name, county)
+      if (code = @place_codes[printed_name])
+        return canonical_places.values.flatten.find { it[:code] == code } || raise(Error, "place_codes.yml maps #{printed_name} to unknown #{code}")
+      end
+
+      candidates = canonical_places.fetch(loose_place_name(printed_name), [])
+      same_code = candidates.find { it[:code] == "MUNICIPALITY-#{@state_path}-#{token(printed_name)}" }
+      return same_code if same_code
+
+      type = printed_name[/\A(Town|City|Village|Borough) of /, 1] || printed_name[/ (City|Town)\z/, 1]
+      candidates = narrow(candidates) { it[:code].match?(/_#{type.upcase}(_|\z)/) } if type
+      candidates = narrow(candidates) { it[:county] == county[:code] } if county
+      # A lone place of the same name in another county is a different place.
+      return if candidates.one? && county && candidates.first[:county] && candidates.first[:county] != county[:code]
+      return candidates.first if candidates.size <= 1
+
+      raise Error, "#{printed_name} could be #{candidates.map { it[:code] }.sort.join(" or ")}; choose one in place_codes.yml"
+    end
+
+    def narrow(candidates)
+      return candidates if candidates.size <= 1
+
+      chosen = candidates.select { yield it }
+      chosen.empty? ? candidates : chosen
+    end
+
+    def loose_place_name(name)
+      slug(name.sub(/\A(Town|City|Village|Borough) of /, "").sub(/ (City|Town|Village|Borough)\z/, "")).delete("_")
+    end
+
+    def canonical_places
+      @canonical_places ||= Dir.glob(@root.join("manifests", "contributions", "**", "*.{yml,yaml}").to_s).flat_map do |path|
+        next [] unless File.read(path).include?("code: MUNICIPALITY-#{@state_path}-")
+
+        document = YAML.load_file(path)
+        (document["records"].to_a + document["groups"].to_a.flat_map { it["records"].to_a }).select do |entry|
+          entry["type"] == "Municipality" && entry["code"].start_with?("MUNICIPALITY-#{@state_path}-")
+        end
+      end.map do |entry|
+        { code: entry["code"], name: entry.dig("attributes", "name"), county: entry.dig("references", "county") }
+      end.uniq { it[:code] }.group_by { loose_place_name(it[:name]) }
     end
 
     def add_place(code, definition)
