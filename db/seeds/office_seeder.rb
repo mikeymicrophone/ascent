@@ -65,21 +65,32 @@ class OfficeSeeder
   end
   
   def self.create_local_offices
-    # Create Mayor offices for some major cities
+    # Create Mayor and Council Member offices for some major cities
     mayor_position = Position.find_by(title: "Mayor")
+    council_position = Position.find_by(title: "Council Member")
     return unless mayor_position
-    
-    # Find some municipalities to create mayor offices for
+
+    # Find some municipalities to create local offices for
     ["Los Angeles", "New York City", "Chicago", "Houston", "Phoenix"].each do |city_name|
       city = Municipality.find_by(name: city_name)
       next unless city
-      
+
       Office.find_or_create_by(
         position: mayor_position,
         jurisdiction: city.jurisdiction
       ) do |office|
         office.is_active = true
         office.notes = "Mayor of #{city.name}"
+      end
+
+      next unless council_position
+
+      Office.find_or_create_by(
+        position: council_position,
+        jurisdiction: city.jurisdiction
+      ) do |office|
+        office.is_active = true
+        office.notes = "#{city.name} City Council Member"
       end
     end
   end

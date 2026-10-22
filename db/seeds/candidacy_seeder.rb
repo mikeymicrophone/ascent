@@ -2,6 +2,7 @@ class CandidacySeeder
   def self.seed
     # Never attach fictional people to a source-backed election.
     create_mock_election_candidacies
+    create_mock_local_candidacies
     
     puts "Seeded #{Candidacy.count} candidacies"
   end
@@ -9,8 +10,8 @@ class CandidacySeeder
   private
   
   def self.create_mock_election_candidacies
-    # Find races in mock elections
-    mock_races = Race.mock.limit(1)
+    # Find the mock presidential race
+    mock_races = Race.mock.joins(office: :position).where(positions: { title: "President" }).limit(1)
     
     mock_races.each do |race|
       # Create several candidacies for educational purposes
@@ -37,6 +38,33 @@ class CandidacySeeder
           line.kind = "party"
           line.position = 1
         end
+      end
+    end
+  end
+
+  # One fictional candidate for each mock local race, chosen to fit their biography.
+  MOCK_LOCAL_CANDIDATES = {
+    "Mayor" => "michael.brown@example.com",
+    "Council Member" => "sarah.williams@example.com",
+    "Sheriff" => "daniel.reyes@example.com",
+    "School Board" => "grace.nakamura@example.com",
+    "County Commissioner" => "alexandra.chen@example.com",
+    "District Attorney" => "david.thompson@example.com",
+    "State Representative" => "marcus.rodriguez@example.com",
+    "State Senator" => "lisa.chang@example.com",
+    "Governor" => "patricia.okafor@example.com"
+  }.freeze
+
+  def self.create_mock_local_candidacies
+    MOCK_LOCAL_CANDIDATES.each do |position_title, email|
+      race = Race.mock.joins(office: :position).find_by(positions: { title: position_title })
+      person = Person.find_by(email: email)
+      next unless race && person
+
+      Candidacy.find_or_create_by(person: person, race: race) do |candidacy|
+        candidacy.status = "active"
+        candidacy.announcement_date = Date.new(2024, 3, 4)
+        candidacy.platform_summary = person.bio
       end
     end
   end

@@ -40,7 +40,7 @@ class StanceSeeder
       
       # Housing Stances
       {
-        candidacy_title: "City Council",
+        candidacy_title: "Council Member",
         issue_title: "Affordable Housing Shortage",
         approach_title: "Inclusionary Housing Ordinance",
         priority_level: "high",
@@ -58,7 +58,7 @@ class StanceSeeder
       
       # Transportation Stances
       {
-        candidacy_title: "City Council",
+        candidacy_title: "Council Member",
         issue_title: "Traffic Congestion",
         approach_title: "Intelligent Transportation Management System",
         priority_level: "medium",
@@ -120,7 +120,7 @@ class StanceSeeder
         evidence_links: "Workforce development partnerships, Job placement program success rates, Employer skill needs assessment"
       },
       {
-        candidacy_title: "City Council",
+        candidacy_title: "Council Member",
         issue_title: "Small Business Struggles",
         approach_title: "Small Business Support and Development Program",
         priority_level: "medium",
@@ -166,7 +166,7 @@ class StanceSeeder
       
       # Cultural and Recreation Stances
       {
-        candidacy_title: "City Council",
+        candidacy_title: "Council Member",
         issue_title: "Cultural Funding Shortfalls",
         approach_title: "Public-Private Arts Partnership",
         priority_level: "medium",
@@ -183,6 +183,8 @@ class StanceSeeder
       }
     ]
     
+    skipped_positions = []
+
     stance_configurations.each do |config|
       # Simulated stances only attach to candidacies in mock elections, never to real candidates.
       candidacy = Candidacy.joins(race: [ :election, { office: :position } ])
@@ -191,7 +193,7 @@ class StanceSeeder
                           .first
       
       unless candidacy
-        puts "\n❌ Candidacy not found for position: #{config[:candidacy_title]}"
+        skipped_positions << config[:candidacy_title]
         next
       end
       
@@ -228,5 +230,6 @@ class StanceSeeder
     end
     
     puts " #{Stance.count} stances"
+    puts "Skipped stances for positions without a mock candidacy: #{skipped_positions.uniq.join(', ')}" if skipped_positions.any?
   end
 end

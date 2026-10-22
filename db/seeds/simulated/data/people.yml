@@ -67,3 +67,24 @@
   email: "michael.brown@example.com"
   birth_date: "1963-10-07"
   bio: "Former business executive and economic development specialist. Focuses on job creation, tax policy, and government efficiency."
+
+- first_name: "Patricia"
+  last_name: "Okafor"
+  middle_name: "Adaeze"
+  email: "patricia.okafor@example.com"
+  birth_date: "1969-05-19"
+  bio: "Public health physician and former state health director. Focuses on mental health services, hospital access, and crisis response."
+
+- first_name: "Daniel"
+  last_name: "Reyes"
+  middle_name: "Tomas"
+  email: "daniel.reyes@example.com"
+  birth_date: "1974-09-02"
+  bio: "Twenty-year sheriff's deputy and youth mentor. Advocates for community policing, civilian oversight, and crime prevention programs."
+
+- first_name: "Grace"
+  last_name: "Nakamura"
+  middle_name: null
+  email: "grace.nakamura@example.com"
+  birth_date: "1986-12-11"
+  bio: "Former elementary school teacher and school nutrition advocate. Committed to universal school meals, smaller classes, and family engagement."
