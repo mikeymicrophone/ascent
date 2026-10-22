@@ -89,7 +89,7 @@ RSpec.describe "Ratings Index", type: :request do
 
     context "error handling" do
       it "handles database errors gracefully" do
-        allow(Rating).to receive(:includes).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
+        allow(Rating).to receive(:all).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
         
         expect { get ratings_path }.to raise_error(ActiveRecord::StatementInvalid)
       end

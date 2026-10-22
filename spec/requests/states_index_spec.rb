@@ -121,7 +121,9 @@ RSpec.describe "States Index", type: :request do
     end
 
     it "handles non-existent country gracefully" do
-      expect { get country_states_path(999999) }.to raise_error(ActiveRecord::RecordNotFound)
+      get country_states_path(999999)
+
+      expect(response).to have_http_status(:not_found)
     end
   end
 

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class Views::Components::HierarchicalNavigation < Views::ApplicationView
-  def initialize(current_object:, show_stats: true, expandable: true, &drill_down_block)
-    @current_object = current_object
-    @show_stats = show_stats
-    @expandable = expandable
-    @drill_down_block = drill_down_block
+  prop :current_object, Hierarchicable
+  prop :show_stats, _Boolean, default: true
+  prop :expandable, _Boolean, default: true
+
+  def after_initialize
     @hierarchy_chain = @current_object.build_hierarchy_chain
     @custom_stats = []
     @custom_sections = []
@@ -20,13 +20,9 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
       breadcrumb_chain
 
       if @expandable && @current_object.has_navigation_children?
-        if @drill_down_block
-          drill_down_section(&@drill_down_block)
-        else
-          drill_down_section do
-            render Views::Components::ChildrenPreview.new(current_object: @current_object)
-            render Views::Components::GeographicSummary.new(current_object: @current_object)
-          end
+        drill_down_section do
+          render Views::Components::ChildrenPreview.new(current_object: @current_object)
+          render Views::Components::GeographicSummary.new(current_object: @current_object)
         end
       end
 
@@ -52,7 +48,7 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
   end
 
   def breadcrumb_item(item, index)
-    span(class: "breadcrumb-item #{'current' if item == @current_object}") do
+    span(class: [ "breadcrumb-item", ("current" if item == @current_object) ]) do
       if item != @current_object
         link_to item.name, item, class: "breadcrumb-link"
       else

@@ -9,6 +9,11 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
     view_context.render(component)
   end
 
+  # The text of the breadcrumb trail alone, without the overview of children below it.
+  def breadcrumbs(html)
+    Nokogiri::HTML.fragment(html).at_css(".breadcrumb-chain").text
+  end
+
   def view_context
     controller.view_context
   end
@@ -56,9 +61,8 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
       let(:rendered) { render_component(component) }
 
       it 'renders hierarchy up to state level' do
-        expect(rendered).to include("United States")
-        expect(rendered).to include("California")
-        expect(rendered).not_to include("San Francisco")
+        expect(breadcrumbs(rendered)).to include("United States", "California")
+        expect(breadcrumbs(rendered)).not_to include("San Francisco")
       end
 
       it 'marks state as current' do
@@ -73,9 +77,9 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
       let(:rendered) { render_component(component) }
 
       it 'renders only the country' do
-        expect(rendered).to include("United States")
-        expect(rendered).not_to include("California")
-        expect(rendered).not_to include("San Francisco")
+        expect(breadcrumbs(rendered)).to include("United States")
+        expect(breadcrumbs(rendered)).not_to include("California")
+        expect(breadcrumbs(rendered)).not_to include("San Francisco")
       end
 
       it 'marks country as current' do
@@ -99,17 +103,17 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
       end
 
       it 'shows voter count' do
-        expect(rendered).to include('class="voter-count"')
+        expect(rendered).to include('class="stat-item voter-count"')
         expect(rendered).to include("voters")
       end
 
       it 'shows active elections count' do
-        expect(rendered).to include('class="election-count"')
+        expect(rendered).to include('class="stat-item election-count"')
         expect(rendered).to include("active elections")
       end
 
       it 'shows office count' do
-        expect(rendered).to include('class="office-count"')
+        expect(rendered).to include('class="stat-item office-count"')
         expect(rendered).to include("offices")
       end
     end
@@ -230,11 +234,11 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
   end
 
   describe 'edge cases' do
-    context 'with nil or invalid object' do
-      it 'handles gracefully' do
+    context 'with no record' do
+      it 'refuses to build without a record to navigate from' do
         expect {
           described_class.new(current_object: nil)
-        }.not_to raise_error
+        }.to raise_error(Literal::TypeError)
       end
     end
 

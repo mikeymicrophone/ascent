@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "Voters Index", type: :request do
+  # The voter list is for administrators only.
+  before { sign_in create(:admin_voter, first_name: "Avery", last_name: "Quinn", email: "avery.quinn@example.com") }
+
   describe "GET /voters" do
     context "with no voters" do
       it "renders successfully with empty state" do
@@ -88,7 +91,7 @@ RSpec.describe "Voters Index", type: :request do
 
     context "error handling" do
       it "handles database errors gracefully" do
-        allow(Voter).to receive(:includes).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
+        allow(Voter).to receive(:with_voting_activity).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
         
         expect { get voters_path }.to raise_error(ActiveRecord::StatementInvalid)
       end

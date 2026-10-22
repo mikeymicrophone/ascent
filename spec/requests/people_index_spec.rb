@@ -182,7 +182,7 @@ RSpec.describe "People Index", type: :request do
 
   context "error handling" do
     it "handles database errors gracefully" do
-      allow(Person).to receive(:includes).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
+      allow(Person).to receive(:with_candidacy_details).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
       
       expect { get people_path }.to raise_error(ActiveRecord::StatementInvalid)
     end

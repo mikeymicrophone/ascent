@@ -91,7 +91,8 @@ RSpec.describe "Voting Workflow", type: :system do
   end
 
   describe "voter information" do
-    it "shows voter profiles" do
+    it "shows voter profiles to an administrator" do
+      sign_in create(:admin_voter)
       visit voters_path
       
       expect(page).to have_content("Voters")

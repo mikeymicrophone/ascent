@@ -58,6 +58,9 @@ RSpec.describe TopicsController, type: :controller do
   end
 
   describe "GET #new" do
+    # Only administrators add records.
+    before { sign_in create(:admin_voter) }
+
     it "returns a success response" do
       get :new, params: {}, session: valid_session
       expect(response).to be_successful

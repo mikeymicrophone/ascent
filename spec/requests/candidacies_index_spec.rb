@@ -12,16 +12,15 @@ RSpec.describe "Candidacies Index", type: :request do
     end
 
     context "with multiple candidacies" do
-      let!(:office) { create(:office, :active) }
-      let!(:election) { create(:election, :upcoming, office: office) }
+      let!(:race) { create(:race, :active) }
       
-      let!(:candidate1) { create(:person, :experienced_politician, first_name: "Sarah", last_name: "Johnson") }
-      let!(:candidate2) { create(:person, :business_leader, first_name: "Michael", last_name: "Chen") }
-      let!(:candidate3) { create(:person, :young_candidate, first_name: "Jordan", last_name: "Taylor") }
+      let!(:candidate1) { create(:person, :experienced_politician, first_name: "Sarah", middle_name: nil, last_name: "Johnson") }
+      let!(:candidate2) { create(:person, :business_leader, first_name: "Michael", middle_name: nil, last_name: "Chen") }
+      let!(:candidate3) { create(:person, :young_candidate, first_name: "Jordan", middle_name: nil, last_name: "Taylor") }
       
-      let!(:candidacy1) { create(:candidacy, election: election, person: candidate1, party_label: "Democratic", status: "active") }
-      let!(:candidacy2) { create(:candidacy, election: election, person: candidate2, party_label: "Republican", status: "active") }
-      let!(:candidacy3) { create(:candidacy, election: election, person: candidate3, party_label: "Independent", status: "announced") }
+      let!(:candidacy1) { create(:candidacy, race: race, person: candidate1, party_label: "Democratic", status: "active") }
+      let!(:candidacy2) { create(:candidacy, race: race, person: candidate2, party_label: "Republican", status: "active") }
+      let!(:candidacy3) { create(:candidacy, race: race, person: candidate3, party_label: "Independent", status: "announced") }
 
       it "renders successfully with candidacy data" do
         get candidacies_path
@@ -44,8 +43,8 @@ RSpec.describe "Candidacies Index", type: :request do
       it "displays candidacy status information" do
         get candidacies_path
         
-        expect(response.body).to include("active") || expect(response.body).to include("Active")
-        expect(response.body).to include("announced") || expect(response.body).to include("Announced")
+        expect(response.body).to match(/active/i)
+        expect(response.body).to match(/announced/i)
       end
 
       it "displays election and office context" do
@@ -65,14 +64,12 @@ RSpec.describe "Candidacies Index", type: :request do
     end
 
     context "with candidacies across multiple elections" do
-      let!(:office1) { create(:office, :active) }
-      let!(:office2) { create(:office, :active) }
-      let!(:election1) { create(:election, :upcoming, office: office1) }
-      let!(:election2) { create(:election, :active, office: office2) }
+      let!(:race1) { create(:race) }
+      let!(:race2) { create(:race, :active) }
       
       let!(:person) { create(:person, :experienced_politician) }
-      let!(:candidacy1) { create(:candidacy, election: election1, person: person, party_label: "Democratic") }
-      let!(:candidacy2) { create(:candidacy, election: election2, person: person, party_label: "Democratic") }
+      let!(:candidacy1) { create(:candidacy, race: race1, person: person, party_label: "Democratic") }
+      let!(:candidacy2) { create(:candidacy, race: race2, person: person, party_label: "Democratic") }
 
       it "displays candidacies from different elections" do
         get candidacies_path
@@ -90,10 +87,10 @@ RSpec.describe "Candidacies Index", type: :request do
     end
 
     context "with candidacies having platform summaries" do
-      let!(:election) { create(:election, :upcoming) }
+      let!(:race) { create(:race) }
       let!(:person) { create(:person, :business_leader) }
       let!(:candidacy) { create(:candidacy, 
-        election: election, 
+        race: race, 
         person: person, 
         platform_summary: "Focused on economic development and job creation through small business support and infrastructure investment."
       ) }
@@ -107,9 +104,9 @@ RSpec.describe "Candidacies Index", type: :request do
     end
 
     context "with candidacies having different announcement dates" do
-      let!(:election) { create(:election, :upcoming) }
-      let!(:early_announce) { create(:candidacy, election: election, announcement_date: 6.months.ago) }
-      let!(:late_announce) { create(:candidacy, election: election, announcement_date: 1.month.ago) }
+      let!(:race) { create(:race) }
+      let!(:early_announce) { create(:candidacy, race: race, announcement_date: 6.months.ago) }
+      let!(:late_announce) { create(:candidacy, race: race, announcement_date: 1.month.ago) }
 
       it "displays announcement timing information" do
         get candidacies_path
@@ -127,10 +124,10 @@ RSpec.describe "Candidacies Index", type: :request do
     end
 
     context "with pagination" do
-      let!(:election) { create(:election, :upcoming) }
+      let!(:race) { create(:race) }
       
       before do
-        create_list(:candidacy, 30, election: election)
+        create_list(:candidacy, 30, race: race)
       end
 
       it "renders successfully with pagination" do
@@ -156,8 +153,8 @@ RSpec.describe "Candidacies Index", type: :request do
     end
 
     context "with candidacies having ratings" do
-      let!(:election) { create(:election, :active) }
-      let!(:candidacy) { create(:candidacy, election: election) }
+      let!(:race) { create(:race, :active) }
+      let!(:candidacy) { create(:candidacy, race: race) }
       let!(:voter1) { create(:voter) }
       let!(:voter2) { create(:voter) }
       let!(:rating1) { create(:rating, candidacy: candidacy, voter: voter1, rating: 350) }
@@ -180,13 +177,13 @@ RSpec.describe "Candidacies Index", type: :request do
   end
 
   context "filtering and search capabilities" do
-    let!(:election1) { create(:election, :upcoming) }
-    let!(:election2) { create(:election, :active) }
-    let!(:candidacy1) { create(:candidacy, election: election1, party_label: "Democratic") }
-    let!(:candidacy2) { create(:candidacy, election: election2, party_label: "Republican") }
+    let!(:race1) { create(:race) }
+    let!(:race2) { create(:race, :active) }
+    let!(:candidacy1) { create(:candidacy, race: race1, party_label: "Democratic") }
+    let!(:candidacy2) { create(:candidacy, race: race2, party_label: "Republican") }
 
     it "handles election filtering if implemented" do
-      get candidacies_path, params: { election_id: election1.id }
+      get candidacies_path, params: { election_id: race1.election_id }
       
       expect(response).to have_http_status(200)
       expect(response.body).to include("Candidacies")
@@ -209,7 +206,7 @@ RSpec.describe "Candidacies Index", type: :request do
 
   context "error handling" do
     it "handles database errors gracefully" do
-      allow(Candidacy).to receive(:includes).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
+      allow(Candidacy).to receive(:with_election_context).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
       
       expect { get candidacies_path }.to raise_error(ActiveRecord::StatementInvalid)
     end
@@ -237,8 +234,8 @@ RSpec.describe "Candidacies Index", type: :request do
     before do
       # Create candidacies with full association chains
       3.times do
-        election = create(:election, :active)
-        candidacy = create(:candidacy, election: election)
+        race = create(:race, :active)
+        candidacy = create(:candidacy, race: race)
         
         # Add ratings for each candidacy
         5.times do

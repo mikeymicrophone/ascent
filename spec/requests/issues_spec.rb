@@ -42,6 +42,9 @@ RSpec.describe "/issues", type: :request do
   end
 
   describe "GET /new" do
+    # Only administrators add records.
+    before { sign_in create(:admin_voter) }
+
     it "renders a successful response" do
       get new_issue_url
       expect(response).to be_successful
