@@ -30,6 +30,9 @@ gem "superform"
 
 # Use Devise for authentication [https://github.com/heartcombo/devise]
 gem "devise"
+# Sign in with Google through Devise; the CSRF gem makes OmniAuth accept only POST requests with a token
+gem "omniauth-google-oauth2", "~> 1.2"
+gem "omniauth-rails_csrf_protection", "~> 2.0"
 
 # Authorization [https://github.com/palkan/action_policy]
 gem "action_policy"

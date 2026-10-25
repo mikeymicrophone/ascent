@@ -596,3 +596,7 @@ select {
     grid-template-columns: minmax(16rem, 2fr) repeat(4, minmax(0, 1fr));
   }
 }
+
+.oauth-sign-in {
+  @apply my-4 flex;
+}

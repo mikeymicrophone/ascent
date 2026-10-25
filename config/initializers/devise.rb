@@ -272,6 +272,17 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  #
+  # Google sign-in reads the OAuth client from GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, or from
+  # google.client_id and google.client_secret in the Rails credentials. Without them the provider is
+  # left out and the sign-in pages hide its button; tests use OmniAuth's mock instead.
+  google_client_id = ENV.fetch("GOOGLE_CLIENT_ID") { Rails.application.credentials.dig(:google, :client_id) }
+  google_client_secret = ENV.fetch("GOOGLE_CLIENT_SECRET") { Rails.application.credentials.dig(:google, :client_secret) }
+  if google_client_id.present? && google_client_secret.present?
+    config.omniauth :google_oauth2, google_client_id, google_client_secret, scope: "email,profile", prompt: "select_account"
+  elsif Rails.env.test?
+    config.omniauth :google_oauth2, "test-client-id", "test-client-secret"
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

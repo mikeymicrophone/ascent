@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_22_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -590,13 +590,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_22_170000) do
     t.string "last_name"
     t.datetime "last_sign_in_at"
     t.string "last_sign_in_ip"
+    t.string "provider"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
+    t.string "uid"
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_voters_on_email", unique: true
+    t.index ["provider", "uid"], name: "index_voters_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_voters_on_reset_password_token", unique: true
   end
 

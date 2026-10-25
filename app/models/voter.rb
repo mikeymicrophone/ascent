@@ -2,7 +2,8 @@ class Voter < ApplicationRecord
   # Include default devise modules. Others available are:
   # :registerable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :confirmable, :registerable,
-         :recoverable, :rememberable, :validatable, :trackable
+         :recoverable, :rememberable, :validatable, :trackable,
+         :omniauthable, omniauth_providers: [ :google_oauth2 ]
   
   has_many :residences, dependent: :destroy
   has_many :jurisdictions, through: :residences
@@ -22,6 +23,46 @@ class Voter < ApplicationRecord
              voter_race_baselines: { race: [:election, { office: :position }] })
   }
   scope :with_residence_details, -> { includes(residences: :jurisdiction) }
+
+  def self.google_sign_in_available?
+    Devise.omniauth_configs.key?(:google_oauth2)
+  end
+
+  # The voter a Google account signs in as: the one already linked to it, else the one with its
+  # verified email, which it then links, else a new confirmed voter with a random password.
+  # Returns an unsaved voter with errors when none can be made.
+  def self.from_google(auth)
+    find_by(provider: auth.provider, uid: auth.uid) || link_google(auth) || create_from_google(auth)
+  end
+
+  def self.link_google(auth)
+    return unless google_email_verified?(auth)
+
+    find_by(email: auth.info.email.downcase)&.tap do |voter|
+      voter.skip_reconfirmation!
+      voter.confirm unless voter.confirmed?
+      voter.update!(provider: auth.provider, uid: auth.uid)
+    end
+  end
+
+  def self.create_from_google(auth)
+    voter = new(provider: auth.provider, uid: auth.uid, email: auth.info.email,
+                first_name: auth.info.first_name, last_name: auth.info.last_name,
+                password: Devise.friendly_token(32))
+    unless google_email_verified?(auth)
+      voter.errors.add(:email, "is not verified with Google")
+      return voter
+    end
+
+    voter.skip_confirmation!
+    voter.save
+    voter
+  end
+
+  def self.google_email_verified?(auth)
+    auth.extra&.raw_info&.email_verified == true || auth.info.email_verified == true
+  end
+  private_class_method :link_google, :create_from_google, :google_email_verified?
 
   def admin?
     admin

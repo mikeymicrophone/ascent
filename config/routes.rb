@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   resources :voter_race_baselines
   resources :ratings
 
-  devise_for :voters
+  devise_for :voters, controllers: { omniauth_callbacks: "voters/omniauth_callbacks" }
   resources :voters
   resources :residences
   resources :candidacies
