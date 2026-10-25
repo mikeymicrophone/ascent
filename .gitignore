@@ -39,3 +39,6 @@
 # Ignore SimpleCov coverage reports
 /coverage/
 .DS_Store
+
+# puma-dev loads development secrets from Doppler through this file.
+/.pumaenv
