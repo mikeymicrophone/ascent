@@ -2,8 +2,7 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  # Include Pagy backend for pagination support
-  include Pagy::Backend
+  include Pagy::Method
 
   # Include ActionPolicy authorization
   include ActionPolicy::Controller
@@ -17,6 +16,12 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
+
+  def pagy(paginator = :offset, collection, **options)
+    super
+  rescue Pagy::RangeError => error
+    super(paginator, collection, **options, page: error.pagy.last)
+  end
 
   rescue_from ActionPolicy::Unauthorized, with: :handle_unauthorized!
 

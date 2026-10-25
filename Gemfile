@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-ruby "4.0.1"
+ruby "4.0.9"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem 'rails', '~> 8.1', '>= 8.1.2'
@@ -92,6 +92,6 @@ group :test do
   gem "simplecov-html", require: false
 end
 
-gem "ruby-lsp", "~> 0.24.2"
+gem "ruby-lsp", "~> 0.26.11"
 
 gem "csv", "~> 3.3"

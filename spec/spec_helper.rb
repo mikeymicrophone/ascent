@@ -1,18 +1,18 @@
 # Code coverage configuration - must be at the very top
 require 'simplecov'
 SimpleCov.start 'rails' do
-  add_filter '/spec/'
-  add_filter '/config/'
-  add_filter '/vendor/'
+  skip '/spec/'
+  skip '/config/'
+  skip '/vendor/'
   
-  add_group 'Models', 'app/models'
-  add_group 'Controllers', 'app/controllers'
-  add_group 'Views', 'app/views'
-  add_group 'Components', 'app/views/components'
-  add_group 'Helpers', 'app/helpers'
-  add_group 'Jobs', 'app/jobs'
-  add_group 'Services', 'app/services'
-  add_group 'Policies', 'app/policies'
+  group 'Models', 'app/models'
+  group 'Controllers', 'app/controllers'
+  group 'Views', 'app/views'
+  group 'Components', 'app/views/components'
+  group 'Helpers', 'app/helpers'
+  group 'Jobs', 'app/jobs'
+  group 'Services', 'app/services'
+  group 'Policies', 'app/policies'
   
   # minimum_coverage 80  # Uncomment to enforce coverage threshold
 end

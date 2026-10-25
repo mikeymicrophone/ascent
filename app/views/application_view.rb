@@ -19,7 +19,6 @@ class Views::ApplicationView < Phlex::HTML
 
   include Devise::Controllers::Helpers
   include ActionPolicy::Behaviour
-  include Pagy::Frontend
 
   include Views::Components
   include Views::Partials

@@ -29,12 +29,12 @@ RSpec.describe "Resource index and show pages", type: :request do
     end
 
     it "pages the records once there are more than a page of them" do
-      create_list(:issue, Pagy::DEFAULT[:limit])
+      create_list(:issue, Pagy::OPTIONS[:limit])
 
       get issues_path
 
       expect(response.body).to include("pagination-container")
-      expect(response.body.scan(/id="list_item_issue_\d+"/).size).to eq(Pagy::DEFAULT[:limit])
+      expect(response.body.scan(/id="list_item_issue_\d+"/).size).to eq(Pagy::OPTIONS[:limit])
     end
   end
 

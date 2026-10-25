@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe StatesController, type: :controller do
+  render_views
+
   before do
     # Skip authentication for these tests
     allow(controller).to receive(:authenticate_voter!).and_return(true)
@@ -26,7 +28,7 @@ RSpec.describe StatesController, type: :controller do
       # Check pagination properties
       expect(pagy.count).to be >= 30 # At least 30 states
       expect(pagy.limit).to eq(25)   # Default page size
-      expect(pagy.pages).to be >= 2  # Multiple pages
+      expect(pagy.last).to be >= 2  # Multiple pages
     end
 
     it 'respects page parameter' do
@@ -44,8 +46,8 @@ RSpec.describe StatesController, type: :controller do
       expect(response).to have_http_status(:success)
       
       pagy = assigns(:pagy)
-      # With overflow: :last_page, should redirect to last page
-      expect(pagy.page).to eq(pagy.pages)
+      expect(pagy.page).to eq(pagy.last)
+      expect(assigns(:states)).to be_present
     end
 
     it 'passes correct states to view' do
@@ -55,6 +57,18 @@ RSpec.describe StatesController, type: :controller do
       expect(states).to be_present
       expect(states.count).to be <= 25 # Should not exceed page size
       expect(states).to all(be_a(State))
+    end
+  end
+
+  describe 'empty pagination' do
+    it 'serves an empty first page when the requested page is beyond the end' do
+      country = create(:country)
+      get :index, params: { country_id: country.id, page: 999 }
+
+      expect(response).to have_http_status(:success)
+      expect(assigns(:pagy).page).to eq(1)
+      expect(assigns(:states)).to be_empty
+      expect(response.body).not_to include('pagination-nav')
     end
   end
 
@@ -68,7 +82,10 @@ RSpec.describe StatesController, type: :controller do
       
       # Check that view receives pagy object
       expect(assigns(:pagy)).to be_present
-      expect(assigns(:pagy).pages).to be > 1
+      expect(assigns(:pagy).last).to be > 1
+      expect(response.body).to include('pagination-info', 'pagination-nav', 'page=2')
+      page = Nokogiri::HTML(response.body)
+      expect(page.at_css('.pagy [aria-current="page"]').text).to eq('1')
     end
   end
 end

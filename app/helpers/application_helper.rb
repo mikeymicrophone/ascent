@@ -1,6 +1,4 @@
 module ApplicationHelper
-  # Include Pagy frontend helpers for pagination support
-  include Pagy::Frontend
   include ScaffoldUiHelper
 
   def load_google_fonts
