@@ -13,7 +13,7 @@ class PolicySeeder
         enacted_date: 2.years.ago
       },
       {
-        governing_body: "United States Congress", 
+        governing_body: "United States Congress",
         area_of_concern: "Environmental Protection",
         approach: "Comprehensive Environmental Monitoring and Enforcement",
         title: "Clean Air and Water Protection Act",
@@ -21,11 +21,11 @@ class PolicySeeder
         status: "enacted",
         enacted_date: 18.months.ago
       },
-      
+
       # State Level Policies
       {
         governing_body: "California State Legislature",
-        area_of_concern: "Education Policy", 
+        area_of_concern: "Education Policy",
         approach: "State Funding Formula Reform",
         title: "Education Funding Equity Act",
         description: "State legislation reforming school funding formulas to ensure equitable per-pupil funding across all districts, with additional weighted funding for students with special needs, English language learners, and low-income students.",
@@ -35,7 +35,7 @@ class PolicySeeder
       {
         governing_body: "Office of the Governor of California",
         area_of_concern: "Healthcare Services",
-        approach: "Mobile Health Clinic Network", 
+        approach: "Mobile Health Clinic Network",
         title: "Rural Healthcare Access Initiative",
         description: "Governor's executive order establishing mobile health clinic network serving rural counties, expanding telemedicine infrastructure, and providing loan forgiveness for healthcare providers serving underserved areas.",
         status: "enacted",
@@ -50,7 +50,7 @@ class PolicySeeder
         status: "enacted",
         enacted_date: 4.years.ago
       },
-      
+
       # Municipal Level Policies
       {
         governing_body: "San Francisco City Council",
@@ -63,7 +63,7 @@ class PolicySeeder
       },
       {
         governing_body: "Los Angeles City Council",
-        area_of_concern: "Housing & Urban Development", 
+        area_of_concern: "Housing & Urban Development",
         approach: "Inclusionary Housing Ordinance",
         title: "Affordable Housing Inclusion Requirements",
         description: "Ordinance requiring new residential developments of 10+ units to include 15% affordable housing or pay in-lieu fees. Provides density bonuses and expedited permitting for developments exceeding requirements.",
@@ -82,7 +82,7 @@ class PolicySeeder
       {
         governing_body: "Miami City Council",
         area_of_concern: "Economic Development",
-        approach: "Small Business Support and Development Program", 
+        approach: "Small Business Support and Development Program",
         title: "Local Business Development Incentives",
         description: "Municipal program providing tax incentives, fee reductions, technical assistance, and preferential procurement opportunities for local small businesses. Includes performance requirements and monitoring.",
         status: "enacted",
@@ -92,12 +92,12 @@ class PolicySeeder
         governing_body: "San Francisco City Council",
         area_of_concern: "Public Safety",
         approach: "Community Policing and Neighborhood Engagement",
-        title: "Community Safety and Accountability Act", 
+        title: "Community Safety and Accountability Act",
         description: "Ordinance establishing community policing requirements, civilian oversight board, police accountability measures, and community engagement protocols. Includes bias training and de-escalation requirements.",
         status: "enacted",
         enacted_date: 1.year.ago
       },
-      
+
       # County Level Policies
       {
         governing_body: "San Francisco County Executive",
@@ -112,12 +112,12 @@ class PolicySeeder
         governing_body: "Los Angeles County Executive",
         area_of_concern: "Healthcare Services",
         approach: "Integrated Community Mental Health System",
-        title: "Universal Healthcare Access Initiative", 
+        title: "Universal Healthcare Access Initiative",
         description: "County program expanding community health centers, providing sliding-scale fee structures, and coordinating with state Medicaid programs to ensure healthcare access for all residents regardless of insurance status.",
         status: "enacted",
         enacted_date: 3.years.ago
       },
-      
+
       # Special District Policies
       {
         governing_body: "San Francisco Unified School District Board",
@@ -138,7 +138,7 @@ class PolicySeeder
         enacted_date: 18.months.ago
       },
       {
-        governing_body: "Metropolitan Water District of Southern California Board", 
+        governing_body: "Metropolitan Water District of Southern California Board",
         area_of_concern: "Environmental Protection",
         approach: "Watershed Protection and Restoration Program",
         title: "Water Quality Protection Standards",
@@ -146,7 +146,7 @@ class PolicySeeder
         status: "enacted",
         enacted_date: 3.years.ago
       },
-      
+
       # Proposed and Under Review Policies
       {
         governing_body: "Austin City Council",
@@ -159,7 +159,7 @@ class PolicySeeder
       },
       {
         governing_body: "Texas State Legislature",
-        area_of_concern: "Immigration & Integration", 
+        area_of_concern: "Immigration & Integration",
         approach: "Intergenerational Community Programs",
         title: "New American Integration Services Act",
         description: "Proposed state legislation providing English language classes, job training, citizenship assistance, and community integration support for new immigrants and refugees.",
@@ -175,7 +175,7 @@ class PolicySeeder
         status: "pending",
         enacted_date: nil
       },
-      
+
       # Repealed Policy Example
       {
         governing_body: "Miami City Council",
@@ -188,7 +188,7 @@ class PolicySeeder
         expiration_date: 2.years.ago
       }
     ]
-    
+
     policy_configurations.each do |config|
       # Find governing body by name
       governing_body = GoverningBody.find_by(name: config[:governing_body])
@@ -196,21 +196,21 @@ class PolicySeeder
         puts "\n❌ Governing body not found: #{config[:governing_body]}"
         next
       end
-      
+
       # Find area of concern by name
       area_of_concern = AreaOfConcern.find_by(name: config[:area_of_concern])
       unless area_of_concern
         puts "\n❌ Area of concern not found: #{config[:area_of_concern]}"
         next
       end
-      
+
       # Find approach by title
       approach = Approach.find_by(title: config[:approach])
       unless approach
         puts "\n❌ Approach not found: #{config[:approach]}"
         next
       end
-      
+
       # Create the policy
       policy = Policy.find_or_create_by(
         title: config[:title],
@@ -223,7 +223,7 @@ class PolicySeeder
         p.enacted_date = config[:enacted_date]
         p.expiration_date = config[:expiration_date]
       end
-      
+
       if policy.persisted?
         print "."
       else
@@ -231,7 +231,7 @@ class PolicySeeder
         puts "   Errors: #{policy.errors.full_messages.join(', ')}"
       end
     end
-    
+
     puts " #{Policy.count} policies"
   end
 end

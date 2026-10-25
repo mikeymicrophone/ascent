@@ -21,25 +21,25 @@ class PhlexScaffoldGenerator < Rails::Generators::NamedBase
 
   def generate_controller
     return if options[:skip_controller]
-    
+
     template "controller.rb.tt", File.join("app/controllers", "#{controller_file_name}_controller.rb")
   end
 
   def generate_model
     return if options[:skip_model]
-    
+
     attributes_with_index = attributes.map do |attr|
       attr_str = "#{attr.name}:#{attr.type}"
       attr_str += ":index" if attr.reference?
       attr_str
     end
-    
-    invoke "model", [singular_name] + attributes_with_index
+
+    invoke "model", [ singular_name ] + attributes_with_index
   end
 
   def add_resource_route
     return if options[:skip_routes]
-    
+
     route "resources :#{plural_name}"
   end
 
@@ -53,10 +53,10 @@ class PhlexScaffoldGenerator < Rails::Generators::NamedBase
     %w[index show new edit].each do |view|
       template "#{view}_view.rb.tt", File.join("app/views", controller_file_path, "#{view}_view.rb")
     end
-    
+
     # Create form component
     template "form_component.rb.tt", File.join("app/views", controller_file_path, "#{singular_name}_form.rb")
-    
+
     # Create partial component
     template "partial_component.rb.tt", File.join("app/views", controller_file_path, "#{singular_name}_partial.rb")
   end

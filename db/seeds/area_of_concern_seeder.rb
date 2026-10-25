@@ -34,7 +34,7 @@ class AreaOfConcernSeeder
       {
         name: "Healthcare Services",
         description: "Public health programs, healthcare access, health insurance policies, disease prevention, and health emergency preparedness.",
-        policy_domain: "Human Services", 
+        policy_domain: "Human Services",
         regulatory_scope: "County, State, Federal"
       },
       {
@@ -92,14 +92,14 @@ class AreaOfConcernSeeder
         regulatory_scope: "Municipal, County, State"
       }
     ]
-    
+
     areas_of_concern.each do |aoc_attrs|
       area_of_concern = AreaOfConcern.find_or_create_by(name: aoc_attrs[:name]) do |aoc|
         aoc.description = aoc_attrs[:description]
         aoc.policy_domain = aoc_attrs[:policy_domain]
         aoc.regulatory_scope = aoc_attrs[:regulatory_scope]
       end
-      
+
       if area_of_concern.persisted?
         print "."
       else
@@ -107,7 +107,7 @@ class AreaOfConcernSeeder
         puts "   Errors: #{area_of_concern.errors.full_messages.join(', ')}"
       end
     end
-    
+
     puts " #{AreaOfConcern.count} areas of concern"
   end
 end

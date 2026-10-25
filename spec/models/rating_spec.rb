@@ -9,10 +9,10 @@ RSpec.describe Rating, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:rating) }
     it { should validate_inclusion_of(:rating).in_range(0..500) }
-    
+
     describe 'uniqueness validation' do
       let(:rating) { create(:rating) }
-      
+
       it 'validates uniqueness of voter_id scoped to candidacy_id' do
         expect(rating).to validate_uniqueness_of(:voter_id)
           .scoped_to(:candidacy_id)
@@ -89,7 +89,7 @@ RSpec.describe Rating, type: :model do
         it 'archives the previous rating value' do
           rating.update(rating: 400)
           archive = RatingArchive.last
-          
+
           expect(archive.voter).to eq(rating.voter)
           expect(archive.candidacy).to eq(rating.candidacy)
           expect(archive.rating).to eq(300) # Previous value
@@ -134,7 +134,7 @@ RSpec.describe Rating, type: :model do
 
       context 'with minimum rating' do
         let(:min_rating) { create(:rating, rating: 0) }
-        
+
         it 'returns 0%' do
           expect(min_rating.rating_percentage).to eq(0.0)
         end
@@ -142,7 +142,7 @@ RSpec.describe Rating, type: :model do
 
       context 'with maximum rating' do
         let(:max_rating) { create(:rating, rating: 500) }
-        
+
         it 'returns 100%' do
           expect(max_rating.rating_percentage).to eq(100.0)
         end
@@ -150,7 +150,7 @@ RSpec.describe Rating, type: :model do
 
       context 'with decimal result' do
         let(:decimal_rating) { create(:rating, rating: 333) }
-        
+
         it 'rounds to 1 decimal place' do
           expect(decimal_rating.rating_percentage).to eq(66.6) # 333/500 * 100 = 66.6%
         end
@@ -169,7 +169,7 @@ RSpec.describe Rating, type: :model do
 
       context 'with rating at baseline' do
         let(:rating) { create(:rating, voter: voter, candidacy: candidacy, rating: 300) }
-        
+
         it 'returns false' do
           expect(rating.approved?).to be false # 300 does not exceed 300
         end
@@ -177,7 +177,7 @@ RSpec.describe Rating, type: :model do
 
       context 'with rating below baseline' do
         let(:rating) { create(:rating, voter: voter, candidacy: candidacy, rating: 250) }
-        
+
         it 'returns false' do
           expect(rating.approved?).to be false # 250 < 300
         end
@@ -192,7 +192,7 @@ RSpec.describe Rating, type: :model do
 
       context 'with no voter baseline for election' do
         before { baseline.destroy }
-        
+
         it 'returns false when no baseline found' do
           expect(rating.approved?).to be false
         end
@@ -209,7 +209,7 @@ RSpec.describe Rating, type: :model do
 
       context 'with no baseline for election' do
         before { baseline.destroy }
-        
+
         it 'returns nil' do
           expect(rating.voter_baseline_for_race).to be_nil
         end
@@ -220,7 +220,7 @@ RSpec.describe Rating, type: :model do
         before do
           baseline.update(race: other_race)
         end
-        
+
         it 'returns nil' do
           expect(rating.voter_baseline_for_race).to be_nil
         end
@@ -253,35 +253,35 @@ RSpec.describe Rating, type: :model do
 
     describe 'duplicate rating prevention' do
       let(:existing_rating) { create(:rating) }
-      
+
       it 'prevents voter from rating same candidacy twice' do
-        duplicate_rating = build(:rating, 
-          voter: existing_rating.voter, 
+        duplicate_rating = build(:rating,
+          voter: existing_rating.voter,
           candidacy: existing_rating.candidacy,
           rating: 400
         )
-        
+
         expect(duplicate_rating).not_to be_valid
         expect(duplicate_rating.errors[:voter_id]).to include("can only rate each candidacy once")
       end
 
       it 'allows same voter to rate different candidacies' do
         different_candidacy = create(:candidacy)
-        new_rating = build(:rating, 
-          voter: existing_rating.voter, 
+        new_rating = build(:rating,
+          voter: existing_rating.voter,
           candidacy: different_candidacy
         )
-        
+
         expect(new_rating).to be_valid
       end
 
       it 'allows different voters to rate same candidacy' do
         different_voter = create(:voter)
-        new_rating = build(:rating, 
-          voter: different_voter, 
+        new_rating = build(:rating,
+          voter: different_voter,
           candidacy: existing_rating.candidacy
         )
-        
+
         expect(new_rating).to be_valid
       end
     end

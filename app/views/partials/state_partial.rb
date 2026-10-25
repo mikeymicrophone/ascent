@@ -6,16 +6,16 @@ class Views::Partials::StatePartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@state), class: "state-partial") do
       h3 { @state.name }
-      
+
       # Hierarchical navigation
       HierarchicalNavigation(current_object: @state)
-      
+
       div do
         span { "Code:" }
         whitespace
         span { @state.code }
       end
-      
+
       expandable(@state, :counties) do |counties|
         ItemPreview(@state, :counties, 5) do |county|
           link_to county.name, county, class: "link county"

@@ -42,16 +42,15 @@ FactoryBot.define do
       title { "Arts & Culture" }
       description { "Cultural programs, arts funding, historic preservation, and community cultural events that enrich community life and preserve heritage." }
     end
-    factory :education_topic, traits: [:education]
-    factory :healthcare_topic, traits: [:healthcare]
-    factory :transportation_topic, traits: [:transportation]
-    factory :environment_topic, traits: [:environment]
-    factory :economic_development_topic, traits: [:economic_development]
-    factory :housing_topic, traits: [:housing]
-    factory :government_accountability_topic, traits: [:government_accountability]
-    factory :social_services_topic, traits: [:social_services]
-    factory :infrastructure_topic, traits: [:infrastructure]
-    factory :arts_culture_topic, traits: [:arts_culture]
+    factory :education_topic, traits: [ :education ]
+    factory :healthcare_topic, traits: [ :healthcare ]
+    factory :transportation_topic, traits: [ :transportation ]
+    factory :environment_topic, traits: [ :environment ]
+    factory :economic_development_topic, traits: [ :economic_development ]
+    factory :housing_topic, traits: [ :housing ]
+    factory :government_accountability_topic, traits: [ :government_accountability ]
+    factory :social_services_topic, traits: [ :social_services ]
+    factory :infrastructure_topic, traits: [ :infrastructure ]
+    factory :arts_culture_topic, traits: [ :arts_culture ]
   end
 end
-

@@ -91,10 +91,10 @@ class Views::Pages::ApprovalVotingView < Views::ApplicationView
   end
 
   def card_grid_class(section)
-    ["story-card-grid", ("story-card-grid-compact" if section[:layout] == "compact")].compact.join(" ")
+    [ "story-card-grid", ("story-card-grid-compact" if section[:layout] == "compact") ].compact.join(" ")
   end
 
   def card_class(section)
-    ["story-card", ("story-card-subtle" if section[:surface] == "band")].compact.join(" ")
+    [ "story-card", ("story-card-subtle" if section[:surface] == "band") ].compact.join(" ")
   end
 end

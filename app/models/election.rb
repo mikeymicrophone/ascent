@@ -15,9 +15,9 @@ class Election < ApplicationRecord
   validate :early_voting_dates_are_ordered
   validate :race_offices_match_jurisdiction, if: :will_save_change_to_jurisdiction_id?
 
-  scope :upcoming, -> { where(status: 'upcoming') }
-  scope :active, -> { where(status: 'active') }
-  scope :completed, -> { where(status: 'completed') }
+  scope :upcoming, -> { where(status: "upcoming") }
+  scope :active, -> { where(status: "active") }
+  scope :completed, -> { where(status: "completed") }
   scope :mock, -> { where(is_mock: true) }
   scope :historical, -> { where(is_historical: true) }
   scope :real, -> { where(is_mock: false, is_historical: false) }
@@ -36,13 +36,13 @@ class Election < ApplicationRecord
 
   def early_voting_dates_are_ordered
     if early_voting_starts_on && early_voting_ends_on && early_voting_starts_on > early_voting_ends_on
-      errors.add(:early_voting_ends_on, 'must be on or after early voting starts')
+      errors.add(:early_voting_ends_on, "must be on or after early voting starts")
     end
     return unless election_date
 
     [ :early_voting_starts_on, :early_voting_ends_on ].each do |attribute|
       if self[attribute] && self[attribute] > election_date
-        errors.add(attribute, 'must be on or before election day')
+        errors.add(attribute, "must be on or before election day")
       end
     end
   end

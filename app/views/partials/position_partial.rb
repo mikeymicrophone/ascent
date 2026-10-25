@@ -14,14 +14,14 @@ class Views::Partials::PositionPartial < Views::ApplicationView
           end
         end
       end
-      
+
       # Main content with improved layout
       div(class: "partial-content") do
         # Description with proper typography
         div(class: "content-section") do
           div(class: "content-description") { simple_format(@position.description) }
         end
-        
+
         # Term information
         div(class: "info-grid") do
           div(class: "info-item") do
@@ -30,7 +30,7 @@ class Views::Partials::PositionPartial < Views::ApplicationView
           end
         end
       end
-      
+
       expandable(@position, :offices) do |offices|
         div(class: "expandable-grid") do
           offices.each { OfficePartial(office: it) }

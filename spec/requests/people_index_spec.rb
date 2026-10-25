@@ -5,7 +5,7 @@ RSpec.describe "People Index", type: :request do
     context "with no people" do
       it "renders successfully with empty state" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("People")
       end
@@ -19,7 +19,7 @@ RSpec.describe "People Index", type: :request do
 
       it "renders successfully with people data" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("People")
         expect(response.body).to include("Sarah Johnson")
@@ -30,7 +30,7 @@ RSpec.describe "People Index", type: :request do
 
       it "displays person biographical information" do
         get people_path
-        
+
         expect(response.body).to include("Sarah")
         expect(response.body).to include("Michael")
         expect(response.body).to include("Jordan")
@@ -39,7 +39,7 @@ RSpec.describe "People Index", type: :request do
 
       it "includes proper HTML structure for Phlex components" do
         get people_path
-        
+
         expect(response.body).to include('class="')
         expect(response.body).to include("<div")
         expect(response.body).to include("</div>")
@@ -52,13 +52,13 @@ RSpec.describe "People Index", type: :request do
       let!(:candidate1) { create(:person, :experienced_politician, first_name: "John", last_name: "Smith") }
       let!(:candidate2) { create(:person, :business_leader, first_name: "Jane", last_name: "Doe") }
       let!(:non_candidate) { create(:person, :community_activist, first_name: "Alex", last_name: "Wilson") }
-      
+
       let!(:candidacy1) { create(:candidacy, race: race, person: candidate1, party_label: "Democratic") }
       let!(:candidacy2) { create(:candidacy, race: race, person: candidate2, party_label: "Republican") }
 
       it "displays candidacy information for candidates" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("John Smith")
         expect(response.body).to include("Jane Doe")
@@ -67,14 +67,14 @@ RSpec.describe "People Index", type: :request do
 
       it "shows party affiliation for candidates" do
         get people_path
-        
+
         expect(response.body).to include("Democratic")
         expect(response.body).to include("Republican")
       end
 
       it "displays election context for candidates" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         # Should show some indication of candidacy status
       end
@@ -88,7 +88,7 @@ RSpec.describe "People Index", type: :request do
 
       it "displays people with different background types" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Robert Martinez")
         expect(response.body).to include("Ashley Kim")
@@ -98,7 +98,7 @@ RSpec.describe "People Index", type: :request do
 
       it "handles different bio lengths appropriately" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         # Should handle both long and minimal bios
       end
@@ -111,21 +111,21 @@ RSpec.describe "People Index", type: :request do
 
       it "renders successfully with pagination" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("People")
       end
 
       it "respects page parameter" do
         get people_path, params: { page: 2 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("People")
       end
 
       it "handles high page numbers gracefully" do
         get people_path, params: { page: 999 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("People")
       end
@@ -142,14 +142,14 @@ RSpec.describe "People Index", type: :request do
 
       it "displays person with multiple candidacies" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("People")
       end
 
       it "shows electoral history appropriately" do
         get people_path
-        
+
         expect(response).to have_http_status(200)
         # Should indicate multiple candidacies or electoral activity
       end
@@ -162,7 +162,7 @@ RSpec.describe "People Index", type: :request do
 
     it "handles potential search parameters" do
       get people_path, params: { search: "Sarah" }
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("People")
     end
@@ -172,9 +172,9 @@ RSpec.describe "People Index", type: :request do
       office = create(:office)
       race = create_race_for(office)
       create(:candidacy, race: race, person: politician)
-      
+
       get people_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("People")
     end
@@ -183,15 +183,15 @@ RSpec.describe "People Index", type: :request do
   context "error handling" do
     it "handles database errors gracefully" do
       allow(Person).to receive(:with_candidacy_details).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-      
+
       expect { get people_path }.to raise_error(ActiveRecord::StatementInvalid)
     end
 
     it "handles valid parameters correctly" do
       create_list(:person, 5)
-      
+
       get people_path, params: { page: 1 }
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("People")
     end
@@ -199,9 +199,9 @@ RSpec.describe "People Index", type: :request do
     it "handles people with special characters in names" do
       person_with_apostrophe = create(:person, first_name: "Mary", last_name: "O'Connor")
       person_with_hyphen = create(:person, first_name: "Jean-Luc", last_name: "Picard")
-      
+
       get people_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("People")
     end
@@ -225,23 +225,23 @@ RSpec.describe "People Index", type: :request do
 
     it "renders successfully with complex person data" do
       get people_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("People")
     end
 
     it "handles people with extensive electoral history" do
       person = create(:person, :experienced_politician)
-      
+
       # Create multiple candidacies across different elections
       3.times do
         office = create(:office)
         race = create_race_for(office)
         create(:candidacy, race: race, person: person)
       end
-      
+
       get people_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("People")
     end

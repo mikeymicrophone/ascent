@@ -3,7 +3,7 @@ class EntityCode < ApplicationRecord
   belongs_to :record, polymorphic: true, optional: true
 
   validates :namespace, :catalog, :code, :canonical_code, presence: true
-  validates :code, uniqueness: { scope: [:namespace, :catalog] }
+  validates :code, uniqueness: { scope: [ :namespace, :catalog ] }
 
   def alias?
     code != canonical_code

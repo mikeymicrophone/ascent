@@ -3,16 +3,16 @@ class MunicipalitiesController < ApplicationController
 
   def index
     municipalities_scope = Municipality.with_office_data
-    
+
     # Filter by state if provided
     if params[:state_id].present?
       @state = State.find(params[:state_id])
       municipalities_scope = municipalities_scope.in_state(@state)
     end
-    
+
     @pagy, @municipalities = pagy(municipalities_scope)
     render Views::Municipalities::IndexView.new(
-      municipalities: @municipalities, 
+      municipalities: @municipalities,
       pagy: @pagy,
       filtered_state: @state
     )

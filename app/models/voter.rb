@@ -4,7 +4,7 @@ class Voter < ApplicationRecord
   devise :database_authenticatable, :confirmable, :registerable,
          :recoverable, :rememberable, :validatable, :trackable,
          :omniauthable, omniauth_providers: [ :google_oauth2 ]
-  
+
   has_many :residences, dependent: :destroy
   has_many :jurisdictions, through: :residences
   has_many :ratings, dependent: :destroy
@@ -12,15 +12,15 @@ class Voter < ApplicationRecord
   has_many :voter_race_baseline_archives, dependent: :delete_all
   has_many :engagements, dependent: :destroy
   has_many :voter_race_preferences, dependent: :delete_all
-  
+
   validates :first_name, presence: true
   validates :last_name, presence: true
   # validates :is_verified, inclusion: { in: [true, false] }
-  
+
   scope :with_voting_activity, -> {
     includes(:ratings, :voter_race_baselines,
-             ratings: { candidacy: { race: [:election, { office: :position }] } },
-             voter_race_baselines: { race: [:election, { office: :position }] })
+             ratings: { candidacy: { race: [ :election, { office: :position } ] } },
+             voter_race_baselines: { race: [ :election, { office: :position } ] })
   }
   scope :with_residence_details, -> { includes(residences: :jurisdiction) }
 
@@ -67,15 +67,15 @@ class Voter < ApplicationRecord
   def admin?
     admin
   end
-  
+
   def full_name
-    [first_name, last_name].compact.join(' ')
+    [ first_name, last_name ].compact.join(" ")
   end
-  
+
   def name
     full_name
   end
-  
+
   def race_preference(race)
     voter_race_preferences.find_by(race: race) || VoterRacePreference.new(voter: self, race: race)
   end
@@ -90,11 +90,10 @@ class Voter < ApplicationRecord
   end
 
   def current_residence
-    residences.where(status: 'active').first
+    residences.where(status: "active").first
   end
-  
+
   def residence_history
     residences.order(registered_at: :desc)
   end
-  
 end

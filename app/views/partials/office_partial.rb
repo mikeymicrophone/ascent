@@ -35,7 +35,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
         whitespace
         div(class: "formatted-text") { simple_format(@office.notes) }
       end
-      
+
       current_office_holder
       race_history
     end
@@ -44,7 +44,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
   def current_office_holder(office = @office)
     current_winner = office.current_office_holder
     return unless current_winner
-    
+
     div(class: "current-holder-section") do
       h4 { "Current Office Holder" }
       div(class: "current-holder-info") do
@@ -69,10 +69,10 @@ class Views::Partials::OfficePartial < Views::ApplicationView
         office.races.recent.includes(:election).limit(3).each do |race|
           race_details(race)
         end
-        
+
         if office.races.count > 3
           div(class: "elections-view-all") do
-            link_to "View all #{office.races.count} races", [office, :races], class: "link view-all"
+            link_to "View all #{office.races.count} races", [ office, :races ], class: "link view-all"
           end
         end
       end
@@ -95,13 +95,13 @@ class Views::Partials::OfficePartial < Views::ApplicationView
           end
         end
       end
-      
+
       if race.status == "completed"
         race_results(race)
       elsif race.status == "upcoming"
         race_schedule(race)
       end
-      
+
       voter_turnout_stats(race)
     end
   end
@@ -109,7 +109,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
   def race_results(race)
     results = race.approval_results
     return if results.empty?
-    
+
     div(class: "election-results") do
       h5 { "Results" }
       div(class: "results-list") do
@@ -128,7 +128,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
           end
         end
       end
-      
+
       if results.count > 3
         div(class: "more-results") do
           link_to "View full results", race, class: "link"
@@ -142,7 +142,7 @@ class Views::Partials::OfficePartial < Views::ApplicationView
       span(class: "schedule-label") { "Scheduled:" }
       whitespace
       span(class: "schedule-date") { race.election_date.to_fs(:display) }
-      
+
       days_until = (race.election_date - Date.current).to_i
       if days_until > 0
         span(class: "days-until") { " (#{days_until} days away)" }
@@ -154,9 +154,9 @@ class Views::Partials::OfficePartial < Views::ApplicationView
 
   def voter_turnout_stats(race)
     return unless race.status == "completed" && race.voter_race_baselines.any?
-    
+
     summary = race.results_summary
-    
+
     div(class: "turnout-stats") do
       h6 { "Voter Participation" }
       div(class: "stats-grid") do
@@ -166,5 +166,4 @@ class Views::Partials::OfficePartial < Views::ApplicationView
       end
     end
   end
-
 end

@@ -53,16 +53,15 @@ FactoryBot.define do
       description { "Historic buildings and cultural traditions are disappearing due to development pressures and lack of preservation funding." }
       association :topic, factory: :arts_culture_topic
     end
-    factory :affordable_housing_issue, traits: [:affordable_housing]
-    factory :school_funding_issue, traits: [:school_funding]
-    factory :traffic_congestion_issue, traits: [:traffic_congestion]
-    factory :healthcare_access_issue, traits: [:healthcare_access]
-    factory :unemployment_issue, traits: [:unemployment]
-    factory :environmental_pollution_issue, traits: [:environmental_pollution]
-    factory :government_transparency_issue, traits: [:government_corruption]
-    factory :senior_services_issue, traits: [:senior_services]
-    factory :infrastructure_decay_issue, traits: [:infrastructure_decay]
-    factory :cultural_preservation_issue, traits: [:cultural_preservation]
+    factory :affordable_housing_issue, traits: [ :affordable_housing ]
+    factory :school_funding_issue, traits: [ :school_funding ]
+    factory :traffic_congestion_issue, traits: [ :traffic_congestion ]
+    factory :healthcare_access_issue, traits: [ :healthcare_access ]
+    factory :unemployment_issue, traits: [ :unemployment ]
+    factory :environmental_pollution_issue, traits: [ :environmental_pollution ]
+    factory :government_transparency_issue, traits: [ :government_corruption ]
+    factory :senior_services_issue, traits: [ :senior_services ]
+    factory :infrastructure_decay_issue, traits: [ :infrastructure_decay ]
+    factory :cultural_preservation_issue, traits: [ :cultural_preservation ]
   end
 end
-

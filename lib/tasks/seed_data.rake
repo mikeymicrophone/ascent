@@ -30,7 +30,7 @@ namespace :seed_data do
     FileUtils.mkdir_p(target_root)
 
     copied_files = Dir.glob(source_root.join("**", "*"), File::FNM_DOTMATCH).filter_map do |path|
-      next if [".", ".."].include?(File.basename(path))
+      next if [ ".", ".." ].include?(File.basename(path))
       next if File.directory?(path)
 
       relative_path = Pathname(path).relative_path_from(source_root)

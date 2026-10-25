@@ -8,7 +8,7 @@ RSpec.describe "Voters Index", type: :request do
     context "with no voters" do
       it "renders successfully with empty state" do
         get voters_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Voters")
       end
@@ -21,7 +21,7 @@ RSpec.describe "Voters Index", type: :request do
 
       it "renders successfully with voter data" do
         get voters_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Voters")
         expect(response.body).to include("Sarah Johnson")
@@ -31,14 +31,14 @@ RSpec.describe "Voters Index", type: :request do
 
       it "displays voter verification status" do
         get voters_path
-        
+
         expect(response).to have_http_status(200)
         # Should show verification indicators
       end
 
       it "includes proper HTML structure for Phlex components" do
         get voters_path
-        
+
         expect(response.body).to include('class="')
         expect(response.body).to include("<div")
         expect(response.body).to include("</div>")
@@ -56,14 +56,14 @@ RSpec.describe "Voters Index", type: :request do
 
       it "displays voters with voting activity" do
         get voters_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Voters")
       end
 
       it "shows voting participation indicators" do
         get voters_path
-        
+
         expect(response).to have_http_status(200)
         # Should indicate voting activity
       end
@@ -76,14 +76,14 @@ RSpec.describe "Voters Index", type: :request do
 
       it "renders successfully with pagination" do
         get voters_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Voters")
       end
 
       it "respects page parameter" do
         get voters_path, params: { page: 2 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Voters")
       end
@@ -92,7 +92,7 @@ RSpec.describe "Voters Index", type: :request do
     context "error handling" do
       it "handles database errors gracefully" do
         allow(Voter).to receive(:with_voting_activity).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-        
+
         expect { get voters_path }.to raise_error(ActiveRecord::StatementInvalid)
       end
     end

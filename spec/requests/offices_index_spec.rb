@@ -5,7 +5,7 @@ RSpec.describe "Offices Index", type: :request do
     context "with no offices" do
       it "renders successfully with empty state" do
         get offices_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Offices")
       end
@@ -15,18 +15,18 @@ RSpec.describe "Offices Index", type: :request do
       let!(:country) { create(:country, :with_jurisdiction, name: "United States") }
       let!(:state) { create(:state, :with_jurisdiction, name: "California", country: country) }
       let!(:city) { create(:municipality, :with_jurisdiction, name: "San Francisco", state: state) }
-      
+
       let!(:mayor_position) { create(:position, title: "Mayor") }
       let!(:council_position) { create(:position, title: "City Council Member") }
       let!(:governor_position) { create(:position, title: "Governor") }
-      
+
       let!(:mayor_office) { create(:office, position: mayor_position, jurisdiction: city.jurisdiction, is_active: true) }
       let!(:council_office) { create(:office, position: council_position, jurisdiction: city.jurisdiction, is_active: true) }
       let!(:governor_office) { create(:office, position: governor_position, jurisdiction: state.jurisdiction, is_active: false) }
 
       it "renders successfully with office data" do
         get offices_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Offices")
         expect(response.body).to include("Mayor")
@@ -36,21 +36,21 @@ RSpec.describe "Offices Index", type: :request do
 
       it "displays jurisdiction information" do
         get offices_path
-        
+
         expect(response.body).to include("San Francisco")
         expect(response.body).to include("California")
       end
 
       it "displays office status information" do
         get offices_path
-        
+
         # Should indicate active/inactive status somehow
         expect(response).to have_http_status(200)
       end
 
       it "includes proper HTML structure for Phlex components" do
         get offices_path
-        
+
         expect(response.body).to include('class="')
         expect(response.body).to include("<div")
         expect(response.body).to include("</div>")
@@ -65,14 +65,14 @@ RSpec.describe "Offices Index", type: :request do
 
       it "displays election information" do
         get offices_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Offices")
       end
 
       it "shows election count or status" do
         get offices_path
-        
+
         expect(response).to have_http_status(200)
         # Should display election-related information
       end
@@ -82,14 +82,14 @@ RSpec.describe "Offices Index", type: :request do
       let!(:country) { create(:country, :with_jurisdiction, name: "United States") }
       let!(:state) { create(:state, :with_jurisdiction, name: "California", country: country) }
       let!(:city) { create(:municipality, :with_jurisdiction, name: "Los Angeles", state: state) }
-      
+
       let!(:federal_office) { create(:office, jurisdiction: country.jurisdiction) }
       let!(:state_office) { create(:office, jurisdiction: state.jurisdiction) }
       let!(:city_office) { create(:office, jurisdiction: city.jurisdiction) }
 
       it "displays offices from all jurisdiction levels" do
         get offices_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Offices")
         expect(response.body).to include("United States")
@@ -105,21 +105,21 @@ RSpec.describe "Offices Index", type: :request do
 
       it "renders successfully with pagination" do
         get offices_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Offices")
       end
 
       it "respects page parameter" do
         get offices_path, params: { page: 2 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Offices")
       end
 
       it "handles high page numbers gracefully" do
         get offices_path, params: { page: 999 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Offices")
       end
@@ -135,14 +135,14 @@ RSpec.describe "Offices Index", type: :request do
 
       it "displays candidate information when available" do
         get offices_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Offices")
       end
 
       it "shows electoral activity indicators" do
         get offices_path
-        
+
         expect(response).to have_http_status(200)
         # Should indicate that office has active election or candidates
       end
@@ -155,7 +155,7 @@ RSpec.describe "Offices Index", type: :request do
 
     it "handles status filtering if implemented" do
       get offices_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Offices")
     end
@@ -163,9 +163,9 @@ RSpec.describe "Offices Index", type: :request do
     it "handles jurisdiction type filtering if implemented" do
       city_office = create(:office, :city_level)
       state_office = create(:office, :state_level)
-      
+
       get offices_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Offices")
     end
@@ -174,15 +174,15 @@ RSpec.describe "Offices Index", type: :request do
   context "error handling" do
     it "handles database errors gracefully" do
       allow(Office).to receive(:with_elections_and_candidates).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-      
+
       expect { get offices_path }.to raise_error(ActiveRecord::StatementInvalid)
     end
 
     it "handles valid parameters correctly" do
       create_list(:office, 5)
-      
+
       get offices_path, params: { page: 1 }
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Offices")
     end
@@ -192,9 +192,9 @@ RSpec.describe "Offices Index", type: :request do
       office = create(:office)
       race = create_race_for(office)
       candidacy = create(:candidacy, race: race)
-      
+
       get offices_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Offices")
     end
@@ -212,7 +212,7 @@ RSpec.describe "Offices Index", type: :request do
 
     it "renders successfully with complex office data" do
       get offices_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Offices")
     end
@@ -221,9 +221,9 @@ RSpec.describe "Offices Index", type: :request do
       office = create(:office)
       create_race_for(office, :completed)
       create_race_for(office, :upcoming)
-      
+
       get offices_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Offices")
     end

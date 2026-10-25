@@ -20,7 +20,7 @@ class Views::Partials::ElectionPartial < Views::ApplicationView
           end
         end
       end
-      
+
       div(class: "partial-content") do
         div(class: "info-grid") do
           div(class: "info-item") do
@@ -37,14 +37,14 @@ class Views::Partials::ElectionPartial < Views::ApplicationView
           end
           early_voting_period if @election.early_voting_starts_on || @election.early_voting_ends_on
         end
-        
+
         if @election.description.present?
           div(class: "content-section") do
             div(class: "content-description") { simple_format(@election.description) }
           end
         end
       end
-      
+
       div(class: "expandable-sections") do
         expandable(@election, :races, title: "Races") do |races|
           div(class: "expandable-grid") do

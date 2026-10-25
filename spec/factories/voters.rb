@@ -52,11 +52,11 @@ FactoryBot.define do
     end
 
     # Named factories for common scenarios
-    factory :verified_voter, traits: [:verified]
-    factory :unverified_voter, traits: [:unverified]
-    factory :experienced_voter, traits: [:experienced]
-    factory :student_voter, traits: [:student]
-    factory :mobile_voter, traits: [:mobile]
-    factory :admin_voter, traits: [:admin]
+    factory :verified_voter, traits: [ :verified ]
+    factory :unverified_voter, traits: [ :unverified ]
+    factory :experienced_voter, traits: [ :experienced ]
+    factory :student_voter, traits: [ :student ]
+    factory :mobile_voter, traits: [ :mobile ]
+    factory :admin_voter, traits: [ :admin ]
   end
 end

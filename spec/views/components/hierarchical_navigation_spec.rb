@@ -4,7 +4,7 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
   let!(:country) { create(:country, name: "United States") }
   let!(:state) { create(:state, country: country, name: "California") }
   let!(:city) { create(:municipality, :with_jurisdiction, state: state, name: "San Francisco") }
-  
+
   def render_component(component)
     view_context.render(component)
   end
@@ -92,9 +92,9 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
     context 'with voter and office data' do
       let!(:office) { create(:office, jurisdiction: city.jurisdiction) }
       let!(:voter_residence) { create(:residence, jurisdiction: city.jurisdiction) }
-      let!(:voter) { create(:voter, residences: [voter_residence]) }
+      let!(:voter) { create(:voter, residences: [ voter_residence ]) }
       let!(:race) { create_race_for(office, :active) }
-      
+
       let(:component) { described_class.new(current_object: city, show_stats: true) }
       let(:rendered) { render_component(component) }
 
@@ -196,7 +196,7 @@ RSpec.describe Views::Components::HierarchicalNavigation, type: :view do
       let!(:state2) { create(:state, country: country, name: "Texas") }
       let!(:city2) { create(:municipality, state: state, name: "Los Angeles") }
       let!(:city3) { create(:municipality, state: state2, name: "Houston") }
-      
+
       let(:component) { described_class.new(current_object: country) }
       let(:rendered) { render_component(component) }
 

@@ -5,7 +5,7 @@ RSpec.describe "Policies Index", type: :request do
     context "with no policies" do
       it "renders successfully with empty state" do
         get policies_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Policies")
       end
@@ -18,7 +18,7 @@ RSpec.describe "Policies Index", type: :request do
 
       it "renders successfully with policy data" do
         get policies_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Policies")
         expect(response.body).to include("Healthcare Reform")
@@ -28,7 +28,7 @@ RSpec.describe "Policies Index", type: :request do
 
       it "displays policy summaries" do
         get policies_path
-        
+
         expect(response.body).to include("Expanding access")
         expect(response.body).to include("Increasing investment")
         expect(response.body).to include("Modernizing transportation")
@@ -36,7 +36,7 @@ RSpec.describe "Policies Index", type: :request do
 
       it "includes proper HTML structure for Phlex components" do
         get policies_path
-        
+
         expect(response.body).to include('class="')
         expect(response.body).to include("<div")
         expect(response.body).to include("</div>")
@@ -50,14 +50,14 @@ RSpec.describe "Policies Index", type: :request do
 
       it "renders successfully with pagination" do
         get policies_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Policies")
       end
 
       it "respects page parameter" do
         get policies_path, params: { page: 2 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Policies")
       end
@@ -66,7 +66,7 @@ RSpec.describe "Policies Index", type: :request do
     context "error handling" do
       it "handles database errors gracefully" do
         allow(Policy).to receive(:all).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-        
+
         expect { get policies_path }.to raise_error(ActiveRecord::StatementInvalid)
       end
     end

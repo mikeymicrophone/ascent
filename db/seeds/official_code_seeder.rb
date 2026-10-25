@@ -13,7 +13,7 @@ class OfficialCodeSeeder
         penalty_structure: "Violation: $1,000 per day until compliance achieved. False certification: $10,000 fine plus compliance costs. Repeat violations: Additional $5,000 penalty and potential permit suspension.",
         status: "active"
       },
-      
+
       # Transportation Policy Implementation
       {
         policy_title: "Complete Streets Ordinance",
@@ -25,8 +25,8 @@ class OfficialCodeSeeder
         penalty_structure: "Non-compliance delays: $500 per day construction delay. Design deficiencies: Correction at contractor expense. Willful violations: $2,500 fine plus correction costs.",
         status: "active"
       },
-      
-      # Environmental Policy Implementation  
+
+      # Environmental Policy Implementation
       {
         policy_title: "Climate Action and Resilience Plan",
         code_number: "Environmental Code 18.3.5",
@@ -37,10 +37,10 @@ class OfficialCodeSeeder
         penalty_structure: "Building code violations: $500 per day until compliance. False reporting: $2,500 fine. Non-compliance with renewable energy: $10,000 per project plus installation requirement.",
         status: "active"
       },
-      
+
       # Economic Development Policy Implementation
       {
-        policy_title: "Local Business Development Incentives", 
+        policy_title: "Local Business Development Incentives",
         code_number: "Business Code 5.2.7",
         title: "Small Business Development Incentives",
         full_text: "Section 5.2.7 - Local Business Support Program\n\n(a) Purpose: To encourage local business development and job creation through regulatory and financial incentives.\n\n(b) Eligible Businesses: Businesses with fewer than 50 employees, locally owned and operated, providing goods or services within the city.\n\n(c) Available Incentives:\n  (1) 50% reduction in business license fees for first year\n  (2) Expedited permitting for qualifying projects\n  (3) Free technical assistance and business counseling\n  (4) Access to revolving loan fund at below-market rates\n  (5) Preference in city procurement under $25,000\n\n(d) Application Process: Submit application with business plan, financial projections, and job creation estimates. Quarterly progress reports required.\n\n(e) Performance Standards: Must create minimum 2 full-time equivalent jobs within 18 months and maintain operations for minimum 3 years.",
@@ -49,11 +49,11 @@ class OfficialCodeSeeder
         penalty_structure: "Failure to meet job targets: Proportional incentive repayment. False information: Full incentive repayment plus $2,500 penalty. Early closure: Pro-rated incentive repayment.",
         status: "active"
       },
-      
+
       # Public Safety Policy Implementation
       {
         policy_title: "Community Safety and Accountability Act",
-        code_number: "Police Code 9.1.15", 
+        code_number: "Police Code 9.1.15",
         title: "Community Policing and Accountability Standards",
         full_text: "Section 9.1.15 - Community Policing Requirements\n\n(a) Community Engagement: Each patrol district must hold monthly community meetings with residents and business owners.\n\n(b) Bias Training: All officers must complete 40 hours of bias awareness and cultural competency training annually.\n\n(c) De-escalation: Officers must attempt de-escalation techniques before using force, except in immediate threat situations.\n\n(d) Civilian Oversight: Independent oversight board with subpoena power reviews all use of force incidents and civilian complaints.\n\n(e) Data Collection: Department must collect and publicly report data on traffic stops, searches, arrests, and use of force by officer demographics and incident characteristics.\n\n(f) Body Cameras: All officers must wear activated body cameras during public interactions with automatic activation triggers.\n\n(g) Crisis Response: Mental health professionals must respond to mental health crisis calls with police backup.",
         summary: "Establishes community policing requirements, oversight mechanisms, training standards, and data collection. Mandates body cameras and specialized crisis response protocols.",
@@ -61,7 +61,7 @@ class OfficialCodeSeeder
         penalty_structure: "Training non-compliance: Officer suspension until completion. Policy violations: Progressive discipline per collective bargaining agreement. Equipment violations: $100 fine per incident.",
         status: "active"
       },
-      
+
       # Healthcare Policy Implementation
       {
         policy_title: "Universal Healthcare Access Initiative",
@@ -73,7 +73,7 @@ class OfficialCodeSeeder
         penalty_structure: "Staffing violations: $1,000 per day below minimum. Access standard failures: $500 per documented delay. Quality benchmark failures: Performance improvement plan required.",
         status: "active"
       },
-      
+
       # Education Policy Implementation
       {
         policy_title: "Universal Pre-K and Early Learning Program",
@@ -85,7 +85,7 @@ class OfficialCodeSeeder
         penalty_structure: "Qualification violations: Teacher reassignment until certification obtained. Class size violations: $200 per day per student over limit. Curriculum non-compliance: Professional development required.",
         status: "active"
       },
-      
+
       # Water Quality Policy Implementation
       {
         policy_title: "Water Quality Protection Standards",
@@ -97,7 +97,7 @@ class OfficialCodeSeeder
         penalty_structure: "Discharge violations: $5,000 per day per violation. Buffer zone violations: $1,000 fine plus restoration costs. Monitoring failures: $500 per missed sample.",
         status: "active"
       },
-      
+
       # Superseded Code Example
       {
         policy_title: "Minimum Parking Requirements (Repealed)",
@@ -110,7 +110,7 @@ class OfficialCodeSeeder
         status: "superseded"
       }
     ]
-    
+
     code_configurations.each do |config|
       # Find policy by title
       policy = Policy.find_by(title: config[:policy_title])
@@ -118,7 +118,7 @@ class OfficialCodeSeeder
         puts "\n❌ Policy not found: #{config[:policy_title]}"
         next
       end
-      
+
       # Create the official code
       official_code = OfficialCode.find_or_create_by(
         code_number: config[:code_number],
@@ -132,7 +132,7 @@ class OfficialCodeSeeder
         oc.effective_date = policy.enacted_date || 2.years.ago
         oc.status = config[:status]
       end
-      
+
       if official_code.persisted?
         print "."
       else
@@ -140,7 +140,7 @@ class OfficialCodeSeeder
         puts "   Errors: #{official_code.errors.full_messages.join(', ')}"
       end
     end
-    
+
     puts " #{OfficialCode.count} official codes"
   end
 end

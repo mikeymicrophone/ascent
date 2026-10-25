@@ -1,10 +1,10 @@
 class VoterSeeder
   def self.seed
     voters_data = YAML.load_file(SimulatedSeedDataPaths.file("voters.yml"))
-    
+
     voters_data.each do |voter_data|
       voter = Voter.find_or_initialize_by(email: voter_data["email"])
-      
+
       if voter.new_record?
         voter.assign_attributes(
           first_name: voter_data["first_name"],
@@ -24,7 +24,7 @@ class VoterSeeder
         end
       end
     end
-    
+
     puts "Seeded #{Voter.count} voters"
   end
 end

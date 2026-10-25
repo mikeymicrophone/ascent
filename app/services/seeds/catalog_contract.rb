@@ -30,7 +30,7 @@ module Seeds
       allowed = allowed_values(model, column.name)
       schema = if allowed
                  { "type" => "string", "enum" => allowed }
-               else
+      else
                  case column.type
                  when :integer, :bigint then { "type" => "integer" }
                  when :float, :decimal then { "type" => "number" }
@@ -40,7 +40,7 @@ module Seeds
                  when :json, :jsonb then {}
                  else { "type" => "string" }
                  end
-               end
+      end
       schema = { "type" => "array", "items" => schema } if column.respond_to?(:array) && column.array
       column.null && !schema.empty? ? { "anyOf" => [ schema, { "type" => "null" } ] } : schema
     end

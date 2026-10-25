@@ -10,7 +10,7 @@ module SeedDataPaths
   end
 
   def roots
-    [primary_root, legacy_root]
+    [ primary_root, legacy_root ]
   end
 
   def file(*parts)

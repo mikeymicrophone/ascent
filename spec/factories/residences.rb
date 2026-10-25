@@ -31,20 +31,20 @@ FactoryBot.define do
     end
 
     trait :in_state do
-      association :jurisdiction, factory: [:jurisdiction, :state]
+      association :jurisdiction, factory: [ :jurisdiction, :state ]
       notes { "State-level residence registration" }
     end
 
     trait :in_country do
-      association :jurisdiction, factory: [:jurisdiction, :country]
+      association :jurisdiction, factory: [ :jurisdiction, :country ]
       notes { "Country-level residence registration for national elections" }
     end
 
     # Commonly used combinations
-    factory :active_city_residence, traits: [:active]
-    factory :inactive_residence, traits: [:inactive]
-    factory :moved_residence, traits: [:moved]
-    factory :state_residence, traits: [:active, :in_state]
-    factory :country_residence, traits: [:active, :in_country]
+    factory :active_city_residence, traits: [ :active ]
+    factory :inactive_residence, traits: [ :inactive ]
+    factory :moved_residence, traits: [ :moved ]
+    factory :state_residence, traits: [ :active, :in_state ]
+    factory :country_residence, traits: [ :active, :in_country ]
   end
 end

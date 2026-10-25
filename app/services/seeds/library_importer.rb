@@ -366,11 +366,11 @@ module Seeds
     # A place nests under the jurisdiction of the place that contains it; a District's comes from its state scope.
     def jurisdiction_parent(record, desired)
       parent_owner = case record.type
-                     when "State" then desired["country"]
-                     when "County" then desired["state"]
-                     when "Municipality" then desired["county"] || desired["state"]
-                     when "District" then (scoped_owner("State", "state", record) if record.scope["state"])
-                     end
+      when "State" then desired["country"]
+      when "County" then desired["state"]
+      when "Municipality" then desired["county"] || desired["state"]
+      when "District" then (scoped_owner("State", "state", record) if record.scope["state"])
+      end
       parent_owner && jurisdiction_of(parent_owner)
     end
 
@@ -379,10 +379,10 @@ module Seeds
       return owner.jurisdiction if owner.jurisdiction
 
       parent_owner = case owner
-                     when State then owner.country
-                     when County then owner.state
-                     when Municipality then owner.county || owner.state
-                     end
+      when State then owner.country
+      when County then owner.state
+      when Municipality then owner.county || owner.state
+      end
       owner.create_jurisdiction!(parent: parent_owner && jurisdiction_of(parent_owner))
     end
 

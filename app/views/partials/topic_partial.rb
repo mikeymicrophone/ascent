@@ -14,7 +14,7 @@ class Views::Partials::TopicPartial < Views::ApplicationView
         whitespace
         div(class: "formatted-text") { simple_format(@topic.description) }
       end
-      
+
       expandable(@topic, :issues) do |issues|
         issues.each { IssuePartial(issue: it, show_topic: false, show_approaches: true) }
       end

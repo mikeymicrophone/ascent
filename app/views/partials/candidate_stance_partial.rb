@@ -11,18 +11,18 @@ class Views::Partials::CandidateStancePartial < Views::ApplicationView
         end
         span(class: "stance-priority-badge stance-priority-#{@stance.priority_level}") { @stance.priority_level.capitalize }
       end
-      
+
       div(class: "stance-approach") do
         span(class: "stance-label") { "Supports: " }
         link_to @stance.approach.title, @stance.approach, class: "stance-approach-link"
       end
-      
+
       if @stance.explanation.present?
         div(class: "stance-explanation") do
           p(class: "stance-explanation-text") { @stance.explanation }
         end
       end
-      
+
       if @stance.evidence_links.present?
         div(class: "stance-evidence") do
           span(class: "stance-label") { "Evidence: " }

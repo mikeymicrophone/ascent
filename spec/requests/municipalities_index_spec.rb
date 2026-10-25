@@ -5,7 +5,7 @@ RSpec.describe "Municipalities Index", type: :request do
     context "with no cities" do
       it "renders successfully with empty state" do
         get municipalities_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Municipalities")
       end
@@ -15,7 +15,7 @@ RSpec.describe "Municipalities Index", type: :request do
       let!(:usa) { create(:country, name: "United States") }
       let!(:california) { create(:state, name: "California", country: usa) }
       let!(:texas) { create(:state, name: "Texas", country: usa) }
-      
+
       let!(:los_angeles) { create(:municipality, name: "Los Angeles", state: california) }
       let!(:san_francisco) { create(:municipality, name: "San Francisco", state: california) }
       let!(:houston) { create(:municipality, name: "Houston", state: texas) }
@@ -23,7 +23,7 @@ RSpec.describe "Municipalities Index", type: :request do
 
       it "renders successfully with city data" do
         get municipalities_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Municipalities")
         expect(response.body).to include("Los Angeles")
@@ -34,20 +34,20 @@ RSpec.describe "Municipalities Index", type: :request do
 
       it "displays associated state information" do
         get municipalities_path
-        
+
         expect(response.body).to include("California")
         expect(response.body).to include("Texas")
       end
 
       it "displays country context through state" do
         get municipalities_path
-        
+
         expect(response.body).to include("United States")
       end
 
       it "includes proper HTML structure for Phlex components" do
         get municipalities_path
-        
+
         expect(response.body).to include('class="')
         expect(response.body).to include("<div")
         expect(response.body).to include("</div>")
@@ -64,7 +64,7 @@ RSpec.describe "Municipalities Index", type: :request do
 
       it "displays office and election information" do
         get municipalities_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("San Francisco")
       end
@@ -72,28 +72,28 @@ RSpec.describe "Municipalities Index", type: :request do
 
     context "with pagination" do
       let!(:state) { create(:state) }
-      
+
       before do
         create_list(:municipality, 30, state: state)
       end
 
       it "renders successfully with pagination" do
         get municipalities_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Municipalities")
       end
 
       it "respects page parameter" do
         get municipalities_path, params: { page: 2 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Municipalities")
       end
 
       it "handles high page numbers gracefully" do
         get municipalities_path, params: { page: 999 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Municipalities")
       end
@@ -109,14 +109,14 @@ RSpec.describe "Municipalities Index", type: :request do
 
     it "renders cities scoped to specific state" do
       get state_municipalities_path(california)
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Municipalities")
     end
 
     it "shows state context information" do
       get state_municipalities_path(california)
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("California")
     end
@@ -130,9 +130,9 @@ RSpec.describe "Municipalities Index", type: :request do
     it "handles pagination for state-scoped cities" do
       # Create many cities for California
       create_list(:municipality, 30, state: california)
-      
+
       get state_municipalities_path(california), params: { page: 2 }
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Municipalities")
     end
@@ -152,7 +152,7 @@ RSpec.describe "Municipalities Index", type: :request do
 
     it "displays cities with different office counts" do
       get municipalities_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Major City")
       expect(response.body).to include("Small Town")
@@ -162,16 +162,16 @@ RSpec.describe "Municipalities Index", type: :request do
   context "error handling" do
     it "handles database errors gracefully" do
       allow(Municipality).to receive(:with_office_data).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-      
+
       expect { get municipalities_path }.to raise_error(ActiveRecord::StatementInvalid)
     end
 
     it "handles valid parameters correctly" do
       state = create(:state)
       create_list(:municipality, 5, state: state)
-      
+
       get municipalities_path, params: { page: 1 }
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Municipalities")
     end
@@ -179,10 +179,10 @@ RSpec.describe "Municipalities Index", type: :request do
     it "handles filter parameters when implemented" do
       state = create(:state, name: "California")
       create(:municipality, name: "Los Angeles", state: state)
-      
+
       # Test without filter parameters (base functionality)
       get municipalities_path
-      
+
       expect(response).to have_http_status(200)
       expect(response.body).to include("Municipalities")
     end

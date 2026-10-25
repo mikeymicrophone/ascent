@@ -16,17 +16,17 @@ class Views::Mountains::MountainChart < Views::ApplicationView
     elsif @mountain_data
       populate_from_mountain_data
     end
-    
+
     div(class: chart_classes, data: chart_data) do
       YAxisLabels()
-      
+
       div(class: "chart-content") do
         BaselineIndicator(
           baseline_value: baseline_value,
           baseline_set: baseline_set?,
           editable: @editable
         ) if show_baseline?
-        
+
         div(class: "candidate-columns") do
           @candidacies.each do |candidacy_data|
             CandidateColumn(
@@ -60,7 +60,7 @@ class Views::Mountains::MountainChart < Views::ApplicationView
 
   def populate_from_mountain_data
     return unless @mountain_data
-    
+
     @mountain_data.each do |data|
       candidacy(
         data[:candidacy],
@@ -95,7 +95,7 @@ class Views::Mountains::MountainChart < Views::ApplicationView
   end
 
   def chart_classes
-    classes = ["mountain-chart"]
+    classes = [ "mountain-chart" ]
     classes << "editable" if @editable
     classes.join(" ")
   end

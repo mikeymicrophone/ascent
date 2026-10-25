@@ -11,20 +11,20 @@ RSpec.describe "Candidate Management", type: :system do
   let!(:governor) { create(:position, title: "Governor", description: "Chief executive of the state") }
   let!(:office) { create(:office, position: governor, jurisdiction: california.jurisdiction) }
   let!(:race) { create_race_for(office, :upcoming, year: year) }
-  
+
   let!(:person) { create(:person, first_name: "Sarah", middle_name: nil, last_name: "Martinez", bio: "Experienced public servant") }
 
   describe "person registration and candidacy announcement" do
     it "shows person profiles in the system" do
       visit people_path
-      
+
       expect(page).to have_content("People")
       expect(page).to have_content("Sarah Martinez")
     end
 
     it "displays person biographical information" do
       visit person_path(person)
-      
+
       expect(page).to have_content("Sarah Martinez")
       expect(page).to have_content("Experienced public servant")
     end
@@ -34,7 +34,7 @@ RSpec.describe "Candidate Management", type: :system do
 
       it "shows candidacy in the candidacies listing" do
         visit candidacies_path
-        
+
         expect(page).to have_content("Candidacies")
         expect(page).to have_content("Sarah Martinez")
         expect(page).to have_content("Governor")
@@ -42,7 +42,7 @@ RSpec.describe "Candidate Management", type: :system do
 
       it "displays candidacy details" do
         visit candidacy_path(candidacy)
-        
+
         expect(page).to have_content("Sarah Martinez")
         expect(page).to have_content("Governor - California")
         expect(page).to have_content("announced")
@@ -51,12 +51,12 @@ RSpec.describe "Candidate Management", type: :system do
       it "shows candidacy status transitions" do
         # Start as announced
         expect(candidacy.status).to eq("announced")
-        
+
         # Can transition to active
         candidacy.update!(status: "active")
         visit candidacy_path(candidacy)
         expect(page).to have_content("active")
-        
+
         # Can transition to withdrawn
         candidacy.update!(status: "withdrawn")
         visit candidacy_path(candidacy)
@@ -69,14 +69,14 @@ RSpec.describe "Candidate Management", type: :system do
     let!(:candidate1) { create(:person, first_name: "Alice", middle_name: nil, last_name: "Johnson") }
     let!(:candidate2) { create(:person, first_name: "Bob", middle_name: nil, last_name: "Wilson") }
     let!(:candidate3) { create(:person, first_name: "Carol", middle_name: nil, last_name: "Davis") }
-    
+
     let!(:candidacy1) { create(:candidacy, :active, person: candidate1, race: race) }
     let!(:candidacy2) { create(:candidacy, :active, person: candidate2, race: race) }
     let!(:candidacy3) { create(:candidacy, :withdrawn, person: candidate3, race: race) }
 
     it "shows all candidates for a race" do
       visit race_path(race)
-      
+
       # Candidates render inside a collapsed expandable section.
       expect(page).to have_text(:all, "Alice Johnson")
       expect(page).to have_text(:all, "Bob Wilson")
@@ -85,7 +85,7 @@ RSpec.describe "Candidate Management", type: :system do
 
     it "differentiates candidate statuses" do
       visit candidacies_path
-      
+
       # Should show different statuses
       expect(page).to have_content("active")
       expect(page).to have_content("withdrawn")
@@ -95,7 +95,7 @@ RSpec.describe "Candidate Management", type: :system do
       active_candidacies = race.candidacies.active
       expect(active_candidacies).to include(candidacy1, candidacy2)
       expect(active_candidacies).not_to include(candidacy3)
-      
+
       withdrawn_candidacies = race.candidacies.withdrawn
       expect(withdrawn_candidacies).to include(candidacy3)
       expect(withdrawn_candidacies).not_to include(candidacy1, candidacy2)
@@ -123,7 +123,7 @@ RSpec.describe "Candidate Management", type: :system do
         baseline_250 = 250
         expect(candidacy.approval_count(baseline_250)).to eq(2) # 450 and 300 are > 250
         expect(candidacy.approval_percentage(baseline_250)).to eq(66.7) # 2/3 = 66.67%, rounded to 66.7%
-        
+
         baseline_350 = 350
         expect(candidacy.approval_count(baseline_350)).to eq(1) # Only 450 is > 350
         expect(candidacy.approval_percentage(baseline_350)).to eq(33.3) # 1/3 = 33.33%, rounded to 33.3%
@@ -132,7 +132,7 @@ RSpec.describe "Candidate Management", type: :system do
       it "displays rating information in the system" do
         sign_in create(:voter, admin: true)
         visit ratings_path
-        
+
         expect(page).to have_content("450")
         expect(page).to have_content("300")
         expect(page).to have_content("200")
@@ -145,14 +145,14 @@ RSpec.describe "Candidate Management", type: :system do
 
     it "shows office and position information" do
       visit offices_path
-      
+
       expect(page).to have_content("California")
       expect(page).to have_content("Governor")
     end
 
     it "shows position descriptions" do
       visit positions_path
-      
+
       expect(page).to have_content("Governor")
       expect(page).to have_content("Chief executive")
     end

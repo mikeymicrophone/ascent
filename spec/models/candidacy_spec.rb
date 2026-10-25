@@ -53,7 +53,7 @@ RSpec.describe Candidacy, type: :model do
 
     describe '.with_election_context' do
       it 'includes election, office, and position details' do
-        expect(Candidacy.with_election_context.includes_values).to include(race: [:election, { office: :position }])
+        expect(Candidacy.with_election_context.includes_values).to include(race: [ :election, { office: :position } ])
       end
     end
   end
@@ -142,7 +142,7 @@ RSpec.describe Candidacy, type: :model do
 
       context 'with no ratings' do
         let(:candidacy_no_ratings) { create(:candidacy) }
-        
+
         it 'returns 0' do
           expect(candidacy_no_ratings.approval_percentage(250)).to eq(0)
         end
@@ -170,7 +170,7 @@ RSpec.describe Candidacy, type: :model do
 
       context 'with fractional percentage' do
         let!(:rating5) { create(:rating, candidacy: candidacy, rating: 250) }
-        
+
         it 'rounds to 1 decimal place' do
           # 2 out of 5 ratings are > 250 = 40%
           expect(candidacy.approval_percentage(250)).to eq(40.0)

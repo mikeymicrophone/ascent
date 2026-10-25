@@ -16,26 +16,26 @@ class Candidacy < ApplicationRecord
   # A general's off-ballot candidacy for someone who ran in a primary for its nomination.
   belongs_to :primary_candidacy, class_name: "Candidacy", optional: true, inverse_of: :general_candidacies
   has_many :general_candidacies, class_name: "Candidacy", foreign_key: :primary_candidacy_id, dependent: :destroy, inverse_of: :primary_candidacy
-  
+
   validates :status, presence: true, inclusion: { in: %w[announced active withdrawn disqualified] }
   # Whether a simulated slate includes the candidacy; separate from its official status.
   validates :participation, inclusion: { in: %w[active inactive off_ballot] }
-  
-  scope :announced, -> { where(status: 'announced') }
-  scope :active, -> { where(status: 'active') }
-  scope :withdrawn, -> { where(status: 'withdrawn') }
-  scope :disqualified, -> { where(status: 'disqualified') }
+
+  scope :announced, -> { where(status: "announced") }
+  scope :active, -> { where(status: "active") }
+  scope :withdrawn, -> { where(status: "withdrawn") }
+  scope :disqualified, -> { where(status: "disqualified") }
   scope :still_running, -> { where.not(status: %w[withdrawn disqualified]) }
   scope :from_primaries, -> { where.not(primary_candidacy_id: nil) }
   scope :not_from_primaries, -> { where(primary_candidacy_id: nil) }
-  
+
   scope :with_rating_details, -> { includes(:person, :ratings, :ballot_lines) }
-  scope :with_election_context, -> { includes(race: [:election, { office: :position }]) }
-  
+  scope :with_election_context, -> { includes(race: [ :election, { office: :position } ]) }
+
   def name
     "#{person.full_name} for #{office.position.title}"
   end
-  
+
   # The printed labels, in ballot order, for display.
   def ballot_labels
     ballot_lines.map(&:label).join("; ").presence
@@ -54,12 +54,12 @@ class Candidacy < ApplicationRecord
   def average_rating
     ratings.average(:rating)&.round(1)
   end
-  
+
   def approval_count(baseline = nil)
     return 0 unless baseline
     ratings.above_baseline(baseline).count
   end
-  
+
   def approval_percentage(baseline = nil)
     return 0 if ratings.count == 0 || baseline.nil?
     (approval_count(baseline).to_f / ratings.count * 100).round(1)

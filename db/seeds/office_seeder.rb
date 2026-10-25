@@ -2,21 +2,21 @@ class OfficeSeeder
   def self.seed
     # Positions are seeded separately, but we can ensure jurisdictions exist
     # (Countries and States should already be seeded by the main seed file)
-    
+
     # Create some example offices
     create_federal_offices
     create_state_offices
     create_local_offices
-    
+
     puts "Seeded #{Office.count} offices"
   end
-  
+
   private
-  
+
   def self.create_federal_offices
     us = Country.find_by(name: "United States")
     return unless us
-    
+
     president_position = Position.find_by(title: "President")
     if president_position
       office = Office.find_or_create_by(
@@ -29,12 +29,12 @@ class OfficeSeeder
       place_in_body(office, "Executive Office of the President")
     end
   end
-  
+
   def self.create_state_offices
     # Create Governor offices for each state
     governor_position = Position.find_by(title: "Governor")
     return unless governor_position
-    
+
     State.find_each do |state|
       office = Office.find_or_create_by(
         position: governor_position,
@@ -45,7 +45,7 @@ class OfficeSeeder
       end
       place_in_body(office, "Office of the Governor of #{state.name}")
     end
-    
+
     # Create Senator offices (2 per state)
     senator_position = Position.find_by(title: "Senator")
     if senator_position
@@ -63,7 +63,7 @@ class OfficeSeeder
       end
     end
   end
-  
+
   def self.create_local_offices
     # Create Mayor and Council Member offices for some major cities
     mayor_position = Position.find_by(title: "Mayor")
@@ -71,7 +71,7 @@ class OfficeSeeder
     return unless mayor_position
 
     # Find some municipalities to create local offices for
-    ["Los Angeles", "New York City", "Chicago", "Houston", "Phoenix"].each do |city_name|
+    [ "Los Angeles", "New York City", "Chicago", "Houston", "Phoenix" ].each do |city_name|
       city = Municipality.find_by(name: city_name)
       next unless city
 

@@ -24,7 +24,6 @@ require 'rails_helper'
 # `rails-controller-testing` gem.
 
 RSpec.describe ApproachesController, type: :controller do
-
   # This should return the minimal set of attributes required to create a valid
   # Approach. As you add validations to Approach, be sure to
   # adjust the attributes here as well.
@@ -52,7 +51,7 @@ RSpec.describe ApproachesController, type: :controller do
   describe "GET #show" do
     it "returns a success response" do
       approach = Approach.create! valid_attributes
-      get :show, params: {id: approach.to_param}, session: valid_session
+      get :show, params: { id: approach.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -70,7 +69,7 @@ RSpec.describe ApproachesController, type: :controller do
   describe "GET #edit" do
     it "returns a success response" do
       approach = Approach.create! valid_attributes
-      get :edit, params: {id: approach.to_param}, session: valid_session
+      get :edit, params: { id: approach.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -79,19 +78,19 @@ RSpec.describe ApproachesController, type: :controller do
     context "with valid params" do
       it "creates a new Approach" do
         expect {
-          post :create, params: {approach: valid_attributes}, session: valid_session
+          post :create, params: { approach: valid_attributes }, session: valid_session
         }.to change(Approach, :count).by(1)
       end
 
       it "redirects to the created approach" do
-        post :create, params: {approach: valid_attributes}, session: valid_session
+        post :create, params: { approach: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Approach.last)
       end
     end
 
     context "with invalid params" do
       it "renders a response with 422 status (i.e. to display the 'new' template)" do
-        post :create, params: {approach: invalid_attributes}, session: valid_session
+        post :create, params: { approach: invalid_attributes }, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -105,14 +104,14 @@ RSpec.describe ApproachesController, type: :controller do
 
       it "updates the requested approach" do
         approach = Approach.create! valid_attributes
-        put :update, params: {id: approach.to_param, approach: new_attributes}, session: valid_session
+        put :update, params: { id: approach.to_param, approach: new_attributes }, session: valid_session
         approach.reload
         skip("Add assertions for updated state")
       end
 
       it "redirects to the approach" do
         approach = Approach.create! valid_attributes
-        put :update, params: {id: approach.to_param, approach: new_attributes}, session: valid_session
+        put :update, params: { id: approach.to_param, approach: new_attributes }, session: valid_session
         expect(response).to redirect_to(approach)
       end
     end
@@ -120,7 +119,7 @@ RSpec.describe ApproachesController, type: :controller do
     context "with invalid params" do
       it "renders a response with 422 status (i.e. to display the 'edit' template)" do
         approach = Approach.create! valid_attributes
-        put :update, params: {id: approach.to_param, approach: invalid_attributes}, session: valid_session
+        put :update, params: { id: approach.to_param, approach: invalid_attributes }, session: valid_session
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -130,15 +129,14 @@ RSpec.describe ApproachesController, type: :controller do
     it "destroys the requested approach" do
       approach = Approach.create! valid_attributes
       expect {
-        delete :destroy, params: {id: approach.to_param}, session: valid_session
+        delete :destroy, params: { id: approach.to_param }, session: valid_session
       }.to change(Approach, :count).by(-1)
     end
 
     it "redirects to the approaches list" do
       approach = Approach.create! valid_attributes
-      delete :destroy, params: {id: approach.to_param}, session: valid_session
+      delete :destroy, params: { id: approach.to_param }, session: valid_session
       expect(response).to redirect_to(approaches_url)
     end
   end
-
 end

@@ -22,14 +22,14 @@ class Views::Mountains::RatingDot < Views::Components::Base
   private
 
   def rating_dot_classes
-    classes = ["rating-dot"]
-    
+    classes = [ "rating-dot" ]
+
     if @has_rating
       classes << (@is_approved ? "approved" : "disapproved")
     else
       classes << "unrated"
     end
-    
+
     classes.join(" ")
   end
 

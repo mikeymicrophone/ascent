@@ -23,27 +23,27 @@ FactoryBot.define do
     end
 
     trait :state_level do
-      association :jurisdiction, factory: [:jurisdiction, :state]
+      association :jurisdiction, factory: [ :jurisdiction, :state ]
       notes { "State office serving all state residents" }
     end
 
     trait :country_level do
-      association :jurisdiction, factory: [:jurisdiction, :country]
+      association :jurisdiction, factory: [ :jurisdiction, :country ]
       notes { "National office serving the entire country" }
     end
 
     trait :executive do
-      association :position, factory: [:position, :executive]
+      association :position, factory: [ :position, :executive ]
       notes { "Executive branch office with administrative responsibilities" }
     end
 
     trait :legislative do
-      association :position, factory: [:position, :legislative]
+      association :position, factory: [ :position, :legislative ]
       notes { "Legislative office involved in lawmaking and policy" }
     end
 
     trait :judicial do
-      association :position, factory: [:position, :judicial]
+      association :position, factory: [ :position, :judicial ]
       notes { "Judicial office responsible for legal interpretation" }
     end
 
@@ -56,13 +56,13 @@ FactoryBot.define do
     end
 
     # Named factories for common scenarios
-    factory :active_office, traits: [:active]
-    factory :inactive_office, traits: [:inactive]
-    factory :city_office, traits: [:active, :city_level]
-    factory :state_office, traits: [:active, :state_level]
-    factory :national_office, traits: [:active, :country_level]
-    factory :executive_office, traits: [:active, :executive]
-    factory :legislative_office, traits: [:active, :legislative]
-    factory :judicial_office, traits: [:active, :judicial]
+    factory :active_office, traits: [ :active ]
+    factory :inactive_office, traits: [ :inactive ]
+    factory :city_office, traits: [ :active, :city_level ]
+    factory :state_office, traits: [ :active, :state_level ]
+    factory :national_office, traits: [ :active, :country_level ]
+    factory :executive_office, traits: [ :active, :executive ]
+    factory :legislative_office, traits: [ :active, :legislative ]
+    factory :judicial_office, traits: [ :active, :judicial ]
   end
 end

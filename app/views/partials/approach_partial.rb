@@ -19,7 +19,7 @@ class Views::Partials::ApproachPartial < Views::ApplicationView
         whitespace
         link_to @approach.issue.name, @approach.issue, class: "link issue"
       end
-      
+
       expandable(@approach, :stances, title: "Candidate Positions") do |stances|
         stances.each { StancePartial(stance: it, show_candidacy: true, show_issue: false, show_approach: false) }
       end

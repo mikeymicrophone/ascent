@@ -6,10 +6,10 @@ class Views::Partials::MunicipalityPartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@municipality), class: "municipality-partial") do
       h3 { @municipality.name }
-      
+
       # Hierarchical navigation
       HierarchicalNavigation(current_object: @municipality)
-      
+
       # Offices expandable section
       expandable(@municipality, :offices) do |offices|
         ItemPreview(@municipality, :offices, 3) do |office|
@@ -17,7 +17,7 @@ class Views::Partials::MunicipalityPartial < Views::ApplicationView
           span(class: "office-position") { " (#{office.position.title})" }
         end
       end
-      
+
       # Active Elections expandable section
       expandable(@municipality, :active_elections, title: "Active Elections") do |elections|
         ItemPreview(@municipality, :active_elections, 3) do |election|

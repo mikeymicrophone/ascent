@@ -74,14 +74,14 @@ FactoryBot.define do
     end
 
     # Named factories for common scenarios
-    factory :executive_position, traits: [:executive]
-    factory :legislative_position, traits: [:legislative]
-    factory :judicial_position, traits: [:judicial]
-    factory :mayor_position, traits: [:mayor]
-    factory :governor_position, traits: [:governor]
-    factory :president_position, traits: [:president]
-    factory :senator_position, traits: [:senator]
-    factory :representative_position, traits: [:representative]
-    factory :sheriff_position, traits: [:sheriff]
+    factory :executive_position, traits: [ :executive ]
+    factory :legislative_position, traits: [ :legislative ]
+    factory :judicial_position, traits: [ :judicial ]
+    factory :mayor_position, traits: [ :mayor ]
+    factory :governor_position, traits: [ :governor ]
+    factory :president_position, traits: [ :president ]
+    factory :senator_position, traits: [ :senator ]
+    factory :representative_position, traits: [ :representative ]
+    factory :sheriff_position, traits: [ :sheriff ]
   end
 end

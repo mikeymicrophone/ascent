@@ -5,7 +5,7 @@ RSpec.describe "Positions Index", type: :request do
     context "with no positions" do
       it "renders successfully with empty state" do
         get positions_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Positions")
       end
@@ -18,7 +18,7 @@ RSpec.describe "Positions Index", type: :request do
 
       it "renders successfully with position data" do
         get positions_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Positions")
         expect(response.body).to include("Mayor")
@@ -28,7 +28,7 @@ RSpec.describe "Positions Index", type: :request do
 
       it "displays position descriptions" do
         get positions_path
-        
+
         expect(response.body).to include("Chief executive")
         expect(response.body).to include("Legislative representative")
         expect(response.body).to include("State chief executive")
@@ -36,7 +36,7 @@ RSpec.describe "Positions Index", type: :request do
 
       it "includes proper HTML structure for Phlex components" do
         get positions_path
-        
+
         expect(response.body).to include('class="')
         expect(response.body).to include("<div")
         expect(response.body).to include("</div>")
@@ -50,7 +50,7 @@ RSpec.describe "Positions Index", type: :request do
 
       it "displays positions with office counts" do
         get positions_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Mayor")
       end
@@ -63,14 +63,14 @@ RSpec.describe "Positions Index", type: :request do
 
       it "renders successfully with pagination" do
         get positions_path
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Positions")
       end
 
       it "respects page parameter" do
         get positions_path, params: { page: 2 }
-        
+
         expect(response).to have_http_status(200)
         expect(response.body).to include("Positions")
       end
@@ -79,7 +79,7 @@ RSpec.describe "Positions Index", type: :request do
     context "error handling" do
       it "handles database errors gracefully" do
         allow(Position).to receive(:all).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-        
+
         expect { get positions_path }.to raise_error(ActiveRecord::StatementInvalid)
       end
     end

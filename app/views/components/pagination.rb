@@ -13,7 +13,7 @@ class Views::Components::Pagination < Views::ApplicationView
       div(class: "pagination-info") do
         raw @pagy.info_tag.html_safe
       end
-      
+
       # Navigation links with custom Tailwind CSS
       div(class: "pagination-nav") do
         raw @pagy.series_nav.html_safe

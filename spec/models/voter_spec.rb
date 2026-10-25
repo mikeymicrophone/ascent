@@ -75,7 +75,7 @@ RSpec.describe Voter, type: :model do
 
       context 'with missing first name' do
         let(:voter) { build(:voter, first_name: nil, last_name: "Johnson") }
-        
+
         it 'handles nil gracefully' do
           expect(voter.full_name).to eq("Johnson")
         end
@@ -83,7 +83,7 @@ RSpec.describe Voter, type: :model do
 
       context 'with missing last name' do
         let(:voter) { build(:voter, first_name: "Sarah", last_name: nil) }
-        
+
         it 'handles nil gracefully' do
           expect(voter.full_name).to eq("Sarah")
         end
@@ -120,9 +120,8 @@ RSpec.describe Voter, type: :model do
 
       it 'returns residences ordered by registration date descending' do
         history = voter.residence_history
-        expect(history).to eq([residence3, residence2, residence1])
+        expect(history).to eq([ residence3, residence2, residence1 ])
       end
     end
-
   end
 end

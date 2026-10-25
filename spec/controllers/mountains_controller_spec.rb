@@ -41,7 +41,7 @@ RSpec.describe MountainsController, type: :controller do
 
     it 'creates candidacies with valid party affiliations' do
       post :simulate, params: { id: race.id }
-      
+
       affiliations = race.candidacies.map(&:ballot_labels)
       expect(affiliations).to all(be_present) # All candidates have party affiliations
       expect(affiliations).to all(be_a(String)) # Valid string values
@@ -49,7 +49,7 @@ RSpec.describe MountainsController, type: :controller do
 
     it 'creates realistic rating distributions' do
       post :simulate, params: { id: race.id }
-      
+
       ratings = Rating.where(candidacy: race.candidacies).pluck(:rating)
       expect(ratings.min).to be >= 0
       expect(ratings.max).to be <= 500

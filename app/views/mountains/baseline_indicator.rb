@@ -33,7 +33,7 @@ class Views::Mountains::BaselineIndicator < Views::Components::Base
   end
 
   def baseline_label_classes
-    classes = ["baseline-label"]
+    classes = [ "baseline-label" ]
     classes << "editable" if @editable
     classes << "baseline-empty" unless @baseline_set
     classes.join(" ")
@@ -45,7 +45,7 @@ class Views::Mountains::BaselineIndicator < Views::Components::Base
   end
 
   def baseline_classes
-    classes = ["baseline-indicator"]
+    classes = [ "baseline-indicator" ]
     classes << "editable" if @editable
     classes.join(" ")
   end

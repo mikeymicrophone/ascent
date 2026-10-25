@@ -13,6 +13,6 @@ class Municipality < ApplicationRecord
   private
 
   def county_matches_state
-    errors.add(:county, 'must belong to the same state') if county && county.state != state
+    errors.add(:county, "must belong to the same state") if county && county.state != state
   end
 end

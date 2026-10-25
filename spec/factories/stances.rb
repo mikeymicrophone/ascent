@@ -71,18 +71,17 @@ FactoryBot.define do
       explanation { "Responsible governance prioritizes proven approaches, fiscal discipline, and community values. I support solutions that strengthen families, support local businesses, and preserve what makes our community special while addressing legitimate needs." }
       evidence_links { "https://example.com/conservative-principles, https://example.com/fiscal-analysis, https://example.com/community-values" }
     end
-    factory :high_priority_stance, traits: [:high_priority]
-    factory :medium_priority_stance, traits: [:medium_priority]
-    factory :low_priority_stance, traits: [:low_priority]
-    factory :education_policy_stance, traits: [:education_stance]
-    factory :healthcare_policy_stance, traits: [:healthcare_stance]
-    factory :housing_policy_stance, traits: [:housing_stance]
-    factory :transportation_policy_stance, traits: [:transportation_stance]
-    factory :environmental_policy_stance, traits: [:environmental_stance]
-    factory :economic_policy_stance, traits: [:economic_stance]
-    factory :progressive_candidate_stance, traits: [:progressive_stance]
-    factory :moderate_candidate_stance, traits: [:moderate_stance]
-    factory :conservative_candidate_stance, traits: [:conservative_stance]
+    factory :high_priority_stance, traits: [ :high_priority ]
+    factory :medium_priority_stance, traits: [ :medium_priority ]
+    factory :low_priority_stance, traits: [ :low_priority ]
+    factory :education_policy_stance, traits: [ :education_stance ]
+    factory :healthcare_policy_stance, traits: [ :healthcare_stance ]
+    factory :housing_policy_stance, traits: [ :housing_stance ]
+    factory :transportation_policy_stance, traits: [ :transportation_stance ]
+    factory :environmental_policy_stance, traits: [ :environmental_stance ]
+    factory :economic_policy_stance, traits: [ :economic_stance ]
+    factory :progressive_candidate_stance, traits: [ :progressive_stance ]
+    factory :moderate_candidate_stance, traits: [ :moderate_stance ]
+    factory :conservative_candidate_stance, traits: [ :conservative_stance ]
   end
 end
-

@@ -46,7 +46,7 @@ class Views::Mountains::IndexView < Views::ApplicationView
           Ui::ActionIcon(kind: :show)
         end
       end
-      
+
       div(class: "election-meta") do
         p { "Election: #{race.election.name}" }
         p { "Office: #{race.office.position.title}" }

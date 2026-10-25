@@ -3,16 +3,16 @@ class CandidacySeeder
     # Never attach fictional people to a source-backed election.
     create_mock_election_candidacies
     create_mock_local_candidacies
-    
+
     puts "Seeded #{Candidacy.count} candidacies"
   end
-  
+
   private
-  
+
   def self.create_mock_election_candidacies
     # Find the mock presidential race
     mock_races = Race.mock.joins(office: :position).where(positions: { title: "President" }).limit(1)
-    
+
     mock_races.each do |race|
       # Create several candidacies for educational purposes
       mock_candidates = [
@@ -21,11 +21,11 @@ class CandidacySeeder
         { person_email: "maria.garcia@example.com", party: "Social Democratic", platform: "Social justice, community empowerment, and inclusive economic policy." },
         { person_email: "james.anderson@example.com", party: "Labor", platform: "Workers' rights, union protection, and manufacturing job creation." }
       ]
-      
+
       mock_candidates.each do |candidate_data|
         person = Person.find_by(email: candidate_data[:person_email])
         next unless person
-        
+
         candidacy = Candidacy.find_or_create_by(
           person: person,
           race: race

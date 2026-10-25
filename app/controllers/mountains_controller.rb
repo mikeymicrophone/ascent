@@ -1,7 +1,7 @@
 class MountainsController < ApplicationController
-  before_action :set_race, only: [:show, :edit, :update, :simulate, :primary_candidates]
-  before_action :set_voter, only: [:show, :edit, :update, :simulate, :primary_candidates]
-  before_action :set_baseline, only: [:show, :edit, :update]
+  before_action :set_race, only: [ :show, :edit, :update, :simulate, :primary_candidates ]
+  before_action :set_voter, only: [ :show, :edit, :update, :simulate, :primary_candidates ]
+  before_action :set_baseline, only: [ :show, :edit, :update ]
   before_action :authorize_mountain!, except: :index
 
   def index
@@ -41,19 +41,19 @@ class MountainsController < ApplicationController
   def simulate
     # Generate random candidacies with diverse backgrounds using SmartFactory
     candidate_count = rand(5..15)
-    candidate_types = [:young_candidate, :experienced_politician, :business_leader, 
-                      :community_activist, :educator, :veteran]
-    
+    candidate_types = [ :young_candidate, :experienced_politician, :business_leader,
+                      :community_activist, :educator, :veteran ]
+
     candidate_count.times do
       # Mix of candidate types for realistic diversity with intelligent reuse
       person_type = candidate_types.sample
-      candidacy_traits = [:democrat, :republican, :independent, :green].sample
-      
+      candidacy_traits = [ :democrat, :republican, :independent, :green ].sample
+
       # Use SmartFactory for people (low reuse for diversity)
-      person = SmartFactory.create_for_mountain_simulation(:person, [person_type])
-      
+      person = SmartFactory.create_for_mountain_simulation(:person, [ person_type ])
+
       # Use SmartFactory for candidacies (very low reuse - each should be unique)
-      SmartFactory.create_for_mountain_simulation(:candidacy, [candidacy_traits], 
+      SmartFactory.create_for_mountain_simulation(:candidacy, [ candidacy_traits ],
                                                   person: person, race: @race)
     end
 
@@ -61,31 +61,31 @@ class MountainsController < ApplicationController
     @race.candidacies.reload.each do |candidacy|
       # Skip if candidate already has stances
       next if candidacy.stances.any?
-      
+
       # Create 2-5 stances per candidate on different policy areas
       stance_count = rand(2..5)
       created_issues = []
-      
+
       stance_count.times do
         # Get a random issue that hasn't been used for this candidate
         available_issues = Issue.where.not(id: created_issues)
         next if available_issues.empty?
-        
+
         issue = available_issues.sample
         created_issues << issue.id
-        
+
         # Find an approach for this issue
         approach = issue.approaches.sample
         next unless approach
-        
+
         # Create stance with realistic priority and explanation
-        priority_level = [:high, :medium, :low].sample
+        priority_level = [ :high, :medium, :low ].sample
         stance_traits = case priority_level
-                       when :high then [:high_priority]
-                       when :medium then [:medium_priority] 
-                       else [:low_priority]
-                       end
-        
+        when :high then [ :high_priority ]
+        when :medium then [ :medium_priority ]
+        else [ :low_priority ]
+        end
+
         SmartFactory.create_for_mountain_simulation(:stance, stance_traits,
                                                    candidacy: candidacy,
                                                    approach: approach)
@@ -96,20 +96,20 @@ class MountainsController < ApplicationController
     @race.candidacies.reload.each do |candidacy|
       # Skip if rating already exists for this voter-candidacy combination
       next if Rating.exists?(voter: @voter, candidacy: candidacy)
-      
+
       # Use different rating patterns for more realistic mountain visualization
-      rating_type = [:high_variance, :polarized, :moderate].sample
-      
+      rating_type = [ :high_variance, :polarized, :moderate ].sample
+
       # Ratings should never be reused (each voter rates each candidate once)
-      SmartFactory.create_for_mountain_simulation(:rating, [rating_type], 
+      SmartFactory.create_for_mountain_simulation(:rating, [ rating_type ],
                                                   candidacy: candidacy, voter: @voter)
     end
 
     # Create realistic baseline for voter (high reuse - voters often have similar standards)
-    SmartFactory.create_for_mountain_simulation(:voter_race_baseline, [:realistic_distribution],
+    SmartFactory.create_for_mountain_simulation(:voter_race_baseline, [ :realistic_distribution ],
                                                 race: @race, voter: @voter)
 
-    redirect_to mountain_path(@race, voter_id: @voter.id), notice: 'Simulation data generated successfully!'
+    redirect_to mountain_path(@race, voter_id: @voter.id), notice: "Simulation data generated successfully!"
   end
 
   private
@@ -144,7 +144,7 @@ class MountainsController < ApplicationController
   def build_mountain_data
     @race.candidacies_for(@voter).active.with_rating_details.map do |candidacy|
       rating = candidacy.ratings.find_by(voter: @voter)
-      
+
       {
         candidacy: candidacy,
         rating_value: rating&.rating || 0,
@@ -195,5 +195,4 @@ class MountainsController < ApplicationController
   def normalize_rating(value)
     value.to_i.clamp(0, 500)
   end
-
 end

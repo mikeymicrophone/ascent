@@ -1,5 +1,5 @@
 class GubernatorialRaceSeeder
-  DATA_GLOB = ["races", "2026", "governor", "**", "*.yml"].freeze
+  DATA_GLOB = [ "races", "2026", "governor", "**", "*.yml" ].freeze
 
   def self.seed(paths = SeedDataPaths.glob(*DATA_GLOB))
     paths.sort.each do |path|

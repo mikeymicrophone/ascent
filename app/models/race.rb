@@ -16,13 +16,13 @@ class Race < ApplicationRecord
   validates :certification_status, inclusion: { in: %w[certified tentative unofficial] }, allow_nil: true
   validate :office_matches_election_jurisdiction
 
-  scope :upcoming, -> { where(status: 'upcoming') }
-  scope :active, -> { where(status: 'active') }
-  scope :completed, -> { where(status: 'completed') }
+  scope :upcoming, -> { where(status: "upcoming") }
+  scope :active, -> { where(status: "active") }
+  scope :completed, -> { where(status: "completed") }
   scope :mock, -> { joins(:election).merge(Election.mock) }
   scope :historical, -> { joins(:election).merge(Election.historical) }
   scope :real, -> { joins(:election).merge(Election.real) }
-  scope :recent, -> { joins(:election).order('elections.election_date DESC') }
+  scope :recent, -> { joins(:election).order("elections.election_date DESC") }
   scope :with_full_details, -> { includes(:office, :candidates, :candidacies) }
   scope :with_candidacy_details, -> { includes(candidacies: [ :person, :ratings ]) }
   scope :with_office_context, -> { includes(office: :position) }

@@ -4,9 +4,9 @@ RSpec.describe Views::Partials::OfficePartial, type: :view do
   let(:position) { create(:position, title: "Mayor") }
   let(:city) { create(:municipality, :with_jurisdiction, name: "Springfield") }
   let(:office) { create(:office, position: position, jurisdiction: city.jurisdiction, is_active: true, notes: "City executive office") }
-  
+
   let(:partial) { described_class.new(office: office) }
-  
+
   def render_component(component = partial)
     view_context.render(component)
   end
@@ -20,7 +20,7 @@ RSpec.describe Views::Partials::OfficePartial, type: :view do
       c.request = ActionDispatch::TestRequest.create
     end
   end
-  
+
   let(:rendered) { render_component }
 
   describe '#view_template' do
@@ -167,7 +167,7 @@ RSpec.describe Views::Partials::OfficePartial, type: :view do
       office_with_elections = Office.includes(:races).find(office.id)
       partial_with_elections = described_class.new(office: office_with_elections)
       rendered_with_elections = render_component(partial_with_elections)
-      
+
       expect(rendered_with_elections).to include('<button')
       expect(rendered_with_elections).to include('expandable-header')
     end
@@ -188,7 +188,7 @@ RSpec.describe Views::Partials::OfficePartial, type: :view do
       let!(:rating) { create(:rating, candidacy: candidacy, voter: voter_baseline.voter, rating: 7) }
       let(:completed_partial) { described_class.new(office: completed_office) }
       let(:completed_rendered) { render_component(completed_partial) }
-      
+
       before do
         completed_office.reload
       end
@@ -264,7 +264,7 @@ RSpec.describe Views::Partials::OfficePartial, type: :view do
       # This test ensures the partial works with preloaded data
       office_with_includes = Office.includes(:position, :races).find(office.id)
       partial_with_includes = described_class.new(office: office_with_includes)
-      
+
       expect { render_component(partial_with_includes) }.not_to raise_error
     end
   end

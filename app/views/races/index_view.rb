@@ -24,7 +24,7 @@ class Views::Races::IndexView < Views::ApplicationView
       end
       div do
         form.label :state_id, "State"
-        form.select :state_id, @states.map { [it.name, it.id] }, include_blank: "All states", selected: @filters["state_id"]
+        form.select :state_id, @states.map { [ it.name, it.id ] }, include_blank: "All states", selected: @filters["state_id"]
       end
       div do
         form.label :year, "Election year"
@@ -32,11 +32,11 @@ class Views::Races::IndexView < Views::ApplicationView
       end
       div do
         form.label :status, "Race status"
-        form.select :status, Race::STATUSES.map { [it.capitalize, it] }, include_blank: "All statuses", selected: @filters["status"]
+        form.select :status, Race::STATUSES.map { [ it.capitalize, it ] }, include_blank: "All statuses", selected: @filters["status"]
       end
       div do
         form.label :kind, "Election kind"
-        form.select :kind, @kinds.map { [it.humanize, it] }, include_blank: "All kinds", selected: @filters["kind"]
+        form.select :kind, @kinds.map { [ it.humanize, it ] }, include_blank: "All kinds", selected: @filters["kind"]
       end
       div(class: "race-filter-actions") do
         button(type: "submit", class: "resource-action resource-action-simulate") do

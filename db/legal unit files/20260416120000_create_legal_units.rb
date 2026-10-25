@@ -13,7 +13,7 @@ class CreateLegalUnits < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :lu_corpora, [:jurisdiction, :slug], unique: true
+    add_index :lu_corpora, [ :jurisdiction, :slug ], unique: true
 
     create_table :lu_editions do |t|
       t.references :corpus, null: false, foreign_key: { to_table: :lu_corpora, on_delete: :cascade }, index: true
@@ -28,7 +28,7 @@ class CreateLegalUnits < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :lu_editions, [:corpus_id, :label], unique: true
+    add_index :lu_editions, [ :corpus_id, :label ], unique: true
     add_index :lu_editions, :effective_on
     add_index :lu_editions, :published_on
 
@@ -52,12 +52,12 @@ class CreateLegalUnits < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :lu_units, [:edition_id, :citation], unique: true, where: 'citation IS NOT NULL'
-    add_index :lu_units, [:edition_id, :path], unique: true, where: 'path IS NOT NULL'
-    add_index :lu_units, [:edition_id, :normalized_kind]
-    add_index :lu_units, [:edition_id, :designator]
-    add_index :lu_units, [:edition_id, :status]
-    add_index :lu_units, [:edition_id, :parent_id, :position], name: 'index_lu_units_on_edition_parent_position'
+    add_index :lu_units, [ :edition_id, :citation ], unique: true, where: 'citation IS NOT NULL'
+    add_index :lu_units, [ :edition_id, :path ], unique: true, where: 'path IS NOT NULL'
+    add_index :lu_units, [ :edition_id, :normalized_kind ]
+    add_index :lu_units, [ :edition_id, :designator ]
+    add_index :lu_units, [ :edition_id, :status ]
+    add_index :lu_units, [ :edition_id, :parent_id, :position ], name: 'index_lu_units_on_edition_parent_position'
 
     create_table :lu_citation_aliases do |t|
       t.references :unit, null: false, foreign_key: { to_table: :lu_units, on_delete: :cascade }, index: true
@@ -69,7 +69,7 @@ class CreateLegalUnits < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :lu_citation_aliases, [:unit_id, :citation], unique: true
+    add_index :lu_citation_aliases, [ :unit_id, :citation ], unique: true
     add_index :lu_citation_aliases, :citation
     add_index :lu_citation_aliases, :citation_type
 
@@ -87,7 +87,7 @@ class CreateLegalUnits < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :lu_references, [:edition_id, :reference_type]
+    add_index :lu_references, [ :edition_id, :reference_type ]
     add_index :lu_references, :raw_citation
     add_index :lu_references, :target_citation
 
@@ -102,7 +102,7 @@ class CreateLegalUnits < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :lu_definitions, [:unit_id, :term], unique: true
+    add_index :lu_definitions, [ :unit_id, :term ], unique: true
     add_index :lu_definitions, :term
     add_index :lu_definitions, :scope_type
 
@@ -118,7 +118,7 @@ class CreateLegalUnits < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :lu_projections, [:unit_id, :projection_type]
+    add_index :lu_projections, [ :unit_id, :projection_type ]
     add_index :lu_projections, :format
     add_index :lu_projections, :generator
     add_index :lu_projections, :content, using: :gin

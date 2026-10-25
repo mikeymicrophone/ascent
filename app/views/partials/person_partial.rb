@@ -5,7 +5,7 @@ class Views::Partials::PersonPartial < Views::ApplicationView
 
   def view_template(&)
     div(id: dom_id(@person), class: "person-partial") do
-      h3 { [@person.first_name, @person.last_name].compact.join(" ") }
+      h3 { [ @person.first_name, @person.last_name ].compact.join(" ") }
       div do
         span { @person.email }
       end

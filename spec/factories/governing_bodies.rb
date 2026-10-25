@@ -12,7 +12,7 @@ FactoryBot.define do
     # Federal level bodies
     trait :federal_legislature do
       name { "United States Congress" }
-      association :jurisdiction, factory: [:jurisdiction, :country]
+      association :jurisdiction, factory: [ :jurisdiction, :country ]
       association :governance_type, factory: :governance_type
       branch { :legislative }
       description { "The bicameral legislature of the federal government consisting of the House of Representatives and the Senate, responsible for making federal laws and appropriating the national budget." }
@@ -22,7 +22,7 @@ FactoryBot.define do
 
     trait :federal_executive do
       name { "Executive Office of the President" }
-      association :jurisdiction, factory: [:jurisdiction, :country]
+      association :jurisdiction, factory: [ :jurisdiction, :country ]
       association :governance_type, factory: [ :governance_type, :executive ]
       branch { :executive }
       description { "The executive branch of the United States federal government, headed by the President, responsible for implementing and enforcing federal laws and policies." }
@@ -33,7 +33,7 @@ FactoryBot.define do
     # State level bodies
     trait :state_legislature do
       name { "State Legislature" }
-      association :jurisdiction, factory: [:jurisdiction, :state]
+      association :jurisdiction, factory: [ :jurisdiction, :state ]
       association :governance_type, factory: :governance_type
       branch { :legislative }
       description { "The state legislative body responsible for making state laws, appropriating the state budget, and overseeing state executive agencies." }
@@ -43,7 +43,7 @@ FactoryBot.define do
 
     trait :state_executive do
       name { "Office of the Governor" }
-      association :jurisdiction, factory: [:jurisdiction, :state]
+      association :jurisdiction, factory: [ :jurisdiction, :state ]
       association :governance_type, factory: [ :governance_type, :executive ]
       branch { :executive }
       description { "The executive branch of state government, headed by the Governor, responsible for implementing state policy and managing state operations." }
@@ -64,7 +64,7 @@ FactoryBot.define do
 
     trait :county_executive do
       name { "County Executive" }
-      association :jurisdiction, factory: [:jurisdiction, :county]
+      association :jurisdiction, factory: [ :jurisdiction, :county ]
       association :governance_type, factory: [ :governance_type, :executive ]
       branch { :executive }
       description { "The chief executive officer of the county, responsible for implementing county policies, managing county operations, and coordinating regional services." }
@@ -74,7 +74,7 @@ FactoryBot.define do
 
     trait :county_legislature do
       name { "County Legislature" }
-      association :jurisdiction, factory: [:jurisdiction, :county]
+      association :jurisdiction, factory: [ :jurisdiction, :county ]
       association :governance_type, factory: :governance_type
       branch { :legislative }
       description { "The legislative body of the county, responsible for county ordinances, budget oversight, and regional policy coordination across municipalities." }
@@ -85,7 +85,7 @@ FactoryBot.define do
     # Educational bodies
     trait :school_board do
       name { "School District Board" }
-      association :jurisdiction, factory: [:jurisdiction, :district]
+      association :jurisdiction, factory: [ :jurisdiction, :district ]
       association :governance_type, factory: [ :governance_type, :board ]
       branch { nil }
       description { "The governing board responsible for educational policy, budget oversight, superintendent selection, and ensuring quality education for all students in the district." }
@@ -96,7 +96,7 @@ FactoryBot.define do
     # Special districts
     trait :special_district do
       name { "Special District Board" }
-      association :jurisdiction, factory: [:jurisdiction, :district]
+      association :jurisdiction, factory: [ :jurisdiction, :district ]
       association :governance_type, factory: [ :governance_type, :board ]
       branch { nil }
       description { "The governing board of a special purpose district providing specific services like transit, water, fire protection, or other specialized public services." }
@@ -106,7 +106,7 @@ FactoryBot.define do
 
     trait :transit_district do
       name { "Transit Authority Board" }
-      association :jurisdiction, factory: [:jurisdiction, :district]
+      association :jurisdiction, factory: [ :jurisdiction, :district ]
       association :governance_type, factory: [ :governance_type, :board ]
       branch { nil }
       description { "The governing board responsible for public transit policy, fare setting, service planning, and system expansion to serve regional transportation needs." }
@@ -116,7 +116,7 @@ FactoryBot.define do
 
     trait :water_district do
       name { "Water District Board" }
-      association :jurisdiction, factory: [:jurisdiction, :district]
+      association :jurisdiction, factory: [ :jurisdiction, :district ]
       association :governance_type, factory: [ :governance_type, :board ]
       branch { nil }
       description { "The governing board responsible for water supply management, infrastructure maintenance, conservation programs, and ensuring reliable water service." }
@@ -126,7 +126,7 @@ FactoryBot.define do
 
     trait :fire_district do
       name { "Fire Protection District Board" }
-      association :jurisdiction, factory: [:jurisdiction, :district]
+      association :jurisdiction, factory: [ :jurisdiction, :district ]
       association :governance_type, factory: [ :governance_type, :board ]
       branch { nil }
       description { "The governing board responsible for fire protection services, emergency response, fire prevention programs, and public safety in the district." }
@@ -136,7 +136,7 @@ FactoryBot.define do
 
     trait :court do
       name { "Supreme Court" }
-      association :jurisdiction, factory: [:jurisdiction, :state]
+      association :jurisdiction, factory: [ :jurisdiction, :state ]
       association :governance_type, factory: [ :governance_type, :court ]
       branch { :judicial }
       description { "The court of last resort for the jurisdiction, responsible for interpreting the law and reviewing decisions of lower courts." }
@@ -150,15 +150,15 @@ FactoryBot.define do
     end
 
     trait :regional_authority do
-      association :jurisdiction, factory: [:jurisdiction, :state]
+      association :jurisdiction, factory: [ :jurisdiction, :state ]
     end
 
     trait :state_authority do
-      association :jurisdiction, factory: [:jurisdiction, :state]
+      association :jurisdiction, factory: [ :jurisdiction, :state ]
     end
 
     trait :federal_authority do
-      association :jurisdiction, factory: [:jurisdiction, :country]
+      association :jurisdiction, factory: [ :jurisdiction, :country ]
     end
 
     # Activity status traits
@@ -209,23 +209,23 @@ FactoryBot.define do
     end
 
     # Named factories for common scenarios
-    factory :federal_congress, traits: [:federal_legislature, :active]
-    factory :supreme_court, traits: [:court, :active]
-    factory :federal_executive_office, traits: [:federal_executive, :active]
-    factory :state_legislature_body, traits: [:state_legislature, :active]
-    factory :state_governor_office, traits: [:state_executive, :active]
-    factory :city_council, traits: [:municipal_legislature, :active]
-    factory :county_executive_office, traits: [:county_executive, :active]
-    factory :county_legislature_body, traits: [:county_legislature, :active]
-    factory :school_district_board, traits: [:school_board, :active]
-    factory :transit_authority, traits: [:transit_district, :active]
-    factory :water_district_board, traits: [:water_district, :active]
-    factory :fire_district_board, traits: [:fire_district, :active]
-    factory :special_district_board, traits: [:special_district, :active]
-    
+    factory :federal_congress, traits: [ :federal_legislature, :active ]
+    factory :supreme_court, traits: [ :court, :active ]
+    factory :federal_executive_office, traits: [ :federal_executive, :active ]
+    factory :state_legislature_body, traits: [ :state_legislature, :active ]
+    factory :state_governor_office, traits: [ :state_executive, :active ]
+    factory :city_council, traits: [ :municipal_legislature, :active ]
+    factory :county_executive_office, traits: [ :county_executive, :active ]
+    factory :county_legislature_body, traits: [ :county_legislature, :active ]
+    factory :school_district_board, traits: [ :school_board, :active ]
+    factory :transit_authority, traits: [ :transit_district, :active ]
+    factory :water_district_board, traits: [ :water_district, :active ]
+    factory :fire_district_board, traits: [ :fire_district, :active ]
+    factory :special_district_board, traits: [ :special_district, :active ]
+
     # Historical variations
-    factory :historical_city_council, traits: [:municipal_legislature, :historical, :active]
-    factory :modern_transit_authority, traits: [:transit_district, :modern, :active]
-    factory :inactive_governing_body, traits: [:municipal_legislature, :inactive]
+    factory :historical_city_council, traits: [ :municipal_legislature, :historical, :active ]
+    factory :modern_transit_authority, traits: [ :transit_district, :modern, :active ]
+    factory :inactive_governing_body, traits: [ :municipal_legislature, :inactive ]
   end
 end

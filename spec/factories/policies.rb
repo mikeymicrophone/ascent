@@ -103,18 +103,18 @@ FactoryBot.define do
       status { "enacted" }
       enacted_date { 18.months.ago }
     end
-    factory :proposed_policy, traits: [:proposed]
-    factory :under_review_policy, traits: [:under_review]
-    factory :repealed_policy, traits: [:repealed]
-    factory :education_policy_example, traits: [:education_policy]
-    factory :healthcare_policy_example, traits: [:healthcare_policy]
-    factory :transportation_policy_example, traits: [:transportation_policy]
-    factory :environmental_policy_example, traits: [:environmental_policy]
-    factory :housing_policy_example, traits: [:housing_policy]
-    factory :economic_policy_example, traits: [:economic_policy]
-    factory :temporary_policy_example, traits: [:temporary_policy]
-    factory :federal_policy_example, traits: [:federal_policy]
-    factory :state_policy_example, traits: [:state_policy]
-    factory :local_policy_example, traits: [:local_policy]
+    factory :proposed_policy, traits: [ :proposed ]
+    factory :under_review_policy, traits: [ :under_review ]
+    factory :repealed_policy, traits: [ :repealed ]
+    factory :education_policy_example, traits: [ :education_policy ]
+    factory :healthcare_policy_example, traits: [ :healthcare_policy ]
+    factory :transportation_policy_example, traits: [ :transportation_policy ]
+    factory :environmental_policy_example, traits: [ :environmental_policy ]
+    factory :housing_policy_example, traits: [ :housing_policy ]
+    factory :economic_policy_example, traits: [ :economic_policy ]
+    factory :temporary_policy_example, traits: [ :temporary_policy ]
+    factory :federal_policy_example, traits: [ :federal_policy ]
+    factory :state_policy_example, traits: [ :state_policy ]
+    factory :local_policy_example, traits: [ :local_policy ]
   end
 end

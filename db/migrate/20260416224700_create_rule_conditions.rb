@@ -13,6 +13,6 @@ class CreateRuleConditions < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :rule_conditions, [:statement_id, :slug], unique: true
+    add_index :rule_conditions, [ :statement_id, :slug ], unique: true
   end
 end

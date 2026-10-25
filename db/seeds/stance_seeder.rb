@@ -19,7 +19,7 @@ class StanceSeeder
         explanation: "Achievement gaps start early and compound over time. As your State Representative, I will advocate for universal pre-K funding, expand Head Start programs, and ensure seamless transitions from early childhood to elementary education. Every child deserves an equal opportunity to succeed regardless of their zip code.",
         evidence_links: "Co-sponsored early childhood legislation, Research on achievement gap interventions, Support from child advocacy organizations"
       },
-      
+
       # Healthcare Stances
       {
         candidacy_title: "County Commissioner",
@@ -37,7 +37,7 @@ class StanceSeeder
         explanation: "Mental health is health, period. As Governor, I will expand community mental health centers, integrate services with primary care, and ensure no one waits weeks for crisis intervention. We must treat mental health with the same urgency and resources we provide for physical health emergencies.",
         evidence_links: "Mental health legislation sponsored, Crisis intervention program funding, Endorsements from mental health professionals"
       },
-      
+
       # Housing Stances
       {
         candidacy_title: "Council Member",
@@ -55,7 +55,7 @@ class StanceSeeder
         explanation: "Housing first works. As Mayor, I will implement evidence-based programs that provide immediate permanent housing combined with wraparound services. It's more cost-effective than emergency shelter cycling and more humane than allowing people to remain on the streets.",
         evidence_links: "Housing First program evaluation data, Partnerships with service providers, Budget analysis showing cost savings"
       },
-      
+
       # Transportation Stances
       {
         candidacy_title: "Council Member",
@@ -73,7 +73,7 @@ class StanceSeeder
         explanation: "Reliable public transit is essential for economic mobility and environmental sustainability. Bus rapid transit provides rail-like service at a fraction of the cost, with dedicated lanes, frequent service, and real-time information that makes transit a viable alternative to driving.",
         evidence_links: "Regional transit needs assessment, BRT system case studies, Federal transit funding applications"
       },
-      
+
       # Environmental Stances
       {
         candidacy_title: "State Senator",
@@ -91,7 +91,7 @@ class StanceSeeder
         explanation: "Clean air and water are fundamental rights. I will strengthen environmental monitoring, increase enforcement of pollution regulations, and require real-time pollution reporting. Industrial companies must be held accountable for protecting the health of our families and environment.",
         evidence_links: "Environmental protection advocacy, Pollution violation enforcement data, Public health impact studies"
       },
-      
+
       # Public Safety Stances
       {
         candidacy_title: "Sheriff",
@@ -109,7 +109,7 @@ class StanceSeeder
         explanation: "We cannot arrest our way out of the addiction crisis. As District Attorney, I will expand drug courts, diversion programs, and treatment options that address the root causes of addiction-related crime. Treatment is more effective and cost-efficient than incarceration for non-violent offenses.",
         evidence_links: "Drug court program outcomes, Treatment vs. incarceration cost analysis, Support from addiction treatment professionals"
       },
-      
+
       # Economic Development Stances
       {
         candidacy_title: "Mayor",
@@ -127,7 +127,7 @@ class StanceSeeder
         explanation: "Small businesses are the backbone of our local economy. I support streamlined permitting, technical assistance, microloans, and buy-local campaigns that help entrepreneurs start and grow businesses that create jobs and keep dollars circulating in our community.",
         evidence_links: "Small business owner testimonials, Economic impact of local businesses, Regulatory streamlining proposals"
       },
-      
+
       # Social Services Stances
       {
         candidacy_title: "County Commissioner",
@@ -145,7 +145,7 @@ class StanceSeeder
         explanation: "No child should go hungry in our community. As a School Board member, I will expand free meal programs, implement universal school breakfast, and ensure children have access to nutritious food year-round through summer and weekend programs.",
         evidence_links: "Childhood hunger statistics, Nutrition program impact studies, Support from child nutrition advocates"
       },
-      
+
       # Infrastructure and Technology Stances
       {
         candidacy_title: "Mayor",
@@ -163,7 +163,7 @@ class StanceSeeder
         explanation: "Clean, reliable water and sewer systems are fundamental to public health and economic development. I will implement systematic infrastructure replacement, smart water management, and sustainable funding that prevents service disruptions and protects our environment.",
         evidence_links: "Infrastructure condition assessment, Water system modernization expertise, Professional engineering credentials"
       },
-      
+
       # Cultural and Recreation Stances
       {
         candidacy_title: "Council Member",
@@ -182,7 +182,7 @@ class StanceSeeder
         evidence_links: "Recreation needs assessment, Youth development program outcomes, Accessible facility design expertise"
       }
     ]
-    
+
     skipped_positions = []
 
     stance_configurations.each do |config|
@@ -191,26 +191,26 @@ class StanceSeeder
                           .merge(Election.mock)
                           .where(positions: { title: config[:candidacy_title] })
                           .first
-      
+
       unless candidacy
         skipped_positions << config[:candidacy_title]
         next
       end
-      
+
       # Find the issue by title
       issue = Issue.find_by(title: config[:issue_title])
       unless issue
         puts "\n❌ Issue not found: #{config[:issue_title]}"
         next
       end
-      
+
       # Find the approach by title
       approach = Approach.find_by(title: config[:approach_title])
       unless approach
         puts "\n❌ Approach not found: #{config[:approach_title]}"
         next
       end
-      
+
       # Create the stance
       stance = Stance.find_or_create_by(
         candidacy: candidacy,
@@ -220,7 +220,7 @@ class StanceSeeder
         s.priority_level = config[:priority_level]
         s.evidence_links = config[:evidence_links]
       end
-      
+
       if stance.persisted?
         print "."
       else
@@ -228,7 +228,7 @@ class StanceSeeder
         puts "   Errors: #{stance.errors.full_messages.join(', ')}"
       end
     end
-    
+
     puts " #{Stance.count} stances"
     puts "Skipped stances for positions without a mock candidacy: #{skipped_positions.uniq.join(', ')}" if skipped_positions.any?
   end

@@ -9,7 +9,7 @@ class RacesController < ApplicationController
     scope = params.permit(:office_id, :election_id).to_h
     elections = Election.where(id: races_scope.reorder(nil).select(:election_id))
     years = Year.where(id: elections.select(:year_id)).order(year: :desc).pluck(:year)
-    kinds = elections.where.not(kind: [nil, ""]).distinct.order(:kind).pluck(:kind)
+    kinds = elections.where.not(kind: [ nil, "" ]).distinct.order(:kind).pluck(:kind)
 
     races_scope = races_scope.matching(filters["q"]) if filters["q"].present?
     races_scope = races_scope.in_state(State.includes(:jurisdiction).find(filters["state_id"])) if filters["state_id"].present?

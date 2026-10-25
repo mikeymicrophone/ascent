@@ -17,14 +17,14 @@ RSpec.describe StatesController, type: :controller do
 
     it 'paginates states correctly' do
       get :index
-      
+
       expect(response).to have_http_status(:success)
-      
+
       # Check that pagy object is created
       pagy = assigns(:pagy)
       expect(pagy).to be_present
       expect(pagy).to be_a(Pagy)
-      
+
       # Check pagination properties
       expect(pagy.count).to be >= 30 # At least 30 states
       expect(pagy.limit).to eq(25)   # Default page size
@@ -33,18 +33,18 @@ RSpec.describe StatesController, type: :controller do
 
     it 'respects page parameter' do
       get :index, params: { page: 2 }
-      
+
       expect(response).to have_http_status(:success)
-      
+
       pagy = assigns(:pagy)
       expect(pagy.page).to eq(2)
     end
 
     it 'handles out of range page gracefully with overflow protection' do
       get :index, params: { page: 999 }
-      
+
       expect(response).to have_http_status(:success)
-      
+
       pagy = assigns(:pagy)
       expect(pagy.page).to eq(pagy.last)
       expect(assigns(:states)).to be_present
@@ -52,7 +52,7 @@ RSpec.describe StatesController, type: :controller do
 
     it 'passes correct states to view' do
       get :index
-      
+
       states = assigns(:states)
       expect(states).to be_present
       expect(states.count).to be <= 25 # Should not exceed page size
@@ -79,7 +79,7 @@ RSpec.describe StatesController, type: :controller do
 
     it 'renders pagination when multiple pages exist' do
       get :index
-      
+
       # Check that view receives pagy object
       expect(assigns(:pagy)).to be_present
       expect(assigns(:pagy).last).to be > 1

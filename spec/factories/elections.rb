@@ -70,14 +70,14 @@ FactoryBot.define do
     end
 
     # Named factories for common scenarios
-    factory :upcoming_election, traits: [:upcoming]
-    factory :active_election, traits: [:active]
-    factory :completed_election, traits: [:completed]
-    factory :mock_election, traits: [:mock]
-    factory :historical_election, traits: [:historical]
-    factory :local_election, traits: [:upcoming, :local]
-    factory :state_election, traits: [:upcoming, :state]
-    factory :national_election, traits: [:upcoming, :national]
-    factory :recent_election, traits: [:recent]
+    factory :upcoming_election, traits: [ :upcoming ]
+    factory :active_election, traits: [ :active ]
+    factory :completed_election, traits: [ :completed ]
+    factory :mock_election, traits: [ :mock ]
+    factory :historical_election, traits: [ :historical ]
+    factory :local_election, traits: [ :upcoming, :local ]
+    factory :state_election, traits: [ :upcoming, :state ]
+    factory :national_election, traits: [ :upcoming, :national ]
+    factory :recent_election, traits: [ :recent ]
   end
 end

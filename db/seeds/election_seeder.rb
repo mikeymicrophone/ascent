@@ -4,10 +4,10 @@ class ElectionSeeder
     # are seeded by their reference-data loaders.
     create_mock_elections
     create_mock_local_elections
-    
+
     puts "Seeded #{Election.count} elections"
   end
-  
+
   # The simulated candidates' races, from city hall up to the governor's office.
   # Mayor and Council Member share the demo city; the others prefer offices in its state.
   MOCK_CITY = "Los Angeles"
@@ -17,21 +17,21 @@ class ElectionSeeder
   ].freeze
 
   private
-  
+
   def self.create_mock_elections
     # Create some mock elections for educational purposes
     us = Country.find_by(name: "United States")
     president_position = Position.find_by(title: "President")
-    
+
     return unless us && president_position
-    
+
     us_president_office = Office.where(position: president_position, jurisdiction: us.jurisdiction).first
-    
+
     return unless us_president_office
-    
+
     year_2024 = Year.find_by(year: 2024)
     return unless year_2024
-    
+
     election = Election.find_or_create_by(
       jurisdiction: us.jurisdiction,
       year: year_2024,

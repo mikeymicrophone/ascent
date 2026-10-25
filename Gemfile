@@ -2,7 +2,7 @@ source "https://rubygems.org"
 ruby "4.0.9"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 8.1', '>= 8.1.2'
+gem "rails", "~> 8.1", ">= 8.1.2"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
@@ -64,10 +64,10 @@ group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
-  gem 'rspec-rails'
-  gem 'shoulda'
-  gem 'faker'
-  gem 'rails-controller-testing'
+  gem "rspec-rails"
+  gem "shoulda"
+  gem "faker"
+  gem "rails-controller-testing"
 
   # gem 'claude-on-rails'
 
@@ -78,7 +78,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
-gem 'factory_bot_rails'
+gem "factory_bot_rails"
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
@@ -89,7 +89,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
-  
+
   # Code coverage reporting [https://github.com/simplecov-ruby/simplecov]
   gem "simplecov", require: false
   gem "simplecov-html", require: false

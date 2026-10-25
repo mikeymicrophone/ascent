@@ -2,25 +2,25 @@ Rails.application.routes.draw do
   get "glossary" => "pages#glossary", as: :glossary
   get "supporters" => "pages#supporters", as: :supporters
   get "approval-voting" => "pages#approval_voting", as: :approval_voting
-  resources :engagements, only: [:index, :create, :destroy], path: "saved"
+  resources :engagements, only: [ :index, :create, :destroy ], path: "saved"
   resources :official_codes
   resources :policies do
-    resources :official_codes, only: [:index]
+    resources :official_codes, only: [ :index ]
   end
   resources :stances
   resources :approaches
   resources :issues do
-    resources :approaches, only: [:index]
+    resources :approaches, only: [ :index ]
   end
   resources :topics do
-    resources :issues, only: [:index]
+    resources :issues, only: [ :index ]
   end
   resources :governing_bodies do
-    resources :policies, only: [:index]
+    resources :policies, only: [ :index ]
   end
   resources :area_of_concerns
   resources :governance_types do
-    resources :governing_bodies, only: [:index]
+    resources :governing_bodies, only: [ :index ]
   end
   resources :voter_race_baselines
   resources :ratings
@@ -31,25 +31,25 @@ Rails.application.routes.draw do
   resources :candidacies
   resources :people
   resources :elections do
-    resources :races, only: [:index]
+    resources :races, only: [ :index ]
   end
   resources :races
   resources :years
   resources :offices do
-    resources :races, only: [:index]
+    resources :races, only: [ :index ]
   end
   resources :positions
   resources :municipalities
   resources :counties
   resources :districts
   resources :states do
-    resources :municipalities, only: [:index]
+    resources :municipalities, only: [ :index ]
   end
   resources :countries do
-    resources :states, only: [:index]
+    resources :states, only: [ :index ]
   end
 
-  resources :mountains, only: [:index, :show, :edit, :update] do
+  resources :mountains, only: [ :index, :show, :edit, :update ] do
     member do
       post :simulate
       patch :primary_candidates
@@ -63,8 +63,8 @@ Rails.application.routes.draw do
 
   # Development only: serve SimpleCov coverage reports
   if Rails.env.development?
-    mount Rack::Files.new(Rails.root.join('coverage')), at: '/coverage'
-    mount Rack::Files.new(Rails.root.join('app/assets/builds')), at: '/dev-assets'
+    mount Rack::Files.new(Rails.root.join("coverage")), at: "/coverage"
+    mount Rack::Files.new(Rails.root.join("app/assets/builds")), at: "/dev-assets"
   end
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

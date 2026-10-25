@@ -15,7 +15,7 @@ class Views::Partials::CandidacyPartial < Views::ApplicationView
           end
         end
       end
-      
+
       # Main content with improved layout
       div(class: "partial-content") do
         # Election and timing information
@@ -35,7 +35,7 @@ class Views::Partials::CandidacyPartial < Views::ApplicationView
             end
           end
         end
-        
+
         # Platform summary
         if @candidacy.platform_summary.present?
           div(class: "content-section") do

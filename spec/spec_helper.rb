@@ -4,7 +4,7 @@ SimpleCov.start 'rails' do
   skip '/spec/'
   skip '/config/'
   skip '/vendor/'
-  
+
   group 'Models', 'app/models'
   group 'Controllers', 'app/controllers'
   group 'Views', 'app/views'
@@ -13,7 +13,7 @@ SimpleCov.start 'rails' do
   group 'Jobs', 'app/jobs'
   group 'Services', 'app/services'
   group 'Policies', 'app/policies'
-  
+
   # minimum_coverage 80  # Uncomment to enforce coverage threshold
 end
 

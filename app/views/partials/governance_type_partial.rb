@@ -23,7 +23,7 @@ class Views::Partials::GovernanceTypePartial < Views::ApplicationView
             div(class: "content-description") { simple_format(@governance_type.description) }
           end
         end
-        
+
         # Governance information grid
         div(class: "info-grid") do
           div(class: "info-item") do

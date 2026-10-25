@@ -223,15 +223,15 @@ module Seeds
 
       place = if towns.one?
                 municipality_place(BallotRows.title_case(towns.first), (county_place(counties.first) if counties.one?))
-              elsif towns.empty? && counties.one?
+      elsif towns.empty? && counties.one?
                 county_place(counties.first)
-              elsif towns.empty? && counties.empty?
+      elsif towns.empty? && counties.empty?
                 covered, seat = seat, nil
                 district_place("#{@state_path}-#{token(office_title)}-#{token(covered)}", "#{@state_name} #{office_title}: #{covered}", "#{office_title} district")
-              else
+      else
                 covered = towns.any? ? towns.map { |name| BallotRows.title_case(name) } : counties.map { it[:name] }
                 district_place("#{@state_path}-#{token(office_title)}-#{token(covered.join(" "))}", "#{@state_name} #{office_title} (#{covered.join(", ")})", "#{office_title} district")
-              end
+      end
       # A district drawn for this office already carries its title.
       office_path = [ place[:path], (token(office_title) unless office_district), (token(seat) if seat) ].compact.join("-")
       {

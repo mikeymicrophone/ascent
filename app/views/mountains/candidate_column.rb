@@ -21,12 +21,12 @@ class Views::Mountains::CandidateColumn < Views::Components::Base
           position_y: @position_y
         )
       end
-      
+
       div(class: "candidate-info") do
         h4(class: "candidate-name") do
           link_to @candidacy.person.name, @candidacy, class: "candidate-link"
         end
-        
+
         p(
           class: "rating-value",
           data: { role: "rating-value" },
@@ -37,7 +37,7 @@ class Views::Mountains::CandidateColumn < Views::Components::Base
           data: { role: "no-rating" },
           hidden: @has_rating
         ) { "Not rated" }
-        
+
         if @candidacy.stances.any?
           p(class: "stance-count") do
             link_to "#{@candidacy.stances.count} policy positions", @candidacy, class: "stance-link"
