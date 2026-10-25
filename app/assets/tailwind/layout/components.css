@@ -600,3 +600,8 @@ select {
 .oauth-sign-in {
   @apply my-4 flex;
 }
+
+/* A candidacy's rating totals */
+.candidacy-ratings {
+  @apply block;
+}

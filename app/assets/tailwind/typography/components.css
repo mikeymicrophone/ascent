@@ -332,3 +332,12 @@
 .scaffold .race-filters select {
   font-size: 0.875rem;
 }
+
+/* A candidacy's rating totals */
+.candidacy-ratings-title {
+  @apply font-['Sora'] text-sm font-semibold uppercase tracking-wide;
+}
+
+.candidacy-ratings-empty {
+  @apply font-['Source_Serif_4'] text-sm;
+}

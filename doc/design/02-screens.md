@@ -45,7 +45,7 @@ At `/races`. Filters for search text, state, election year, status and election 
 
 ## 6. Candidacy and person
 
-- **Candidacy** (`/candidacies/:id`): the person's name, status and ballot labels, the race and election, and sections for policy positions and voter ratings. **The voter ratings section currently lists each voter by name with their rating, visible to anyone.** Ratings are meant to be private, so the redesign should show only aggregates here (for example, how many voters approve), never individual voters.
+- **Candidacy** (`/candidacies/:id`): the person's name, status and ballot labels, the race and election, policy positions, and rating totals: how many voters rated the candidate, the average rating, and how many approve. Ratings are private, so this page must never show which voter rated the candidate or how.
 - **Person** (`/people/:id`): their candidacies over time, with office, date, status and party.
 - They have to present a candidate as a person: stances with their evidence, official channels and communications, endorsements, and room for the multi-dimensional evaluation to come (ASC-59).
 

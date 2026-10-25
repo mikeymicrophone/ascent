@@ -53,12 +53,26 @@ class Views::Partials::CandidacyPartial < Views::ApplicationView
             end
           end
         end
+      end
 
-        expandable(@candidacy, :ratings, title: "Voter Ratings") do |ratings|
-          div(class: "expandable-grid") do
-            ratings.each { RatingPartial(rating: it) }
-          end
+      rating_totals
+    end
+  end
+
+  private
+
+  # Only totals: a rating is private to its voter, so no one may see who rated the candidate or how.
+  def rating_totals
+    section(class: "candidacy-ratings") do
+      h4(class: "candidacy-ratings-title") { "Ratings" }
+      if @candidacy.ratings.any?
+        div(class: "stats-grid") do
+          Stat(value: @candidacy.ratings.count, label: "voters rated")
+          Stat(value: @candidacy.average_rating.to_f, label: "average rating")
+          Stat(value: @candidacy.approvals_count, label: "approve")
         end
+      else
+        p(class: "candidacy-ratings-empty") { "No voter has rated this candidate yet." }
       end
     end
   end

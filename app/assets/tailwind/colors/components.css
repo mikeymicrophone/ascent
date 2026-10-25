@@ -495,3 +495,12 @@ select.error {
 .race-filters {
   background: var(--brand-paper);
 }
+
+/* A candidacy's rating totals */
+.candidacy-ratings-title {
+  color: var(--info-label-color);
+}
+
+.candidacy-ratings-empty {
+  color: var(--text-muted);
+}

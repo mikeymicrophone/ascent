@@ -567,3 +567,12 @@ select:focus {
 .scaffold .race-filters .race-filter-summary {
   margin: 0 0 0 auto;
 }
+
+/* A candidacy's rating totals */
+.candidacy-ratings {
+  @apply mt-4;
+}
+
+.candidacy-ratings-title {
+  @apply mb-2;
+}

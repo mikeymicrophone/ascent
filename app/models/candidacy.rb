@@ -55,6 +55,16 @@ class Candidacy < ApplicationRecord
     ratings.average(:rating)&.round(1)
   end
 
+  # Voters who rated this candidacy above their own baseline in its race, the way the race's results
+  # count them: a candidacy from a primary counts only voters who include primary candidates there.
+  def approvals_count
+    approving = ratings.joins(voter: :voter_race_baselines)
+                       .where(voter_race_baselines: { race_id: race_id })
+                       .where("ratings.rating > voter_race_baselines.baseline")
+    approving = approving.where(voter_id: VoterRacePreference.where(race_id: race_id, include_primary_candidates: true).select(:voter_id)) if primary_candidacy_id
+    approving.count
+  end
+
   def approval_count(baseline = nil)
     return 0 unless baseline
     ratings.above_baseline(baseline).count
