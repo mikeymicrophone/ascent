@@ -55,10 +55,12 @@ class Views::Mountains::IndexView < Views::ApplicationView
 
       div(class: "election-actions") do
         a(href: mountain_path(race), class: "btn-primary") { "View Mountain" }
-        button_to simulate_mountain_path(race), method: :post,
-          class: "resource-action resource-action-simulate", form_class: "resource-action-form" do
-          Ui::ActionIcon(kind: :simulate)
-          span { "Simulate Data" }
+        if can_simulate_mountains?
+          button_to simulate_mountain_path(race), method: :post,
+            class: "resource-action resource-action-simulate", form_class: "resource-action-form" do
+            Ui::ActionIcon(kind: :simulate)
+            span { "Simulate Data" }
+          end
         end
       end
     end

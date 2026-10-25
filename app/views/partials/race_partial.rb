@@ -72,7 +72,7 @@ class Views::Partials::RacePartial < Views::ApplicationView
 
       if @race.status == "active"
         div(class: "election-vote-action") do
-          link_to "Vote", mountain_path(@race, voter_id: current_voter&.id), class: "btn-primary"
+          link_to "Vote", mountain_path(@race), class: "btn-primary"
         end
       end
     end

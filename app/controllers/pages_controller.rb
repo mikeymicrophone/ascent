@@ -1,4 +1,7 @@
 class PagesController < ApplicationController
+  # Public pages, with no record to authorize.
+  skip_verify_authorized
+
   def home
     render Views::Pages::HomeView.new(
       active_races: active_races,

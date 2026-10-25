@@ -2,8 +2,10 @@ class MountainsController < ApplicationController
   before_action :set_race, only: [:show, :edit, :update, :simulate, :primary_candidates]
   before_action :set_voter, only: [:show, :edit, :update, :simulate, :primary_candidates]
   before_action :set_baseline, only: [:show, :edit, :update]
+  before_action :authorize_mountain!, except: :index
 
   def index
+    authorize! :mountain
     @races = Race.active.with_naming_details.includes(:candidacies)
     render Views::Mountains::IndexView.new(races: @races)
   end
@@ -127,13 +129,12 @@ class MountainsController < ApplicationController
   end
 
   def set_voter
-    @voter = if params[:voter_id].present?
-               Voter.find(params[:voter_id])
-             else
-               current_voter || Voter.first
-             end
+    @voter = params[:voter_id].present? ? Voter.find(params[:voter_id]) : current_voter
+  end
 
-    raise ActiveRecord::RecordNotFound, "No voter available for mountain" unless @voter
+  # Without a signed-in voter this fails, and the visitor is sent to sign in.
+  def authorize_mountain!
+    authorize! @voter, with: MountainPolicy
   end
 
   def set_baseline

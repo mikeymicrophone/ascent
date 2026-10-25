@@ -52,9 +52,11 @@ class Views::Mountains::ShowView < Views::ApplicationView
     div(class: "mountain-empty") do
       p { "No candidates yet for this race." }
       div(class: "mountain-empty-actions") do
-        link_to simulate_mountain_path(@race), data: { turbo_method: :post }, class: "resource-action resource-action-simulate" do
-          Ui::ActionIcon(kind: :simulate)
-          span { "Simulate Data" }
+        if can_simulate_mountains?
+          link_to simulate_mountain_path(@race), data: { turbo_method: :post }, class: "resource-action resource-action-simulate" do
+            Ui::ActionIcon(kind: :simulate)
+            span { "Simulate Data" }
+          end
         end
         link_to("Back to Race", @race, class: "btn-tertiary")
       end
@@ -65,9 +67,11 @@ class Views::Mountains::ShowView < Views::ApplicationView
     div(class: "mountain-controls") do
       link_to("Edit Ratings", edit_mountain_path(@race, voter_id: @voter.id),
               class: "btn-primary")
-      link_to simulate_mountain_path(@race), data: { turbo_method: :post }, class: "resource-action resource-action-simulate" do
-        Ui::ActionIcon(kind: :simulate)
-        span { "Simulate More Data" }
+      if can_simulate_mountains?
+        link_to simulate_mountain_path(@race), data: { turbo_method: :post }, class: "resource-action resource-action-simulate" do
+          Ui::ActionIcon(kind: :simulate)
+          span { "Simulate More Data" }
+        end
       end
       link_to("Back to Races", mountains_path, class: "btn-tertiary")
     end

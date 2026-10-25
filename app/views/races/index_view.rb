@@ -50,6 +50,8 @@ class Views::Races::IndexView < Views::ApplicationView
   end
 
   def simulate_button(race)
+    return unless can_simulate_mountains?
+
     button_to simulate_mountain_path(race), method: :post,
       class: "resource-action resource-action-simulate", form_class: "resource-action-form" do
       Ui::ActionIcon(kind: :simulate)
