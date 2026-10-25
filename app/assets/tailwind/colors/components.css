@@ -458,3 +458,40 @@ select.error {
 .action-bar .action-favorite.marked .icon-heart {
   fill: currentColor;
 }
+
+.resource-action-show {
+  color: var(--brand-ink);
+  background: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.resource-action-simulate {
+  color: var(--brand-ink);
+  background: var(--brand-glacier);
+  border-color: var(--brand-mist);
+}
+
+.resource-action:hover {
+  color: var(--brand-link);
+  background: var(--brand-snow);
+  border-color: var(--brand-link);
+}
+
+.resource-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.resource-title-link .resource-action-icon {
+  color: var(--brand-link);
+}
+
+.resource-title-link:hover {
+  color: var(--brand-link);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.race-filters {
+  background: var(--brand-paper);
+}

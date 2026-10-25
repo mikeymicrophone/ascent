@@ -239,3 +239,15 @@ select:focus {
   @apply outline-2 outline-offset-2;
   outline-color: var(--action-marked-border);
 }
+
+.resource-action,
+.resource-title-link {
+  cursor: pointer;
+  transition: background-color 150ms, border-color 150ms, color 150ms;
+}
+
+.resource-action:focus-visible,
+.resource-title-link:focus-visible {
+  outline: 2px solid var(--brand-link);
+  outline-offset: 3px;
+}

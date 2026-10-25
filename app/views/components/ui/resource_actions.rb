@@ -11,9 +11,12 @@ class Views::Components::Ui::ResourceActions < Views::Components::Base
   def view_template
     return unless scaffold_record_actions_visible?(@resource)
 
-    div do
+    div(class: "resource-actions") do
       if show_path && scaffold_show_action_visible?(@resource)
-        link_to "Show", show_path, class: scaffold_secondary_action_class
+        link_to show_path, class: "resource-action resource-action-show", title: "Show #{@resource.model_name.human.downcase}" do
+          render Views::Components::Ui::ActionIcon.new(kind: :show)
+          span { "Show" }
+        end
       end
 
       if edit_path && scaffold_edit_action_visible?(@resource)

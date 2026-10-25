@@ -311,3 +311,24 @@
 .saved-name {
   @apply font-['Source_Serif_4'] text-lg;
 }
+
+.resource-action,
+.resource-action > span,
+.scaffold .resource-action > span {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.78125rem;
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.scaffold .race-filters label {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.scaffold .race-filters input,
+.scaffold .race-filters select {
+  font-size: 0.875rem;
+}

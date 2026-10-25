@@ -1,4 +1,6 @@
 class Race < ApplicationRecord
+  STATUSES = %w[upcoming active completed cancelled].freeze
+
   include Engageable
 
   belongs_to :election
@@ -9,7 +11,7 @@ class Race < ApplicationRecord
   has_many :voter_race_baseline_archives, dependent: :delete_all
   has_many :voter_race_preferences, dependent: :delete_all
 
-  validates :status, presence: true, inclusion: { in: %w[upcoming active completed cancelled] }
+  validates :status, presence: true, inclusion: { in: STATUSES }
   # An updateable fact about the source's list, kept out of the race's identity and code.
   validates :certification_status, inclusion: { in: %w[certified tentative unofficial] }, allow_nil: true
   validate :office_matches_election_jurisdiction
@@ -25,6 +27,20 @@ class Race < ApplicationRecord
   scope :with_candidacy_details, -> { includes(candidacies: [ :person, :ratings ]) }
   scope :with_office_context, -> { includes(office: :position) }
   scope :with_naming_details, -> { includes(election: :year, office: [ :position, { jurisdiction: :jurisdictionable } ]) }
+
+  scope :in_state, ->(state) {
+    state.jurisdiction ? joins(:office).where(offices: { jurisdiction_id: state.jurisdiction.self_and_descendants.select(:id) }) : none
+  }
+
+  scope :matching, ->(query) {
+    pattern = "%#{sanitize_sql_like(query.strip)}%"
+    candidates = Candidacy.joins(:person)
+      .where("concat_ws(' ', people.first_name, people.middle_name, people.last_name) ILIKE ?", pattern)
+    joins(:election, office: :position).where(
+      "positions.title ILIKE :pattern OR elections.name ILIKE :pattern OR races.description ILIKE :pattern OR races.id IN (:candidate_races)",
+      pattern: pattern, candidate_races: candidates.select(:race_id)
+    )
+  }
 
   delegate :election_date, :year, to: :election
   delegate :current_office_holder, to: :office

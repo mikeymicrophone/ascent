@@ -6,7 +6,13 @@ class Views::Partials::RacePartial < Views::ApplicationView
   def view_template(&)
     div(id: dom_id(@race), class: "race-partial") do
       div(class: "partial-header") do
-        h3(class: "partial-title") { @race.office.name }
+        h3(class: "partial-title") do
+          link_to @race, class: "resource-title-link" do
+            plain @race.office.name
+            whitespace
+            Ui::ActionIcon(kind: :show)
+          end
+        end
         div(class: "header-indicators") do
           span(class: "status-indicator status-#{@race.status}") { @race.status.capitalize }
           if @race.election.is_mock

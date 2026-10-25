@@ -523,3 +523,76 @@ select {
 .breadcrumb-separator {
   @apply inline-flex items-center;
 }
+
+.resource-actions,
+.resource-list-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.scaffold[class*="-index"] [id^="list_item_"] .resource-list-actions,
+.scaffold[class*="-index"] [id^="list_item_"] .resource-actions {
+  flex-direction: row;
+  justify-content: flex-start;
+  width: auto;
+}
+
+.resource-action,
+.scaffold .resource-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  flex: 0 0 auto;
+}
+
+.resource-action-form,
+.scaffold .resource-action-form {
+  display: inline-flex;
+}
+
+.resource-title-link .resource-action-icon {
+  display: inline-block;
+  vertical-align: -0.1em;
+}
+
+.race-partial .partial-header {
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.race-partial .partial-title {
+  flex-basis: 15rem;
+  min-width: 0;
+}
+
+.resource-list-actions {
+  margin-block: 0.75rem 1rem;
+}
+
+.scaffold .race-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  align-items: end;
+  gap: 1rem;
+}
+
+.scaffold .race-filters > div {
+  margin: 0;
+}
+
+.scaffold .race-filters .race-filter-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (min-width: 64rem) {
+  .scaffold .race-filters {
+    grid-template-columns: minmax(16rem, 2fr) repeat(4, minmax(0, 1fr));
+  }
+}

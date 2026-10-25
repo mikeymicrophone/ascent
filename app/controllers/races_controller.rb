@@ -5,8 +5,21 @@ class RacesController < ApplicationController
     races_scope = Race.with_naming_details.includes(candidacies: :person).recent.visible_to(current_voter)
     races_scope = races_scope.where(office_id: params[:office_id]) if params[:office_id]
     races_scope = races_scope.where(election_id: params[:election_id]) if params[:election_id]
+    filters = params.permit(:q, :state_id, :year, :status, :kind).to_h
+    scope = params.permit(:office_id, :election_id).to_h
+    elections = Election.where(id: races_scope.reorder(nil).select(:election_id))
+    years = Year.where(id: elections.select(:year_id)).order(year: :desc).pluck(:year)
+    kinds = elections.where.not(kind: [nil, ""]).distinct.order(:kind).pluck(:kind)
+
+    races_scope = races_scope.matching(filters["q"]) if filters["q"].present?
+    races_scope = races_scope.in_state(State.includes(:jurisdiction).find(filters["state_id"])) if filters["state_id"].present?
+    races_scope = races_scope.where(elections: { year_id: Year.where(year: filters["year"]).select(:id) }) if filters["year"].present?
+    races_scope = races_scope.where(status: filters["status"]) if filters["status"].present?
+    races_scope = races_scope.where(elections: { kind: filters["kind"] }) if filters["kind"].present?
+    races_scope = races_scope.order(id: :asc)
     @pagy, @races = pagy(races_scope)
-    render Views::Races::IndexView.new(races: @races, pagy: @pagy)
+    render Views::Races::IndexView.new(races: @races, pagy: @pagy,
+      filters: filters, scope: scope, states: State.order(:name), years: years, kinds: kinds)
   end
 
   def show

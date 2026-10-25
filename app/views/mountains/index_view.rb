@@ -39,7 +39,13 @@ class Views::Mountains::IndexView < Views::ApplicationView
 
   def render_race_card(race)
     div(class: "election-card") do
-      h3(class: "election-title") { race.name }
+      h3(class: "election-title") do
+        link_to mountain_path(race), class: "resource-title-link" do
+          plain race.name
+          whitespace
+          Ui::ActionIcon(kind: :show)
+        end
+      end
       
       div(class: "election-meta") do
         p { "Election: #{race.election.name}" }
@@ -49,8 +55,11 @@ class Views::Mountains::IndexView < Views::ApplicationView
 
       div(class: "election-actions") do
         a(href: mountain_path(race), class: "btn-primary") { "View Mountain" }
-        button_to("Simulate Data", simulate_mountain_path(race), 
-                  method: :post, class: "btn-secondary", form: { style: "display: inline;" })
+        button_to simulate_mountain_path(race), method: :post,
+          class: "resource-action resource-action-simulate", form_class: "resource-action-form" do
+          Ui::ActionIcon(kind: :simulate)
+          span { "Simulate Data" }
+        end
       end
     end
   end

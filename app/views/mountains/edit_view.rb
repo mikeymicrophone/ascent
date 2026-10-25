@@ -99,8 +99,10 @@ class Views::Mountains::EditView < Views::ApplicationView
     div(class: "mountain-empty") do
       p { "No candidates yet for this race." }
       div(class: "mountain-empty-actions") do
-        link_to("Simulate Data", simulate_mountain_path(@race),
-                data: { turbo_method: :post }, class: "btn-primary")
+        link_to simulate_mountain_path(@race), data: { turbo_method: :post }, class: "resource-action resource-action-simulate" do
+          Ui::ActionIcon(kind: :simulate)
+          span { "Simulate Data" }
+        end
         link_to("Back to Race", @race, class: "btn-tertiary")
       end
     end

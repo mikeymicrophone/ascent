@@ -13,6 +13,7 @@ class Views::Components::ResourceIndex < Views::ApplicationView
   prop :heading, _Nilable(String)
   prop :details, _Callable?
   prop :extra_actions, _Callable?
+  prop :filters, _Callable?
 
   def view_template(&item_content)
     div(class: "scaffold #{plural}-index", id: "index_#{plural}") do
@@ -21,6 +22,8 @@ class Views::Components::ResourceIndex < Views::ApplicationView
         @parent ? parent_filter_info : @details&.call
         scaffold_new_resource_link "New #{model_name.human.downcase}", new_polymorphic_path(model), record: model
       end
+
+      @filters&.call
 
       div(id: plural) do
         if @collection.any?
@@ -43,9 +46,8 @@ class Views::Components::ResourceIndex < Views::ApplicationView
       ActionBar(record: record, summary: engagement_summary) if engageable?
 
       if @extra_actions
-        div do
+        div(class: "resource-list-actions") do
           @extra_actions.call(record)
-          whitespace
           Ui::ResourceActions(resource: record)
         end
       else
