@@ -23,6 +23,9 @@ RSpec.describe "Mountains", type: :request do
       let!(:year) { create(:year, year: 2026) }
       let!(:active_race) { create_race_for(office, :active, year: year, description: "A live municipal demonstration.") }
 
+      # An admin also sees the controls for simulated data.
+      before { sign_in create(:voter, admin: true) }
+
       before do
         create_list(:candidacy, 2, race: active_race)
       end
@@ -45,6 +48,8 @@ RSpec.describe "Mountains", type: :request do
     let!(:race) { create(:race, :active) }
     let!(:voter) { create(:voter) }
 
+    before { sign_in voter }
+
     it "renders the mountain page" do
       get mountain_path(race, voter_id: voter.id)
 
@@ -62,6 +67,8 @@ RSpec.describe "Mountains", type: :request do
   describe "GET /mountains/:id/edit" do
     let!(:race) { create(:race, :active) }
     let!(:voter) { create(:voter) }
+
+    before { sign_in voter }
     let!(:candidacy) { create(:candidacy, :active, race: race) }
 
     it "renders the editable mountain with the stimulus controller" do
@@ -78,6 +85,8 @@ RSpec.describe "Mountains", type: :request do
   describe "GET /mountains/:id remains editable after viewing" do
     let!(:race) { create(:race, :active) }
     let!(:voter) { create(:voter) }
+
+    before { sign_in voter }
     let!(:candidacy) { create(:candidacy, :active, race: race) }
     let!(:rating) { create(:rating, voter: voter, candidacy: candidacy, rating: 300) }
 
@@ -95,6 +104,8 @@ RSpec.describe "Mountains", type: :request do
   describe "PATCH /mountains/:id" do
     let!(:race) { create(:race, :active) }
     let!(:voter) { create(:voter) }
+
+    before { sign_in voter }
     let!(:candidacy_a) { create(:candidacy, :active, race: race) }
     let!(:candidacy_b) { create(:candidacy, :active, race: race) }
     let!(:existing_rating) do

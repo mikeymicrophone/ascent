@@ -35,6 +35,11 @@ class Views::ApplicationView < Phlex::HTML
     ApplicationRecordPolicy
   end
 
+  # Simulated mountain data invents candidates and ratings, so only admins see the controls for it.
+  def can_simulate_mountains?
+    allowed_to?(:simulate?, :mountain, context: { voter: current_voter })
+  end
+
   # A Lucide icon by name, e.g. icon(:share_2). Hidden from screen readers; the text beside it carries the meaning.
   def icon(name, **attributes)
     render PhlexIcons::Lucide.const_get(name.to_s.camelize).new(class: "icon icon-#{name.to_s.dasherize}", aria: { hidden: true }, **attributes)

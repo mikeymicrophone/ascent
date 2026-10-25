@@ -29,6 +29,11 @@ class ApplicationRecordPolicy < ApplicationPolicy
     admin?
   end
 
+  # Any other action, such as a mountain's simulate, is for admins.
+  def manage?
+    admin?
+  end
+
   private
 
   def admin?

@@ -130,6 +130,7 @@ RSpec.describe "Candidate Management", type: :system do
       end
 
       it "displays rating information in the system" do
+        sign_in create(:voter, admin: true)
         visit ratings_path
         
         expect(page).to have_content("450")

@@ -3,10 +3,9 @@ require 'rails_helper'
 RSpec.describe MountainsController, type: :controller do
   let(:race) { create(:race, :active) }
 
-  # Skip authentication for these tests
+  # Simulated data is for admins.
   before do
-    allow(controller).to receive(:authenticate_voter!).and_return(true)
-    allow(controller).to receive(:current_voter).and_return(create(:voter))
+    allow(controller).to receive(:current_voter).and_return(create(:voter, admin: true))
   end
 
   describe 'GET #index' do

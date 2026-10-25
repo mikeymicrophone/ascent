@@ -52,6 +52,7 @@ RSpec.describe "Voting Workflow", type: :system do
       let!(:rating2) { create(:rating, voter: voter, candidacy: candidacy2, rating: 200) }
 
       it "shows voter ratings in the system" do
+        sign_in create(:voter, admin: true)
         visit ratings_path
         
         expect(page).to have_content("Ratings")
@@ -100,6 +101,7 @@ RSpec.describe "Voting Workflow", type: :system do
     end
 
     it "shows voter baselines" do
+      sign_in create(:voter, admin: true)
       visit voter_race_baselines_path
       
       expect(page).to have_content("Baselines")

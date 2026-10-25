@@ -49,8 +49,10 @@ class Views::Mountains::IndexView < Views::ApplicationView
 
       div(class: "election-actions") do
         a(href: mountain_path(race), class: "btn-primary") { "View Mountain" }
-        button_to("Simulate Data", simulate_mountain_path(race), 
-                  method: :post, class: "btn-secondary", form: { style: "display: inline;" })
+        if can_simulate_mountains?
+          button_to("Simulate Data", simulate_mountain_path(race),
+                    method: :post, class: "btn-secondary", form: { style: "display: inline;" })
+        end
       end
     end
   end

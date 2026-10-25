@@ -12,6 +12,8 @@ RSpec.describe "Primary candidates on the mountain", type: :request do
     create(:candidacy, race: race, person: eliminated, status: "active", participation: "off_ballot", primary_candidacy: create(:candidacy, person: eliminated))
   end
 
+  before { sign_in voter }
+
   it "leaves primary candidates off by default and offers to include them" do
     get mountain_path(race, voter_id: voter.id)
 

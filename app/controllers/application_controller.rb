@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
   include ActionPolicy::Controller
   authorize :voter, through: :current_voter
   append_before_action :authorize_action_policy_resource!
+  # An action that authorizes nothing raises, so a new controller cannot skip its policy by accident.
+  verify_authorized unless: :devise_controller?
 
   # Make current_voter available as a helper method in views
   helper_method :current_voter
@@ -52,8 +54,8 @@ class ApplicationController < ActionController::Base
     case action_name
     when "index", "new", "create"
       klass
-    when "show", "edit", "update", "destroy"
-      klass.find(params[:id])
+    else
+      params[:id] ? klass.find(params[:id]) : klass
     end
   end
 

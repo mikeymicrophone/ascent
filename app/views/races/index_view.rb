@@ -9,6 +9,8 @@ class Views::Races::IndexView < Views::ApplicationView
   private
 
   def simulate_button(race)
+    return unless can_simulate_mountains?
+
     button_to("Simulate Data", simulate_mountain_path(race),
       method: :post, class: "btn-secondary", form: { style: "display: inline;" })
   end

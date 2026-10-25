@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "Ratings Index", type: :request do
+  # Every voter's ratings are listed only for admins.
+  before { sign_in create(:voter, admin: true) }
+
   describe "GET /ratings" do
     context "with no ratings" do
       it "renders successfully with empty state" do
