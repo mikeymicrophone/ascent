@@ -29,7 +29,7 @@ module Seeds
       @vintage = Integer(vintage)
       @dry_run = dry_run
       @factory = RGeo::Geos.factory(srid: 4326)
-      @report = { matched: 0, written: 0, created: 0, skipped: 0, placed_elsewhere: 0, unmatched_count: 0, ambiguous_count: 0, invalid_count: 0,
+      @report = { matched: 0, written: 0, created: 0, released: 0, skipped: 0, placed_elsewhere: 0, unmatched_count: 0, ambiguous_count: 0, invalid_count: 0,
                   unmatched: [], ambiguous: [], invalid: [] }
       @states = {}
       @legislative_districts = {}
@@ -51,6 +51,7 @@ module Seeds
     end
 
     def import_feature(feature)
+      release(feature) if feature.not_a_government?
       return count(:skipped) unless feature.kind
 
       state = state_of(feature)
@@ -69,6 +70,21 @@ module Seeds
     end
 
     private
+
+    # A town an earlier import matched to an area with no government gives up that area's census ID and
+    # its boundary from this vintage, reopening any older one, so the town's own place can match it.
+    def release(feature)
+      Jurisdiction.with_census_id(feature.census_class, feature.geoid).find_each do |jurisdiction|
+        count(:released)
+        next if @dry_run
+
+        ActiveRecord::Base.transaction do
+          jurisdiction.boundaries.where(valid_from: valid_from).delete_all
+          jurisdiction.boundaries.where(valid_until: valid_from).update_all(valid_until: nil)
+          jurisdiction.update!(census_class: nil, census_geoid: nil)
+        end
+      end
+    end
 
     def count(key)
       @report[key] += 1

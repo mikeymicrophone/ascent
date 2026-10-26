@@ -15,6 +15,11 @@ module Seeds
       "G5220" => :lower_district
     }.freeze
 
+    # Functional status codes for areas with no government of their own: fictitious, inactive,
+    # nonfunctioning, and statistical (such as census county divisions).
+    NOT_GOVERNMENTS = %w[F I N S].freeze
+    TOWN_KINDS = %i[county_subdivision place].freeze
+
     # The parts of a legislative district's legal name that say which chamber it belongs to.
     LEGISLATIVE_WORDS = /\b(?:State (?:House|Senate|Legislative) (?:Sub)?district|Assembly District|Delegate District|Senatorial District|District)\b/i
 
@@ -44,7 +49,12 @@ module Seeds
     end
 
     def kind
-      CLASSES[census_class] unless undefined_district? || undefined_subdivision? || council_ward?
+      CLASSES[census_class] unless undefined_district? || undefined_subdivision? || council_ward? || not_a_government?
+    end
+
+    # A county subdivision or place that has no government, such as "Las Vegas CCD", is never a town.
+    def not_a_government?
+      TOWN_KINDS.include?(CLASSES[census_class]) && NOT_GOVERNMENTS.include?(properties["FUNCSTAT"])
     end
 
     def district?

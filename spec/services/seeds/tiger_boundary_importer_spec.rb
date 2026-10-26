@@ -134,6 +134,21 @@ RSpec.describe Seeds::TigerBoundaryImporter do
     expect(barre_town.jurisdiction.reload.census_geoid).to eq("5002303250")
   end
 
+  it "never takes a town's shape from an area with no government, and gives back one an earlier import took" do
+    stanton = create(:municipality, :with_jurisdiction, name: "Stanton", state: vermont, county: alder_county)
+    division = feature({ "MTFCC" => "G4040", "GEOID" => "5000192037", "COUSUBFP" => "92037", "FUNCSTAT" => "S", "NAME" => "Stanton", "NAMELSAD" => "Stanton CCD" }, square(-73, 43, 1.5))
+    town = feature({ "MTFCC" => "G4110", "GEOID" => "5070000", "FUNCSTAT" => "A", "NAME" => "Stanton", "NAMELSAD" => "Stanton city" }, square(-72.5, 43.5, 0.2))
+    stanton.jurisdiction.update!(census_class: "G4040", census_geoid: "5000192037")
+    stanton.jurisdiction.boundaries.create!(geometry: RGeo::GeoJSON.decode(division["geometry"], geo_factory: RGeo::Geos.factory(srid: 4326)),
+      valid_from: Date.new(2025, 1, 1))
+
+    report = described_class.new(vintage: 2025).import_all([ collection_file("tl_2025_50_cousub.geojson", [ division ]), collection_file("tl_2025_50_place.geojson", [ town ]) ])
+
+    expect(report).to include(released: 1, skipped: 1, matched: 1)
+    expect(stanton.jurisdiction.reload).to have_attributes(census_class: "G4110", census_geoid: "5070000")
+    expect(stanton.jurisdiction.boundaries.sole.geometry.area).to be_within(0.001).of(0.04)
+  end
+
   it "reads a shapefile, reprojecting it to WGS 84", skip: (system("which ogr2ogr > /dev/null") ? false : "needs GDAL's ogr2ogr") do
     source = collection_file("county.geojson", [ county_feature ])
     shapefile = directory.join("tl_2025_us_county.shp")
