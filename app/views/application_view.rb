@@ -45,6 +45,24 @@ class Views::ApplicationView < Phlex::HTML
     render PhlexIcons::Lucide.const_get(name.to_s.camelize).new(class: "icon icon-#{name.to_s.dasherize}", aria: { hidden: true }, **attributes)
   end
 
+  def delimited(number)
+    ActiveSupport::NumberHelper.number_to_delimited(number)
+  end
+
+  # A share from 0 to 100 as a whole percent, or a dash when there is none.
+  def percent(share)
+    share ? "#{share.round}%" : "—"
+  end
+
+  # How far a date is from today: "in 8 days", "today", "3 days ago".
+  def relative_days(date)
+    days = (date - Date.current).to_i
+    if days.positive? then "in #{pluralize(days, "day")}"
+    elsif days.zero? then "today"
+    else "#{pluralize(-days, "day")} ago"
+    end
+  end
+
   # The popover a ballot opens on a candidate's name, and the Turbo frame its card loads into.
   def candidate_popover_id(candidacy)
     "candidate-popover-#{candidacy.id}"

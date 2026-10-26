@@ -29,6 +29,11 @@ class Office < ApplicationRecord
     position.title + " - " + jurisdiction.name
   end
 
+  # The seat's code as words: DISTRICT_10 reads "District 10", AT_LARGE "At large".
+  def seat_label
+    seat_code&.humanize
+  end
+
   def nomination?
     nominee_for_office_id.present?
   end

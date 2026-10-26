@@ -55,14 +55,8 @@ class Views::Elections::ShowView < Views::ApplicationView
       "historical" => [ "Historical · #{@election.election_date.year}", "This election is over; replay its races with approval" ]
     }
     label, text = labels.fetch(mode)
-    div(class: "mode-strip mode-#{mode}", role: "status") do
-      div(class: "mode-strip-inner") do
-        div(class: "mode-strip-main") do
-          span(class: "mode-strip-label") { label }
-          span(class: "mode-strip-text") { text }
-        end
-        span(class: "mode-strip-note") { "Not a real race" } if mode == "mock"
-      end
+    ModeBanner(mode: mode, label: label, text: text) do
+      span(class: "mode-strip-note") { "Not a real race" } if mode == "mock"
     end
   end
 
@@ -70,11 +64,7 @@ class Views::Elections::ShowView < Views::ApplicationView
   def election_hero
     section(class: "election-hero") do
       div(class: "election-hero-text") do
-        nav(class: "breadcrumb", aria: { label: "Breadcrumb" }) do
-          link_to "Elections", elections_path, class: "breadcrumb-link"
-          span(class: "breadcrumb-separator", aria: { hidden: true }) { "/" }
-          link_to place.name, place, class: "breadcrumb-link"
-        end
+        Breadcrumb(trail: [ [ "Elections", elections_path ], [ place.name, place ] ], current: @election.name)
         span(class: "eyebrow") { [ @election.kind&.humanize, "election", place.name ].compact.join(" · ") }
         h1(class: "display-title") { @election.name }
         p(class: "ballot-lede") { lede }
@@ -99,19 +89,16 @@ class Views::Elections::ShowView < Views::ApplicationView
 
   def primary_action
     if !current_voter
-      link_to "Sign in to build a mountain", new_voter_session_path, class: "pill-button"
+      PillLink(label: "Sign in to build a mountain", path: new_voter_session_path)
     elsif mode == "ballot" && @election.open_to_rating?
-      link_to ballot_path, class: "pill-button" do
-        icon(:map_pin)
-        plain "Open my ballot"
-      end
+      PillLink(label: "Open my ballot", path: ballot_path, icon: :map_pin)
     elsif @election.open_to_rating? || mode == "historical"
       link_to "#election-ballot", class: "pill-button pill-button-summit" do
         icon(mode == "historical" ? :clock : :compass)
         plain({ "pretend" => "Pretend vote here", "mock" => "Build your mountains", "historical" => "Replay with approval" }.fetch(mode, "See the ballot"))
       end
     else
-      link_to "See the ballot", "#election-ballot", class: "pill-button pill-button-outline"
+      PillLink(label: "See the ballot", path: "#election-ballot", variant: "outline")
     end
   end
 
@@ -258,7 +245,7 @@ class Views::Elections::ShowView < Views::ApplicationView
 
   # A name opens its card in a popover; the card loads the first time it is shown.
   def candidate_button(candidacy)
-    button(type: "button", class: "candidate-name", popovertarget: candidate_popover_id(candidacy)) { candidate_name(candidacy.person) }
+    button(type: "button", class: "candidate-name", popovertarget: candidate_popover_id(candidacy)) { PersonName(person: candidacy.person) }
     div(id: candidate_popover_id(candidacy), popover: "auto", class: "candidate-popover") do
       turbo_frame_tag(dom_id(candidacy, :card), src: candidacy_card_path(candidacy), loading: "lazy", target: "_top") do
         p(class: "candidate-card-loading") { "Loading #{candidacy.person.full_name}…" }
@@ -267,12 +254,6 @@ class Views::Elections::ShowView < Views::ApplicationView
   end
 
   # The surname carries the weight; given and middle names stay light.
-  def candidate_name(person)
-    given = [ person.first_name, person.middle_name ].compact_blank.join(" ")
-    span(class: "candidate-given") { "#{given} " } if given.present?
-    strong(class: "candidate-surname") { person.last_name }
-  end
-
   def candidate_names(race)
     names = ballot_candidacies(race).map { it.person.full_name }
     names.any? ? names.join(", ") : "No candidates yet"
@@ -328,7 +309,7 @@ class Views::Elections::ShowView < Views::ApplicationView
   # nil leaves it to be numbered.
   def seat_label(race)
     office = race.office
-    office.seat_code&.humanize || (office.jurisdiction.name unless office.jurisdiction_id == @election.jurisdiction_id)
+    office.seat_label || (office.jurisdiction.name unless office.jurisdiction_id == @election.jurisdiction_id)
   end
 
   def progress_chip(race)
@@ -357,8 +338,7 @@ class Views::Elections::ShowView < Views::ApplicationView
   end
 
   def at_a_glance
-    section(class: "side-card") do
-      h2(class: "card-heading") { "At a glance" }
+    SideCard(heading: "At a glance") do
       dl(class: "place-facts-list") do
         glance_row("Contests", contests.size)
         glance_row("Seats", @election.races.size)
@@ -370,24 +350,14 @@ class Views::Elections::ShowView < Views::ApplicationView
   end
 
   def glance_row(label, value)
-    div(class: "place-fact-row") do
-      dt { label }
-      dd(class: "glance-value") { ActiveSupport::NumberHelper.number_to_delimited(value) }
-    end
+    FactRow(label: label, value_class: "glance-value") { delimited(value) }
   end
 
   def where_held
-    section(class: "side-card") do
-      h2(class: "card-heading") { "Where" }
+    SideCard(heading: "Where") do
       dl(class: "place-facts-list") do
-        div(class: "place-fact-row") do
-          dt { place.class.model_name.human }
-          dd { link_to place.name, place, class: "text-link" }
-        end
-        div(class: "place-fact-row") do
-          dt { "Year" }
-          dd { link_to @election.year.name.to_s, @election.year, class: "text-link" }
-        end
+        FactRow(label: place.class.model_name.human) { link_to place.name, place, class: "text-link" }
+        FactRow(label: "Year") { link_to @election.year.name.to_s, @election.year, class: "text-link" }
       end
     end
   end
@@ -397,8 +367,7 @@ class Views::Elections::ShowView < Views::ApplicationView
     following = @election.next_in_jurisdiction
     return unless previous || following
 
-    section(class: "side-card") do
-      h2(class: "card-heading") { "Before and after in #{place.name}" }
+    SideCard(heading: "Before and after in #{place.name}") do
       ul(class: "sibling-elections") do
         sibling_election("Before", previous) if previous
         sibling_election("After", following) if following
@@ -416,8 +385,7 @@ class Views::Elections::ShowView < Views::ApplicationView
   def admin_actions
     return unless current_voter&.admin?
 
-    section(class: "side-card admin-card") do
-      h2(class: "card-heading") { "Admin" }
+    SideCard(heading: "Admin", modifier: "admin-card") do
       Ui::ResourceActions(resource: @election)
       scaffold_new_resource_link "Add a race", new_race_path(election_id: @election.id), record: Race
     end

@@ -39,18 +39,15 @@ class Views::Elections::IndexView < Views::ApplicationView
         p(class: "ballot-lede") { header_lede }
       end
       div(class: "place-actions") do
-        link_to new_mock_election_path, class: "pill-button pill-button-outline" do
-          icon(:flask_conical)
-          plain "Make a mock election"
-        end
-        link_to("New election", new_election_path, class: "pill-button") if current_voter&.admin?
+        PillLink(label: "Make a mock election", path: new_mock_election_path, icon: :flask_conical, variant: "outline")
+        PillLink(label: "New election", path: new_election_path) if current_voter&.admin?
       end
     end
   end
 
   def header_lede
-    "#{number(@tab_counts["upcoming"])} #{"election".pluralize(@tab_counts["upcoming"])} open for mountains, " \
-      "#{number(@tab_counts["past"])} finished, and #{number(@tab_counts["mock"])} mock #{"election".pluralize(@tab_counts["mock"])} to practice on."
+    "#{delimited(@tab_counts["upcoming"])} #{"election".pluralize(@tab_counts["upcoming"])} open for mountains, " \
+      "#{delimited(@tab_counts["past"])} finished, and #{delimited(@tab_counts["mock"])} mock #{"election".pluralize(@tab_counts["mock"])} to practice on."
   end
 
   # The open elections where the voter lives, pulled out of the long list.
@@ -100,7 +97,7 @@ class Views::Elections::IndexView < Views::ApplicationView
         current = tab == @filters[:tab]
         link_to listing_path(tab: tab), class: "listing-tab#{" is-current" if current}", aria: { current: (current ? "page" : nil) } do
           span(class: "listing-tab-label") { TAB_LABELS.fetch(tab) }
-          span(class: "listing-tab-count") { number(@tab_counts.fetch(tab)) }
+          span(class: "listing-tab-count") { delimited(@tab_counts.fetch(tab)) }
         end
       end
     end
@@ -160,12 +157,7 @@ class Views::Elections::IndexView < Views::ApplicationView
 
   def day_meta(date)
     count = @day_counts.fetch(date, 0)
-    days = (date - Date.current).to_i
-    relative = if days.positive? then "in #{pluralize(days, "day")}"
-    elsif days.zero? then "today"
-    else "#{pluralize(-days, "day")} ago"
-    end
-    "#{number(count)} #{"election".pluralize(count)} · #{relative}"
+    "#{delimited(count)} #{"election".pluralize(count)} · #{relative_days(date)}"
   end
 
   def election_row(election)
@@ -193,7 +185,7 @@ class Views::Elections::IndexView < Views::ApplicationView
     span(class: "row-badge row-badge-yours") { "Your ballot" } if yours?(election)
     progress_badge(election)
     span(class: "row-badge row-badge-following") { "Following" } if engagements.marked?(election, :follow)
-    span(class: "race-status-chip race-status-#{election.status}") { election.status } unless election.open_to_rating?
+    StatusChip(status: election.status) unless election.open_to_rating?
   end
 
   def progress_badge(election)
@@ -223,11 +215,7 @@ class Views::Elections::IndexView < Views::ApplicationView
     section(class: "ballot-empty") do
       h2(class: "card-title") { "No elections match" }
       p { "Try another tab, clear the kind, or search for a different place." }
-      link_to "Clear filters", elections_path(tab: @filters[:tab]), class: "pill-button"
+      PillLink(label: "Clear filters", path: elections_path(tab: @filters[:tab]))
     end
-  end
-
-  def number(value)
-    ActiveSupport::NumberHelper.number_to_delimited(value)
   end
 end

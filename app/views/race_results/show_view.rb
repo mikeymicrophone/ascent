@@ -41,25 +41,16 @@ class Views::RaceResults::ShowView < Views::ApplicationView
   end
 
   def results_strip
-    div(class: "mode-strip mode-results", role: "status") do
-      div(class: "mode-strip-inner") do
-        div(class: "mode-strip-main") do
-          span(class: "mode-strip-label") { "Ascent results" }
-          span(class: "mode-strip-text") { "Mountains built by #{place} #{@group == "resident" ? "residents" : "visitors"}. Not a poll, and not the official count." }
-        end
-        span(class: "mode-strip-note") { "Updates hourly" }
-      end
+    ModeBanner(mode: "results", label: "Ascent results",
+      text: "Mountains built by #{place} #{@group == "resident" ? "residents" : "visitors"}. Not a poll, and not the official count.") do
+      span(class: "mode-strip-note") { "Updates hourly" }
     end
   end
 
   def results_header
     section(class: "results-header") do
       div(class: "results-heading") do
-        nav(class: "breadcrumb", aria: { label: "Breadcrumb" }) do
-          link_to @race.office.name, edit_mountain_path(@race), class: "breadcrumb-link"
-          span(class: "breadcrumb-separator", aria: { hidden: true }) { "/" }
-          span(aria: { current: "page" }) { "Results" }
-        end
+        Breadcrumb(trail: [ [ @race.office.name, edit_mountain_path(@race) ] ], current: "Results")
         h1(class: "display-title") { "What #{place} approves" }
       end
       nav(class: "group-toggle", aria: { label: "Whose mountains" }) do
@@ -73,17 +64,10 @@ class Views::RaceResults::ShowView < Views::ApplicationView
 
   def stat_tiles
     div(class: "stat-tiles") do
-      stat_tile(number(@summary[:mountain_count]), "#{GROUP_LABELS.fetch(@group).downcase} built a mountain for this race")
-      stat_tile(@summary[:average_approvals].to_s, "candidates approved per mountain, on average")
-      stat_tile("#{@summary[:multiple_approval_share].round}%", "approved more than one candidate")
-      stat_tile(@summary[:median_baseline].to_s, "median baseline", modifier: "baseline")
-    end
-  end
-
-  def stat_tile(value, label, modifier: nil)
-    div(class: "stat-tile#{" stat-tile-#{modifier}" if modifier}") do
-      span(class: "stat-tile-value") { value }
-      span(class: "stat-tile-label") { label }
+      StatTile(value: delimited(@summary[:mountain_count]), label: "#{GROUP_LABELS.fetch(@group).downcase} built a mountain for this race")
+      StatTile(value: @summary[:average_approvals].to_s, label: "candidates approved per mountain, on average")
+      StatTile(value: percent(@summary[:multiple_approval_share]), label: "approved more than one candidate")
+      StatTile(value: @summary[:median_baseline].to_s, label: "median baseline", modifier: "baseline")
     end
   end
 
@@ -141,7 +125,7 @@ class Views::RaceResults::ShowView < Views::ApplicationView
 
     section(class: "results-card results-off-ballot") do
       h2(class: "card-title") { "Off the ballot" }
-      p(class: "card-text") { "Among #{number(off[:mountain_count])} who chose to show candidates from the primaries." }
+      p(class: "card-text") { "Among #{delimited(off[:mountain_count])} who chose to show candidates from the primaries." }
       table(class: "results-table") do
         tbody do
           off[:approval_shares].sort_by { -it.last }.each do |candidacy_id, share|
@@ -159,7 +143,7 @@ class Views::RaceResults::ShowView < Views::ApplicationView
     section(class: "results-card results-withheld") do
       h2(class: "card-title") { "No mountains yet" }
       p(class: "card-text") { "Results appear as soon as someone saves a mountain for this race." }
-      link_to "Build your mountain", edit_mountain_path(@race), class: "pill-button"
+      PillLink(label: "Build your mountain", path: edit_mountain_path(@race))
     end
   end
 
@@ -176,13 +160,5 @@ class Views::RaceResults::ShowView < Views::ApplicationView
 
   def ranked_by(key)
     @summary[key].sort_by { -it.last }
-  end
-
-  def percent(share)
-    "#{share.round}%"
-  end
-
-  def number(value)
-    ActiveSupport::NumberHelper.number_to_delimited(value)
   end
 end

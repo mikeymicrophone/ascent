@@ -9,16 +9,8 @@ class Views::MockElections::NewView < Views::ApplicationView
 
   def view_template
     div(class: "mock-page") do
-      div(class: "mode-strip mode-mock", role: "status") do
-        div(class: "mode-strip-inner") do
-          div(class: "mode-strip-main") do
-            icon(:flask_conical, class: "icon mode-strip-icon")
-            span(class: "mode-strip-label") { "Mock election" }
-            span(class: "mode-strip-text") { "Invented candidates, kept apart from real races and real people" }
-          end
-          span(class: "mode-strip-note") { "Not a real race" }
-        end
-      end
+      ModeBanner(mode: "mock", label: "Mock election", text: "Invented candidates, kept apart from real races and real people",
+        icon: :flask_conical) { span(class: "mode-strip-note") { "Not a real race" } }
       div(class: "mock-body") do
         header(class: "mock-header") do
           span(class: "eyebrow") { "New" }
@@ -45,7 +37,7 @@ class Views::MockElections::NewView < Views::ApplicationView
       RACE_SLOTS.times { race_fields(it) }
       div(class: "form-actions") do
         button(type: "submit", class: "pill-button pill-button-summit") { "Create mock election" }
-        link_to "Cancel", ballot_path, class: "pill-button pill-button-ghost"
+        PillLink(label: "Cancel", path: ballot_path, variant: "ghost")
       end
     end
   end

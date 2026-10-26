@@ -46,28 +46,19 @@ class Views::Mountains::EditView < Views::ApplicationView
   def race_header
     section(class: "race-header") do
       div(class: "race-header-text") do
-        nav(class: "breadcrumb", aria: { label: "Breadcrumb" }) do
-          link_to "My ballot", ballot_path, class: "breadcrumb-link"
-          span(class: "breadcrumb-separator", aria: { hidden: true }) { "/" }
-          span { @race.office.jurisdiction.name }
-          span(class: "breadcrumb-separator", aria: { hidden: true }) { "/" }
-          span(aria: { current: "page" }) { @race.office.position.title }
-        end
+        Breadcrumb(trail: [ [ "My ballot", ballot_path ], [ @race.office.jurisdiction.name ] ], current: @race.office.position.title)
         h1(class: "display-title race-title") { @race.office.name }
         div(class: "race-meta") do
           span { @race.election.name }
           span(class: "race-meta-dot", aria: { hidden: true }) { "·" }
           span { "#{pluralize(@mountain.ballot_candidacies_count, "candidate")} on the ballot" }
-          span(class: "race-status-chip race-status-#{@race.status}") { @race.status }
+          StatusChip(status: @race.status)
         end
         p(class: "voter-on-behalf") { "Voter: #{@voter.name}" } unless @voter == current_voter
       end
       div(class: "race-header-actions") do
         follow_button if current_voter
-        link_to race_results_path(@race), class: "pill-button pill-button-outline" do
-          icon(:chart_column)
-          plain "Results"
-        end
+        PillLink(label: "Results", path: race_results_path(@race), icon: :chart_column, variant: "outline")
       end
     end
   end

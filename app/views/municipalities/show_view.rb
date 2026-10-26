@@ -67,13 +67,8 @@ class Views::Municipalities::ShowView < Views::ApplicationView
   end
 
   def breadcrumb
-    nav(class: "breadcrumb", aria: { label: "Breadcrumb" }) do
-      [ @municipality.state.country, @municipality.state, @municipality.distinct_county ].compact.each do |place|
-        link_to place.name, place, class: "breadcrumb-link"
-        span(class: "breadcrumb-separator", aria: { hidden: true }) { "/" }
-      end
-      span(aria: { current: "page" }) { name }
-    end
+    places = [ @municipality.state.country, @municipality.state, @municipality.distinct_county ].compact
+    Breadcrumb(trail: places.map { [ it.name, it ] }, current: name)
   end
 
   def lede
@@ -87,17 +82,11 @@ class Views::Municipalities::ShowView < Views::ApplicationView
 
   def primary_action
     if resident?
-      link_to ballot_path, class: "pill-button" do
-        icon(:map_pin)
-        plain "Open my ballot"
-      end
+      PillLink(label: "Open my ballot", path: ballot_path, icon: :map_pin)
     elsif !current_voter
-      link_to "Sign in to build a mountain", new_voter_session_path, class: "pill-button"
+      PillLink(label: "Sign in to build a mountain", path: new_voter_session_path)
     elsif open_races.any?
-      link_to "#place-ballot", class: "pill-button pill-button-summit" do
-        icon(:compass)
-        plain "Pretend vote here"
-      end
+      PillLink(label: "Pretend vote here", path: "#place-ballot", icon: :compass, variant: "summit")
     else
       mock_election_link("pill-button")
     end
@@ -105,7 +94,7 @@ class Views::Municipalities::ShowView < Views::ApplicationView
 
   def secondary_action
     if open_races.any? && (resident? || !current_voter)
-      link_to "See the races here", "#place-ballot", class: "pill-button pill-button-outline"
+      PillLink(label: "See the races here", path: "#place-ballot", variant: "outline")
     elsif current_voter && open_races.any?
       mock_election_link("pill-button pill-button-outline")
     end
@@ -120,26 +109,19 @@ class Views::Municipalities::ShowView < Views::ApplicationView
 
   def fact_tiles
     div(class: "stat-tiles place-facts") do
-      fact(open_races.size.to_s, "open #{"race".pluralize(open_races.size)} decided here")
+      StatTile(value: open_races.size.to_s, label: "open #{"race".pluralize(open_races.size)} decided here")
       seats = @municipality.office_seats.values.sum
-      fact(seats.to_s, "#{"seat".pluralize(seats)} elected here")
+      StatTile(value: seats.to_s, label: "#{"seat".pluralize(seats)} elected here")
       if next_election
-        fact(next_election.election_date.strftime("%b %-d"), election_day_label, modifier: "date")
+        StatTile(value: next_election.election_date.strftime("%b %-d"), label: election_day_label, modifier: "date")
       end
-      fact(@municipality.voters.count.to_s, "voters here on Ascent")
+      StatTile(value: @municipality.voters.count.to_s, label: "voters here on Ascent")
     end
   end
 
   def election_day_label
     days = next_election.days_until
     days.positive? ? "election day · in #{pluralize(days, "day")}" : "election day"
-  end
-
-  def fact(value, label, modifier: nil)
-    div(class: "stat-tile#{" stat-tile-#{modifier}" if modifier}") do
-      span(class: "stat-tile-value") { value }
-      span(class: "stat-tile-label") { label }
-    end
   end
 
   # The open races decided here, then a line for the races every resident also votes in.
@@ -160,7 +142,7 @@ class Views::Municipalities::ShowView < Views::ApplicationView
     article(class: "place-race") do
       div(class: "place-race-heading") do
         h3(class: "place-race-office") { race.office.position.title }
-        span(class: "place-race-seat") { seat_label(race.office) } if race.office.seat_code.present?
+        span(class: "place-race-seat") { race.office.seat_label } if race.office.seat_code.present?
       end
       span(class: "race-card-meta") { "#{pluralize(race.candidacies.size, "candidate")} · #{race.status.humanize}" }
       div(class: "race-card-actions") do
@@ -171,11 +153,6 @@ class Views::Municipalities::ShowView < Views::ApplicationView
         end
       end
     end
-  end
-
-  # DISTRICT_10 reads as "District 10", AT_LARGE as "At large".
-  def seat_label(office)
-    office.seat_code.humanize
   end
 
   def more_races_link
@@ -234,7 +211,7 @@ class Views::Municipalities::ShowView < Views::ApplicationView
     li(class: "timeline-item timeline-#{election.status}") do
       span(class: "timeline-date") { election.election_date.strftime("%b %-d, %Y") }
       link_to election.name, election, class: "timeline-name"
-      span(class: "race-status-chip race-status-#{election.status}") { election.status }
+      StatusChip(status: election.status)
     end
   end
 
@@ -247,8 +224,7 @@ class Views::Municipalities::ShowView < Views::ApplicationView
 
   # Where the city sits, and the wards or districts within it.
   def where_it_is
-    section(class: "side-card") do
-      h2(class: "card-heading") { "Where it is" }
+    SideCard(heading: "Where it is") do
       dl(class: "place-facts-list") do
         place_row("State", @municipality.state)
         place_row("County", @municipality.distinct_county) if @municipality.distinct_county
@@ -259,10 +235,7 @@ class Views::Municipalities::ShowView < Views::ApplicationView
   end
 
   def place_row(label, place)
-    div(class: "place-fact-row") do
-      dt { label }
-      dd { link_to place.name, place, class: "text-link" }
-    end
+    FactRow(label: label) { link_to place.name, place, class: "text-link" }
   end
 
   def within_here
@@ -279,8 +252,7 @@ class Views::Municipalities::ShowView < Views::ApplicationView
     neighbors = @municipality.neighbors.limit(NEIGHBOR_LIMIT).to_a
     return if neighbors.empty?
 
-    section(class: "side-card") do
-      h2(class: "card-heading") { "Nearby in #{@municipality.county.name}" }
+    SideCard(heading: "Nearby in #{@municipality.county.name}") do
       ul(class: "nearby-list") do
         neighbors.each { |neighbor| li { link_to neighbor.name, neighbor, class: "text-link" } }
       end
@@ -293,8 +265,7 @@ class Views::Municipalities::ShowView < Views::ApplicationView
   def admin_actions
     return unless current_voter&.admin?
 
-    section(class: "side-card admin-card") do
-      h2(class: "card-heading") { "Admin" }
+    SideCard(heading: "Admin", modifier: "admin-card") do
       Ui::ResourceActions(resource: @municipality)
     end
   end

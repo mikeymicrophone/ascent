@@ -29,11 +29,7 @@ class Views::Candidacies::Card < Views::ApplicationView
   def card_head
     header(class: "candidate-card-head") do
       div(class: "candidate-card-title") do
-        h3(class: "candidate-card-name") do
-          given = [ person.first_name, person.middle_name ].compact_blank.join(" ")
-          span(class: "candidate-given") { "#{given} " } if given.present?
-          strong(class: "candidate-surname") { person.last_name }
-        end
+        h3(class: "candidate-card-name") { PersonName(person: person) }
         span(class: "candidate-card-office") { @candidacy.race.office.name }
       end
       button(type: "button", class: "icon-action candidate-card-close", popovertarget: candidate_popover_id(@candidacy),
@@ -100,20 +96,10 @@ class Views::Candidacies::Card < Views::ApplicationView
     end
   end
 
-  def percent(share)
-    share ? "#{share.round}%" : "—"
-  end
-
   def card_links
     footer(class: "candidate-card-links") do
-      link_to person_path(person), class: "pill-button pill-button-outline" do
-        icon(:user)
-        plain "Person page"
-      end
-      link_to candidacy_path(@candidacy), class: "pill-button pill-button-outline" do
-        icon(:file_text)
-        plain "Candidacy page"
-      end
+      PillLink(label: "Person page", path: person_path(person), icon: :user, variant: "outline")
+      PillLink(label: "Candidacy page", path: candidacy_path(@candidacy), icon: :file_text, variant: "outline")
     end
   end
 end

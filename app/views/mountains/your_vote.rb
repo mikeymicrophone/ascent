@@ -6,8 +6,7 @@ class Views::Mountains::YourVote < Views::ApplicationView
   prop :mountain, Mountain
 
   def view_template
-    section(class: "side-card your-vote", id: "your-vote") do
-      h2(class: "card-heading") { "Your vote" }
+    SideCard(heading: "Your vote", modifier: "your-vote", id: "your-vote") do
       p(class: "your-vote-count") do
         span(class: "your-vote-number") { approved.size.to_s }
         span(class: "your-vote-of") { "of #{@mountain.ballot_candidacies_count} approved" }

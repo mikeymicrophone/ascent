@@ -7,16 +7,7 @@ class Views::Components::ModeStrip < Views::ApplicationView
   prop :voter, _Nilable(Voter)
 
   def view_template
-    div(class: "mode-strip mode-#{mode}", role: "status") do
-      div(class: "mode-strip-inner") do
-        div(class: "mode-strip-main") do
-          icon(mode_icon, class: "icon mode-strip-icon")
-          span(class: "mode-strip-label") { mode_label }
-          span(class: "mode-strip-text") { mode_text }
-        end
-        mode_aside
-      end
-    end
+    ModeBanner(mode: mode, label: mode_label, text: mode_text, icon: mode_icon) { mode_aside }
   end
 
   private

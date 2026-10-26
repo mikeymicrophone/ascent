@@ -55,7 +55,7 @@ class Views::Ballots::ShowView < Views::ApplicationView
           strong(class: "residence-card-name") { residence.jurisdiction.name }
           span(class: "residence-card-districts") { residence_districts_text(residence) }
         end
-        link_to("Change", edit_residence_path(residence), class: "pill-button pill-button-outline") if current_voter.admin?
+        PillLink(label: "Change", path: edit_residence_path(residence), variant: "outline") if current_voter.admin?
       end
       progress_bar
     end
@@ -98,7 +98,7 @@ class Views::Ballots::ShowView < Views::ApplicationView
     section(class: "ballot-empty") do
       h2(class: "card-title") { "We don't know where you vote yet" }
       p { "Your ballot comes from where you live. Until it's recorded, you can still pretend vote in any race below." }
-      link_to("Record a residence", new_residence_path, class: "pill-button") if current_voter.admin?
+      PillLink(label: "Record a residence", path: new_residence_path) if current_voter.admin?
     end
   end
 
