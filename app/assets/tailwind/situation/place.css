@@ -1,0 +1,16 @@
+.place-race {
+  @apply transition-colors;
+}
+
+.place-race:hover {
+  border-color: var(--brand-basalt);
+}
+
+.timeline-name:hover {
+  color: var(--brand-rope-deep);
+}
+
+.timeline-name:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
+}

@@ -100,6 +100,10 @@ class Voter < ApplicationRecord
     current_residence&.covers?(race) || false
   end
 
+  def lives_in?(jurisdiction)
+    current_residence ? current_residence.ballot_jurisdictions.where(id: jurisdiction).exists? : false
+  end
+
   def ballot
     Ballot.new(self)
   end

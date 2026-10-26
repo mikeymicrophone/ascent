@@ -1,0 +1,96 @@
+.place-page {
+  @apply gap-8 pt-8 pb-16;
+}
+
+.place-header {
+  @apply gap-3;
+}
+
+.place-actions {
+  @apply gap-2.5 pt-2;
+}
+
+.place-header .action-bar {
+  @apply pt-1;
+}
+
+.place-layout {
+  @apply gap-6;
+}
+
+.place-main,
+.place-aside {
+  @apply gap-6;
+}
+
+.place-section {
+  @apply gap-4 p-6 rounded-[20px] border;
+}
+
+.place-section-heading {
+  @apply gap-x-4 gap-y-1;
+}
+
+.place-race-grid {
+  @apply gap-3.5;
+}
+
+.place-race {
+  @apply gap-3 p-4 rounded-2xl border-[1.5px];
+}
+
+.place-race-heading {
+  @apply gap-0.5;
+}
+
+.races-above {
+  @apply gap-x-3 gap-y-2 px-4 py-3 rounded-xl border border-dashed;
+}
+
+.races-above-count {
+  @apply px-2 py-0.5 rounded-md border;
+}
+
+.seat-list {
+  @apply gap-x-6 gap-y-0 m-0 p-0 list-none;
+}
+
+.seat-item {
+  @apply gap-3 py-2.5 border-b;
+}
+
+.election-timeline {
+  @apply m-0 p-0 list-none;
+}
+
+.timeline-item {
+  @apply gap-x-4 gap-y-1 py-3 border-b last:border-b-0;
+}
+
+.place-facts-list {
+  @apply m-0 gap-0;
+}
+
+.place-fact-row {
+  @apply gap-3 py-2 border-b last:border-b-0;
+}
+
+.place-fact-row dd {
+  @apply m-0;
+}
+
+.within-here {
+  @apply gap-2 pt-1;
+}
+
+.chip-list {
+  @apply gap-1.5 m-0 p-0 list-none;
+}
+
+.place-chip {
+  @apply px-2 py-1 rounded-md border;
+}
+
+.nearby-list {
+  @apply gap-x-4 gap-y-1.5 m-0 p-0 list-none;
+}

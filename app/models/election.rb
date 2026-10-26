@@ -28,6 +28,7 @@ class Election < ApplicationRecord
   scope :real, -> { where(is_mock: false, is_historical: false) }
   scope :open_to_rating, -> { where(status: OPEN_STATUSES) }
   scope :created_by, ->(voter) { where(creator: voter) }
+  scope :in_jurisdictions, ->(jurisdictions) { where(jurisdiction_id: jurisdictions.select(:id)) }
   scope :recent, -> { order(election_date: :desc) }
   scope :primaries, -> { where(kind: PRIMARY_KINDS) }
   scope :with_full_details, -> { includes(:jurisdiction, races: [ :office, :candidates, :candidacies ]) }

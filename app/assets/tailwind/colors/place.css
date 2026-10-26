@@ -1,0 +1,55 @@
+.place-page {
+  color: var(--brand-basalt);
+}
+
+.place-section,
+.place-race {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.place-section-subtitle,
+.timeline-date,
+.seat-count,
+.place-fact-row dt,
+.races-above-label,
+.place-race-seat {
+  color: var(--brand-slate);
+}
+
+.races-above {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-scree-edge);
+}
+
+.races-above-count,
+.place-chip {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.seat-item,
+.timeline-item,
+.place-fact-row {
+  border-color: var(--brand-contour);
+}
+
+.timeline-name {
+  color: var(--brand-basalt);
+}
+
+.timeline-completed .timeline-name {
+  color: var(--brand-slate);
+}
+
+.stat-tile-date .stat-tile-value {
+  color: var(--brand-basalt);
+}
+
+.place-header .action-button {
+  border-color: var(--brand-mist);
+}
+
+.admin-card {
+  border-style: dashed;
+}

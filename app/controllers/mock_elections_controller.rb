@@ -28,11 +28,11 @@ class MockElectionsController < ApplicationController
       .reject { it[:title].blank? && it[:candidates].compact_blank.empty? })
   end
 
-  # The places a mock election can be set in: where the voter lives and every jurisdiction above it,
-  # or the states and countries when we don't know where they live.
+  # The places a mock election can be set in: a place the voter came from first, then where they live
+  # and every jurisdiction above it, or the states and countries when we don't know where they live.
   def places
     residence = current_voter.current_residence
     places = residence ? residence.ballot_jurisdictions : Jurisdiction.where(jurisdictionable_type: %w[State Country])
-    places.includes(:jurisdictionable).sort_by(&:name)
+    [ Jurisdiction.find_by(id: params[:jurisdiction_id]), *places.includes(:jurisdictionable).sort_by(&:name) ].compact.uniq
   end
 end
