@@ -11,7 +11,8 @@ module Seeds
       entities = LibraryImporter::MODELS.sort.to_h do |name, model|
         association_columns = LibraryImporter.association_columns(model)
         attributes = model.columns.sort_by(&:name).filter_map do |column|
-          next if LibraryImporter::PROTECTED_ATTRIBUTES.include?(column.name) || association_columns.include?(column.name) || absent?(model, column.name)
+          next if LibraryImporter::PROTECTED_ATTRIBUTES.include?(column.name) || association_columns.include?(column.name) || absent?(model, column.name) ||
+            LibraryImporter::UNSEEDED_ATTRIBUTES.fetch(name, []).include?(column.name)
 
           [ column.name, column_schema(model, column) ]
         end.to_h

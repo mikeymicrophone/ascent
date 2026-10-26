@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   resources :residences
   resources :candidacies
   resources :people
+  resources :mock_elections, only: [ :create, :destroy ]
   resources :elections do
     resources :races, only: [ :index ]
   end
@@ -53,6 +54,9 @@ Rails.application.routes.draw do
     member do
       post :simulate
       patch :primary_candidates
+      patch :draft
+      delete :draft, action: :discard
+      post :save
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

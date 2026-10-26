@@ -2,8 +2,13 @@ class Election < ApplicationRecord
   # Elections that decide nominations rather than offices.
   PRIMARY_KINDS = %w[primary primary_runoff].freeze
 
+  # Statuses in which voters can still build mountains for the election's races.
+  OPEN_STATUSES = %w[upcoming active].freeze
+
   belongs_to :jurisdiction
   belongs_to :year
+  # Whoever made a mock election; real and historical elections come from official sources.
+  belongs_to :creator, class_name: "Voter", optional: true
   has_many :races, dependent: :destroy
   has_many :offices, through: :races
   has_many :candidacies, through: :races
@@ -21,10 +26,35 @@ class Election < ApplicationRecord
   scope :mock, -> { where(is_mock: true) }
   scope :historical, -> { where(is_historical: true) }
   scope :real, -> { where(is_mock: false, is_historical: false) }
+  scope :open_to_rating, -> { where(status: OPEN_STATUSES) }
+  scope :created_by, ->(voter) { where(creator: voter) }
   scope :recent, -> { order(election_date: :desc) }
   scope :primaries, -> { where(kind: PRIMARY_KINDS) }
   scope :with_full_details, -> { includes(:jurisdiction, races: [ :office, :candidates, :candidacies ]) }
   scope :with_candidacy_details, -> { includes(races: { candidacies: [ :person, :ratings ] }) }
+
+  # Which kind of election this is, for the mode strip: a real one, a mock one, or a historical replay.
+  def mode
+    if is_mock then "mock"
+    elsif is_historical then "historical"
+    else "real"
+    end
+  end
+
+  # Removes a mock election with the inactive offices and fictional candidates made for it.
+  def destroy_mock!
+    transaction do
+      invented_offices = offices.to_a
+      invented_people = candidates.fictional.to_a
+      destroy!
+      invented_offices.each(&:destroy!)
+      invented_people.each(&:destroy!)
+    end
+  end
+
+  def days_until
+    (election_date - Date.current).to_i
+  end
 
   private
 

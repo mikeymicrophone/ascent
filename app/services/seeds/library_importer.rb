@@ -43,7 +43,10 @@ module Seeds
     BALLOT_LINE_KEYS = %w[label kind party].freeze
     PROTECTED_ATTRIBUTES = %w[id entity_code type created_at updated_at].freeze
     # References Ascent derives after an import rather than reading from manifests.
-    DERIVED_REFERENCES = { "Candidacy" => %w[primary_candidacy] }.freeze
+    DERIVED_REFERENCES = { "Candidacy" => %w[primary_candidacy], "Election" => %w[creator] }.freeze
+    # Columns Ascent fills itself, such as a mock election's invented candidates, or that the
+    # published contract does not offer yet, like how a historical race was decided.
+    UNSEEDED_ATTRIBUTES = { "Person" => %w[fictional], "Race" => %w[decided_by] }.freeze
     EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [], features_added: [], primary_candidates_added: [] }.freeze
 
     # A Person's code ends in a disambiguator issued once, like PERSON-JAMES_LT_6J; a submission may leave it off.

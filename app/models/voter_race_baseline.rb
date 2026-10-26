@@ -1,12 +1,32 @@
 class VoterRaceBaseline < ApplicationRecord
+  # Saved baseline changes a voter may make to one race in a day; ratings stay unlimited.
+  DAILY_CHANGE_LIMIT = 5
+
   belongs_to :voter
   belongs_to :race
 
+  # Whose results the mountain counts toward: the race's residents, or visitors trying a pretend vote.
+  enum :counted_as, { resident: "resident", visitor: "visitor" }, validate: true
+
   validates :baseline, presence: true, inclusion: { in: 0..500 }
   validates :voter_id, uniqueness: { scope: :race_id, message: "can only have one baseline per race" }
+  validate :within_daily_change_limit, on: :update, if: :will_save_change_to_baseline?
 
   before_update :archive_previous_baseline
   before_destroy :archive_baseline_on_destroy
+
+  def self.changes_left_today(voter, race)
+    [ DAILY_CHANGE_LIMIT - VoterRaceBaselineArchive.for_voter_and_race(voter, race).archived_today.count, 0 ].max
+  end
+
+  # Sorts every saved mountain into residents and visitors by where its voter lives now.
+  def self.recount!
+    includes(:voter, race: :office).find_each { it.update_columns(counted_as: it.race.counted_as_for(it.voter)) }
+  end
+
+  def changes_left_today
+    self.class.changes_left_today(voter, race)
+  end
 
   def baseline_percentage
     (baseline / 500.0 * 100).round(1)
@@ -48,6 +68,10 @@ class VoterRaceBaseline < ApplicationRecord
   end
 
   private
+
+  def within_daily_change_limit
+    errors.add(:baseline, "can change #{DAILY_CHANGE_LIMIT} times a day; try again tomorrow") if changes_left_today.zero?
+  end
 
   def archive_previous_baseline
     if baseline_changed? && baseline_was.present?

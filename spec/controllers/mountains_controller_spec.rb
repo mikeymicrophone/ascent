@@ -25,6 +25,9 @@ RSpec.describe MountainsController, type: :controller do
   end
 
   describe 'POST #simulate' do
+    # Simulated candidates and ratings only ever go in a mock election.
+    let(:race) { create(:race, :active, :mock) }
+
     it 'generates realistic simulation data' do
       expect {
         post :simulate, params: { id: race.id }

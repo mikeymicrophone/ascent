@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_090500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -56,10 +56,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.string "participation", default: "active", null: false
     t.bigint "person_id", null: false
     t.text "platform_summary"
-    t.bigint "primary_candidacy_id"
     t.bigint "race_id", null: false
     t.string "status"
     t.datetime "updated_at", null: false
+    t.bigint "primary_candidacy_id"
     t.index ["entity_code"], name: "index_candidacies_on_entity_code", unique: true
     t.index ["person_id"], name: "index_candidacies_on_person_id"
     t.index ["primary_candidacy_id"], name: "index_candidacies_on_primary_candidacy_id"
@@ -167,6 +167,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.string "status"
     t.datetime "updated_at", null: false
     t.bigint "year_id", null: false
+    t.bigint "creator_id"
+    t.index ["creator_id"], name: "index_elections_on_creator_id"
     t.index ["entity_code"], name: "index_elections_on_entity_code", unique: true
     t.index ["jurisdiction_id"], name: "index_elections_on_jurisdiction_id"
     t.index ["year_id"], name: "index_elections_on_year_id"
@@ -202,7 +204,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.index ["engageable_type", "engageable_id", "kind"], name: "index_engagements_on_record_and_kind"
     t.index ["voter_id", "engageable_type", "engageable_id", "kind"], name: "index_engagements_once_per_voter_record_and_kind", unique: true
     t.index ["voter_id"], name: "index_engagements_on_voter_id"
-    t.check_constraint "kind::text = ANY (ARRAY['bookmark'::character varying, 'favorite'::character varying, 'follow'::character varying, 'hide'::character varying]::text[])", name: "engagements_kind_is_known"
+    t.check_constraint "kind::text = ANY (ARRAY['bookmark'::character varying::text, 'favorite'::character varying::text, 'follow'::character varying::text, 'hide'::character varying::text])", name: "engagements_kind_is_known"
   end
 
   create_table "entity_codes", force: :cascade do |t|
@@ -278,6 +280,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.check_constraint "parent_id <> id", name: "jurisdictions_cannot_parent_themselves"
   end
 
+  create_table "mountain_drafts", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.bigint "race_id", null: false
+    t.integer "baseline"
+    t.jsonb "ratings", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["race_id"], name: "index_mountain_drafts_on_race_id"
+    t.index ["voter_id", "race_id"], name: "index_mountain_drafts_on_voter_id_and_race_id", unique: true
+    t.check_constraint "baseline >= 0 AND baseline <= 500", name: "mountain_drafts_baseline_in_range"
+  end
+
   create_table "municipalities", force: :cascade do |t|
     t.bigint "county_id"
     t.datetime "created_at", null: false
@@ -297,13 +311,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.bigint "governing_body_id"
     t.boolean "is_active"
     t.bigint "jurisdiction_id", null: false
-    t.bigint "nominating_organization_id"
-    t.integer "nominee_count"
-    t.bigint "nominee_for_office_id"
     t.text "notes"
     t.bigint "position_id", null: false
     t.string "seat_code"
     t.datetime "updated_at", null: false
+    t.bigint "nominee_for_office_id"
+    t.bigint "nominating_organization_id"
+    t.integer "nominee_count"
     t.index ["chamber_id"], name: "index_offices_on_chamber_id"
     t.index ["entity_code"], name: "index_offices_on_entity_code", unique: true
     t.index ["governing_body_id"], name: "index_offices_on_governing_body_id"
@@ -329,15 +343,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.index ["policy_id"], name: "index_official_codes_on_policy_id"
   end
 
+  create_table "official_results", force: :cascade do |t|
+    t.bigint "race_id", null: false
+    t.bigint "candidacy_id", null: false
+    t.integer "votes", null: false
+    t.decimal "vote_share", precision: 5, scale: 2
+    t.boolean "winner", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["candidacy_id"], name: "index_official_results_on_candidacy_id"
+    t.index ["race_id", "candidacy_id"], name: "index_official_results_on_race_id_and_candidacy_id", unique: true
+    t.check_constraint "vote_share >= 0::numeric AND vote_share <= 100::numeric", name: "official_results_vote_share_in_range"
+    t.check_constraint "votes >= 0", name: "official_results_votes_not_negative"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.string "abbreviation"
     t.datetime "created_at", null: false
     t.string "entity_code"
-    t.string "kind"
     t.string "name", null: false
     t.bigint "state_id"
-    t.string "type", default: "Organization", null: false
     t.datetime "updated_at", null: false
+    t.string "type", default: "Organization", null: false
+    t.string "kind"
     t.index ["entity_code"], name: "index_organizations_on_entity_code", unique: true
     t.index ["state_id", "name"], name: "index_organizations_on_state_id_and_name", unique: true
     t.index ["state_id"], name: "index_organizations_on_state_id"
@@ -356,6 +384,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.datetime "updated_at", null: false
     t.string "username"
     t.string "username_status"
+    t.boolean "fictional", default: false, null: false
     t.index ["entity_code"], name: "index_people_on_entity_code", unique: true
     t.index ["username"], name: "index_people_on_username", unique: true
   end
@@ -396,6 +425,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.bigint "office_id", null: false
     t.string "status", default: "upcoming", null: false
     t.datetime "updated_at", null: false
+    t.string "decided_by"
     t.index ["election_id"], name: "index_races_on_election_id"
     t.index ["entity_code"], name: "index_races_on_entity_code", unique: true
     t.index ["office_id"], name: "index_races_on_office_id"
@@ -423,6 +453,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.index ["voter_id"], name: "index_ratings_on_voter_id"
   end
 
+  create_table "residence_districts", force: :cascade do |t|
+    t.bigint "residence_id", null: false
+    t.bigint "jurisdiction_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["jurisdiction_id"], name: "index_residence_districts_on_jurisdiction_id"
+    t.index ["residence_id", "jurisdiction_id"], name: "index_residence_districts_on_residence_id_and_jurisdiction_id", unique: true
+  end
+
   create_table "residences", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "jurisdiction_id", null: false
@@ -431,7 +470,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.string "status"
     t.datetime "updated_at", null: false
     t.bigint "voter_id", null: false
+    t.geometry "location", limit: {srid: 4326, type: "st_point"}
     t.index ["jurisdiction_id"], name: "index_residences_on_jurisdiction_id"
+    t.index ["location"], name: "index_residences_on_location", using: :gist
     t.index ["voter_id"], name: "index_residences_on_voter_id"
   end
 
@@ -559,17 +600,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.bigint "race_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "voter_id", null: false
+    t.string "counted_as", default: "visitor", null: false
+    t.index ["race_id", "counted_as"], name: "index_voter_race_baselines_on_race_id_and_counted_as"
     t.index ["race_id"], name: "index_voter_race_baselines_on_race_id"
     t.index ["voter_id", "race_id"], name: "index_voter_race_baselines_on_voter_and_race", unique: true
     t.index ["voter_id"], name: "index_voter_race_baselines_on_voter_id"
+    t.check_constraint "counted_as::text = ANY (ARRAY['resident'::character varying, 'visitor'::character varying]::text[])", name: "voter_race_baselines_counted_as_is_known"
   end
 
   create_table "voter_race_preferences", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.boolean "include_primary_candidates", default: false, null: false
-    t.bigint "race_id", null: false
-    t.datetime "updated_at", null: false
     t.bigint "voter_id", null: false
+    t.bigint "race_id", null: false
+    t.boolean "include_primary_candidates", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["race_id"], name: "index_voter_race_preferences_on_race_id"
     t.index ["voter_id", "race_id"], name: "index_voter_race_preferences_on_voter_id_and_race_id", unique: true
   end
@@ -590,14 +634,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
     t.string "last_name"
     t.datetime "last_sign_in_at"
     t.string "last_sign_in_ip"
-    t.string "provider"
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
-    t.string "uid"
     t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
+    t.string "provider"
+    t.string "uid"
     t.index ["email"], name: "index_voters_on_email", unique: true
     t.index ["provider", "uid"], name: "index_voters_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_voters_on_reset_password_token", unique: true
@@ -624,6 +668,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
   add_foreign_key "communications", "channels"
   add_foreign_key "counties", "states"
   add_foreign_key "elections", "jurisdictions"
+  add_foreign_key "elections", "voters", column: "creator_id", on_delete: :nullify
   add_foreign_key "elections", "years"
   add_foreign_key "endorsements", "ballot_lines"
   add_foreign_key "endorsements", "candidacies"
@@ -633,6 +678,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
   add_foreign_key "issues", "topics"
   add_foreign_key "jurisdiction_boundaries", "jurisdictions"
   add_foreign_key "jurisdictions", "jurisdictions", column: "parent_id"
+  add_foreign_key "mountain_drafts", "races", on_delete: :cascade
+  add_foreign_key "mountain_drafts", "voters", on_delete: :cascade
   add_foreign_key "municipalities", "counties"
   add_foreign_key "municipalities", "states"
   add_foreign_key "offices", "chambers"
@@ -642,6 +689,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
   add_foreign_key "offices", "organizations", column: "nominating_organization_id"
   add_foreign_key "offices", "positions"
   add_foreign_key "official_codes", "policies"
+  add_foreign_key "official_results", "candidacies", on_delete: :cascade
+  add_foreign_key "official_results", "races", on_delete: :cascade
   add_foreign_key "organizations", "states"
   add_foreign_key "policies", "approaches"
   add_foreign_key "policies", "area_of_concerns"
@@ -652,6 +701,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
   add_foreign_key "rating_archives", "voters"
   add_foreign_key "ratings", "candidacies"
   add_foreign_key "ratings", "voters"
+  add_foreign_key "residence_districts", "jurisdictions"
+  add_foreign_key "residence_districts", "residences", on_delete: :cascade
   add_foreign_key "residences", "jurisdictions"
   add_foreign_key "residences", "voters"
   add_foreign_key "rule_conditions", "rule_statements", column: "statement_id"
@@ -667,4 +718,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_120000) do
   add_foreign_key "voter_race_baselines", "voters"
   add_foreign_key "voter_race_preferences", "races", on_delete: :cascade
   add_foreign_key "voter_race_preferences", "voters", on_delete: :cascade
+
+  create_view "mountain_ratings", sql_definition: <<-SQL
+      SELECT ratings.id,
+      ratings.voter_id,
+      ratings.candidacy_id,
+      candidacies.race_id,
+      ratings.rating,
+      voter_race_baselines.baseline,
+      voter_race_baselines.counted_as,
+      (candidacies.primary_candidacy_id IS NOT NULL) AS from_primary,
+      (ratings.rating > voter_race_baselines.baseline) AS approved
+     FROM (((ratings
+       JOIN candidacies ON ((candidacies.id = ratings.candidacy_id)))
+       JOIN voter_race_baselines ON (((voter_race_baselines.voter_id = ratings.voter_id) AND (voter_race_baselines.race_id = candidacies.race_id))))
+       LEFT JOIN voter_race_preferences ON (((voter_race_preferences.voter_id = ratings.voter_id) AND (voter_race_preferences.race_id = candidacies.race_id))))
+    WHERE ((candidacies.primary_candidacy_id IS NULL) OR voter_race_preferences.include_primary_candidates);
+  SQL
 end

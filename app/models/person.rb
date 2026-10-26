@@ -12,6 +12,9 @@ class Person < ApplicationRecord
   validates :username, uniqueness: true, format: { with: /\A[a-z0-9_]+\z/ }, allow_blank: true
   validates :username_status, inclusion: { in: %w[provisional verified] }, if: :username?
 
+  # Invented candidates in mock elections are kept apart from real people.
+  scope :real, -> { where(fictional: false) }
+  scope :fictional, -> { where(fictional: true) }
   scope :with_candidacy_details, -> { includes(candidacies: { race: [ :election, { office: :position } ] }) }
   scope :with_recent_candidacies, -> {
     includes(candidacies: { race: [ :election, { office: :position } ] })

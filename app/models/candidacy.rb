@@ -13,6 +13,8 @@ class Candidacy < ApplicationRecord
   has_many :communication_features, dependent: :destroy
   has_many :featured_communications, through: :communication_features, source: :communication
   has_many :voters, through: :ratings
+  has_many :mountain_ratings
+  has_many :official_results, dependent: :destroy
   # A general's off-ballot candidacy for someone who ran in a primary for its nomination.
   belongs_to :primary_candidacy, class_name: "Candidacy", optional: true, inverse_of: :general_candidacies
   has_many :general_candidacies, class_name: "Candidacy", foreign_key: :primary_candidacy_id, dependent: :destroy, inverse_of: :primary_candidacy
@@ -58,11 +60,7 @@ class Candidacy < ApplicationRecord
   # Voters who rated this candidacy above their own baseline in its race, the way the race's results
   # count them: a candidacy from a primary counts only voters who include primary candidates there.
   def approvals_count
-    approving = ratings.joins(voter: :voter_race_baselines)
-                       .where(voter_race_baselines: { race_id: race_id })
-                       .where("ratings.rating > voter_race_baselines.baseline")
-    approving = approving.where(voter_id: VoterRacePreference.where(race_id: race_id, include_primary_candidates: true).select(:voter_id)) if primary_candidacy_id
-    approving.count
+    MountainRating.where(candidacy: self).approved.count
   end
 
   def approval_count(baseline = nil)

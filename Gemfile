@@ -98,3 +98,8 @@ end
 gem "ruby-lsp", "~> 0.26.11"
 
 gem "csv", "~> 3.3"
+
+# Database views as versioned migrations, for the counted mountain ratings [https://github.com/scenic-views/scenic]
+gem "scenic", "~> 1.9"
+# Median and percentile calculations in ActiveRecord, for results statistics [https://github.com/ankane/active_median]
+gem "active_median", "~> 1.0"

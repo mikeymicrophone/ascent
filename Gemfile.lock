@@ -49,6 +49,8 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+    active_median (1.0.0)
+      activesupport (>= 7.2)
     activejob (8.1.4)
       activesupport (= 8.1.4)
       globalid (>= 0.3.6)
@@ -418,6 +420,9 @@ GEM
     ruby-next-core (1.2.1)
     ruby-progressbar (1.13.0)
     rubyzip (3.7.0)
+    scenic (1.9.0)
+      activerecord (>= 4.0.0)
+      railties (>= 4.0.0)
     securerandom (0.4.1)
     selenium-webdriver (4.51.0)
       base64 (~> 0.2)
@@ -520,6 +525,7 @@ PLATFORMS
 
 DEPENDENCIES
   action_policy
+  active_median (~> 1.0)
   activerecord-postgis-adapter (~> 11.1)
   bootsnap
   brakeman
@@ -547,6 +553,7 @@ DEPENDENCIES
   rspec-rails
   rubocop-rails-omakase
   ruby-lsp (~> 0.26.11)
+  scenic (~> 1.9)
   selenium-webdriver
   shoulda
   simplecov

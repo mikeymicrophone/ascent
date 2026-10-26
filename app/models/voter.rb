@@ -12,6 +12,8 @@ class Voter < ApplicationRecord
   has_many :voter_race_baseline_archives, dependent: :delete_all
   has_many :engagements, dependent: :destroy
   has_many :voter_race_preferences, dependent: :delete_all
+  has_many :mountain_drafts, dependent: :delete_all
+  has_many :created_elections, class_name: "Election", foreign_key: :creator_id, inverse_of: :creator, dependent: :nullify
 
   validates :first_name, presence: true
   validates :last_name, presence: true
@@ -91,6 +93,15 @@ class Voter < ApplicationRecord
 
   def current_residence
     residences.where(status: "active").first
+  end
+
+  # Whether this voter lives where the race is decided, so their mountain counts with residents.
+  def resident_of?(race)
+    current_residence&.covers?(race) || false
+  end
+
+  def ballot
+    Ballot.new(self)
   end
 
   def residence_history

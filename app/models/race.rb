@@ -1,5 +1,7 @@
 class Race < ApplicationRecord
   STATUSES = %w[upcoming active completed cancelled].freeze
+  # How a finished race was officially decided, shown beside a historical replay.
+  DECIDED_BY = %w[plurality majority_runoff ranked_choice approval top_two].freeze
 
   include Engageable
 
@@ -10,10 +12,14 @@ class Race < ApplicationRecord
   has_many :voter_race_baselines, dependent: :destroy
   has_many :voter_race_baseline_archives, dependent: :delete_all
   has_many :voter_race_preferences, dependent: :delete_all
+  has_many :mountain_drafts, dependent: :delete_all
+  has_many :mountain_ratings
+  has_many :official_results, dependent: :destroy
 
   validates :status, presence: true, inclusion: { in: STATUSES }
   # An updateable fact about the source's list, kept out of the race's identity and code.
   validates :certification_status, inclusion: { in: %w[certified tentative unofficial] }, allow_nil: true
+  validates :decided_by, inclusion: { in: DECIDED_BY }, allow_nil: true
   validate :office_matches_election_jurisdiction
 
   scope :upcoming, -> { where(status: "upcoming") }
@@ -23,6 +29,13 @@ class Race < ApplicationRecord
   scope :historical, -> { joins(:election).merge(Election.historical) }
   scope :real, -> { joins(:election).merge(Election.real) }
   scope :recent, -> { joins(:election).order("elections.election_date DESC") }
+  scope :open_to_rating, -> { where(status: Election::OPEN_STATUSES) }
+  scope :in_jurisdictions, ->(jurisdictions) { joins(:office).where(offices: { jurisdiction_id: jurisdictions.select(:id) }) }
+  # The real races still open where this residence votes.
+  scope :on_ballot_for, ->(residence) { real.open_to_rating.in_jurisdictions(residence.ballot_jurisdictions) }
+  scope :in_place_named, ->(query) { in_jurisdictions(Jurisdiction.and_their_descendants(Jurisdiction.named_like(query))) }
+  # Races a search for an office, election, candidate, or place finds.
+  scope :findable, ->(query) { where(id: matching(query).select(:id)).or(where(id: in_place_named(query).select(:id))) }
   scope :with_full_details, -> { includes(:office, :candidates, :candidacies) }
   scope :with_candidacy_details, -> { includes(candidacies: [ :person, :ratings ]) }
   scope :with_office_context, -> { includes(office: :position) }
@@ -49,26 +62,37 @@ class Race < ApplicationRecord
     "#{office.name} - #{year.year}"
   end
 
+  # Approvals for every candidacy across all saved mountains, residents' and visitors' alike.
   def aggregate_votes
-    results = {}
+    approvals = mountain_ratings.approved.group(:candidacy_id).count
+    candidacies.to_h { [ it, approvals.fetch(it.id, 0) ] }
+  end
 
-    candidacies.each { |candidacy| results[candidacy] = 0 }
-
-    voter_race_baselines.includes(:voter).each do |baseline|
-      voter = baseline.voter
-      voter_baseline = baseline.baseline
-
-      voter_ratings = Rating.where(voter: voter, candidacy: candidacies_for(voter))
-                           .includes(:candidacy)
-
-      voter_ratings.each do |rating|
-        if rating.rating > voter_baseline
-          results[rating.candidacy] += 1
-        end
-      end
+  # What one group's saved mountains add up to, recounted at most once an hour.
+  def results_for(group = "resident")
+    Rails.cache.fetch([ "race-results", id, group, Time.current.beginning_of_hour.to_i ], expires_in: 1.hour) do
+      RaceResults.new(self, group: group).summary
     end
+  end
 
-    results
+  def mock?
+    election.is_mock
+  end
+
+  # Which mode strip a voter sees on this race: their own ballot, a pretend vote, a mock, or a replay.
+  def mode_for(voter)
+    return election.mode unless election.mode == "real"
+
+    voter.resident_of?(self) ? "ballot" : "pretend"
+  end
+
+  def counted_as_for(voter)
+    voter.resident_of?(self) ? "resident" : "visitor"
+  end
+
+  # A replay shows the certified result only once the voter has saved their own mountain.
+  def official_results_revealed_to?(voter)
+    election.is_historical && voter_race_baselines.exists?(voter: voter)
   end
 
   def approval_results

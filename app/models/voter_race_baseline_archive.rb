@@ -13,6 +13,7 @@ class VoterRaceBaselineArchive < ApplicationRecord
   scope :for_race, ->(race) { where(race: race) }
   scope :for_voter_and_race, ->(voter, race) { where(voter: voter, race: race) }
   scope :baseline_changes, -> { where.not(previous_baseline: nil) }
+  scope :archived_today, -> { where(archived_at: Time.current.all_day) }
 
   def baseline_percentage
     (baseline / 500.0 * 100).round(1)

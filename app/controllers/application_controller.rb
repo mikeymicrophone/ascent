@@ -54,7 +54,8 @@ class ApplicationController < ActionController::Base
 
   def action_policy_target
     klass = controller_name.classify.safe_constantize
-    return unless klass
+    # Plain models such as Mountain have no records to find; their controllers authorize themselves.
+    return unless klass && klass < ActiveRecord::Base
 
     case action_name
     when "index", "new", "create"

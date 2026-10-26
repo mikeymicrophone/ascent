@@ -4,7 +4,7 @@
 # see or change it. The record is the voter whose mountain it is. Simulated data invents candidates
 # and ratings, so only admins may make it.
 class MountainPolicy < ApplicationPolicy
-  alias_rule :edit?, :update?, :primary_candidates?, to: :show?
+  alias_rule :edit?, :update?, :primary_candidates?, :draft?, :discard?, :save?, to: :show?
 
   def index?
     true

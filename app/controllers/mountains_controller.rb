@@ -1,8 +1,10 @@
 class MountainsController < ApplicationController
-  before_action :set_race, only: [ :show, :edit, :update, :simulate, :primary_candidates ]
-  before_action :set_voter, only: [ :show, :edit, :update, :simulate, :primary_candidates ]
+  before_action :set_race, except: :index
+  before_action :set_voter, except: :index
   before_action :set_baseline, only: [ :show, :edit, :update ]
   before_action :authorize_mountain!, except: :index
+  # Simulated candidates and ratings never mix with a real race's mountains.
+  before_action :require_mock_race, only: :simulate
 
   def index
     authorize! :mountain
@@ -19,16 +21,35 @@ class MountainsController < ApplicationController
   end
 
   def update
-    ActiveRecord::Base.transaction do
-      update_baseline
-      update_ratings
-    end
+    mountain.publish!(ratings: rating_params, baseline: params[:baseline].presence)
 
     # Stay on the editable mountain so ratings remain draggable after save.
     redirect_to mountain_path(@race, voter_id: @voter.id), notice: "Mountain ratings updated."
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
     redirect_to mountain_path(@race, voter_id: @voter.id),
                 alert: "Could not save mountain ratings: #{e.message}"
+  end
+
+  # Keeps unsaved edits on the server as the voter drags, answering with the mountain as it now stands.
+  def draft
+    render json: mountain.revise_draft!(ratings: rating_params, baseline: params[:baseline])
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_content
+  end
+
+  def discard
+    mountain.discard!
+    respond_with_mountain notice: "Changes discarded."
+  end
+
+  def save
+    mountain.save!
+    respond_with_mountain notice: "Mountain saved."
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
+    respond_to do |format|
+      format.html { redirect_to mountain_path(@race, voter_id: @voter.id), alert: "Could not save your mountain: #{e.message}" }
+      format.json { render json: { errors: [ e.message ] }, status: :unprocessable_content }
+    end
   end
 
   def primary_candidates
@@ -114,6 +135,21 @@ class MountainsController < ApplicationController
 
   private
 
+  def mountain
+    @mountain ||= Mountain.new(voter: @voter, race: @race)
+  end
+
+  def respond_with_mountain(notice:)
+    respond_to do |format|
+      format.html { redirect_to mountain_path(@race, voter_id: @voter.id), notice: notice }
+      format.json { render json: mountain }
+    end
+  end
+
+  def require_mock_race
+    redirect_to mountain_path(@race, voter_id: @voter.id), alert: "Simulated data can only go in a mock election." unless @race.mock?
+  end
+
   def render_mountain_editor
     @mountain_data = build_mountain_data
     render Views::Mountains::EditView.new(
@@ -160,39 +196,7 @@ class MountainsController < ApplicationController
     Views::Mountains.calculate_label_position(rating)
   end
 
-  def update_baseline
-    baseline_value = params[:baseline].presence
-
-    if baseline_value
-      baseline_record = VoterRaceBaseline.find_or_initialize_by(voter: @voter, race: @race)
-      baseline_record.update!(baseline: normalize_rating(baseline_value))
-    else
-      @baseline&.destroy
-    end
-  end
-
-  def update_ratings
-    rating_params.each do |candidacy_id, rating_value|
-      candidacy = @race.candidacies_for(@voter).find(candidacy_id)
-      rating_record = Rating.find_by(voter: @voter, candidacy: candidacy)
-
-      if rating_value.present?
-        if rating_record
-          rating_record.update!(rating: normalize_rating(rating_value))
-        else
-          Rating.create!(voter: @voter, candidacy: candidacy, rating: normalize_rating(rating_value))
-        end
-      else
-        rating_record&.destroy
-      end
-    end
-  end
-
   def rating_params
     params.fetch(:ratings, {}).to_unsafe_h
-  end
-
-  def normalize_rating(value)
-    value.to_i.clamp(0, 500)
   end
 end
