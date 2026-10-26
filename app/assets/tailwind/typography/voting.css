@@ -207,3 +207,27 @@
 .is-winner .official-name {
   @apply font-bold;
 }
+
+.claim-current,
+.claim-place-text strong {
+  @apply text-[17px];
+}
+
+.claim-status,
+.claim-place-meta,
+.claim-summary .place-chip {
+  @apply text-sm;
+}
+
+.residence-dates {
+  @apply font-['Martian_Mono'] text-xs uppercase font-semibold tracking-[0.06em];
+}
+
+.residence-town {
+  @apply text-lg;
+}
+
+.residence-item .place-chip,
+.claim-districts dd {
+  @apply text-sm;
+}

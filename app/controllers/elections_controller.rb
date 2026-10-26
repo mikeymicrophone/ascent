@@ -55,14 +55,14 @@ class ElectionsController < ApplicationController
       tab: Election::LISTING_TABS.include?(params[:tab]) ? params[:tab] : "upcoming",
       kind: (params[:kind] if Election::KIND_GROUPS.key?(params[:kind])),
       q: params[:q].to_s.strip.presence,
-      near: params[:near] == "1" && current_voter&.current_residence.present?
+      near: params[:near] == "1" && current_voter&.current_residences&.any?
     }
   end
 
   def filtered(elections)
     elections = elections.of_kind(listing_filters[:kind]) if listing_filters[:kind]
     elections = elections.matching(listing_filters[:q]) if listing_filters[:q]
-    elections = elections.in_jurisdictions(current_voter.current_residence.ballot_jurisdictions) if listing_filters[:near]
+    elections = elections.in_jurisdictions(current_voter.ballot_jurisdictions) if listing_filters[:near]
     elections
   end
 

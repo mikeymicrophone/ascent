@@ -47,4 +47,25 @@ RSpec.describe Ballot do
     expect(house.mode_for(voter)).to eq("ballot")
     expect(next_door.mode_for(voter)).to eq("pretend")
   end
+
+  describe "for a voter who lives in two places at once" do
+    let(:halden_bay) { create(:jurisdiction, jurisdictionable: create(:municipality, name: "Halden Bay", state: state.jurisdictionable), parent: alder_county) }
+    let!(:harbormaster) { create_race_for(office_in(halden_bay, "Harbormaster")) }
+
+    before { voter.claim_residence!(halden_bay, moving: false) }
+
+    it "puts both places' races on one ballot, counting shared ones once" do
+      expect(voter.current_residences.map(&:jurisdiction)).to contain_exactly(ward_4, halden_bay)
+      expect(ballot.races).to contain_exactly(mayor, ward_council, sheriff, governor, assembly, house, harbormaster)
+      expect(voter.resident_of?(harbormaster)).to be(true)
+      expect(voter.resident_of?(mayor)).to be(true)
+    end
+
+    it "drops a place's races once the voter moves out of it" do
+      voter.move_out_of!(residence)
+
+      expect(voter.reload.ballot.races).to contain_exactly(sheriff, governor, harbormaster)
+      expect(residence.reload).to have_attributes(status: "moved", ended_on: Date.current)
+    end
+  end
 end

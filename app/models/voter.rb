@@ -91,17 +91,59 @@ class Voter < ApplicationRecord
     race_preference(race).update!(include_primary_candidates: included)
   end
 
-  def current_residence
-    residences.where(status: "active").first
+  # Everywhere this voter lives now; they may live in several places at once.
+  def current_residences
+    residences.current.chronological
   end
 
-  # Whether this voter lives where the race is decided, so their mountain counts with residents.
+  # The newest of the places this voter lives now, for when one name is enough.
+  def current_residence
+    current_residences.first
+  end
+
+  # Every jurisdiction whose offices are on this voter's ballot, across all the places they live.
+  def ballot_jurisdictions
+    Residence.ballot_jurisdictions(current_residences)
+  end
+
+  # Adds the given town, with its districts ({ "congressional" => ... }), to where this voter lives now.
+  # Moving there ends the other current residences today; otherwise the voter lives in both. Their saved
+  # mountains are then re-sorted into resident or visitor for where they live.
+  def claim_residence!(jurisdiction, districts: {}, moving: true)
+    transaction do
+      residences.current.update_all(status: "moved", ended_on: Date.current) if moving
+      residence = residences.create!(jurisdiction: jurisdiction, **district_slots(districts), status: "active",
+        started_on: Date.current, registered_at: Time.current, notes: "Claimed by the voter")
+      voter_race_baselines.recount!
+      residence
+    end
+  end
+
+  # Records somewhere this voter used to live, in the same shape as a current residence.
+  def add_past_residence!(jurisdiction, started_on:, ended_on:, districts: {})
+    residences.create!(jurisdiction: jurisdiction, **district_slots(districts), status: "moved",
+      started_on: started_on, ended_on: ended_on, registered_at: Time.current, notes: "Added by the voter")
+  end
+
+  def district_slots(districts)
+    Residence::DISTRICT_SLOTS.to_h { |chamber, slot| [ slot, districts[chamber] ] }
+  end
+
+  # Whether any place this voter lives is where the race is decided, so their mountain counts with residents.
   def resident_of?(race)
-    current_residence&.covers?(race) || false
+    lives_in?(race.office.jurisdiction_id)
   end
 
   def lives_in?(jurisdiction)
-    current_residence ? current_residence.ballot_jurisdictions.where(id: jurisdiction).exists? : false
+    ballot_jurisdictions.where(id: jurisdiction).exists?
+  end
+
+  # Ends one current residence and re-sorts saved mountains for the places still lived in.
+  def move_out_of!(residence)
+    transaction do
+      residence.move_out!
+      voter_race_baselines.recount!
+    end
   end
 
   def ballot
@@ -118,6 +160,6 @@ class Voter < ApplicationRecord
   end
 
   def residence_history
-    residences.order(registered_at: :desc)
+    residences.chronological
   end
 end

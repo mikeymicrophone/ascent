@@ -16,9 +16,8 @@ RSpec.shared_context "Port Merritt ballot" do
 
   let(:voter) { create(:voter, first_name: "Rosa", last_name: "Delgado") }
   let!(:residence) do
-    create(:residence, voter: voter, jurisdiction: ward_4, notes: "Lives on Harbor Street, Ward 4").tap do
-      it.district_jurisdictions << assembly_52 << congressional_7
-    end
+    create(:residence, voter: voter, jurisdiction: ward_4, congressional_district: congressional_7, state_house_district: assembly_52,
+      notes: "Lives on Harbor Street, Ward 4")
   end
 
   def office_in(jurisdiction, title)

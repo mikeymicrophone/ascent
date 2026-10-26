@@ -356,3 +356,47 @@
     @apply hidden;
   }
 }
+
+/* Setting where you live */
+.claim-page,
+.claim-header {
+  @apply flex flex-col;
+}
+
+.claim-options {
+  @apply grid items-start;
+  grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
+}
+
+.claim-places {
+  @apply flex flex-col;
+}
+
+.claim-place {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.claim-place-text {
+  @apply flex flex-col min-w-0;
+}
+
+/* The ballot's search sits in a row; inside a claim card's column it keeps its natural height. */
+.claim-option .place-search {
+  @apply flex-none;
+}
+
+.residence-timeline {
+  @apply flex flex-col;
+}
+
+.residence-item {
+  @apply flex flex-wrap items-start justify-between;
+}
+
+.residence-item-text {
+  @apply flex flex-col min-w-0;
+}
+
+.claim-confirm {
+  @apply flex flex-col;
+}

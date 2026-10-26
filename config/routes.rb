@@ -31,6 +31,12 @@ Rails.application.routes.draw do
   resources :candidacies
   resources :people
   resource :ballot, only: :show
+  resource :residence_claim, only: %i[new create], path: "ballot/residence" do
+    post :preview
+  end
+  resources :past_residences, only: %i[index new create destroy], path: "ballot/residences" do
+    patch :move_out, on: :member
+  end
   resources :mock_elections, only: [ :new, :create, :destroy ]
   get "races/:race_id/results", to: "race_results#show", as: :race_results
   get "candidacies/:id/card", to: "candidacy_cards#show", as: :candidacy_card

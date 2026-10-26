@@ -1,29 +1,46 @@
 class Residence < ApplicationRecord
   belongs_to :voter
+  # Where someone lives: a town, or the county outside any town.
   belongs_to :jurisdiction
-  has_many :residence_districts, dependent: :destroy
-  has_many :district_jurisdictions, through: :residence_districts, source: :jurisdiction
+  # The districts the town alone can't tell: each a District jurisdiction of its chamber, when known.
+  belongs_to :congressional_district, class_name: "Jurisdiction", optional: true
+  belongs_to :state_senate_district, class_name: "Jurisdiction", optional: true
+  belongs_to :state_house_district, class_name: "Jurisdiction", optional: true
+
+  DISTRICT_SLOTS = { "congressional" => :congressional_district, "state_senate" => :state_senate_district,
+                     "state_house" => :state_house_district }.freeze
 
   validates :status, presence: true, inclusion: { in: %w[active inactive moved suspended] }
-  validates :registered_at, presence: true
-  validate :only_one_active_residence_per_voter
+  validates :registered_at, :started_on, presence: true
+  validate :ends_after_it_starts
+  validate :districts_fit_their_slots
 
   scope :active, -> { where(status: "active") }
   scope :inactive, -> { where(status: "inactive") }
   scope :recent, -> { order(registered_at: :desc) }
-
-  before_create :deactivate_other_residences
+  # A voter can live in several places at once; each open-ended, active residence is current.
+  scope :current, -> { active.where(ended_on: nil) }
+  scope :past, -> { where.not(ended_on: nil) }
+  scope :chronological, -> { order(started_on: :desc) }
+  # Residences lived in at any point between two dates.
+  scope :lived_in_between, ->(from, to) { where(started_on: ..to).where("residences.ended_on IS NULL OR residences.ended_on >= ?", from) }
 
   def name
     "#{voter.name} - #{jurisdiction.name} (#{status})"
   end
 
-  # Every jurisdiction whose offices are on this residence's ballot: its own and the districts it is in,
-  # whether recorded or found from its location, along with every jurisdiction those sit within.
+  # Every jurisdiction whose offices are on this residence's ballot: its town and districts, and every
+  # jurisdiction those sit within.
   def ballot_jurisdictions
-    Jurisdiction.and_their_ancestors(
-      Jurisdiction.where(id: [ jurisdiction_id, *district_jurisdiction_ids ]).or(Jurisdiction.where(id: jurisdictions_at_location.select(:id)))
-    )
+    Jurisdiction.and_their_ancestors(Jurisdiction.where(id: [ jurisdiction_id, *district_ids ].compact))
+  end
+
+  def district_ids
+    [ congressional_district_id, state_senate_district_id, state_house_district_id ]
+  end
+
+  def districts
+    [ congressional_district, state_senate_district, state_house_district ].compact
   end
 
   def covers?(race)
@@ -35,34 +52,31 @@ class Residence < ApplicationRecord
     Jurisdiction.siblings_of(jurisdiction)
   end
 
-  def activate!
-    transaction do
-      # Deactivate other residences for this voter
-      voter.residences.where.not(id: id).update_all(status: "inactive")
-      update!(status: "active")
-    end
+  # Every jurisdiction whose offices are on the ballot for these residences together.
+  def self.ballot_jurisdictions(residences)
+    ids = residences.pluck(:jurisdiction_id, :congressional_district_id, :state_senate_district_id, :state_house_district_id).flatten.compact
+    Jurisdiction.and_their_ancestors(Jurisdiction.where(id: ids))
+  end
+
+  def current?
+    status == "active" && ended_on.nil?
+  end
+
+  def move_out!(on: Date.current)
+    update!(status: "moved", ended_on: on)
   end
 
   private
 
-  def jurisdictions_at_location
-    location ? Jurisdiction.covering(location.x, location.y) : Jurisdiction.none
+  def ends_after_it_starts
+    errors.add(:ended_on, "must be on or after the date it starts") if started_on && ended_on && ended_on < started_on
   end
 
-  def only_one_active_residence_per_voter
-    if status == "active"
-      existing_active = voter.residences.where(status: "active")
-      existing_active = existing_active.where.not(id: id) if persisted?
-
-      if existing_active.exists?
-        errors.add(:status, "can only have one active residence per voter")
-      end
-    end
-  end
-
-  def deactivate_other_residences
-    if status == "active"
-      voter.residences.where(status: "active").update_all(status: "inactive")
+  # A district slot holds only a district of its own chamber.
+  def districts_fit_their_slots
+    DISTRICT_SLOTS.each do |chamber, slot|
+      district = public_send(slot)
+      errors.add(slot, "must be a #{chamber.humanize(capitalize: false)} district") if district && district.jurisdictionable.try(:chamber) != chamber
     end
   end
 end

@@ -11,7 +11,7 @@ class Views::Ballots::ShowView < Views::ApplicationView
   def view_template
     div(class: "ballot-page") do
       ballot_header
-      if @ballot.residence
+      if @ballot.residences.any?
         ballot_levels
       else
         no_residence
@@ -29,7 +29,7 @@ class Views::Ballots::ShowView < Views::ApplicationView
         h1(class: "display-title") { "Your ballot" }
         p(class: "ballot-lede") { ballot_lede }
       end
-      residence_card if @ballot.residence
+      residence_card if @ballot.residences.any?
     end
   end
 
@@ -46,23 +46,27 @@ class Views::Ballots::ShowView < Views::ApplicationView
       "rate every candidate, set your baseline, and see who you approve."
   end
 
+  # Every place the voter lives, each with its county and districts, then how far they've got.
   def residence_card
-    residence = @ballot.residence
     div(class: "residence-card") do
-      div(class: "residence-card-place") do
-        span(class: "residence-card-icon") { icon(:map_pin) }
-        div(class: "residence-card-text") do
-          strong(class: "residence-card-name") { residence.jurisdiction.name }
-          span(class: "residence-card-districts") { residence_districts_text(residence) }
-        end
-        PillLink(label: "Change", path: edit_residence_path(residence), variant: "outline") if current_voter.admin?
-      end
+      @ballot.residences.each_with_index { |residence, index| residence_place(residence, first: index.zero?) }
       progress_bar
     end
   end
 
+  def residence_place(residence, first:)
+    div(class: "residence-card-place") do
+      span(class: "residence-card-icon") { icon(:map_pin) }
+      div(class: "residence-card-text") do
+        strong(class: "residence-card-name") { residence.jurisdiction.name }
+        span(class: "residence-card-districts") { residence_districts_text(residence) }
+      end
+      PillLink(label: @ballot.residences.many? ? "Manage" : "Change", path: past_residences_path, variant: "outline") if first
+    end
+  end
+
   def residence_districts_text(residence)
-    [ residence.jurisdiction.parent, *residence.district_jurisdictions ].compact.map(&:name).join(" · ")
+    [ residence.jurisdiction.parent, *residence.districts ].compact.map(&:name).join(" · ")
   end
 
   def progress_bar
@@ -97,8 +101,8 @@ class Views::Ballots::ShowView < Views::ApplicationView
   def no_residence
     section(class: "ballot-empty") do
       h2(class: "card-title") { "We don't know where you vote yet" }
-      p { "Your ballot comes from where you live. Until it's recorded, you can still pretend vote in any race below." }
-      PillLink(label: "Record a residence", path: new_residence_path) if current_voter.admin?
+      p { "Your ballot comes from where you live. Until you set it, you can still pretend vote in any race below." }
+      PillLink(label: "Set where you live", path: new_residence_claim_path, icon: :map_pin)
     end
   end
 

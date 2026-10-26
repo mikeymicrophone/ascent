@@ -31,8 +31,7 @@ class MockElectionsController < ApplicationController
   # The places a mock election can be set in: a place the voter came from first, then where they live
   # and every jurisdiction above it, or the states and countries when we don't know where they live.
   def places
-    residence = current_voter.current_residence
-    places = residence ? residence.ballot_jurisdictions : Jurisdiction.where(jurisdictionable_type: %w[State Country])
+    places = current_voter.current_residences.any? ? current_voter.ballot_jurisdictions : Jurisdiction.where(jurisdictionable_type: %w[State Country])
     [ Jurisdiction.find_by(id: params[:jurisdiction_id]), *places.includes(:jurisdictionable).sort_by(&:name) ].compact.uniq
   end
 end

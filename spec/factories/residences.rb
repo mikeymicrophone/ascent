@@ -3,6 +3,7 @@ FactoryBot.define do
     association :voter
     association :jurisdiction
     registered_at { 3.years.ago }
+    started_on { registered_at.to_date }
     status { "active" }
     notes { "Standard residence registration for voting purposes" }
 

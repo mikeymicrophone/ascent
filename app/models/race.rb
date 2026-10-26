@@ -33,8 +33,8 @@ class Race < ApplicationRecord
   # Races with at least one saved mountain, so their results have something to show.
   scope :with_mountains, -> { where(id: VoterRaceBaseline.select(:race_id)) }
   scope :in_jurisdictions, ->(jurisdictions) { joins(:office).where(offices: { jurisdiction_id: jurisdictions.select(:id) }) }
-  # The real races still open where this residence votes.
-  scope :on_ballot_for, ->(residence) { real.open_to_rating.in_jurisdictions(residence.ballot_jurisdictions) }
+  # The real races still open where a voter, or one residence, votes.
+  scope :on_ballot_for, ->(holder) { real.open_to_rating.in_jurisdictions(holder.ballot_jurisdictions) }
   scope :in_place_named, ->(query) { in_jurisdictions(Jurisdiction.and_their_descendants(Jurisdiction.named_like(query))) }
   # Races a search for an office, election, candidate, or place finds.
   scope :findable, ->(query) { where(id: matching(query).select(:id)).or(where(id: in_place_named(query).select(:id))) }

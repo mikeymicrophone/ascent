@@ -189,7 +189,8 @@
 }
 
 .place-search .place-search-input,
-.mock-form .text-input {
+.mock-form .text-input,
+.claim-confirm .text-input {
   @apply min-h-12 px-4 rounded-xl border-[1.5px];
 }
 
@@ -439,4 +440,74 @@ textarea.text-input {
 
 .form-actions {
   @apply gap-3;
+}
+
+.claim-page {
+  @apply gap-8 pt-8 pb-16 max-w-5xl;
+}
+
+.claim-header {
+  @apply gap-3 items-start;
+}
+
+.claim-current,
+.claim-status {
+  @apply m-0;
+}
+
+.claim-options {
+  @apply gap-5;
+}
+
+.claim-places {
+  @apply m-0 p-0 list-none;
+}
+
+.claim-place {
+  @apply gap-3 py-3 border-b last:border-b-0;
+}
+
+.claim-place-text {
+  @apply gap-0.5;
+}
+
+.claim-summary .chip-list {
+  @apply flex flex-wrap gap-1.5 m-0 p-0 list-none;
+}
+
+.claim-summary .place-chip {
+  @apply px-2 py-1 rounded-md border;
+}
+
+.residence-timeline {
+  @apply m-0 p-0 list-none rounded-[20px] border overflow-hidden;
+}
+
+.residence-item {
+  @apply gap-3 px-5 py-4 border-b last:border-b-0;
+}
+
+.residence-item-text {
+  @apply gap-1;
+}
+
+.residence-item .chip-list,
+.claim-confirm .chip-list {
+  @apply flex flex-wrap gap-1.5 m-0 p-0 list-none;
+}
+
+.residence-item .place-chip {
+  @apply px-2 py-1 rounded-md border;
+}
+
+.claim-confirm {
+  @apply gap-4;
+}
+
+.claim-select {
+  @apply w-full max-w-sm;
+}
+
+.claim-errors {
+  @apply px-4 py-3 rounded-xl;
 }

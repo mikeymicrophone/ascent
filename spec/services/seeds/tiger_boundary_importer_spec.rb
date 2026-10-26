@@ -57,15 +57,15 @@ RSpec.describe Seeds::TigerBoundaryImporter do
     expect(alder_county.jurisdiction.boundaries.sole.valid_from).to eq(Date.new(2025, 1, 1))
   end
 
-  it "lets a residence find its districts from a point once boundaries are in" do
+  it "lets a voter's location find their town and districts once boundaries are in" do
+    alder_county.jurisdiction.update!(parent: vermont.jurisdiction)
+    port_merritt.jurisdiction.update!(parent: alder_county.jurisdiction)
     import
-    residence = create(:residence, jurisdiction: port_merritt.jurisdiction,
-      location: RGeo::Geos.factory(srid: 4326).point(-72.3, 43.7))
+    claim = ResidenceClaim.new(latitude: 43.7, longitude: -72.3, voter: create(:voter))
 
-    expect(residence.ballot_jurisdictions.map(&:name)).to include(
-      "Vermont At-Large Congressional District", "Vermont State House District 12A", "Alder County"
-    )
-    expect(residence.ballot_jurisdictions.map(&:name)).not_to include("Vermont State Senate District 3")
+    expect(claim.town).to eq(port_merritt.jurisdiction)
+    expect(claim.districts.values).to contain_exactly(at_large.jurisdiction, house_12a.jurisdiction, nil)
+    expect(claim.ballot_jurisdictions.map(&:name)).to include("Alder County", "Vermont")
   end
 
   it "replaces the same vintage, closes the older boundary for a newer one, and then matches by census ID" do

@@ -23,7 +23,7 @@ RSpec.describe "My ballot", type: :request do
     get ballot_path
 
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include("Your ballot", "Port Merritt Ward 4", "Assembly District 52 · Congressional District 7")
+    expect(response.body).to include("Your ballot", "Port Merritt Ward 4", "Port Merritt · Congressional District 7 · Assembly District 52")
     expect(response.body).to include("City", "Federal", "You approve 1 of 3", "Open mountain", "Start rating")
     expect(response.body).to include(edit_mountain_path(house), race_results_path(mayor))
     # Next door is a pretend vote, offered below the ballot rather than on it.

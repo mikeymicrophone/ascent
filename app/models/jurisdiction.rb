@@ -25,6 +25,18 @@ class Jurisdiction < ApplicationRecord
       .distinct
   }
 
+  # Jurisdictions whose boundary shares more than a sliver of the given jurisdiction's area today, such
+  # as the districts a town falls in; shared edges and digitizing slivers don't count.
+  scope :overlapping, ->(jurisdiction, at_least: 0.001, on: Date.current) {
+    town = JurisdictionBoundary.effective_on(on).where(jurisdiction_id: jurisdiction.id).select(:geometry).limit(1).to_sql
+    joins(:boundaries).merge(JurisdictionBoundary.effective_on(on))
+      .where("ST_Area(ST_Intersection(jurisdiction_boundaries.geometry, (#{town}))) > ? * ST_Area((#{town}))", at_least)
+      .distinct
+  }
+
+  # The district jurisdictions that elect one chamber: congressional, state_senate or state_house.
+  scope :districts_of_chamber, ->(chamber) { where(jurisdictionable_type: "District", jurisdictionable_id: District.of_chamber(chamber).select(:id)) }
+
   # The jurisdiction a TIGER/Line feature describes, by its feature class and GEOID.
   scope :with_census_id, ->(census_class, geoid) { where(census_class: census_class, census_geoid: geoid) }
 
@@ -60,6 +72,15 @@ class Jurisdiction < ApplicationRecord
 
   def self_and_ancestors
     self.class.and_their_ancestors(self)
+  end
+
+  # What kind of place this is and where, for telling same-named places apart:
+  # "City or town · Onondaga County, New York".
+  def place_description
+    owner = jurisdictionable
+    kind = { "Municipality" => "City or town", "County" => "County" }.fetch(jurisdictionable_type, owner.model_name.human)
+    where = [ (owner.county&.name if owner.respond_to?(:county)), (owner.state&.name if owner.respond_to?(:state)) ].compact.join(", ")
+    [ kind, where.presence ].compact.join(" · ")
   end
 
   # Where this jurisdiction's offices sit on a ballot: a district goes with the jurisdiction it

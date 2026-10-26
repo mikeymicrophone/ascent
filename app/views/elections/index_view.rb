@@ -52,10 +52,9 @@ class Views::Elections::IndexView < Views::ApplicationView
 
   # The open elections where the voter lives, pulled out of the long list.
   def your_elections
-    residence = current_voter&.current_residence
-    return unless residence && !@filters[:near]
+    return unless lives_somewhere? && !@filters[:near]
 
-    elections = Election.real.open_to_rating.in_jurisdictions(residence.ballot_jurisdictions).soonest_first.includes(:races).limit(4).to_a
+    elections = Election.real.open_to_rating.in_jurisdictions(current_voter.ballot_jurisdictions).soonest_first.includes(:races).limit(4).to_a
     return if elections.empty?
 
     section(class: "your-elections", aria: { label: "Your elections" }) do
@@ -88,7 +87,7 @@ class Views::Elections::IndexView < Views::ApplicationView
 
   def progress_for_your_elections
     @progress_for_your_elections ||= current_voter.mountain_progress(Race.joins(:election).merge(Election.real.open_to_rating)
-      .in_jurisdictions(current_voter.current_residence.ballot_jurisdictions))
+      .in_jurisdictions(current_voter.ballot_jurisdictions))
   end
 
   def listing_tabs
@@ -116,7 +115,7 @@ class Views::Elections::IndexView < Views::ApplicationView
       div(class: "filter-chips", role: "group", aria: { label: "Kind of election" }) do
         filter_chip("Any kind", listing_path(kind: nil), @filters[:kind].nil?)
         KIND_LABELS.each { |kind, label| filter_chip(label, listing_path(kind: kind), @filters[:kind] == kind) }
-        near_chip if current_voter&.current_residence
+        near_chip if lives_somewhere?
       end
     end
   end
@@ -199,8 +198,14 @@ class Views::Elections::IndexView < Views::ApplicationView
     resident_jurisdiction_ids.include?(election.jurisdiction_id)
   end
 
+  def lives_somewhere?
+    return @lives_somewhere if defined?(@lives_somewhere)
+
+    @lives_somewhere = current_voter&.current_residences&.any? || false
+  end
+
   def resident_jurisdiction_ids
-    @resident_jurisdiction_ids ||= current_voter&.current_residence&.ballot_jurisdictions&.pluck(:id).to_a.to_set
+    @resident_jurisdiction_ids ||= lives_somewhere? ? current_voter.ballot_jurisdictions.pluck(:id).to_set : Set.new
   end
 
   def progress

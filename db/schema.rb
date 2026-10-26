@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_180000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -457,15 +457,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_150000) do
     t.index ["voter_id"], name: "index_ratings_on_voter_id"
   end
 
-  create_table "residence_districts", force: :cascade do |t|
-    t.bigint "residence_id", null: false
-    t.bigint "jurisdiction_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["jurisdiction_id"], name: "index_residence_districts_on_jurisdiction_id"
-    t.index ["residence_id", "jurisdiction_id"], name: "index_residence_districts_on_residence_id_and_jurisdiction_id", unique: true
-  end
-
   create_table "residences", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "jurisdiction_id", null: false
@@ -474,10 +465,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_150000) do
     t.string "status"
     t.datetime "updated_at", null: false
     t.bigint "voter_id", null: false
-    t.geometry "location", limit: {srid: 4326, type: "st_point"}
+    t.bigint "congressional_district_id"
+    t.bigint "state_senate_district_id"
+    t.bigint "state_house_district_id"
+    t.date "started_on", null: false
+    t.date "ended_on"
+    t.index ["congressional_district_id"], name: "index_residences_on_congressional_district_id"
     t.index ["jurisdiction_id"], name: "index_residences_on_jurisdiction_id"
-    t.index ["location"], name: "index_residences_on_location", using: :gist
+    t.index ["state_house_district_id"], name: "index_residences_on_state_house_district_id"
+    t.index ["state_senate_district_id"], name: "index_residences_on_state_senate_district_id"
     t.index ["voter_id"], name: "index_residences_on_voter_id"
+    t.check_constraint "ended_on IS NULL OR ended_on >= started_on", name: "residences_end_after_start"
   end
 
   create_table "rule_conditions", force: :cascade do |t|
@@ -705,9 +703,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_150000) do
   add_foreign_key "rating_archives", "voters"
   add_foreign_key "ratings", "candidacies"
   add_foreign_key "ratings", "voters"
-  add_foreign_key "residence_districts", "jurisdictions"
-  add_foreign_key "residence_districts", "residences", on_delete: :cascade
   add_foreign_key "residences", "jurisdictions"
+  add_foreign_key "residences", "jurisdictions", column: "congressional_district_id"
+  add_foreign_key "residences", "jurisdictions", column: "state_house_district_id"
+  add_foreign_key "residences", "jurisdictions", column: "state_senate_district_id"
   add_foreign_key "residences", "voters"
   add_foreign_key "rule_conditions", "rule_statements", column: "statement_id"
   add_foreign_key "rule_statements", "rule_topics", column: "topic_id"

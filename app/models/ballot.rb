@@ -7,12 +7,13 @@ class Ballot
     @voter = voter
   end
 
-  def residence
-    voter.current_residence
+  # Every place the voter lives now; the ballot covers them all.
+  def residences
+    @residences ||= voter.current_residences.includes(:jurisdiction, :congressional_district, :state_senate_district, :state_house_district).to_a
   end
 
   def races
-    residence ? Race.on_ballot_for(residence).with_naming_details.recent : Race.none
+    residences.any? ? Race.on_ballot_for(voter).with_naming_details.recent : Race.none
   end
 
   def mountains
@@ -39,7 +40,9 @@ class Ballot
   end
 
   def neighboring_races
-    residence ? Race.real.open_to_rating.in_jurisdictions(residence.neighboring_jurisdictions) : Race.none
+    towns = residences.map(&:jurisdiction)
+    neighbors = Jurisdiction.where(parent_id: towns.map(&:parent_id)).where.not(id: towns.map(&:id))
+    residences.any? ? Race.real.open_to_rating.in_jurisdictions(neighbors).where.not(id: races.select(:id)) : Race.none
   end
 
   def mock_races
@@ -48,6 +51,6 @@ class Ballot
 
   # Finished races where the voter lives, to replay with approval voting.
   def historical_races
-    residence ? Race.historical.in_jurisdictions(residence.ballot_jurisdictions).recent : Race.none
+    residences.any? ? Race.historical.in_jurisdictions(voter.ballot_jurisdictions).recent : Race.none
   end
 end

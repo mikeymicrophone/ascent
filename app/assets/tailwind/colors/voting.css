@@ -216,7 +216,8 @@
 }
 
 .place-search .place-search-input,
-.mock-form .text-input {
+.mock-form .text-input,
+.claim-confirm .text-input {
   background-color: var(--brand-lichen);
   border-color: var(--brand-basalt);
   color: var(--brand-basalt);
@@ -435,4 +436,55 @@
 .results-withheld {
   border-style: dashed;
   border-color: var(--brand-scree-edge);
+}
+
+.claim-current,
+.claim-status,
+.claim-place-meta {
+  color: var(--brand-slate);
+}
+
+[data-locate-state="error"] .claim-status {
+  color: var(--brand-rope-deep);
+}
+
+.claim-place {
+  border-color: var(--brand-contour);
+}
+
+.claim-summary .place-chip {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-mist);
+}
+
+.claim-summary .place-chip.is-district {
+  background-color: var(--brand-summit-wash);
+  border-color: var(--brand-basalt);
+}
+
+.residence-timeline {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.residence-item {
+  border-color: var(--brand-contour);
+}
+
+.residence-item.is-current {
+  box-shadow: inset 4px 0 0 var(--brand-summit);
+}
+
+.residence-dates {
+  color: var(--brand-rope-deep);
+}
+
+.residence-item .place-chip {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-mist);
+}
+
+.claim-errors {
+  background-color: var(--brand-rope-wash);
+  color: var(--brand-rope-deep);
 }

@@ -36,12 +36,17 @@ class Views::Components::ModeStrip < Views::ApplicationView
 
   def mode_text
     case mode
-    when "ballot" then "Real election · you live in #{@voter.current_residence.jurisdiction.name}"
+    when "ballot" then "Real election · you live in #{home_place_name}"
     when "real" then "Sign in to build a mountain for this race"
     when "pretend" then "You don't live in #{@race.office.jurisdiction.name}. Your mountain is counted with visitors, never with residents."
     when "mock" then mock_text
     when "historical" then historical_text
     end
+  end
+
+  # The place this race's voter lives in that puts the race on their ballot.
+  def home_place_name
+    @voter.current_residences.includes(:jurisdiction).find { it.covers?(@race) }&.jurisdiction&.name
   end
 
   def mock_text
