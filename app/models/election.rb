@@ -5,6 +5,10 @@ class Election < ApplicationRecord
   # Statuses in which voters can still build mountains for the election's races.
   OPEN_STATUSES = %w[upcoming active].freeze
 
+  # The tabs of the elections list, and the kinds its chips filter by.
+  LISTING_TABS = %w[upcoming past mock historical all].freeze
+  KIND_GROUPS = { "general" => %w[general], "primary" => PRIMARY_KINDS, "special" => %w[special] }.freeze
+
   include Engageable
 
   belongs_to :jurisdiction
@@ -31,6 +35,13 @@ class Election < ApplicationRecord
   scope :open_to_rating, -> { where(status: OPEN_STATUSES) }
   scope :created_by, ->(voter) { where(creator: voter) }
   scope :in_jurisdictions, ->(jurisdictions) { where(jurisdiction_id: jurisdictions.select(:id)) }
+  scope :finished, -> { where(status: %w[completed cancelled]) }
+  scope :of_kind, ->(group) { where(kind: KIND_GROUPS.fetch(group)) }
+  scope :soonest_first, -> { order(:election_date, :name) }
+  scope :latest_first, -> { order(election_date: :desc, name: :asc) }
+  scope :matching, ->(query) {
+    where("elections.name ILIKE ?", "%#{sanitize_sql_like(query.strip)}%").or(where(jurisdiction_id: Jurisdiction.named_like(query).select(:id)))
+  }
   scope :held_before, ->(date) { where(election_date: ...date) }
   scope :held_after, ->(date) { where("elections.election_date > ?", date) }
   scope :recent, -> { order(election_date: :desc) }
@@ -54,6 +65,18 @@ class Election < ApplicationRecord
       destroy!
       invented_offices.each(&:destroy!)
       invented_people.each(&:destroy!)
+    end
+  end
+
+  # One tab of the elections list: open real elections soonest first, finished ones latest first,
+  # mock and historical ones apart, or everything.
+  def self.listing(tab)
+    case tab
+    when "upcoming" then real.open_to_rating.soonest_first
+    when "past" then real.finished.latest_first
+    when "mock" then mock.latest_first
+    when "historical" then historical.latest_first
+    else latest_first
     end
   end
 

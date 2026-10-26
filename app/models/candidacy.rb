@@ -53,6 +53,20 @@ class Candidacy < ApplicationRecord
     "Off the ballot; ran in the #{organization.is_a?(Party) ? "#{organization.name} primary" : organization.name}"
   end
 
+  # How one group's saved mountains treat this candidacy, from the race's results: totals only.
+  def support(group = "resident")
+    results = race.results_for(group)
+    return { mountain_count: 0, any_mountains: false } unless results[:any_mountains]
+
+    {
+      mountain_count: results[:mountain_count],
+      any_mountains: true,
+      approval_share: primary_candidacy_id ? results[:off_ballot][:approval_shares][id] : results[:approval_shares][id],
+      first_choice_share: (results[:first_choice_shares].fetch(id, 0.0) unless primary_candidacy_id),
+      average_rating: mountain_ratings.counted_with(group).average(:rating)&.round
+    }
+  end
+
   def average_rating
     ratings.average(:rating)&.round(1)
   end

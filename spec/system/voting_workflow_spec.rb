@@ -24,10 +24,9 @@ RSpec.describe "Voting Workflow", type: :system do
     it "allows voter to view active elections" do
       visit elections_path
 
-      expect(page).to have_content("Elections")
+      expect(page).to have_content("Every election")
       expect(page).to have_content("Springfield General Election 2024")
-      # Races render inside a collapsed expandable section.
-      expect(page).to have_text(:all, "Mayor - Springfield")
+      expect(page).to have_content("Mayor · 1 seat")
     end
 
     it "shows race details with candidates" do

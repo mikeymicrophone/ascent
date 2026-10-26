@@ -1,9 +1,7 @@
 # What one group's saved mountains for a race add up to: residents' by default, or visitors' pretend
-# votes. Results are totals only, and any total drawn from fewer than MINIMUM_MOUNTAINS mountains is
-# withheld, so a small ward cannot reveal how one person voted.
+# votes. Results are totals only, shown from the first saved mountain.
 class RaceResults
   GROUPS = %w[resident visitor].freeze
-  MINIMUM_MOUNTAINS = 10
 
   attr_reader :race, :group
 
@@ -24,8 +22,8 @@ class RaceResults
     @mountain_count ||= mountains.count
   end
 
-  def publishable?
-    mountain_count >= MINIMUM_MOUNTAINS
+  def any_mountains?
+    mountain_count.positive?
   end
 
   # Percent of mountains approving each candidacy on the ballot, unapproved ones at zero.
@@ -54,9 +52,8 @@ class RaceResults
   # Approval of candidates from the primaries, among only the voters who chose to include them.
   def off_ballot
     including = race.voter_race_preferences.where(include_primary_candidates: true, voter_id: mountains.select(:voter_id)).count
-    return { mountain_count: including, approval_shares: {} } if including < MINIMUM_MOUNTAINS
-
-    { mountain_count: including, approval_shares: percents(ratings.from_primaries.approved.group(:candidacy_id).count, including) }
+    approvals = race.candidacies.from_primaries.ids.index_with(0).merge(ratings.from_primaries.approved.group(:candidacy_id).count)
+    { mountain_count: including, approval_shares: percents(approvals, including) }
   end
 
   # Of the mountains approving one candidacy, the percent also approving another, keyed [one, other].
@@ -76,12 +73,12 @@ class RaceResults
   end
 
   def summary
-    return { group: group, mountain_count: mountain_count, publishable: false } unless publishable?
+    return { group: group, mountain_count: 0, any_mountains: false } unless any_mountains?
 
     {
       group: group,
       mountain_count: mountain_count,
-      publishable: true,
+      any_mountains: true,
       approval_shares: approval_shares,
       first_choice_shares: first_choice_shares,
       average_approvals: average_approvals,

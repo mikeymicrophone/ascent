@@ -42,8 +42,21 @@
   font-stretch: 85%;
 }
 
-.contest-candidates {
+.contest-candidates,
+.candidate-item {
   @apply text-[15px] leading-snug;
+}
+
+.candidate-given {
+  @apply font-normal;
+}
+
+.candidate-surname {
+  @apply font-bold;
+}
+
+.candidate-more {
+  @apply italic;
 }
 
 .seat-chip-label,
@@ -54,4 +67,26 @@
 
 .glance-value {
   @apply font-['Martian_Mono'];
+}
+
+.candidate-name {
+  @apply font-['Bricolage_Grotesque'] text-[15px] leading-snug;
+}
+
+.candidate-card-name {
+  @apply font-['Bricolage_Grotesque'] text-2xl leading-tight;
+}
+
+.candidate-card-office,
+.endorsement-kind,
+.support-stat-label {
+  @apply font-['Martian_Mono'] text-[11px] tracking-[0.04em];
+}
+
+.endorsement-name {
+  @apply text-[15px];
+}
+
+.support-stat-value {
+  @apply font-['Martian_Mono'] font-bold text-xl leading-none;
 }

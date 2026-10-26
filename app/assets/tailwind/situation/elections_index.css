@@ -1,0 +1,39 @@
+.listing-tab,
+.filter-chip,
+.election-row {
+  @apply transition-colors;
+}
+
+.listing-tab:not(.is-current):hover,
+.filter-chip:not(.is-current):hover {
+  background-color: var(--brand-contour);
+}
+
+.election-row:hover {
+  background-color: var(--brand-lichen);
+}
+
+.election-row:hover .election-row-name {
+  color: var(--brand-rope-deep);
+}
+
+.listing-tab:focus-visible,
+.filter-chip:focus-visible,
+.listing-search-input:focus-visible,
+.election-row-name:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
+}
+
+.your-election-card {
+  @apply transition-colors;
+}
+
+.your-election-card:hover {
+  border-color: var(--brand-summit);
+}
+
+.your-election-card:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
+}

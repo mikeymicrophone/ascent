@@ -2,8 +2,13 @@ class ElectionsController < ApplicationController
   before_action :set_election, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @elections = pagy(Election.with_full_details.recent)
-    render Views::Elections::IndexView.new(elections: @elections, pagy: @pagy)
+    elections = filtered(Election.listing(listing_filters[:tab]))
+    @pagy, @elections = pagy(elections.includes(races: { office: :position }, jurisdiction: :jurisdictionable))
+    render Views::Elections::IndexView.new(
+      elections: @elections, pagy: @pagy, filters: listing_filters,
+      tab_counts: Election::LISTING_TABS.index_with { filtered(Election.listing(it)).count },
+      day_counts: elections.where(election_date: @elections.map(&:election_date)).reorder(nil).group(:election_date).count
+    )
   end
 
   def show
@@ -43,6 +48,23 @@ class ElectionsController < ApplicationController
   end
 
   private
+
+  # The list's tab, kind chip, search and "where I live" toggle, cleaned of anything unknown.
+  def listing_filters
+    @listing_filters ||= {
+      tab: Election::LISTING_TABS.include?(params[:tab]) ? params[:tab] : "upcoming",
+      kind: (params[:kind] if Election::KIND_GROUPS.key?(params[:kind])),
+      q: params[:q].to_s.strip.presence,
+      near: params[:near] == "1" && current_voter&.current_residence.present?
+    }
+  end
+
+  def filtered(elections)
+    elections = elections.of_kind(listing_filters[:kind]) if listing_filters[:kind]
+    elections = elections.matching(listing_filters[:q]) if listing_filters[:q]
+    elections = elections.in_jurisdictions(current_voter.current_residence.ballot_jurisdictions) if listing_filters[:near]
+    elections
+  end
 
   def set_election
     @election = Election.with_full_details.find(params[:id])

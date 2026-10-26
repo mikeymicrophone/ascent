@@ -68,8 +68,26 @@
   @apply flex flex-wrap items-baseline;
 }
 
+/* Names fill the row; the actions sit against the right edge, top-aligned with the first names. */
 .contest-single {
-  @apply flex flex-wrap items-center justify-between;
+  @apply grid items-start;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.candidate-list {
+  columns: 3 11rem;
+}
+
+.candidate-item {
+  break-inside: avoid;
+}
+
+.contest-actions {
+  @apply flex items-center justify-end;
+}
+
+.icon-action {
+  @apply inline-flex items-center justify-center shrink-0;
 }
 
 .seat-chips {
@@ -96,4 +114,46 @@
   .contest {
     grid-template-columns: 2.5rem minmax(0, 1fr);
   }
+}
+
+/* Candidate names open a card in a popover, centered in the top layer. */
+.candidate-name {
+  @apply inline text-left;
+}
+
+.candidate-popover {
+  @apply m-auto;
+  width: min(26rem, calc(100vw - 2rem));
+}
+
+.candidate-card {
+  @apply flex flex-col;
+}
+
+.candidate-card-head {
+  @apply flex items-start justify-between;
+}
+
+.candidate-card-title {
+  @apply flex flex-col min-w-0;
+}
+
+.endorsement-list {
+  @apply flex flex-col;
+}
+
+.endorsement-item {
+  @apply flex items-baseline justify-between;
+}
+
+.support-stats {
+  @apply grid grid-cols-3;
+}
+
+.support-stat {
+  @apply flex flex-col;
+}
+
+.candidate-card-links {
+  @apply flex flex-wrap;
 }

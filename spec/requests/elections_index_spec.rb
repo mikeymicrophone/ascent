@@ -7,7 +7,7 @@ RSpec.describe "Elections Index", type: :request do
         get elections_path
 
         expect(response).to have_http_status(200)
-        expect(response.body).to include("Elections")
+        expect(response.body).to include("Every election", "No elections match")
       end
     end
 
@@ -38,19 +38,22 @@ RSpec.describe "Elections Index", type: :request do
         expect(response.body).to include("Elections")
       end
 
-      it "displays different election statuses" do
+      it "lists open elections soonest first, and finished ones under Past" do
         get elections_path
 
-        expect(response.body).to include("upcoming").or include("Upcoming")
-        expect(response.body).to include("active").or include("Active")
-        expect(response.body).to include("completed").or include("Completed")
+        days = [ active_race, upcoming_race ].map { response.body.index(it.election.election_date.strftime("%A, %B %-d, %Y")) }
+        expect(days.first).to be < days.last
+        expect(response.body).not_to include(completed_race.election.election_date.strftime("%A, %B %-d, %Y"))
+
+        get elections_path(tab: "past")
+
+        expect(response.body).to include(completed_race.election.name, "race-status-completed")
       end
 
-      it "displays the races on each election's ballot" do
+      it "previews the offices on each election's ballot" do
         get elections_path
 
-        expect(response.body).to include("Mayor - Los Angeles")
-        expect(response.body).to include("2 candidates")
+        expect(response.body).to include("Mayor · 1 seat")
       end
 
       it "displays the jurisdiction holding the election" do
@@ -89,7 +92,7 @@ RSpec.describe "Elections Index", type: :request do
     context "error handling" do
       it "handles database errors gracefully" do
         # Mock a database error
-        allow(Election).to receive(:with_full_details).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
+        allow(Election).to receive(:listing).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
 
         expect { get elections_path }.to raise_error(ActiveRecord::StatementInvalid)
       end

@@ -16,6 +16,7 @@ class Views::ApplicationView < Phlex::HTML
   include Phlex::Rails::Helpers::Pluralize
   include Phlex::Rails::Helpers::CurrentPage
   include Phlex::Rails::Helpers::Request
+  include Phlex::Rails::Helpers::TurboFrameTag
 
   include Devise::Controllers::Helpers
   include ActionPolicy::Behaviour
@@ -42,6 +43,11 @@ class Views::ApplicationView < Phlex::HTML
   # A Lucide icon by name, e.g. icon(:share_2). Hidden from screen readers; the text beside it carries the meaning.
   def icon(name, **attributes)
     render PhlexIcons::Lucide.const_get(name.to_s.camelize).new(class: "icon icon-#{name.to_s.dasherize}", aria: { hidden: true }, **attributes)
+  end
+
+  # The popover a ballot opens on a candidate's name, and the Turbo frame its card loads into.
+  def candidate_popover_id(candidacy)
+    "candidate-popover-#{candidacy.id}"
   end
 
   def jurisdiction_link(jurisdiction)

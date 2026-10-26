@@ -5,7 +5,7 @@
 # order, where offices with several seats collapse into seat chips that show the voter's own progress.
 class Views::Elections::ShowView < Views::ApplicationView
   CONTEST_LIMIT = 10
-  CANDIDATE_NAME_LIMIT = 4
+  CANDIDATE_NAME_LIMIT = 9
   DAY_CELL_LIMIT = 45
 
   prop :election, Election
@@ -230,23 +230,77 @@ class Views::Elections::ShowView < Views::ApplicationView
     [ (pluralize(contest_races.size, "seat") if contest_races.many?), pluralize(candidates, "candidate") ].compact.join(" · ")
   end
 
+  # One seat: its candidates as a bulleted list in up to three columns, with icon actions at the right edge.
   def single_seat(race)
     div(class: "contest-single") do
-      p(class: "contest-candidates") { candidate_names(race) }
-      div(class: "race-card-actions") do
+      candidate_list(race)
+      div(class: "contest-actions") do
         progress_chip(race)
-        link_to("Results", race_results_path(race), class: "race-card-link")
-        link_to(cta_text(race), edit_mountain_path(race), class: "pill-button race-card-cta") if rateable?
+        results_action(race) if voted?(race)
+        mountain_action(race) if rateable?
       end
     end
   end
 
-  def candidate_names(race)
-    names = race.candidacies.reject(&:primary_candidacy_id).map { it.person.full_name }
-    return "No candidates yet" if names.empty?
+  def ballot_candidacies(race)
+    race.candidacies.reject(&:primary_candidacy_id)
+  end
 
-    shown = names.first(CANDIDATE_NAME_LIMIT).join(", ")
-    names.size > CANDIDATE_NAME_LIMIT ? "#{shown}, and #{names.size - CANDIDATE_NAME_LIMIT} more" : shown
+  def candidate_list(race)
+    candidacies = ballot_candidacies(race)
+    return p(class: "contest-candidates") { "No candidates yet" } if candidacies.empty?
+
+    ul(class: "candidate-list") do
+      candidacies.first(CANDIDATE_NAME_LIMIT).each { |candidacy| li(class: "candidate-item") { candidate_button(candidacy) } }
+      li(class: "candidate-item candidate-more") { "and #{candidacies.size - CANDIDATE_NAME_LIMIT} more" } if candidacies.size > CANDIDATE_NAME_LIMIT
+    end
+  end
+
+  # A name opens its card in a popover; the card loads the first time it is shown.
+  def candidate_button(candidacy)
+    button(type: "button", class: "candidate-name", popovertarget: candidate_popover_id(candidacy)) { candidate_name(candidacy.person) }
+    div(id: candidate_popover_id(candidacy), popover: "auto", class: "candidate-popover") do
+      turbo_frame_tag(dom_id(candidacy, :card), src: candidacy_card_path(candidacy), loading: "lazy", target: "_top") do
+        p(class: "candidate-card-loading") { "Loading #{candidacy.person.full_name}…" }
+      end
+    end
+  end
+
+  # The surname carries the weight; given and middle names stay light.
+  def candidate_name(person)
+    given = [ person.first_name, person.middle_name ].compact_blank.join(" ")
+    span(class: "candidate-given") { "#{given} " } if given.present?
+    strong(class: "candidate-surname") { person.last_name }
+  end
+
+  def candidate_names(race)
+    names = ballot_candidacies(race).map { it.person.full_name }
+    names.any? ? names.join(", ") : "No candidates yet"
+  end
+
+  def results_action(race)
+    link_to race_results_path(race), class: "icon-action", aria: { label: "Results for #{race.office.name}" }, title: "Results" do
+      icon(:chart_column)
+    end
+  end
+
+  def mountain_action(race)
+    label = cta_text(race)
+    link_to edit_mountain_path(race), class: "icon-action icon-action-primary", aria: { label: "#{label}: #{race.office.name}" }, title: label do
+      icon(mountain_icon(race))
+    end
+  end
+
+  def mountain_icon(race)
+    return :history if mode == "historical" && !progress[race.id]
+
+    { "saved" => :mountain, "started" => :pencil }.fetch(progress[race.id]) { mode == "pretend" ? :compass : :mountain }
+  end
+
+  # Results appear only once someone has saved a mountain for the race.
+  def voted?(race)
+    @voted_race_ids ||= @election.races.with_mountains.ids.to_set
+    @voted_race_ids.include?(race.id)
   end
 
   def seat_chips(contest_races)

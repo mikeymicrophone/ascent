@@ -72,6 +72,30 @@
   border-color: var(--brand-pebble);
 }
 
+.candidate-given,
+.candidate-more {
+  color: var(--brand-slate);
+}
+
+.candidate-surname {
+  color: var(--brand-basalt);
+}
+
+.candidate-item::marker {
+  color: var(--brand-pebble);
+}
+
+.icon-action {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.icon-action-primary {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
 .contest-number {
   color: var(--brand-pebble);
 }
@@ -113,4 +137,35 @@
 .more-contests-toggle {
   border-color: var(--brand-basalt);
   color: var(--brand-basalt);
+}
+
+.candidate-name {
+  background: none;
+  color: inherit;
+}
+
+.candidate-popover {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+  box-shadow: 0 24px 60px -20px rgba(21, 32, 27, 0.45);
+}
+
+.candidate-popover::backdrop {
+  background-color: rgba(21, 32, 27, 0.28);
+}
+
+.candidate-card-office,
+.endorsement-kind,
+.support-stat-label,
+.candidate-card-loading {
+  color: var(--brand-slate);
+}
+
+.candidate-card-section {
+  border-color: var(--brand-contour);
+}
+
+.support-stat {
+  background-color: var(--brand-lichen);
 }

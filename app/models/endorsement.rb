@@ -15,5 +15,11 @@ class Endorsement < ApplicationRecord
   validates :ballot_line, presence: true, if: -> { kind == "ballot_line" }
   validates :endorser_id, uniqueness: { scope: [ :candidacy_id, :endorser_type, :kind ] }
 
+  # A strong public endorsement, worth naming beside the party lines.
+  MAJOR_STRENGTH = 4
+
   scope :current, -> { where(withdrawn_on: nil) }
+  # The endorsements worth naming: party lines and strong public endorsements still standing.
+  scope :major, -> { current.where(kind: "ballot_line").or(current.where(strength: MAJOR_STRENGTH..)) }
+  scope :strongest_first, -> { order(Arel.sql("endorsements.strength DESC NULLS LAST"), :endorsed_on, :id) }
 end

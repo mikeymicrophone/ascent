@@ -1,6 +1,6 @@
 require "rails_helper"
 
-# Results show totals only, residents and visitors apart, and wait for ten mountains before showing any.
+# Results show totals only, residents and visitors apart, from the first saved mountain.
 RSpec.describe "Race results", type: :request do
   let(:race) { create(:race, :active) }
   let(:okafor) { create(:candidacy, race: race, person: create(:person, first_name: "Dana", middle_name: nil, last_name: "Okafor")) }
@@ -12,13 +12,16 @@ RSpec.describe "Race results", type: :request do
     ratings.each { |candidacy, rating| Rating.create!(voter: voter, candidacy: candidacy, rating: rating) }
   end
 
-  it "withholds results until ten mountains are saved" do
-    3.times { mountain!({ okafor => 400 }) }
-
+  it "invites the first mountain when there are none, and shows results from the first one" do
     get race_results_path(race)
 
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include("Not enough mountains yet", "3 mountains so far")
+    expect(response.body).to include("No mountains yet", "Build your mountain")
+
+    mountain!({ okafor => 400 })
+    get race_results_path(race)
+
+    expect(response.body).to include("Approval tally", "Dana Okafor", "100%")
   end
 
   it "shows residents' approval beside first choice, and keeps visitors apart" do
@@ -33,6 +36,8 @@ RSpec.describe "Race results", type: :request do
 
     get race_results_path(race, group: "visitor")
 
-    expect(response.body).to include("Not enough mountains yet", "2 mountains so far")
+    # The two visitors approve only Lindqvist; residents' 100% for Okafor stays out of their tally.
+    expect(response.body).to match(/Theo Lindqvist<\/td><td class="numeric strong">100%/)
+    expect(response.body).to match(/Dana Okafor<\/td><td class="numeric strong">0%/)
   end
 end

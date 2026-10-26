@@ -22,7 +22,8 @@ RSpec.describe "Election page", type: :request do
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include("Port Merritt General Election", "9 days to go", "One square per day", "The ballot")
-    expect(response.body).to include("01", "Mayor", "Dana Okafor, Ruth Okafor", "Sign in to build a mountain")
+    expect(response.body).to include("01", "Mayor", "Sign in to build a mountain")
+    expect(response.body).to include('<span class="candidate-given">Dana </span><strong class="candidate-surname">Okafor</strong></button>')
     expect(response.body.scan("countdown-cell").size).to eq(10)
   end
 
@@ -38,14 +39,19 @@ RSpec.describe "Election page", type: :request do
     expect(response.body).to include("seat-chip seat-chip-saved")
   end
 
-  it "says Open mountain for a race the voter has saved" do
+  it "offers Open mountain, and Results, only once a mountain is saved" do
     mayor = race_for("Mayor", candidates: %w[Dana])
-    Mountain.new(voter: voter, race: mayor).publish!(ratings: { mayor.candidacies.first.id => 300 }, baseline: 200)
+    race_for("Clerk", candidates: %w[Ruth])
     sign_in voter
 
     get election_path(election)
+    expect(response.body).not_to include(race_results_path(mayor))
 
-    expect(response.body).to include("state-chip-saved", "Open mountain")
+    Mountain.new(voter: voter, race: mayor).publish!(ratings: { mayor.candidacies.first.id => 300 }, baseline: 200)
+    get election_path(election)
+
+    expect(response.body).to include("state-chip-saved", 'title="Open mountain"', race_results_path(mayor))
+    expect(response.body.scan(%r{/races/\d+/results}).size).to eq(1)
   end
 
   it "shows ten contests and folds the rest" do

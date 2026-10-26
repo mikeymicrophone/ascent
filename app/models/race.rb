@@ -30,6 +30,8 @@ class Race < ApplicationRecord
   scope :real, -> { joins(:election).merge(Election.real) }
   scope :recent, -> { joins(:election).order("elections.election_date DESC") }
   scope :open_to_rating, -> { where(status: Election::OPEN_STATUSES) }
+  # Races with at least one saved mountain, so their results have something to show.
+  scope :with_mountains, -> { where(id: VoterRaceBaseline.select(:race_id)) }
   scope :in_jurisdictions, ->(jurisdictions) { joins(:office).where(offices: { jurisdiction_id: jurisdictions.select(:id) }) }
   # The real races still open where this residence votes.
   scope :on_ballot_for, ->(residence) { real.open_to_rating.in_jurisdictions(residence.ballot_jurisdictions) }
@@ -70,7 +72,7 @@ class Race < ApplicationRecord
 
   # What one group's saved mountains add up to, recounted at most once an hour.
   def results_for(group = "resident")
-    Rails.cache.fetch([ "race-results", id, group, Time.current.beginning_of_hour.to_i ], expires_in: 1.hour) do
+    Rails.cache.fetch([ "race-results-v2", id, group, Time.current.beginning_of_hour.to_i ], expires_in: 1.hour) do
       RaceResults.new(self, group: group).summary
     end
   end

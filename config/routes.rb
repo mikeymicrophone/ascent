@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   resource :ballot, only: :show
   resources :mock_elections, only: [ :new, :create, :destroy ]
   get "races/:race_id/results", to: "race_results#show", as: :race_results
+  get "candidacies/:id/card", to: "candidacy_cards#show", as: :candidacy_card
   resources :elections do
     resources :races, only: [ :index ]
   end

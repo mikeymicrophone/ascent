@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# What a race's saved mountains add up to, for residents or for visitors: totals only, never one voter.
+# What a race's saved mountains add up to, for residents or for visitors: totals only, never named voters.
 # The approval tally sits beside the first-choice count the same mountains give. Charts come later;
 # for now the numbers are tables.
 class Views::RaceResults::ShowView < Views::ApplicationView
@@ -15,7 +15,7 @@ class Views::RaceResults::ShowView < Views::ApplicationView
       results_strip
       div(class: "results-body") do
         results_header
-        if @summary[:publishable]
+        if @summary[:any_mountains]
           stat_tiles
           div(class: "results-columns") do
             tally
@@ -23,7 +23,7 @@ class Views::RaceResults::ShowView < Views::ApplicationView
           end
           off_ballot
         else
-          withheld
+          no_mountains
         end
         privacy_note
       end
@@ -141,31 +141,24 @@ class Views::RaceResults::ShowView < Views::ApplicationView
 
     section(class: "results-card results-off-ballot") do
       h2(class: "card-title") { "Off the ballot" }
-      if off[:approval_shares].any?
-        p(class: "card-text") { "Among #{number(off[:mountain_count])} who chose to show candidates from the primaries." }
-        table(class: "results-table") do
-          tbody do
-            off[:approval_shares].sort_by { -it.last }.each do |candidacy_id, share|
-              tr do
-                td { candidacies.fetch(candidacy_id).person.full_name }
-                td(class: "numeric strong") { percent(share) }
-              end
+      p(class: "card-text") { "Among #{number(off[:mountain_count])} who chose to show candidates from the primaries." }
+      table(class: "results-table") do
+        tbody do
+          off[:approval_shares].sort_by { -it.last }.each do |candidacy_id, share|
+            tr do
+              td { candidacies.fetch(candidacy_id).person.full_name }
+              td(class: "numeric strong") { percent(share) }
             end
           end
         end
-      else
-        p(class: "card-text") { "Too few mountains include primary candidates to show their support yet." }
       end
     end
   end
 
-  def withheld
+  def no_mountains
     section(class: "results-card results-withheld") do
-      h2(class: "card-title") { "Not enough mountains yet" }
-      p(class: "card-text") do
-        "#{pluralize(@summary[:mountain_count], "mountain")} so far. Results appear once at least " \
-          "#{RaceResults::MINIMUM_MOUNTAINS} are saved, so no one's vote can be picked out."
-      end
+      h2(class: "card-title") { "No mountains yet" }
+      p(class: "card-text") { "Results appear as soon as someone saves a mountain for this race." }
       link_to "Build your mountain", edit_mountain_path(@race), class: "pill-button"
     end
   end

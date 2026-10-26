@@ -1,8 +1,7 @@
 require "rails_helper"
 
 # Results add up saved mountains for one group, residents or visitors, and never mix the two. The same
-# mountains give an approval count and a first-choice (plurality) count. Totals drawn from fewer than ten
-# mountains are withheld so a small group cannot reveal one person's vote.
+# mountains give an approval count and a first-choice (plurality) count, from the first saved mountain.
 RSpec.describe RaceResults do
   let(:race) { create(:race, :active) }
   let(:ventura_quinn) { create(:candidacy, race: race, person: create(:person, first_name: "Marisol", last_name: "Ventura-Quinn")) }
@@ -57,16 +56,16 @@ RSpec.describe RaceResults do
       .to eq([ lindqvist.id, 0 ] => 1, [ lindqvist.id, 2 ] => 4, [ lindqvist.id, 4 ] => 2, [ lindqvist.id, 8 ] => 3)
   end
 
-  it "withholds the off-ballot tally while fewer than ten residents include primary candidates" do
-    expect(residents.off_ballot).to eq(mountain_count: 3, approval_shares: {})
+  it "counts the off-ballot tally among only the residents who include primary candidates, however few" do
+    expect(residents.off_ballot).to eq(mountain_count: 3, approval_shares: { feld.id => 100.0 })
   end
 
-  it "keeps visitors' pretend votes out of residents' results, and withholds a group under ten" do
+  it "keeps visitors' pretend votes out of residents' results, showing even a small group" do
     visitors = described_class.new(race, group: "visitor")
 
-    expect(visitors.mountain_count).to eq(2)
-    expect(visitors.summary).to eq(group: "visitor", mountain_count: 2, publishable: false)
-    expect(residents.summary).to include(publishable: true, approval_shares: residents.approval_shares)
+    expect(visitors.summary).to include(mountain_count: 2, any_mountains: true, approval_shares: include(lindqvist.id => 100.0))
+    expect(residents.summary).to include(any_mountains: true, approval_shares: residents.approval_shares)
+    expect(described_class.new(create(:race)).summary).to eq(group: "resident", mountain_count: 0, any_mountains: false)
   end
 
   it "still counts every saved mountain, residents and visitors, for the race's overall tally" do

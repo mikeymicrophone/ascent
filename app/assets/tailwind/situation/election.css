@@ -1,6 +1,20 @@
 .seat-chip,
-.more-contests-toggle {
+.more-contests-toggle,
+.icon-action {
   @apply transition-colors cursor-pointer;
+}
+
+.icon-action:hover {
+  background-color: var(--brand-contour);
+}
+
+.icon-action-primary:hover {
+  background-color: var(--brand-slate);
+}
+
+.icon-action:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
 }
 
 .seat-chip:hover {
@@ -39,4 +53,21 @@
 @keyframes summit-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(197, 238, 63, 0.6); }
   50% { box-shadow: 0 0 0 4px rgba(197, 238, 63, 0); }
+}
+
+.candidate-name {
+  @apply cursor-pointer underline decoration-transparent underline-offset-4 transition-colors;
+}
+
+.candidate-name:hover {
+  text-decoration-color: var(--brand-rope);
+}
+
+.candidate-name:hover .candidate-surname {
+  color: var(--brand-rope-deep);
+}
+
+.candidate-name:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
 }
