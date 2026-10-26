@@ -25,6 +25,9 @@ class Jurisdiction < ApplicationRecord
       .distinct
   }
 
+  # The jurisdiction a TIGER/Line feature describes, by its feature class and GEOID.
+  scope :with_census_id, ->(census_class, geoid) { where(census_class: census_class, census_geoid: geoid) }
+
   # The given jurisdictions and every one they sit within, up to their countries.
   scope :and_their_ancestors, ->(jurisdictions) {
     with_recursive(jurisdiction_chain: [

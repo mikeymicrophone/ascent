@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_090500) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_26_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -275,8 +275,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_090500) do
     t.string "jurisdictionable_type", null: false
     t.bigint "parent_id"
     t.datetime "updated_at", null: false
+    t.string "census_class"
+    t.string "census_geoid"
+    t.index ["census_class", "census_geoid"], name: "index_jurisdictions_on_census_class_and_census_geoid", unique: true, where: "(census_geoid IS NOT NULL)"
     t.index ["jurisdictionable_type", "jurisdictionable_id"], name: "index_jurisdictions_on_jurisdictionable", unique: true
     t.index ["parent_id"], name: "index_jurisdictions_on_parent_id"
+    t.check_constraint "(census_class IS NULL) = (census_geoid IS NULL)", name: "jurisdictions_census_ids_together"
     t.check_constraint "parent_id <> id", name: "jurisdictions_cannot_parent_themselves"
   end
 

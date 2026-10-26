@@ -103,3 +103,5 @@ gem "csv", "~> 3.3"
 gem "scenic", "~> 1.9"
 # Median and percentile calculations in ActiveRecord, for results statistics [https://github.com/ankane/active_median]
 gem "active_median", "~> 1.0"
+# GeoJSON reading for TIGER/Line boundary imports [https://github.com/rgeo/rgeo-geojson]
+gem "rgeo-geojson", "~> 2.2"
