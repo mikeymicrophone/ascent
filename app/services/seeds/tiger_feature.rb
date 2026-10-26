@@ -15,6 +15,9 @@ module Seeds
       "G5220" => :lower_district
     }.freeze
 
+    # The parts of a legislative district's legal name that say which chamber it belongs to.
+    LEGISLATIVE_WORDS = /\b(?:State (?:House|Senate|Legislative) (?:Sub)?district|Assembly District|Delegate District|Senatorial District|District)\b/i
+
     # Congressional district numbers TIGER uses for a state's single at-large seat.
     AT_LARGE = %w[00 98].freeze
 
@@ -41,7 +44,26 @@ module Seeds
     end
 
     def kind
-      CLASSES[census_class]
+      CLASSES[census_class] unless undefined_district? || undefined_subdivision? || council_ward?
+    end
+
+    def district?
+      kind.to_s.end_with?("district")
+    end
+
+    # Water and other areas a state leaves outside every district, coded ZZ or ZZZ.
+    def undefined_district?
+      district_code&.match?(/\AZ+\z/)
+    end
+
+    # Water and other parts of a county outside every town, coded 00000.
+    def undefined_subdivision?
+      properties["COUSUBFP"] == "00000"
+    end
+
+    # DC has no legislature; its upper-chamber layer holds the council's wards.
+    def council_ward?
+      census_class == "G5210" && state_fips == "11"
     end
 
     def geoid
@@ -69,10 +91,25 @@ module Seeds
       properties["NAMELSAD"] || name
     end
 
-    # A district's number without leading zeros ("07" reads 7), or its code as given ("1A", "Chittenden-1").
+    # The kind of government a town is, from its legal name: "town", "city", "village", "borough".
+    def legal_type
+      full_name.delete_prefix(name.to_s).strip.presence if properties["NAMELSAD"] && name
+    end
+
+    def district_code
+      properties[congressional_key] || properties["SLDUST"] || properties["SLDLST"]
+    end
+
+    # A district's number without leading zeros ("07" reads 7), or its code as given ("1A", "C13").
     def district_number
-      code = properties[congressional_key] || properties["SLDUST"] || properties["SLDLST"]
-      code&.match?(/\A\d+\z/) ? code.to_i.to_s : code
+      district_code&.match?(/\A\d+\z/) ? district_code.to_i.to_s : district_code
+    end
+
+    # How the district is known, from its legal name without the chamber: "30", "29A", "Grafton 15",
+    # "Chittenden-13", "3rd Barnstable". Files without names fall back to the number.
+    def district_label
+      label = properties["NAMELSAD"].to_s.gsub(LEGISLATIVE_WORDS, "").squish
+      label.match?(/\A\d/) ? label.sub(/\A0+(?=\d)/, "") : label.presence || district_number
     end
 
     def at_large?

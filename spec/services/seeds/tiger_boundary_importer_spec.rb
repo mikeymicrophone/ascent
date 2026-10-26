@@ -1,8 +1,9 @@
 require "rails_helper"
 
-# TIGER/Line boundaries arrive as GeoJSON. The importer matches each feature to a jurisdiction we
-# already have (by census ID once recorded, else by name within its state), stores its shape as a dated
-# boundary, and leaves anything it cannot place in a report. The shapes here are simple squares.
+# TIGER/Line boundaries arrive as shapefiles or GeoJSON. The importer matches each feature to a
+# jurisdiction we already have (by census ID once recorded, else by name within its state), creates any
+# congressional or legislative district the seed data lacks, stores its shape as a dated boundary, and
+# leaves anything it cannot place in a report. The shapes here are simple squares.
 RSpec.describe Seeds::TigerBoundaryImporter do
   let(:united_states) { create(:country, name: "United States", code: "US") }
   let(:vermont) { create(:state, :with_jurisdiction, name: "Vermont", code: "VT", country: united_states) }
@@ -86,6 +87,60 @@ RSpec.describe Seeds::TigerBoundaryImporter do
     expect(report).to include(matched: 5, written: 0)
     expect(JurisdictionBoundary.count).to eq(0)
     expect(port_merritt.jurisdiction.reload.census_geoid).to be_nil
+  end
+
+  describe "legislative districts" do
+    let!(:middlesex_35) { create(:district, :with_jurisdiction, name: "Vermont State House District: Thirty-Fifth Middlesex", kind: "state house district") }
+
+    def import_districts(*features)
+      described_class.new(vintage: 2025).import_all([ collection_file("tl_2025_50_sldl.geojson", features) ])
+    end
+
+    it "matches a district however its name is spelled" do
+      report = import_districts(feature({ "MTFCC" => "G5220", "GEOID" => "50M35", "SLDLST" => "M35", "NAMELSAD" => "35th Middlesex District" }, square(-72, 44)))
+
+      expect(report).to include(matched: 1, created: 0)
+      expect(middlesex_35.jurisdiction.reload).to have_attributes(census_geoid: "50M35", parent: vermont.jurisdiction)
+    end
+
+    it "creates a district the seed data lacks, under its state, and skips areas outside every district" do
+      report = import_districts(
+        feature({ "MTFCC" => "G5210", "GEOID" => "50BEN", "STATEFP" => "50", "SLDUST" => "BEN", "NAMELSAD" => "Bennington Senatorial District" }, square(-73, 42.7)),
+        feature({ "MTFCC" => "G5220", "GEOID" => "50C13", "STATEFP" => "50", "SLDLST" => "C13", "NAMELSAD" => "Chittenden-13 State House District" }, square(-73, 44.4)),
+        feature({ "MTFCC" => "G5220", "GEOID" => "50ZZZ", "STATEFP" => "50", "SLDLST" => "ZZZ", "NAMELSAD" => "State House Districts not defined" }, square(-71, 44)))
+
+      expect(report).to include(created: 2, skipped: 1, unmatched_count: 0)
+      bennington = District.find_by!(name: "Vermont State Senate District Bennington")
+      expect(bennington).to have_attributes(kind: "state senate district", chamber: "state_senate")
+      expect(bennington.jurisdiction).to have_attributes(parent: vermont.jurisdiction, census_geoid: "50BEN")
+      expect(District.find_by!(name: "Vermont State House District Chittenden-13").jurisdiction.boundaries.count).to eq(1)
+    end
+  end
+
+  it "tells a town from a same-named city by its seed code, and never lets one take the other's shape" do
+    barre_city = create(:municipality, :with_jurisdiction, name: "Barre", entity_code: "MUNICIPALITY-USA-VT-BARRE_CITY", state: vermont, county: alder_county)
+    barre_town = create(:municipality, :with_jurisdiction, name: "Barre", entity_code: "MUNICIPALITY-USA-VT-BARRE_TOWN", state: vermont, county: alder_county)
+    file = collection_file("tl_2025_50_cousub.geojson", [
+      feature({ "MTFCC" => "G4040", "GEOID" => "5002303175", "COUSUBFP" => "03175", "NAME" => "Barre", "NAMELSAD" => "Barre city" }, square(-72.5, 44.2, 0.1)),
+      feature({ "MTFCC" => "G4040", "GEOID" => "5002303250", "COUSUBFP" => "03250", "NAME" => "Barre", "NAMELSAD" => "Barre town" }, square(-72.6, 44.1, 0.3)),
+      feature({ "MTFCC" => "G4040", "GEOID" => "5002300000", "COUSUBFP" => "00000", "NAME" => "County subdivisions not defined" }, square(-71, 44))
+    ])
+    place = collection_file("tl_2025_50_place.geojson", [ feature({ "MTFCC" => "G4110", "GEOID" => "5003175", "NAME" => "Barre", "NAMELSAD" => "Barre city" }, square(-72.5, 44.2, 0.1)) ])
+
+    report = described_class.new(vintage: 2025).import_all([ file, place ])
+
+    expect(report).to include(matched: 2, skipped: 1, placed_elsewhere: 1, ambiguous_count: 0)
+    expect(barre_city.jurisdiction.reload.census_geoid).to eq("5002303175")
+    expect(barre_town.jurisdiction.reload.census_geoid).to eq("5002303250")
+  end
+
+  it "reads a shapefile, reprojecting it to WGS 84", skip: (system("which ogr2ogr > /dev/null") ? false : "needs GDAL's ogr2ogr") do
+    source = collection_file("county.geojson", [ county_feature ])
+    shapefile = directory.join("tl_2025_us_county.shp")
+    system("ogr2ogr", "-f", "ESRI Shapefile", "-a_srs", "EPSG:4269", shapefile.to_s, source.to_s, exception: true)
+
+    expect(described_class.new(vintage: 2025).import(shapefile)).to include(written: 1)
+    expect(alder_county.jurisdiction.boundaries.sole.geometry.envelope.exterior_ring.points.map(&:x).minmax.map { it.round(3) }).to eq([ -73.0, -71.0 ])
   end
 
   it "reads newline-delimited and gzipped GeoJSON, repairing a self-crossing shape" do
