@@ -5,6 +5,8 @@ class Election < ApplicationRecord
   # Statuses in which voters can still build mountains for the election's races.
   OPEN_STATUSES = %w[upcoming active].freeze
 
+  include Engageable
+
   belongs_to :jurisdiction
   belongs_to :year
   # Whoever made a mock election; real and historical elections come from official sources.
@@ -29,6 +31,8 @@ class Election < ApplicationRecord
   scope :open_to_rating, -> { where(status: OPEN_STATUSES) }
   scope :created_by, ->(voter) { where(creator: voter) }
   scope :in_jurisdictions, ->(jurisdictions) { where(jurisdiction_id: jurisdictions.select(:id)) }
+  scope :held_before, ->(date) { where(election_date: ...date) }
+  scope :held_after, ->(date) { where("elections.election_date > ?", date) }
   scope :recent, -> { order(election_date: :desc) }
   scope :primaries, -> { where(kind: PRIMARY_KINDS) }
   scope :with_full_details, -> { includes(:jurisdiction, races: [ :office, :candidates, :candidacies ]) }
@@ -51,6 +55,34 @@ class Election < ApplicationRecord
       invented_offices.each(&:destroy!)
       invented_people.each(&:destroy!)
     end
+  end
+
+  def open_to_rating?
+    OPEN_STATUSES.include?(status)
+  end
+
+  # The races grouped into contests the way a printed ballot reads: federal offices first, then by how
+  # many candidates are running. Each contest is [[level, position title], races].
+  def contests
+    races.includes(candidacies: :person, office: [ :position, { jurisdiction: :jurisdictionable } ])
+      .group_by { [ it.office.jurisdiction.ballot_level, it.office.position.title ] }
+      .sort_by { |(level, title), contest_races| [ -Jurisdiction::BALLOT_LEVELS.index(level), -contest_races.sum { it.candidacies.size }, title ] }
+  end
+
+  def mountain_count
+    VoterRaceBaseline.where(race: races).count
+  end
+
+  def participant_count
+    VoterRaceBaseline.where(race: races).distinct.count(:voter_id)
+  end
+
+  def previous_in_jurisdiction
+    Election.where(jurisdiction: jurisdiction).held_before(election_date).recent.first
+  end
+
+  def next_in_jurisdiction
+    Election.where(jurisdiction: jurisdiction).held_after(election_date).order(:election_date).first
   end
 
   def days_until

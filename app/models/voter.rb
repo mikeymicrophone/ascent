@@ -108,6 +108,15 @@ class Voter < ApplicationRecord
     Ballot.new(self)
   end
 
+  # How far this voter has got on each of the given races, as { race_id => "saved" | "started" };
+  # untouched races are left out. A saved race with an unsaved draft counts as started.
+  def mountain_progress(races)
+    drafted = mountain_drafts.where(race: races).pluck(:race_id)
+    rated = ratings.joins(:candidacy).where(candidacies: { race_id: races.select(:id) }).distinct.pluck("candidacies.race_id")
+    saved = voter_race_baselines.where(race: races).pluck(:race_id) - drafted
+    (rated + drafted).index_with("started").merge(saved.index_with("saved"))
+  end
+
   def residence_history
     residences.order(registered_at: :desc)
   end

@@ -1,0 +1,115 @@
+.election-page {
+  @apply gap-8 pb-16;
+}
+
+.election-hero {
+  @apply gap-x-10 gap-y-6;
+}
+
+.election-hero-text {
+  @apply gap-3;
+}
+
+.date-stub {
+  @apply rounded-[24px] border-[1.5px] overflow-hidden;
+}
+
+.date-stub-top {
+  @apply gap-x-4 px-6 pt-5 pb-6;
+}
+
+.date-stub-bottom {
+  @apply gap-2.5 px-6 pt-6 pb-5;
+}
+
+.countdown-strip {
+  @apply gap-1;
+}
+
+.countdown-cell {
+  @apply h-[18px] rounded-sm border;
+}
+
+.countdown-strip.is-weekly .countdown-cell {
+  @apply h-3;
+}
+
+.election-layout {
+  @apply gap-6;
+}
+
+.ballot-sheet {
+  @apply gap-2 px-7 pt-6 pb-7 rounded-[6px] border border-t-[10px];
+}
+
+.ballot-sheet-head {
+  @apply gap-x-4 gap-y-1 pb-4 border-b-2;
+}
+
+.election-aside {
+  @apply gap-4;
+}
+
+.contest-list {
+  @apply m-0 p-0 list-none;
+}
+
+.contest {
+  @apply gap-x-3 py-5 border-b border-dotted;
+}
+
+.contest-body {
+  @apply gap-3;
+}
+
+.contest-head {
+  @apply gap-x-3 gap-y-1;
+}
+
+.contest-title {
+  @apply m-0;
+}
+
+.contest-level {
+  @apply px-1.5 py-0.5 rounded border;
+}
+
+.contest-single {
+  @apply gap-3;
+}
+
+.contest-candidates {
+  @apply m-0;
+}
+
+.seat-chips {
+  @apply gap-1.5 m-0 p-0 list-none;
+}
+
+.seat-chip {
+  @apply min-h-10 gap-2 pl-3 pr-2 rounded-lg border-[1.5px];
+}
+
+.seat-chip-count {
+  @apply px-1.5 rounded;
+}
+
+.more-contests-toggle {
+  @apply inline-flex items-center min-h-11 mt-4 px-4 rounded-full border-[1.5px];
+}
+
+.progress-key {
+  @apply gap-2 pt-4;
+}
+
+.key-swatch {
+  @apply min-h-8 px-2.5;
+}
+
+.sibling-elections {
+  @apply gap-3 m-0 p-0 list-none;
+}
+
+.sibling-election {
+  @apply gap-0.5;
+}

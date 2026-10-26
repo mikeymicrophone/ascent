@@ -1,0 +1,42 @@
+.seat-chip,
+.more-contests-toggle {
+  @apply transition-colors cursor-pointer;
+}
+
+.seat-chip:hover {
+  border-color: var(--brand-basalt);
+}
+
+.seat-chip-untouched:hover,
+.more-contests-toggle:hover {
+  background-color: var(--brand-contour);
+}
+
+.seat-chip:focus-visible,
+.more-contests-toggle:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
+}
+
+.more-contests-toggle {
+  list-style: none;
+}
+
+.more-contests-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.more-contests[open] .more-contests-toggle {
+  @apply hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .countdown-cell.is-election-day {
+    animation: summit-pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes summit-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(197, 238, 63, 0.6); }
+  50% { box-shadow: 0 0 0 4px rgba(197, 238, 63, 0); }
+}
