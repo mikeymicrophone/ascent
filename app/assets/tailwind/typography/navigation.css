@@ -1,36 +1,41 @@
 /* Navigation Typography - Layer 3: Fonts and text properties */
 
 .brand-link {
-  @apply font-['Calistoga'] text-3xl;
+  @apply font-['Bricolage_Grotesque'] text-3xl;
   @apply no-underline;
 }
 
+.brand-wordmark {
+  @apply font-extrabold leading-none tracking-tight;
+  font-stretch: 75%;
+}
+
 .nav-link {
-  @apply font-['Source_Serif_4'] font-semibold;
+  @apply font-['Bricolage_Grotesque'] font-semibold;
   @apply no-underline;
 }
 
 .nav-group-header {
-  @apply font-['Sora'] text-sm font-semibold uppercase tracking-[0.18em];
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold uppercase tracking-[0.18em];
   @apply no-underline;
 }
 
 .nav-group-arrow {
-  @apply font-['Sora'] text-xs font-normal;
+  @apply font-['Bricolage_Grotesque'] text-xs font-normal;
 }
 
 .nav-auth-link,
 .sign-in-link,
 .sign-up-link {
-  @apply font-['Sora'] text-sm font-semibold;
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold;
   @apply no-underline;
 }
 
 .voter-greeting {
-  @apply font-['Source_Serif_4'] text-sm font-semibold;
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold;
 }
 
 /* Phone menu button */
 .nav-menu-toggle {
-  @apply font-['Sora'] text-sm font-semibold;
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold;
 }

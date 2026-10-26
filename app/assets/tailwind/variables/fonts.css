@@ -1,6 +1,8 @@
 :root {
-    --font-body: "Source Serif 4";
-    --font-brand: "Calistoga";
-    --font-ui: "Sora";
-    --font-metric: "IBM Plex Mono";
+    /* Bricolage Grotesque for display (800, width 75%) and reading text; Martian Mono for ratings, counts and labels. */
+    --font-display: "Bricolage Grotesque";
+    --font-body: "Bricolage Grotesque";
+    --font-brand: "Bricolage Grotesque";
+    --font-ui: "Bricolage Grotesque";
+    --font-metric: "Martian Mono";
 }

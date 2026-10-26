@@ -1,7 +1,6 @@
 class MountainsController < ApplicationController
   before_action :set_race, except: :index
   before_action :set_voter, except: :index
-  before_action :set_baseline, only: [ :show, :edit, :update ]
   before_action :authorize_mountain!, except: :index
   # Simulated candidates and ratings never mix with a real race's mountains.
   before_action :require_mock_race, only: :simulate
@@ -32,7 +31,11 @@ class MountainsController < ApplicationController
 
   # Keeps unsaved edits on the server as the voter drags, answering with the mountain as it now stands.
   def draft
-    render json: mountain.revise_draft!(ratings: rating_params, baseline: params[:baseline])
+    mountain.revise_draft!(ratings: rating_params, baseline: params[:baseline])
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: mountain_panel_streams }
+      format.json { render json: mountain }
+    end
   rescue ActiveRecord::RecordInvalid => e
     render json: { errors: e.record.errors.full_messages }, status: :unprocessable_content
   end
@@ -151,13 +154,16 @@ class MountainsController < ApplicationController
   end
 
   def render_mountain_editor
-    @mountain_data = build_mountain_data
-    render Views::Mountains::EditView.new(
-      race: @race,
-      voter: @voter,
-      baseline: @baseline,
-      mountain_data: @mountain_data
-    )
+    render Views::Mountains::EditView.new(race: @race, voter: @voter, mountain: mountain, mountain_data: build_mountain_data)
+  end
+
+  # The panels the page refreshes after each autosave, rendered from the draft as it now stands.
+  def mountain_panel_streams
+    [
+      turbo_stream.replace("your-vote", Views::Mountains::YourVote.new(mountain: mountain)),
+      turbo_stream.replace("baseline-allowance", Views::Mountains::BaselineAllowance.new(mountain: mountain)),
+      turbo_stream.replace("mountain-save-bar", Views::Mountains::SaveBar.new(mountain: mountain))
+    ]
   end
 
   def set_race
@@ -173,20 +179,17 @@ class MountainsController < ApplicationController
     authorize! @voter, with: MountainPolicy
   end
 
-  def set_baseline
-    @baseline = @race.voter_race_baselines.find_by(voter: @voter)
-  end
-
+  # Each candidate as the voter sees them now, with any unsaved draft laid over the saved ratings.
   def build_mountain_data
     @race.candidacies_for(@voter).active.with_rating_details.map do |candidacy|
-      rating = candidacy.ratings.find_by(voter: @voter)
+      rating = mountain.ratings[candidacy.id]
 
       {
         candidacy: candidacy,
-        rating_value: rating&.rating || 0,
+        rating_value: rating || 0,
         has_rating: rating.present?,
-        is_approved: rating&.approved?(@baseline&.baseline),
-        position_y: calculate_position(rating&.rating || 0)
+        is_approved: mountain.approved?(candidacy),
+        position_y: calculate_position(rating || 0)
       }
     end
   end

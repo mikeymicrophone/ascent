@@ -21,7 +21,8 @@ RSpec.describe "Mountain access", type: :request do
     get mountain_path(race)
 
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include("Voter: Priya Raman")
+    expect(response.body).to include("Your vote")
+    expect(response.body).not_to include("Voter: Priya Raman")
   end
 
   it "refuses another voter's mountain and their ratings" do
@@ -56,6 +57,10 @@ RSpec.describe "Mountain access", type: :request do
     expect(response.body).not_to include("Simulate Data")
 
     sign_in admin
+    get mountains_path
+    expect(response.body).not_to include("Simulate Data")
+
+    create(:candidacy, race: create(:race, :active, :mock))
     get mountains_path
     expect(response.body).to include("Simulate Data")
   end

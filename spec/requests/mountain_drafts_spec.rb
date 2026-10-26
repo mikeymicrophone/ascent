@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe "Mountain drafts", type: :request do
   let(:race) { create(:race, :active) }
   let(:voter) { create(:voter, first_name: "Rosa", last_name: "Delgado") }
-  let!(:okafor) { create(:candidacy, race: race, person: create(:person, first_name: "Dana", last_name: "Okafor")) }
-  let!(:lindqvist) { create(:candidacy, race: race, person: create(:person, first_name: "Theo", last_name: "Lindqvist")) }
+  let!(:okafor) { create(:candidacy, race: race, person: create(:person, first_name: "Dana", middle_name: nil, last_name: "Okafor")) }
+  let!(:lindqvist) { create(:candidacy, race: race, person: create(:person, first_name: "Theo", middle_name: nil, last_name: "Lindqvist")) }
 
   before { sign_in voter }
 
@@ -20,6 +20,21 @@ RSpec.describe "Mountain drafts", type: :request do
       "baseline_changes_left_today" => 5
     )
     expect(Rating.count).to eq(0)
+  end
+
+  it "answers the page's autosave with fresh Your vote, allowance and save bar panels" do
+    patch draft_mountain_path(race), params: { ratings: { okafor.id => "360" }, baseline: "280" },
+      headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+    expect(response.body).to include('target="your-vote"', 'target="baseline-allowance"', 'target="mountain-save-bar"')
+    expect(response.body).to include("2 unsaved changes", "Ratings: Dana Okafor", "Baseline unset → 280", "Save mountain")
+  end
+
+  it "shows the mountain with its mode strip, Your vote panel and list view" do
+    get edit_mountain_path(race)
+
+    expect(response.body).to include("Pretend vote", "Your vote", "All changes saved", "Rate Dana Okafor", "Follow race")
   end
 
   it "saves the draft into the voter's mountain" do

@@ -1,32 +1,32 @@
 .story-kicker,
 .story-section-kicker {
-  @apply font-['Sora'] text-sm font-semibold uppercase tracking-[0.24em];
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold uppercase tracking-[0.24em];
 }
 
 .story-title {
-  @apply font-['Sora'] text-4xl font-bold leading-tight md:text-6xl;
+  @apply font-['Bricolage_Grotesque'] text-4xl font-bold leading-tight md:text-6xl;
 }
 
 .story-lead {
-  @apply max-w-4xl font-['Source_Serif_4'] text-lg leading-8 md:text-xl;
+  @apply max-w-4xl font-['Bricolage_Grotesque'] text-lg leading-8 md:text-xl;
 }
 
 .story-metric-value {
-  @apply font-['IBM_Plex_Mono'] text-4xl leading-none;
+  @apply font-['Martian_Mono'] text-4xl leading-none;
 }
 
 .story-metric-label {
-  @apply font-['Sora'] text-sm uppercase tracking-[0.2em];
+  @apply font-['Bricolage_Grotesque'] text-sm uppercase tracking-[0.2em];
 }
 
 .story-section-title,
 .story-callout-title {
-  @apply font-['Sora'] text-2xl font-semibold md:text-3xl;
+  @apply font-['Bricolage_Grotesque'] text-2xl font-semibold md:text-3xl;
 }
 
 .story-card-title,
 .story-election-title {
-  @apply font-['Sora'] text-xl font-semibold;
+  @apply font-['Bricolage_Grotesque'] text-xl font-semibold;
 }
 
 .story-card-title {
@@ -37,7 +37,7 @@
 .story-election-summary,
 .story-callout-copy,
 .story-election-context {
-  @apply font-['Source_Serif_4'] text-base leading-7;
+  @apply font-['Bricolage_Grotesque'] text-base leading-7;
 }
 
 .story-callout-copy,
@@ -47,5 +47,5 @@
 }
 
 .story-prose p {
-  @apply font-['Source_Serif_4'] text-lg leading-8;
+  @apply font-['Bricolage_Grotesque'] text-lg leading-8;
 }

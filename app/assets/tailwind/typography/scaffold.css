@@ -2,48 +2,48 @@
 
 .scaffold {
   /* Base font for body */
-  @apply font-['Source_Serif_4'];
+  @apply font-['Bricolage_Grotesque'];
   
   /* Headings */
   h1 {
-    @apply font-['Sora'] font-bold text-4xl;
+    @apply font-['Bricolage_Grotesque'] font-bold text-4xl;
   }
   
   h2 {
-    @apply font-['Sora'] text-3xl;
+    @apply font-['Bricolage_Grotesque'] text-3xl;
   }
   
   h3 {
-    @apply font-['Sora'] font-semibold text-xl;
+    @apply font-['Bricolage_Grotesque'] font-semibold text-xl;
   }
   
   h4 {
-    @apply font-['Sora'] text-lg;
+    @apply font-['Bricolage_Grotesque'] text-lg;
   }
   
   h5 {
-    @apply font-['Sora'] text-base;
+    @apply font-['Bricolage_Grotesque'] text-base;
   }
   
   /* Labels and Text */
   label {
-    @apply block font-['Source_Serif_4'] font-medium;
+    @apply block font-['Bricolage_Grotesque'] font-medium;
   }
   
   span {
-    @apply font-['Source_Serif_4'];
+    @apply font-['Bricolage_Grotesque'];
   }
   
   /* Paragraphs and descriptions */
   p {
-    @apply font-['Source_Serif_4'] leading-relaxed;
+    @apply font-['Bricolage_Grotesque'] leading-relaxed;
   }
   
   /* Button Text */
   button,
   input[type="submit"],
   a[class*="button"] {
-    @apply font-['Sora'] font-medium;
+    @apply font-['Bricolage_Grotesque'] font-medium;
   }
   
   /* Empty State Text */

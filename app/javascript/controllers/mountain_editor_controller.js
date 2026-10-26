@@ -1,10 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Interactive mountain ratings: drag within a candidate column to set 0–500,
-// drag the baseline handle to set the approval threshold.
+// Interactive mountain ratings: drag within a candidate column, or slide a row in the list view, to
+// set 0–500, and drag or nudge the baseline to set the approval threshold. Every change autosaves to
+// the server draft, which answers with fresh Your vote, allowance and save bar panels.
 export default class extends Controller {
+  static targets = ["form"]
   static values = {
-    maxHeight: { type: Number, default: 320 }
+    maxHeight: { type: Number, default: 320 },
+    draftUrl: String,
+    autosaveDelay: { type: Number, default: 400 },
+    logLevel: { type: String, default: "warn" }
   }
 
   connect() {
@@ -14,10 +19,109 @@ export default class extends Controller {
     this.boundPointerMove = this.onPointerMove.bind(this)
     this.boundPointerUp = this.onPointerUp.bind(this)
     this.updateApprovalStates()
+    if (this.isPhoneWidth()) this.setView("list")
   }
 
   disconnect() {
     this.teardownDocumentListeners()
+    clearTimeout(this.autosaveTimer)
+  }
+
+  // The hidden form only feeds autosave; pressing Enter in it must not publish the mountain.
+  preventSubmit(event) {
+    event.preventDefault()
+  }
+
+  showView(event) {
+    this.setView(event.params.view)
+  }
+
+  // Phones get the list: sliders are easier to thumb than columns.
+  isPhoneWidth() {
+    return window.matchMedia("(max-width: 640px)").matches
+  }
+
+  setView(view) {
+    this.element.dataset.view = view
+    this.element.querySelectorAll("[data-view-button]").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.viewButton === view))
+    })
+  }
+
+  rateFromSlider(event) {
+    const column = this.candidateColumn(event.target.dataset.candidacyId)
+    if (column) this.applyRatingUpdate(column, Number.parseInt(event.target.value, 10))
+  }
+
+  setBaselineFromSlider(event) {
+    this.applyBaselineUpdate(Number.parseInt(event.target.value, 10))
+  }
+
+  nudgeBaseline(event) {
+    const current = this.baselineValue() ?? 250
+    this.applyBaselineUpdate(Math.max(0, Math.min(500, current + event.params.step)))
+  }
+
+  // Waits for any pending autosave so Save mountain publishes the latest edits.
+  async saveAfterDraft(event) {
+    if (!this.hasPendingAutosave()) return
+
+    event.preventDefault()
+    await this.autosave()
+    event.target.requestSubmit()
+  }
+
+  hasPendingAutosave() {
+    return Boolean(this.autosaveTimer || this.inflightAutosave)
+  }
+
+  scheduleAutosave() {
+    if (!this.draftUrlValue || !this.hasFormTarget) return
+
+    clearTimeout(this.autosaveTimer)
+    this.autosaveTimer = setTimeout(() => this.autosave(), this.autosaveDelayValue)
+  }
+
+  async autosave() {
+    clearTimeout(this.autosaveTimer)
+    this.autosaveTimer = null
+    if (this.inflightAutosave) await this.inflightAutosave
+
+    this.inflightAutosave = this.sendDraft()
+    try {
+      await this.inflightAutosave
+    } finally {
+      this.inflightAutosave = null
+    }
+  }
+
+  async sendDraft() {
+    const body = new FormData(this.formTarget)
+    body.delete("_method")
+    try {
+      const response = await fetch(this.draftUrlValue, {
+        method: "PATCH",
+        headers: { Accept: "text/vnd.turbo-stream.html", "X-CSRF-Token": this.csrfToken() },
+        body
+      })
+      if (!response.ok) throw new Error(`Draft refused with ${response.status}`)
+      window.Turbo.renderStreamMessage(await response.text())
+      this.logDebug("[Mountain] Draft saved")
+    } catch (error) {
+      this.logWarning("[Mountain] Draft not saved", error)
+    }
+  }
+
+  csrfToken() {
+    return document.querySelector("meta[name='csrf-token']")?.content
+  }
+
+  logDebug(...messages) {
+    if (this.logLevelValue === "debug") console.debug(...messages)
+  }
+
+  logWarning(...messages) {
+    if (this.logLevelValue !== "silent") console.warn(...messages)
   }
 
   startRatingDrag(event) {
@@ -133,7 +237,9 @@ export default class extends Controller {
 
     input.value = ratingValue
     this.updateColumnDisplay(column, ratingValue)
+    this.updateListRow(column.dataset.candidacyId, ratingValue)
     this.updateApprovalStates()
+    this.scheduleAutosave()
   }
 
   applyBaselineUpdate(ratingValue) {
@@ -142,7 +248,27 @@ export default class extends Controller {
 
     input.value = ratingValue
     this.updateBaselineIndicator(ratingValue)
+    this.updateBaselineDisplays(ratingValue)
     this.updateApprovalStates()
+    this.scheduleAutosave()
+  }
+
+  updateListRow(candidacyId, ratingValue) {
+    const row = this.listRow(candidacyId)
+    if (!row) return
+
+    row.querySelector("[data-role='rating-slider']").value = ratingValue
+    row.querySelector("[data-role='row-value']").textContent = ratingValue
+  }
+
+  updateBaselineDisplays(ratingValue) {
+    this.element.querySelectorAll("[data-role='baseline-value']").forEach((element) => {
+      element.textContent = ratingValue
+    })
+    const slider = this.element.querySelector("[data-role='baseline-slider']")
+    if (slider) slider.value = ratingValue
+    const list = this.element.querySelector(".rating-list")
+    if (list) list.style.setProperty("--baseline", `${ratingValue / 5}%`)
   }
 
   updateColumnDisplay(column, ratingValue) {
@@ -205,6 +331,9 @@ export default class extends Controller {
   }
 
   applyDotState(column, hasRating, approved) {
+    const row = this.listRow(column.dataset.candidacyId)
+    if (row) row.dataset.state = hasRating ? (approved ? "approved" : "not-approved") : "unrated"
+
     const ratingDot = column.querySelector("[data-role='rating-dot']")
     if (!ratingDot) return
 
@@ -260,6 +389,14 @@ export default class extends Controller {
 
   firstRatingArea() {
     return this.element.querySelector(".rating-area")
+  }
+
+  candidateColumn(candidacyId) {
+    return this.element.querySelector(`.candidate-column[data-candidacy-id='${candidacyId}']`)
+  }
+
+  listRow(candidacyId) {
+    return this.element.querySelector(`[data-role='rating-row'][data-candidacy-id='${candidacyId}']`)
   }
 
   closestCandidateColumn(element) {

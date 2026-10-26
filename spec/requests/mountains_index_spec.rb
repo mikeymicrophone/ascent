@@ -21,7 +21,7 @@ RSpec.describe "Mountains", type: :request do
       let!(:position) { create(:position, title: "Mayor") }
       let!(:office) { create(:office, position: position, jurisdiction: city.jurisdiction) }
       let!(:year) { create(:year, year: 2026) }
-      let!(:active_race) { create_race_for(office, :active, year: year, description: "A live municipal demonstration.") }
+      let!(:active_race) { create_race_for(office, :active, year: year, description: "A live municipal demonstration.", is_mock: true) }
 
       # An admin also sees the controls for simulated data.
       before { sign_in create(:voter, admin: true) }
@@ -54,7 +54,7 @@ RSpec.describe "Mountains", type: :request do
       get mountain_path(race, voter_id: voter.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(race.name)
+      expect(response.body).to include(race.office.name)
     end
 
     it "returns not found when the race does not exist" do
@@ -75,10 +75,10 @@ RSpec.describe "Mountains", type: :request do
       get edit_mountain_path(race, voter_id: voter.id)
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(race.name)
+      expect(response.body).to include(race.office.name)
       expect(response.body).to include('data-controller="mountain-editor"')
       expect(response.body).to include("rating-input-#{candidacy.id}")
-      expect(response.body).to include("Save Changes")
+      expect(response.body).to include("mountain-save-bar")
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe "Mountains", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('data-controller="mountain-editor"')
       expect(response.body).to include("mountain-chart editable")
-      expect(response.body).to include("Save Changes")
+      expect(response.body).to include("mountain-save-bar")
       expect(response.body).to include("Rating: 300")
     end
   end
@@ -132,10 +132,10 @@ RSpec.describe "Mountains", type: :request do
       # After save, mountain must still be editable (not a read-only show page).
       expect(response.body).to include('data-controller="mountain-editor"')
       expect(response.body).to include("mountain-chart editable")
-      expect(response.body).to include("Save Changes")
+      expect(response.body).to include("mountain-save-bar")
       expect(response.body).to include("Rating: 420")
       expect(response.body).to include("Rating: 180")
-      expect(response.body).to include("Current Baseline: 275")
+      expect(response.body).to include('data-role="baseline-value">275<')
     end
 
     it "clears a rating when submitted blank" do

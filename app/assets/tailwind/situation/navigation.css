@@ -45,12 +45,12 @@
 }
 
 /* Brand mark states */
-.brand-mark-check {
+.brand-mark-rope {
   @apply transition-colors;
 }
 
-.brand-link:hover .brand-mark-check {
-  stroke: var(--brand-summit-deep);
+.brand-link:hover .brand-mark-rope {
+  stroke: var(--brand-rope-deep);
 }
 
 /* Phone menu button states */

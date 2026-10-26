@@ -28,6 +28,7 @@ class Views::Components::Navigation < Views::ApplicationView
         end
 
         div(class: "nav-links", id: "site-menu") do
+          primary_links
           @sections.each { render_nav_section it }
         end
       end
@@ -42,15 +43,19 @@ class Views::Components::Navigation < Views::ApplicationView
 
   private
 
+  # Voting links lead; reference pages and the public data follow in menus.
   def render_default_navigation
-    add_section("Project") do |section|
+    add_section("Reference") do |section|
       section.link("Overview", root_path)
       section.link("About Approval Voting", approval_voting_path)
       section.link("Glossary", glossary_path)
       section.link("For Supporters", supporters_path)
-      section.link("Mountains", mountains_path)
+      section.link("All Mountains", mountains_path)
     end
+    render_data_navigation
+  end
 
+  def render_data_navigation
     add_section("Jurisdictions") do |section|
       section.link("Countries", countries_path)
       section.link("States", states_path)
@@ -92,6 +97,14 @@ class Views::Components::Navigation < Views::ApplicationView
     end
   end
 
+  def primary_links
+    div(class: "nav-primary") do
+      link_to "My ballot", ballot_path, class: nav_link_class(ballot_path, "nav-primary-link")
+      link_to "Explore races", ballot_path(anchor: "elsewhere"), class: "nav-primary-link"
+      link_to "Mock election", new_mock_election_path, class: nav_link_class(new_mock_election_path, "nav-primary-link")
+    end
+  end
+
   # Phones fold the account links and sections behind this button.
   def menu_toggle
     button(type: "button", class: "nav-menu-toggle", aria: { expanded: "false", controls: "site-menu" },
@@ -114,8 +127,7 @@ class Views::Components::Navigation < Views::ApplicationView
     end
   end
 
-  def nav_link_class(path)
-    base_classes = "nav-link"
+  def nav_link_class(path, base_classes = "nav-link")
     current_page?(path) ? "#{base_classes} active" : base_classes
   end
 

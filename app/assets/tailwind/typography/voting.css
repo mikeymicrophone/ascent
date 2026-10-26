@@ -1,0 +1,209 @@
+/* Voting flow type: Bricolage Grotesque, narrowed and heavy for display, Martian Mono for numbers and labels. */
+
+.display-title {
+  @apply font-['Bricolage_Grotesque'] font-extrabold m-0 text-5xl sm:text-6xl lg:text-7xl leading-[0.92] tracking-tight;
+  font-stretch: 75%;
+  text-wrap: balance;
+}
+
+.race-title {
+  @apply text-4xl sm:text-5xl lg:text-6xl;
+}
+
+.display-subtitle {
+  @apply font-['Bricolage_Grotesque'] font-extrabold m-0 text-4xl leading-[0.95] tracking-tight;
+  font-stretch: 75%;
+}
+
+.eyebrow,
+.mode-strip-label,
+.mode-strip-note,
+.section-rule,
+.card-heading,
+.state-chip,
+.suggestion-chip,
+.race-status-chip,
+.stat-tile-label,
+.results-table th {
+  @apply font-['Martian_Mono'] text-xs font-semibold uppercase tracking-[0.08em];
+}
+
+.state-chip,
+.suggestion-chip,
+.race-status-chip {
+  @apply text-[10.5px];
+}
+
+.stat-tile-label,
+.results-table th {
+  @apply normal-case tracking-normal font-normal font-['Bricolage_Grotesque'] text-sm;
+}
+
+.results-table th {
+  @apply font-['Martian_Mono'] text-[11px] uppercase tracking-[0.06em] font-semibold text-left;
+}
+
+.mode-strip-note {
+  @apply font-normal tracking-[0.04em];
+}
+
+.mode-strip-text,
+.ballot-lede,
+.elsewhere-lede {
+  @apply font-['Bricolage_Grotesque'];
+}
+
+.mode-strip-text {
+  @apply text-[15px];
+}
+
+.ballot-lede,
+.elsewhere-lede {
+  @apply m-0 text-lg leading-normal max-w-2xl;
+}
+
+.nav-primary-link,
+.pill-button,
+.view-toggle-button,
+.group-toggle-link,
+.mode-strip-action {
+  @apply font-['Bricolage_Grotesque'] text-[15px] font-semibold no-underline;
+}
+
+.pill-button-summit {
+  @apply font-bold;
+}
+
+.breadcrumb {
+  @apply text-sm;
+}
+
+.text-link,
+.race-card-link {
+  @apply font-semibold text-[15px];
+}
+
+.card-title {
+  @apply font-['Bricolage_Grotesque'] text-2xl font-bold;
+  font-stretch: 85%;
+}
+
+.residence-card-name {
+  @apply text-[17px];
+}
+
+.residence-card-districts,
+.race-card-meta,
+.race-card-status,
+.suggestion-meta,
+.progress-count,
+.keyboard-hint,
+.baseline-note,
+.allowance-note,
+.not-approved,
+.off-ballot-note,
+.your-vote-empty,
+.save-bar-detail,
+.voter-on-behalf,
+.card-text,
+.privacy-note p {
+  @apply text-sm leading-snug;
+}
+
+.race-card-office {
+  @apply font-['Bricolage_Grotesque'] text-2xl font-bold leading-tight m-0;
+  font-stretch: 85%;
+}
+
+.suggestion-title {
+  @apply text-[19px] leading-tight;
+}
+
+.place-search-label,
+.form-label {
+  @apply text-sm font-semibold;
+}
+
+.place-search-input,
+.text-input {
+  @apply text-base font-['Bricolage_Grotesque'];
+}
+
+.race-meta {
+  @apply text-base;
+}
+
+.legend-item {
+  @apply text-[13px];
+}
+
+.your-vote-number {
+  @apply font-['Bricolage_Grotesque'] font-extrabold text-7xl leading-[0.85];
+  font-stretch: 75%;
+}
+
+.your-vote-of {
+  @apply text-[17px] font-semibold leading-tight;
+}
+
+.approved-name {
+  @apply text-[15px] font-semibold leading-tight;
+}
+
+.approved-rating,
+.rating-row-value,
+.official-share,
+.results-table .numeric,
+.stat-tile-value,
+.baseline-value {
+  @apply font-['Martian_Mono'] font-bold;
+}
+
+.approved-rating {
+  @apply text-[13px];
+}
+
+.baseline-value {
+  @apply text-3xl;
+}
+
+.stat-tile-value {
+  @apply text-[34px] leading-tight;
+}
+
+.rating-row-label {
+  @apply text-base font-semibold leading-tight;
+}
+
+.rating-row-sub {
+  @apply font-['Martian_Mono'] text-[11px];
+  font-stretch: 87.5%;
+}
+
+.rating-row-value {
+  @apply text-lg;
+}
+
+.save-bar-title {
+  @apply text-base;
+}
+
+.results-table .numeric {
+  @apply text-right font-normal;
+}
+
+.results-table .strong {
+  @apply font-bold;
+}
+
+.results-table .rank {
+  @apply font-['Martian_Mono'] text-xs;
+}
+
+.official-name {
+  @apply text-[15px];
+}
+
+.is-winner .official-name {
+  @apply font-bold;
+}

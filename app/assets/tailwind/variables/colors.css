@@ -1,17 +1,35 @@
-/* Brand palette: alpine ink for structure and actions, summit gold for what a visitor has marked,
-   glacier and paper for quiet surfaces. Every other color below is named for its job and points here. */
+/* Brand palette, October 2026 reboot. A peak is a rating, the line is the baseline, and the summit that
+   breaks through the line is an approval. Parties are never colors: no red, no blue. Every other color
+   below is named for its job and points here. Text pairs on lichen pass 4.5:1: basalt 15.1, slate 8.8,
+   moss 5.6, summit-deep 5.9, rope-deep 5.6. Summit, rope and scree are for fills, lines and marks only. */
 :root {
-  --brand-ink: #1c2c46;
-  --brand-ink-soft: #2e4a73;
-  --brand-link: #28518c;
-  --brand-summit: #b5862a;
-  --brand-summit-deep: #7d5c17;
-  --brand-summit-soft: #f7efdc;
-  --brand-summit-wash: #efe1bf;
-  --brand-glacier: #e9f0f6;
-  --brand-mist: #d3dde7;
-  --brand-paper: #fbfaf6;
-  --brand-snow: #ffffff;
+  --brand-basalt: #15201B;
+  --brand-slate: #3A4740;
+  --brand-moss: #57645C;
+  --brand-lichen: #F2F4EE;
+  --brand-snow: #FFFFFF;
+  --brand-mist: #D6DBD2;
+  --brand-contour: #E4E8E0;
+  --brand-scree: #CDD5C8;
+  --brand-scree-edge: #56635B;
+  --brand-pebble: #8E9B92;
+  --brand-gravel: #B9C4BC;
+  --brand-summit: #C5EE3F;
+  --brand-summit-wash: #EAF7C2;
+  --brand-summit-deep: #4A6600;
+  --brand-rope: #E05A12;
+  --brand-rope-wash: #FBEDE4;
+  --brand-rope-deep: #A8400B;
+  --brand-stone: #E6E1D6;
+  --brand-hatch: #EEF1EA;
+
+  /* Earlier names, kept so existing rules follow the reboot. */
+  --brand-ink: var(--brand-basalt);
+  --brand-ink-soft: var(--brand-slate);
+  --brand-link: var(--brand-basalt);
+  --brand-summit-soft: var(--brand-summit-wash);
+  --brand-glacier: var(--brand-contour);
+  --brand-paper: var(--brand-lichen);
 }
 
 :root {
@@ -19,10 +37,10 @@
   --nav-border: var(--brand-mist);
   --nav-shadow: theme('colors.gray.100');
   --brand-color: var(--brand-ink);
-  --brand-hover: var(--brand-summit-deep);
+  --brand-hover: var(--brand-rope-deep);
   --nav-link-color: theme('colors.gray.600');
   --nav-link-hover-bg: theme('colors.gray.50');
-  --nav-link-hover-color: var(--brand-link);
+  --nav-link-hover-color: var(--brand-rope-deep);
   --nav-link-active-bg: var(--brand-glacier);
   --nav-link-active-color: var(--brand-ink);
   --nav-group-label-color: var(--brand-ink);
@@ -54,11 +72,11 @@
 
   /* Link colors */
   --link-color: var(--brand-link);
-  --link-hover: var(--brand-ink);
+  --link-hover: var(--brand-rope-deep);
 
   /* Button colors */
   --btn-primary-bg: var(--brand-ink);
-  --btn-primary-hover: var(--brand-ink-soft);
+  --btn-primary-hover: var(--brand-slate);
   --btn-secondary-bg: theme('colors.gray.600');
   --btn-secondary-hover: theme('colors.gray.700');
   --btn-danger-bg: theme('colors.red.600');
@@ -66,8 +84,8 @@
 
   /* Form colors */
   --input-border: theme('colors.gray.300');
-  --input-focus-border: var(--brand-link);
-  --input-focus-ring: var(--brand-link);
+  --input-focus-border: var(--brand-rope);
+  --input-focus-ring: var(--brand-rope);
   --input-error-border: theme('colors.red.500');
 
   /* Card colors */

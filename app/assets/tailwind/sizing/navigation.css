@@ -134,10 +134,9 @@
   @apply w-9 h-9;
 }
 
-.brand-mark-check {
-  stroke-width: 2.6;
+.brand-mark-rope {
+  stroke-width: 2.5;
   stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .nav-group-arrow .icon {

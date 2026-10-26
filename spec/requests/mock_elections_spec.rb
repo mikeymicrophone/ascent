@@ -6,7 +6,7 @@ RSpec.describe "Mock elections", type: :request do
   let(:city) { create(:jurisdiction, jurisdictionable: create(:municipality, name: "Port Merritt")) }
   let(:params) do
     { mock_election: { name: "School board, classroom edition", election_date: "2026-11-17", jurisdiction_id: city.id,
-                       races: [ { title: "School Board", candidates: [ "Avery Lin", "Jordan Okafor-Reyes" ] } ] } }
+                       races: [ { title: "School Board", candidates: "Avery Lin\nJordan Okafor-Reyes" }, { title: "", candidates: "" } ] } }
   end
 
   it "lets a signed-in voter make one" do
@@ -22,7 +22,8 @@ RSpec.describe "Mock elections", type: :request do
   end
 
   it "lets only the creator remove it" do
-    election = MockElection.new(**params[:mock_election], creator: teacher).save!
+    election = MockElection.new(**params[:mock_election], races: [ { title: "School Board", candidates: [ "Avery Lin", "Jordan Okafor-Reyes" ] } ],
+                                creator: teacher).save!
 
     sign_in create(:voter)
     expect { delete mock_election_path(election) }.not_to change(Election, :count)

@@ -45,20 +45,20 @@
 
 /* Brand mark colors */
 .brand-mark-far {
-  fill: var(--brand-ink-soft);
+  fill: var(--brand-moss);
 }
 
 .brand-mark-near {
-  fill: var(--brand-ink);
+  fill: var(--brand-basalt);
 }
 
-.brand-mark-snow {
-  fill: var(--brand-snow);
+.brand-mark-summit {
+  fill: var(--brand-summit);
 }
 
-.brand-mark-check {
+.brand-mark-rope {
   fill: none;
-  stroke: var(--brand-summit);
+  stroke: var(--brand-rope);
 }
 
 /* Phone menu button */

@@ -1,13 +1,13 @@
 /* Mountain Interface Colors */
 
 .mountain-chart {
-  @apply bg-white;
-  @apply border-gray-300;
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
 }
 
 .election-card {
-  @apply bg-white;
-  @apply border-gray-200;
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
 }
 
 .candidate-column {
@@ -15,62 +15,51 @@
 }
 
 .rating-area {
-  @apply border-gray-200;
+  border-color: var(--brand-contour);
 }
 
-/* Rating dot states */
+/* Rating dot states: a lime summit is approved; below the line stays scree. Never red and green. */
 .rating-dot.approved {
-  @apply bg-green-500;
-  @apply border-green-600;
+  background-color: var(--brand-summit);
+  border-color: var(--brand-basalt);
 }
 
 .rating-dot.disapproved {
-  @apply bg-red-500;
-  @apply border-red-600;
+  background-color: var(--brand-snow);
+  border-color: var(--brand-scree-edge);
 }
 
 .rating-dot.unrated {
-  @apply bg-gray-300;
-  @apply border-gray-400;
+  background-color: var(--brand-contour);
+  border-color: var(--brand-pebble);
+  border-style: dashed;
 }
 
-/* Baseline styling */
+/* Baseline: survey-rope orange, always on top */
 .baseline-line {
-  @apply border-blue-500;
+  border-color: var(--brand-rope);
 }
 
 .baseline-label {
-  @apply bg-blue-50;
-  @apply text-blue-700;
-  @apply border border-blue-200;
-  @apply rounded;
+  background-color: var(--brand-rope-deep);
+  color: var(--brand-snow);
+  @apply border rounded;
+  border-color: var(--brand-rope-deep);
 }
 
 .baseline-label.baseline-empty {
-  @apply bg-orange-50;
-  @apply text-orange-700;
-  @apply border-orange-200;
+  background-color: var(--brand-rope-wash);
+  color: var(--brand-rope-deep);
+  border-color: var(--brand-rope-deep);
 }
 
-/* Party affiliation colors */
-.party-democratic {
-  @apply text-blue-600;
-}
-
-.party-republican {
-  @apply text-red-600;
-}
-
-.party-independent {
-  @apply text-gray-600;
-}
-
-.party-green {
-  @apply text-green-600;
-}
-
+/* Parties are text, never colors. */
+.party-democratic,
+.party-republican,
+.party-independent,
+.party-green,
 .party-other {
-  @apply text-purple-600;
+  color: var(--brand-slate);
 }
 
 /* Button styling */
@@ -95,11 +84,11 @@
 
 /* Axis labels */
 .axis-label {
-  @apply text-gray-600;
+  color: var(--brand-moss);
 }
 
 .y-axis-labels {
-  @apply text-gray-500;
+  color: var(--brand-moss);
 }
 
 .mountain-empty {

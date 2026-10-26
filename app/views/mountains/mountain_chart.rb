@@ -75,10 +75,9 @@ class Views::Mountains::MountainChart < Views::ApplicationView
     yield(self) if block
   end
 
+  # The baseline is a number from 0 to 500, or nil until the voter sets one.
   def baseline_value
-    return @baseline.baseline if @baseline
-    return 250 if @editable
-    nil
+    @baseline || (250 if @editable)
   end
 
   def show_baseline?

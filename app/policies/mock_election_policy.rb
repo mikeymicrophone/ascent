@@ -6,6 +6,7 @@ class MockElectionPolicy < ApplicationPolicy
   def create?
     voter.present?
   end
+  alias_method :new?, :create?
 
   def destroy?
     voter.present? && record.is_mock && (voter.admin? || record.creator_id == voter.id)
