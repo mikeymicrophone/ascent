@@ -53,22 +53,15 @@ class Views::Municipalities::ShowView < Views::ApplicationView
 
   # Header: where it sits, what it is, one primary action, then bookmarks and sharing.
   def place_header
-    section(class: "place-header") do
-      breadcrumb
-      span(class: "eyebrow") { [ "City", @municipality.distinct_county&.name, @municipality.state.name ].compact.join(" · ") }
-      h1(class: "display-title") { name }
-      p(class: "ballot-lede") { lede }
-      div(class: "place-actions") do
-        primary_action
-        secondary_action
-      end
-      ActionBar(record: @municipality)
+    PageHeader(title: name, trail: trail, eyebrow: [ "City", @municipality.distinct_county&.name, @municipality.state.name ].compact.join(" · "),
+      lede: lede, record: @municipality, modifier: "place-header") do
+      primary_action
+      secondary_action
     end
   end
 
-  def breadcrumb
-    places = [ @municipality.state.country, @municipality.state, @municipality.distinct_county ].compact
-    Breadcrumb(trail: places.map { [ it.name, it ] }, current: name)
+  def trail
+    [ @municipality.state.country, @municipality.state, @municipality.distinct_county ].compact.map { [ it.name, it ] }
   end
 
   def lede

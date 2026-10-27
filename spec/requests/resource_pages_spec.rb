@@ -33,7 +33,7 @@ RSpec.describe "Resource index and show pages", type: :request do
 
       get issues_path
 
-      expect(response.body).to include("pagination-container")
+      expect(response.body).to include(%(<nav class="pagination" aria-label="Pagination">), "Showing 1–25 of")
       expect(response.body.scan(/id="list_item_issue_\d+"/).size).to eq(Pagy::OPTIONS[:limit])
     end
   end

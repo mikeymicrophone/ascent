@@ -14,6 +14,8 @@
 @import "./layout/place.css";
 @import "./layout/election.css";
 @import "./layout/elections_index.css";
+@import "./layout/kit.css";
+@import "./layout/race.css";
 
 /* Layer 2: Spacing/Size */
 @import "./sizing/scaffold.css";
@@ -25,6 +27,8 @@
 @import "./sizing/place.css";
 @import "./sizing/election.css";
 @import "./sizing/elections_index.css";
+@import "./sizing/kit.css";
+@import "./sizing/race.css";
 
 /* Layer 3: Typography & Colors */
 @import "./typography/fonts.css";
@@ -37,6 +41,8 @@
 @import "./typography/place.css";
 @import "./typography/election.css";
 @import "./typography/elections_index.css";
+@import "./typography/kit.css";
+@import "./typography/race.css";
 
 /* Layer 3: Colors */
 @import "./colors/main.css";
@@ -49,6 +55,8 @@
 @import "./colors/place.css";
 @import "./colors/election.css";
 @import "./colors/elections_index.css";
+@import "./colors/kit.css";
+@import "./colors/race.css";
 
 /* Layer 4: State */
 @import "./situation/scaffold.css";
@@ -60,7 +68,7 @@
 @import "./situation/place.css";
 @import "./situation/election.css";
 @import "./situation/elections_index.css";
+@import "./situation/kit.css";
+@import "./situation/race.css";
 @import "./situation/butterfly.css";
 
-/* Layer 5: Plugins */
-@import "./plugins/pagy.tailwind.css";

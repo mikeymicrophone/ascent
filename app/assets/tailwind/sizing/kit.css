@@ -1,0 +1,134 @@
+.record-page,
+.index-page {
+  @apply gap-8 pt-8 pb-16;
+}
+
+.page-header {
+  @apply gap-3;
+}
+
+.page-header .action-bar {
+  @apply pt-1;
+}
+
+.page-header-chips {
+  @apply gap-1.5;
+}
+
+.index-page {
+  @apply gap-6;
+}
+
+.index-filters {
+  @apply gap-x-4 gap-y-3;
+}
+
+.race-filters {
+  @apply gap-x-3 gap-y-3;
+}
+
+.race-filter {
+  @apply gap-1;
+}
+
+.race-filter-select {
+  @apply min-h-11 pl-3.5 pr-9 rounded-full border-[1.5px];
+}
+
+.race-filter-actions {
+  @apply gap-1.5;
+}
+
+.index-results {
+  @apply gap-3;
+}
+
+.list-rows {
+  @apply m-0 p-0 list-none rounded-[20px] border overflow-hidden;
+}
+
+.list-row {
+  @apply gap-4 px-5 py-4 border-b last:border-b-0;
+}
+
+.list-row-icon {
+  @apply w-10 h-10 rounded-xl;
+}
+
+.list-row-icon .icon {
+  @apply w-5 h-5;
+}
+
+.list-row-main {
+  @apply gap-1;
+}
+
+.list-row-badges {
+  @apply gap-1.5;
+}
+
+.list-row-chevron .icon {
+  @apply w-5 h-5;
+}
+
+.list-row-action {
+  @apply w-9 h-9;
+}
+
+.related-list {
+  @apply gap-3;
+}
+
+.place-section .list-rows {
+  @apply rounded-2xl;
+}
+
+.index-empty {
+  @apply gap-3 p-8 rounded-[20px] border;
+}
+
+.index-empty-icon {
+  @apply w-12 h-12 rounded-2xl;
+}
+
+.index-empty-icon .icon {
+  @apply w-6 h-6;
+}
+
+.pagination {
+  @apply gap-x-6 gap-y-3 pt-2;
+}
+
+.pagination-info {
+  @apply m-0;
+}
+
+.pagination-nav,
+.pagination-pages {
+  @apply gap-1.5;
+}
+
+.pagination-pages {
+  @apply m-0 p-0 list-none;
+}
+
+.pagination-step {
+  @apply min-h-11 gap-1 px-3.5 rounded-full border-[1.5px];
+}
+
+.pagination-step .icon {
+  @apply w-4 h-4;
+}
+
+.pagination-page {
+  @apply min-w-11 h-11 px-2 rounded-full border-[1.5px];
+}
+
+.pagination-gap {
+  @apply w-6 h-11;
+}
+
+/* Turbo's autoscroll brings a frame's first child into view, so the clearance goes there. */
+.index-results > :first-child {
+  scroll-margin-top: calc(var(--nav-clearance, 0px) + 1rem);
+}

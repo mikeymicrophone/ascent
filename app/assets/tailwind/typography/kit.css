@@ -1,0 +1,34 @@
+.list-row-title {
+  @apply font-['Bricolage_Grotesque'] font-semibold text-[17px] leading-snug no-underline;
+}
+
+.list-row-meta,
+.list-row-detail {
+  @apply text-sm leading-snug;
+}
+
+.list-row-detail {
+  @apply truncate;
+}
+
+.related-list-count,
+.index-count,
+.pagination-info {
+  @apply font-['Martian_Mono'] text-xs font-semibold uppercase tracking-[0.06em];
+}
+
+.index-count,
+.pagination-info {
+  @apply m-0;
+}
+
+.race-filter-select {
+  @apply font-['Bricolage_Grotesque'] text-[15px] font-semibold;
+}
+
+.pagination-step,
+.pagination-page,
+.pagination-compact {
+  @apply font-['Bricolage_Grotesque'] text-[15px] font-semibold no-underline;
+  font-variant-numeric: tabular-nums;
+}

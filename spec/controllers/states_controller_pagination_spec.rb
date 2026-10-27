@@ -85,7 +85,7 @@ RSpec.describe StatesController, type: :controller do
       expect(assigns(:pagy).last).to be > 1
       expect(response.body).to include('pagination-info', 'pagination-nav', 'page=2')
       page = Nokogiri::HTML(response.body)
-      expect(page.at_css('.pagy [aria-current="page"]').text).to eq('1')
+      expect(page.at_css('.pagination [aria-current="page"]').text).to eq('1')
     end
   end
 end

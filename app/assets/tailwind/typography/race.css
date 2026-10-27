@@ -1,0 +1,13 @@
+.approval-bar-name {
+  @apply text-[15px] font-semibold truncate;
+}
+
+.approval-bar-value {
+  @apply font-['Martian_Mono'] text-sm font-semibold;
+  font-variant-numeric: tabular-nums;
+}
+
+.source-card .card-text {
+  @apply break-words;
+  overflow-wrap: anywhere;
+}

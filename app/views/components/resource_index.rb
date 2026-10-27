@@ -33,7 +33,7 @@ class Views::Components::ResourceIndex < Views::ApplicationView
         end
       end
 
-      Pagination(pagy: @pagy) if @pagy
+      Pagination(pagy: @pagy, noun: human_plural.downcase) if @pagy
     end
   end
 

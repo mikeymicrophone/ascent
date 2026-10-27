@@ -45,6 +45,27 @@ class Views::ApplicationView < Phlex::HTML
     render PhlexIcons::Lucide.const_get(name.to_s.camelize).new(class: "icon icon-#{name.to_s.dasherize}", aria: { hidden: true }, **attributes)
   end
 
+  # The Lucide icon that stands for each kind of record, wherever records are listed or titled.
+  ENTITY_ICONS = {
+    race: :vote, election: :calendar, candidacy: :badge_check, person: :user_round,
+    office: :landmark, position: :briefcase, country: :globe, state: :map, county: :map_pinned,
+    municipality: :building_2, district: :layout_grid, topic: :tag, issue: :circle_question_mark,
+    approach: :route, stance: :quote, governing_body: :columns_3, policy: :scroll_text
+  }.freeze
+
+  def entity_icon(record_or_model)
+    icon(ENTITY_ICONS.fetch(record_or_model.model_name.element.to_sym, :circle))
+  end
+
+  # The links back up from a record to its section of the site, for a Breadcrumb's trail.
+  def trail_for(record)
+    case record
+    when Race then [ [ "Elections", elections_path ], [ record.election.name, record.election ] ]
+    when Hierarchicable then record.build_hierarchy_chain[0...-1].map { [ it.name, it ] }
+    else [ [ record.model_name.human.pluralize, polymorphic_path(record.class) ] ]
+    end
+  end
+
   def delimited(number)
     ActiveSupport::NumberHelper.number_to_delimited(number)
   end
