@@ -1,7 +1,14 @@
 /* Mountain Interface States & Interactions */
 
 .rating-dot {
-  @apply transition-all duration-200;
+  transition-property: background-color, border-color, box-shadow;
+  @apply duration-200;
+}
+
+/* Until the mountain-range controller has drawn the range, hide what it is about to move. */
+.mountain-chart[data-controller~="mountain-range"]:not([data-range-ready]) .mountain-peak,
+.mountain-chart[data-controller~="mountain-range"]:not([data-range-ready]) .rating-dot {
+  visibility: hidden;
 }
 
 .rating-dot:hover {

@@ -12,7 +12,7 @@ class Views::Mountains::BaselineIndicator < Views::Components::Base
       class: baseline_classes,
       style: "top: #{baseline_position}px;",
       title: baseline_title,
-      data: { baseline_set: @baseline_set }
+      data: { baseline_set: @baseline_set, mountain_range_target: "baseline" }
     ) do
       div(class: "baseline-line")
       div(class: baseline_label_classes, data: baseline_handle_data) do

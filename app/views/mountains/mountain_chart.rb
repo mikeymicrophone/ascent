@@ -34,7 +34,7 @@ class Views::Mountains::MountainChart < Views::ApplicationView
               rating_value: candidacy_data[:rating_value],
               has_rating: candidacy_data[:has_rating],
               is_approved: candidacy_data[:is_approved],
-              position_y: candidacy_data[:position_y],
+              baseline: (baseline_value if baseline_set?),
               editable: @editable,
               rating_input_id: rating_input_id(candidacy_data[:candidacy])
             )
@@ -45,13 +45,11 @@ class Views::Mountains::MountainChart < Views::ApplicationView
   end
 
   def candidacy(candidacy, rating: 0, approved: false, has_rating: false)
-    position_y = calculate_label_position(rating)
     @candidacies << {
       candidacy: candidacy,
       rating_value: rating,
       has_rating: has_rating,
-      is_approved: approved,
-      position_y: position_y
+      is_approved: approved
     }
     nil
   end
@@ -100,7 +98,14 @@ class Views::Mountains::MountainChart < Views::ApplicationView
   end
 
   def chart_data
-    return {} unless @editable
-    { "mountain-editor-target": "chart" }
+    range = {
+      controller: "mountain-range",
+      "mountain-range-baseline-value": baseline_value,
+      "mountain-range-baseline-set-value": baseline_set?,
+      action: "mountain-editor:rated->mountain-range#rate mountain-editor:baseline-moved->mountain-range#moveBaseline"
+    }
+    return range unless @editable
+
+    range.merge("mountain-editor-target": "chart")
   end
 end

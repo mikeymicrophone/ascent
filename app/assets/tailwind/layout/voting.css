@@ -400,3 +400,11 @@
 .claim-confirm {
   @apply flex flex-col;
 }
+
+.baseline-sweep {
+  @apply flex flex-col;
+}
+
+.baseline-sweep-scale {
+  @apply flex justify-between;
+}

@@ -96,3 +96,35 @@
   @apply border-gray-200;
   @apply text-gray-700;
 }
+
+/* Peaks: scree below the line, a lime summit above it, and the rope drawn across. */
+.peak-body,
+.peak-summit,
+.peak-rope {
+  vector-effect: non-scaling-stroke;
+}
+
+.peak-body {
+  fill: var(--brand-scree);
+  stroke: var(--brand-scree-edge);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.candidate-column.off-ballot .peak-body {
+  fill: var(--brand-hatch);
+  stroke-dasharray: 5 4;
+}
+
+.peak-summit {
+  fill: var(--brand-summit);
+  stroke: var(--brand-summit-deep);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.peak-rope {
+  fill: none;
+  stroke: var(--brand-rope);
+  stroke-width: 2;
+}

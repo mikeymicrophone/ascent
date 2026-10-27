@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
 class Views::Mountains::RatingDot < Views::Components::Base
-  def initialize(rating_value:, has_rating:, is_approved:, position_y:)
+  def initialize(rating_value:, has_rating:, is_approved:)
     @rating_value = rating_value
     @has_rating = has_rating
     @is_approved = is_approved
-    @position_y = position_y
   end
 
   def view_template
     div(
       class: rating_dot_classes,
-      style: "top: #{@position_y}px;",
+      style: "top: #{100 - @rating_value / 5.0}%;",
       title: rating_tooltip,
       data: { role: "rating-dot" }
     ) do

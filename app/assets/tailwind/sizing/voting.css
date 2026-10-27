@@ -520,3 +520,11 @@ textarea.text-input {
 .chart-bars {
   height: calc(var(--chart-rows, 4) * 40px + 16px);
 }
+
+.baseline-sweep-slider {
+  @apply w-full h-9;
+}
+
+.baseline-sweep {
+  @apply gap-0.5;
+}

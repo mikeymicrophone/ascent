@@ -488,3 +488,7 @@
   background-color: var(--brand-rope-wash);
   color: var(--brand-rope-deep);
 }
+
+.baseline-sweep-scale {
+  color: var(--brand-moss);
+}
