@@ -3,9 +3,11 @@ class StatesController < ApplicationController
 
   def index
     country = Country.find(params[:country_id]) if params[:country_id]
-    states_scope = State.includes(:counties, :municipalities).in_country(country&.id)
+    states_scope = State.includes(:country).in_country(country&.id).order(:name)
+    states_scope = states_scope.named_like(filters["q"]) if filters["q"].present?
     @pagy, @states = pagy(states_scope)
-    render Views::States::IndexView.new(states: @states, pagy: @pagy, parent: country)
+    render Views::States::IndexView.new(states: @states, pagy: @pagy, parent: country, filters: filters,
+      county_counts: County.where(state: @states).group(:state_id).count, town_counts: Municipality.where(state: @states).group(:state_id).count)
   end
 
   def show
@@ -45,6 +47,10 @@ class StatesController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q).to_h
+  end
 
   def set_state
     @state = State.find(params[:id])

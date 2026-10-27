@@ -16,6 +16,7 @@ RSpec.describe "Person page", type: :request do
 
     page = Nokogiri::HTML(response.body)
     expect(response).to have_http_status(:ok)
+    expect(page.css(".breadcrumb a").map(&:text)).to eq([ "People" ])
     expect(page.at_css("h1").text).to eq("Marisol Okafor")
     expect(page.css("#person-candidacies .list-row-meta").map(&:text).map { it.split(" · ").first }).to eq([ "Calder General 2026", "Calder Primary 2024" ])
     expect(page.at_css(".page-header .pill-button")["href"]).to eq(candidacy_path(latest))

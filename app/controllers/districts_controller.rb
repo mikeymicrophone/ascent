@@ -2,8 +2,13 @@ class DistrictsController < ApplicationController
   before_action :set_district, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @districts = pagy(District.order(:name))
-    render Views::Districts::IndexView.new(districts: @districts, pagy: @pagy)
+    districts_scope = District.includes(jurisdiction: { parent: :jurisdictionable }).in_natural_order
+    districts_scope = districts_scope.named_like(filters["q"]) if filters["q"].present?
+    districts_scope = districts_scope.in_state(State.includes(:jurisdiction).find(filters["state_id"])) if filters["state_id"].present?
+    districts_scope = districts_scope.where(kind: filters["kind"]) if filters["kind"].present?
+    @pagy, @districts = pagy(districts_scope)
+    render Views::Districts::IndexView.new(districts: @districts, pagy: @pagy, filters: filters, states: State.order(:name),
+      kinds: District.distinct.order(:kind).pluck(:kind))
   end
 
   def show
@@ -44,6 +49,10 @@ class DistrictsController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q, :state_id, :kind).to_h
+  end
 
   def set_district
     @district = District.find(params[:id])

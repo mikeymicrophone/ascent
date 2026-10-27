@@ -2,8 +2,12 @@ class CountiesController < ApplicationController
   before_action :set_county, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @counties = pagy(County.includes(:state).order(:name))
-    render Views::Counties::IndexView.new(counties: @counties, pagy: @pagy)
+    counties_scope = County.includes(:state).order(:name, :id)
+    counties_scope = counties_scope.named_like(filters["q"]) if filters["q"].present?
+    counties_scope = counties_scope.where(state_id: filters["state_id"]) if filters["state_id"].present?
+    @pagy, @counties = pagy(counties_scope)
+    render Views::Counties::IndexView.new(counties: @counties, pagy: @pagy, filters: filters, states: State.order(:name),
+      town_counts: Municipality.where(county: @counties).group(:county_id).count)
   end
 
   def show
@@ -44,6 +48,10 @@ class CountiesController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q, :state_id).to_h
+  end
 
   def set_county
     @county = County.find(params[:id])

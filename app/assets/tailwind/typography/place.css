@@ -41,3 +41,11 @@
   @apply font-['Bricolage_Grotesque'] font-extrabold;
   font-stretch: 75%;
 }
+
+.place-chip-link {
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold tracking-normal no-underline;
+}
+
+.place-race-link {
+  @apply no-underline;
+}

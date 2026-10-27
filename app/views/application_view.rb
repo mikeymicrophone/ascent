@@ -63,9 +63,28 @@ class Views::ApplicationView < Phlex::HTML
     when Race then [ [ "Elections", elections_path ], [ record.election.name, record.election ] ]
     when Candidacy then trail_for(record.race) + [ [ record.race.office.position.title, record.race ] ]
     when Office then [ [ "Offices", offices_path ], [ record.jurisdiction.name, record.jurisdiction.jurisdictionable ] ]
-    when Hierarchicable then record.build_hierarchy_chain[0...-1].map { [ it.name, it ] }
-    else [ [ record.model_name.human.pluralize, polymorphic_path(record.class) ] ]
+    when JurisdictionOwner then place_trail(record)
+    else chain_trail(record)
     end
+  end
+
+  # The places a place sits within, from its country down, by the jurisdiction tree.
+  def place_trail(place)
+    above = []
+    jurisdiction = place.jurisdiction&.parent
+    while jurisdiction
+      above.unshift(jurisdiction)
+      jurisdiction = jurisdiction.parent
+    end
+    above.map { [ it.name, it.jurisdictionable ] }
+  end
+
+  # A record's parents in its own hierarchy, such as an approach's issue and topic, or else its section.
+  def chain_trail(record)
+    parents = record.build_hierarchy_chain[0...-1]
+    return parents.map { [ it.name, it ] } if parents.any?
+
+    [ [ record.model_name.human.pluralize, polymorphic_path(record.class) ] ]
   end
 
   # A race still to be decided: open for mountains, and its election day not yet past.
