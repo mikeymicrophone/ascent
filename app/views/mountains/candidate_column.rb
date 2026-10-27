@@ -28,7 +28,7 @@ class Views::Mountains::CandidateColumn < Views::Components::Base
       end
 
       div(class: "candidate-info") do
-        h4(class: "candidate-name") do
+        h4(class: "column-name") do
           link_to @candidacy.person.name, @candidacy, class: "candidate-link"
         end
 

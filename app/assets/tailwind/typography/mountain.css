@@ -39,11 +39,12 @@
   @apply font-medium;
 }
 
-.candidate-name {
+.column-name {
   @apply font-['Bricolage_Grotesque'];
   @apply text-sm font-medium;
   @apply text-center;
   @apply leading-tight;
+  text-wrap: balance;
 }
 
 .party-affiliation {

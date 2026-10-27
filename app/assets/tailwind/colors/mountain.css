@@ -14,8 +14,9 @@
   @apply bg-transparent;
 }
 
+/* The column's line runs up its middle, through the peak and the name below it. */
 .rating-area {
-  border-color: var(--brand-contour);
+  background: linear-gradient(var(--brand-contour), var(--brand-contour)) center / 1px 100% no-repeat;
 }
 
 /* Rating dot states: a lime summit is approved; below the line stays scree. Never red and green. */

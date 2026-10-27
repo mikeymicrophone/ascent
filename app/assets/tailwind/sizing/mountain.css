@@ -24,7 +24,7 @@
   @apply rounded-full px-4 py-2.5 text-sm;
 }
 
-/* Room for the first peak's left slope, which spreads 70% of a rating area past its line. */
+/* Room for the axis labels, clear of the first peak's left slope. */
 .candidate-columns {
   @apply pl-14;
 }
@@ -56,12 +56,10 @@
   @apply min-h-48;
 }
 
-.candidate-info {
-  @apply px-1;
-}
-
-.candidate-name {
+/* Two lines for every name, so the ratings beneath line up across the columns. */
+.column-name {
   @apply mb-1;
+  min-height: 2lh;
 }
 
 .party-affiliation,

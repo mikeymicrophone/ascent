@@ -76,3 +76,23 @@
     transition: background-color 150ms ease, border-color 150ms ease;
   }
 }
+
+/* "All changes saved" only confirms: it shows for a moment, then gets out of the way. Unsaved
+   changes keep the bar up until they are saved or discarded. */
+.save-bar.is-clean {
+  animation: save-bar-leave 300ms ease-in 1.8s forwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .save-bar.is-clean {
+    animation-name: save-bar-slide-away;
+  }
+}
+
+@keyframes save-bar-leave {
+  to { opacity: 0; visibility: hidden; }
+}
+
+@keyframes save-bar-slide-away {
+  to { opacity: 0; visibility: hidden; transform: translateY(1rem); }
+}

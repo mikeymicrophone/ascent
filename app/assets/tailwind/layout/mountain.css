@@ -60,13 +60,13 @@
 .rating-area {
   /* Every column shares one 0–500 scale, so the area never grows or shrinks with its name. */
   @apply relative flex-none;
-  @apply border-l border-gray-200;
   height: 320px; /* Actual rating scale area */
   z-index: 2;
 }
 
+/* Reaches past the column's padding into the gap, so a long name wraps less and stays centered under its peak. */
 .candidate-info {
-  @apply mt-4 text-center;
+  @apply -mx-3 mt-4 text-center;
 }
 
 .y-axis-labels {
@@ -106,7 +106,7 @@
 }
 
 .rating-dot {
-  @apply absolute rounded-full;
+  @apply absolute left-1/2 rounded-full;
   @apply border-2;
   @apply -translate-x-1/2 -translate-y-1/2; /* Centered on the rating, on the column's line */
   /* Let pointer events hit the rating-area so drag always starts */
@@ -138,10 +138,10 @@
   @apply inline-flex items-center justify-center;
 }
 
-/* A peak spreads 70% of a column either side of its line, under the dot. */
+/* A peak spreads 70% of a column either side of its centered line, under the dot. */
 .mountain-peak {
   @apply absolute top-0 h-full overflow-visible pointer-events-none;
-  left: -70%;
+  left: -20%;
   width: 140%;
   z-index: 0;
 }
