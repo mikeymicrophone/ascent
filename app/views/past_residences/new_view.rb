@@ -26,8 +26,8 @@ class Views::PastResidences::NewView < Views::ApplicationView
         date_field("started_on", "Moved in", @claim.started_on)
         date_field("ended_on", "Moved out", @claim.ended_on)
       end
-      h2(class: "card-heading") { "Its districts" }
-      Views::ResidenceClaims::DistrictFields(claim: @claim)
+      h2(class: "card-heading") { "Its county and districts" }
+      Views::ResidenceClaims::AreaFields(claim: @claim)
       div(class: "form-actions") do
         button(type: "submit", class: "pill-button pill-button-summit") { "Add to where I've lived" }
         PillLink(label: "Cancel", path: past_residences_path, variant: "ghost")

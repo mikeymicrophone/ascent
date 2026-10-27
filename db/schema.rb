@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_26_180000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -303,8 +303,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_180000) do
     t.string "name"
     t.bigint "state_id", null: false
     t.datetime "updated_at", null: false
+    t.bigint "parent_municipality_id"
     t.index ["county_id"], name: "index_municipalities_on_county_id"
     t.index ["entity_code"], name: "index_municipalities_on_entity_code", unique: true
+    t.index ["parent_municipality_id"], name: "index_municipalities_on_parent_municipality_id"
     t.index ["state_id"], name: "index_municipalities_on_state_id"
   end
 
@@ -470,7 +472,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_180000) do
     t.bigint "state_house_district_id"
     t.date "started_on", null: false
     t.date "ended_on"
+    t.bigint "county_id"
     t.index ["congressional_district_id"], name: "index_residences_on_congressional_district_id"
+    t.index ["county_id"], name: "index_residences_on_county_id"
     t.index ["jurisdiction_id"], name: "index_residences_on_jurisdiction_id"
     t.index ["state_house_district_id"], name: "index_residences_on_state_house_district_id"
     t.index ["state_senate_district_id"], name: "index_residences_on_state_senate_district_id"
@@ -683,6 +687,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_180000) do
   add_foreign_key "mountain_drafts", "races", on_delete: :cascade
   add_foreign_key "mountain_drafts", "voters", on_delete: :cascade
   add_foreign_key "municipalities", "counties"
+  add_foreign_key "municipalities", "municipalities", column: "parent_municipality_id"
   add_foreign_key "municipalities", "states"
   add_foreign_key "offices", "chambers"
   add_foreign_key "offices", "governing_bodies"
@@ -705,6 +710,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_26_180000) do
   add_foreign_key "ratings", "voters"
   add_foreign_key "residences", "jurisdictions"
   add_foreign_key "residences", "jurisdictions", column: "congressional_district_id"
+  add_foreign_key "residences", "jurisdictions", column: "county_id"
   add_foreign_key "residences", "jurisdictions", column: "state_house_district_id"
   add_foreign_key "residences", "jurisdictions", column: "state_senate_district_id"
   add_foreign_key "residences", "voters"

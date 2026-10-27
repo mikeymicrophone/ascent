@@ -100,6 +100,44 @@ RSpec.describe Seeds::LibraryImporter do
     expect(Municipality.where(name: "Washington Township").map { it.county.name }).to contain_exactly("Holmes County", "Muskingum County")
   end
 
+  # A borough sits inside its city, whose jurisdiction spans several counties, and shares its borders
+  # with one county; it nests under the city even when listed before it.
+  it "nests a town inside the town it names as its parent" do
+    boroughs = write_manifest("boroughs.yml", <<~YAML)
+      format: micharisma-seeds/v1
+      namespace: MIC
+      catalog: ASC
+      records:
+        - type: Country
+          code: COUNTRY-USA
+          attributes: { code: US, name: United States }
+        - type: State
+          code: STATE-USA-NY
+          attributes: { code: NY, name: New York }
+          references: { country: COUNTRY-USA }
+        - type: County
+          code: COUNTY-USA-NY-KINGS
+          attributes: { name: Kings County }
+          references: { state: STATE-USA-NY }
+        - type: Municipality
+          code: MUNICIPALITY-USA-NY-BROOKLYN
+          attributes: { name: Brooklyn }
+          references: { state: STATE-USA-NY, county: COUNTY-USA-NY-KINGS, parent_municipality: MUNICIPALITY-USA-NY-NEW_YORK }
+        - type: Municipality
+          code: MUNICIPALITY-USA-NY-NEW_YORK
+          attributes: { name: New York }
+          references: { state: STATE-USA-NY }
+    YAML
+
+    importer.call([ boroughs ])
+
+    brooklyn = Municipality.find_by!(name: "Brooklyn")
+    new_york = Municipality.find_by!(name: "New York")
+    expect(brooklyn).to have_attributes(parent_municipality: new_york, county: County.find_by!(name: "Kings County"))
+    expect(brooklyn.jurisdiction.parent).to eq(new_york.jurisdiction)
+    expect(new_york.jurisdiction.parent.jurisdictionable).to eq(State.find_by!(code: "NY"))
+  end
+
   it "claims an uncoded place only once, leaving a second URI its own record" do
     ohio = State.create!(code: "OH", name: "Ohio", country: Country.create!(code: "US", name: "United States"))
     seeded = Municipality.create!(name: "Washington Township", state: ohio)

@@ -66,7 +66,7 @@ class Views::Ballots::ShowView < Views::ApplicationView
   end
 
   def residence_districts_text(residence)
-    [ residence.jurisdiction.parent, *residence.districts ].compact.map(&:name).join(" · ")
+    [ *residence.surroundings, *residence.districts ].map(&:name).join(" · ")
   end
 
   def progress_bar

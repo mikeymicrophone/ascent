@@ -2,8 +2,8 @@
 
 module Seeds
   # Checks that voters can be placed across the country once boundaries are imported. A point inside
-  # every county must find a town or county in that county's state and exactly one district in each
-  # legislative chamber, and a set of landmarks that are easy to get wrong must find the town expected.
+  # every county must find a town or county in that county's state, that county as the residence's
+  # county, and exactly one district in each legislative chamber, and a set of landmarks that are easy to get wrong must find the town expected.
   # A county's first point can land in a lake or bay, which districts leave out; the check then tries
   # other points inside the county for one on land, and only reports the county if none is.
   #
@@ -16,8 +16,8 @@ module Seeds
       Landmark.new("Las Vegas Strip, in unincorporated Paradise", 36.1147, -115.1728, "Clark County"),
       Landmark.new("Open land near Lewistown, Montana", 47.0, -109.5, "Fergus County"),
       Landmark.new("East Los Angeles, unincorporated", 34.0239, -118.1720, "Los Angeles County"),
-      Landmark.new("Brooklyn", 40.6782, -73.9442, "New York"),
-      Landmark.new("Staten Island", 40.5795, -74.1502, "New York"),
+      Landmark.new("Brooklyn, a borough of New York City", 40.6782, -73.9442, "Brooklyn"),
+      Landmark.new("Staten Island, a borough of New York City", 40.5795, -74.1502, "Staten Island"),
       # The District itself is DC's government; the Census lists Washington city as nonfunctioning.
       Landmark.new("Washington, DC", 38.8977, -77.0365, "District of Columbia"),
       Landmark.new("Richmond, an independent city", 37.5407, -77.4360, "Richmond"),
@@ -51,7 +51,7 @@ module Seeds
     end
 
     def run
-      county_points.each { |boundary_id, name, state_code, longitude, latitude| check_county(boundary_id, name, state_code, longitude, latitude) }
+      county_points.each { |county_id, boundary_id, name, state_code, longitude, latitude| check_county(county_id, boundary_id, name, state_code, longitude, latitude) }
       @landmarks.each { check_landmark(it) }
       self
     end
@@ -64,7 +64,7 @@ module Seeds
 
     def county_points
       ActiveRecord::Base.connection.select_rows(<<~SQL)
-        SELECT jurisdiction_boundaries.id, counties.name, states.code, ST_X(point), ST_Y(point)
+        SELECT jurisdictions.id, jurisdiction_boundaries.id, counties.name, states.code, ST_X(point), ST_Y(point)
         FROM jurisdiction_boundaries
         JOIN jurisdictions ON jurisdictions.id = jurisdiction_boundaries.jurisdiction_id AND jurisdictions.jurisdictionable_type = 'County'
         JOIN counties ON counties.id = jurisdictions.jurisdictionable_id
@@ -75,7 +75,7 @@ module Seeds
       SQL
     end
 
-    def check_county(boundary_id, name, state_code, longitude, latitude)
+    def check_county(county_id, boundary_id, name, state_code, longitude, latitude)
       @counties_checked += 1
       place = "#{name}, #{state_code}"
       counts = chamber_counts(longitude, latitude)
@@ -88,9 +88,11 @@ module Seeds
         end
       end
 
-      town = claim(latitude, longitude).town
+      claim = claim(latitude, longitude)
+      town = claim.town
       @town_kinds[town&.jurisdictionable_type || "none"] += 1
       problems[:no_town] << place unless town
+      problems[:wrong_county] << "#{place} found #{claim.area("county")&.name || "none"}" unless claim.area("county")&.id == county_id
       problems[:wrong_state] << "#{place} found #{town.name}" if town && state_code_of(town) != state_code
       counts.each do |chamber, count|
         expected = expected_districts(chamber, state_code)

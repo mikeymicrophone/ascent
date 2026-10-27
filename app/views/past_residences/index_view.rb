@@ -41,7 +41,7 @@ class Views::PastResidences::IndexView < Views::ApplicationView
       div(class: "residence-item-text") do
         span(class: "residence-dates") { dates(residence) }
         strong(class: "residence-town") { residence.jurisdiction.name }
-        span(class: "claim-place-meta") { residence.jurisdiction.parent&.name }
+        span(class: "claim-place-meta") { residence.surroundings.map(&:name).join(" · ") }
         ul(class: "chip-list") { residence.districts.each { |district| li(class: "place-chip") { district.name } } } if residence.districts.any?
       end
       residence_action(residence)

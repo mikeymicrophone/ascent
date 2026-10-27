@@ -45,12 +45,12 @@ class PastResidencesController < ApplicationController
   end
 
   def claim_params
-    params.permit(:jurisdiction_id, :started_on, :ended_on, :congressional_district_id, :state_senate_district_id, :state_house_district_id)
+    params.permit(:jurisdiction_id, :started_on, :ended_on, :county_id, :congressional_district_id, :state_senate_district_id, :state_house_district_id)
       .to_h.symbolize_keys.compact_blank
   end
 
   def shown_places
-    [ { jurisdiction: [ :jurisdictionable, { parent: :jurisdictionable } ] }, :congressional_district, :state_senate_district, :state_house_district ]
+    [ { jurisdiction: [ :jurisdictionable, { parent: :jurisdictionable } ] }, :county, :congressional_district, :state_senate_district, :state_house_district ]
   end
 
   def places_named(query)

@@ -4,9 +4,14 @@ class Municipality < ApplicationRecord
 
   belongs_to :state
   belongs_to :county, optional: true
+  # The town this one sits inside, as Brooklyn sits inside New York City; its jurisdiction nests there.
+  belongs_to :parent_municipality, class_name: "Municipality", optional: true
+  has_many :inner_municipalities, class_name: "Municipality", foreign_key: :parent_municipality_id,
+    inverse_of: :parent_municipality, dependent: :restrict_with_error
 
   validates :name, presence: true
   validate :county_matches_state
+  validate :parent_municipality_matches_state
 
   scope :in_state, ->(state) { where(state: state) if state.present? }
   scope :with_office_data, -> { includes(:state, jurisdiction: :offices) }
@@ -26,11 +31,13 @@ class Municipality < ApplicationRecord
     Race.real.open_to_rating.in_jurisdictions(local_jurisdictions).recent.reorder("elections.election_date")
   end
 
-  # The open real races every resident also votes in, decided by the county, state or country above.
+  # The open real races every resident also votes in, decided by the city, county, state or country
+  # above. A town inside a city has its county beside it rather than above it.
   def open_races_above
     return Race.none unless jurisdiction
 
-    Race.real.open_to_rating.in_jurisdictions(Jurisdiction.and_their_ancestors(jurisdiction.parent_id ? jurisdiction.parent : jurisdiction))
+    above = [ jurisdiction.parent || jurisdiction, county&.jurisdiction ].compact
+    Race.real.open_to_rating.in_jurisdictions(Jurisdiction.and_their_ancestors(above))
       .where.not(id: open_local_races.select(:id))
   end
 
@@ -60,5 +67,9 @@ class Municipality < ApplicationRecord
 
   def county_matches_state
     errors.add(:county, "must belong to the same state") if county && county.state != state
+  end
+
+  def parent_municipality_matches_state
+    errors.add(:parent_municipality, "must belong to the same state") if parent_municipality && parent_municipality.state != state
   end
 end

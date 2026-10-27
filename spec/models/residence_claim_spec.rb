@@ -1,8 +1,9 @@
 require "rails_helper"
 
-# A residence is a town plus its House, state senate and state assembly districts, with dates. A location
-# finds the smallest town and each district by boundary and is then forgotten; a searched town fills in
-# any district it sits wholly inside, and the voter picks the rest. Past residences take the same shape.
+# A residence is a town plus its county and its House, state senate and state assembly districts, with
+# dates. A location finds the smallest town and each of those by boundary and is then forgotten; a
+# searched town fills in any it sits wholly inside, and the voter picks the rest. Past residences take
+# the same shape.
 RSpec.describe ResidenceClaim do
   include_context "Port Merritt ballot"
 
@@ -30,12 +31,12 @@ RSpec.describe ResidenceClaim do
   end
 
   describe "from a location" do
-    it "finds the town and each chamber's district" do
+    it "finds the town, its county and each chamber's district" do
       claim = described_class.new(latitude: 42.5, longitude: -75.2, voter: newcomer)
 
       expect(claim).to be_valid
       expect(claim.town).to eq(port_merritt)
-      expect(claim.districts).to eq("congressional" => congressional_7, "state_senate" => senate_9, "state_house" => assembly_53)
+      expect(claim.areas).to eq("county" => alder_county, "congressional" => congressional_7, "state_senate" => senate_9, "state_house" => assembly_53)
     end
 
     it "prefers the smaller of two towns it falls in" do
@@ -49,7 +50,7 @@ RSpec.describe ResidenceClaim do
       claim = described_class.new(latitude: 41.5, longitude: -76.8, voter: newcomer)
 
       expect(claim.town).to eq(alder_county)
-      expect(claim.district("congressional")).to eq(congressional_7)
+      expect(claim.area("congressional")).to eq(congressional_7)
     end
 
     it "can't place a location outside every boundary" do
@@ -63,25 +64,61 @@ RSpec.describe ResidenceClaim do
   describe "from a searched town" do
     let(:claim) { described_class.new(jurisdiction_id: port_merritt.id, voter: newcomer) }
 
-    it "fills in the districts the town sits wholly inside" do
-      expect(claim.district("congressional")).to eq(congressional_7)
-      expect(claim.district("state_senate")).to eq(senate_9)
+    it "fills in the county and districts the town sits wholly inside" do
+      expect(claim.area("county")).to eq(alder_county)
+      expect(claim.area("congressional")).to eq(congressional_7)
+      expect(claim.area("state_senate")).to eq(senate_9)
     end
 
     it "asks the voter to pick where the town is split, and takes the pick" do
       expect(claim.needs_pick?("state_house")).to be(true)
-      expect(claim.district_choices("state_house")).to contain_exactly(assembly_52, assembly_53)
+      expect(claim.area_choices("state_house")).to contain_exactly(assembly_52, assembly_53)
 
       picked = described_class.new(jurisdiction_id: port_merritt.id, state_house_district_id: assembly_52.id, voter: newcomer)
-      expect(picked.district("state_house")).to eq(assembly_52)
+      expect(picked.area("state_house")).to eq(assembly_52)
     end
 
     it "offers the state's districts when the town's boundary isn't mapped" do
       unmapped = create(:jurisdiction, jurisdictionable: create(:municipality, name: "Halden Bay", state: state.jurisdictionable), parent: alder_county)
       claim = described_class.new(jurisdiction_id: unmapped.id, voter: newcomer)
 
-      expect(claim.district_choices("state_house")).to contain_exactly(assembly_52, assembly_53)
-      expect(claim.district("state_house")).to be_nil
+      expect(claim.area_choices("state_house")).to contain_exactly(assembly_52, assembly_53)
+      expect(claim.area("state_house")).to be_nil
+    end
+  end
+
+  # Calder City straddles the county line at -74, so its jurisdiction sits under the state, not a county.
+  describe "in a city spanning two counties" do
+    let(:birch_county) { create(:jurisdiction, jurisdictionable: create(:county, name: "Birch County", state: state.jurisdictionable), parent: state) }
+    let(:calder_city) do
+      create(:jurisdiction, jurisdictionable: create(:municipality, name: "Calder City", state: state.jurisdictionable), parent: state)
+    end
+    let!(:birch_judge) { create_race_for(office_in(birch_county, "County Judge")) }
+
+    before do
+      boundary!(birch_county, -74, 41, 3)
+      boundary!(calder_city, -74.5, 42, 1)
+    end
+
+    it "takes the county the location falls in, and puts its races on the ballot" do
+      claim = described_class.new(latitude: 42.5, longitude: -73.8, voter: newcomer)
+
+      expect(claim.town).to eq(calder_city)
+      expect(claim.area("county")).to eq(birch_county)
+      expect(claim.open_races).to include(birch_judge)
+    end
+
+    it "asks a voter who searched for the city to pick its county, and keeps the pick" do
+      claim = described_class.new(jurisdiction_id: calder_city.id, voter: newcomer)
+      expect(claim.needs_pick?("county")).to be(true)
+      expect(claim.area_choices("county")).to contain_exactly(alder_county, birch_county)
+      expect(claim.open_races).not_to include(birch_judge)
+
+      residence = described_class.new(jurisdiction_id: calder_city.id, county_id: birch_county.id, voter: newcomer).save!
+
+      expect(residence.county).to eq(birch_county)
+      expect(newcomer.ballot_jurisdictions).to include(birch_county)
+      expect(Race.on_ballot_for(newcomer)).to include(birch_judge)
     end
   end
 

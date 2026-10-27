@@ -371,7 +371,7 @@ module Seeds
       parent_owner = case record.type
       when "State" then desired["country"]
       when "County" then desired["state"]
-      when "Municipality" then desired["county"] || desired["state"]
+      when "Municipality" then desired["parent_municipality"] || desired["county"] || desired["state"]
       when "District" then (scoped_owner("State", "state", record) if record.scope["state"])
       end
       parent_owner && jurisdiction_of(parent_owner)
@@ -384,7 +384,7 @@ module Seeds
       parent_owner = case owner
       when State then owner.country
       when County then owner.state
-      when Municipality then owner.county || owner.state
+      when Municipality then owner.parent_municipality || owner.county || owner.state
       end
       owner.create_jurisdiction!(parent: parent_owner && jurisdiction_of(parent_owner))
     end

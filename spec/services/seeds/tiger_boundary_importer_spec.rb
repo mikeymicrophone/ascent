@@ -65,7 +65,7 @@ RSpec.describe Seeds::TigerBoundaryImporter do
     claim = ResidenceClaim.new(latitude: 43.7, longitude: -72.3, voter: create(:voter))
 
     expect(claim.town).to eq(port_merritt.jurisdiction)
-    expect(claim.districts.values).to contain_exactly(at_large.jurisdiction, house_12a.jurisdiction, nil)
+    expect(claim.areas.values).to contain_exactly(alder_county.jurisdiction, at_large.jurisdiction, house_12a.jurisdiction, nil)
     expect(claim.ballot_jurisdictions.map(&:name)).to include("Alder County", "Vermont")
   end
 

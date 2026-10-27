@@ -106,13 +106,14 @@ class Voter < ApplicationRecord
     Residence.ballot_jurisdictions(current_residences)
   end
 
-  # Adds the given town, with its districts ({ "congressional" => ... }), to where this voter lives now.
+  # Adds the given town, with its county and districts ({ "county" => ..., "congressional" => ... }), to
+  # where this voter lives now.
   # Moving there ends the other current residences today; otherwise the voter lives in both. Their saved
   # mountains are then re-sorted into resident or visitor for where they live.
-  def claim_residence!(jurisdiction, districts: {}, moving: true)
+  def claim_residence!(jurisdiction, areas: {}, moving: true)
     transaction do
       residences.current.update_all(status: "moved", ended_on: Date.current) if moving
-      residence = residences.create!(jurisdiction: jurisdiction, **district_slots(districts), status: "active",
+      residence = residences.create!(jurisdiction: jurisdiction, **area_slots(areas), status: "active",
         started_on: Date.current, registered_at: Time.current, notes: "Claimed by the voter")
       voter_race_baselines.recount!
       residence
@@ -120,13 +121,13 @@ class Voter < ApplicationRecord
   end
 
   # Records somewhere this voter used to live, in the same shape as a current residence.
-  def add_past_residence!(jurisdiction, started_on:, ended_on:, districts: {})
-    residences.create!(jurisdiction: jurisdiction, **district_slots(districts), status: "moved",
+  def add_past_residence!(jurisdiction, started_on:, ended_on:, areas: {})
+    residences.create!(jurisdiction: jurisdiction, **area_slots(areas), status: "moved",
       started_on: started_on, ended_on: ended_on, registered_at: Time.current, notes: "Added by the voter")
   end
 
-  def district_slots(districts)
-    Residence::DISTRICT_SLOTS.to_h { |chamber, slot| [ slot, districts[chamber] ] }
+  def area_slots(areas)
+    Residence::AREA_SLOTS.to_h { |kind, slot| [ slot, areas[kind] ] }
   end
 
   # Whether any place this voter lives is where the race is decided, so their mountain counts with residents.

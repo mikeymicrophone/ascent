@@ -22,11 +22,11 @@ class Views::ResidenceClaims::PreviewView < Views::ApplicationView
     end
     section(class: "form-card claim-summary") do
       h2(class: "card-heading") { "Your places" }
-      ul(class: "chip-list") { places.each { |place| li(class: "place-chip#{" is-district" if @claim.districts.value?(place)}") { place.name } } }
+      ul(class: "chip-list") { places.each { |place| li(class: "place-chip#{" is-district" if @claim.areas.except("county").value?(place)}") { place.name } } }
       p(class: "card-text") { district_note }
       form_with(url: residence_claim_path, class: "claim-confirm") do
-        h2(class: "card-heading") { "Your districts" }
-        DistrictFields(claim: @claim)
+        h2(class: "card-heading") { "Your county and districts" }
+        AreaFields(claim: @claim)
         h2(class: "card-heading") { "On your ballot now" }
         ballot_counts
         confirm_actions

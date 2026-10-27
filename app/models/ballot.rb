@@ -9,7 +9,7 @@ class Ballot
 
   # Every place the voter lives now; the ballot covers them all.
   def residences
-    @residences ||= voter.current_residences.includes(:jurisdiction, :congressional_district, :state_senate_district, :state_house_district).to_a
+    @residences ||= voter.current_residences.includes(:jurisdiction, :county, :congressional_district, :state_senate_district, :state_house_district).to_a
   end
 
   def races

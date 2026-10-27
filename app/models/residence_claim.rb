@@ -1,21 +1,23 @@
 # A voter saying where they live, or used to live: a town (or the county, outside any town) and the
-# House, state senate and state assembly districts it sits in, with dates for a past residence.
+# areas it sits in, with dates for a past residence. The areas are its county, which a city spanning
+# several can't settle alone, and its House, state senate and state assembly districts.
 #
-# A location is used once, never kept: it finds the smallest town and the district of each chamber
-# whose boundaries cover it. A searched town fills in each district it lies wholly inside; where the
-# town is split, the voter picks from the districts it overlaps, or from the state's when no boundaries
-# are mapped.
+# A location is used once, never kept: it finds the smallest town and the county and district of each
+# chamber whose boundaries cover it. A searched town fills in each area it lies wholly inside; where the
+# town is split, the voter picks from the areas it overlaps, or from the state's when no boundaries are
+# mapped.
 class ResidenceClaim
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  CHAMBERS = Residence::DISTRICT_SLOTS.keys.freeze
-  CHAMBER_LABELS = { "congressional" => "U.S. House district", "state_senate" => "State senate district",
-                     "state_house" => "State assembly district" }.freeze
+  AREAS = Residence::AREA_SLOTS.keys.freeze
+  AREA_LABELS = { "county" => "County", "congressional" => "U.S. House district", "state_senate" => "State senate district",
+                  "state_house" => "State assembly district" }.freeze
 
   attribute :latitude, :float
   attribute :longitude, :float
   attribute :jurisdiction_id, :integer
+  attribute :county_id, :integer
   attribute :congressional_district_id, :integer
   attribute :state_senate_district_id, :integer
   attribute :state_house_district_id, :integer
@@ -46,27 +48,27 @@ class ResidenceClaim
     @town ||= from_location? ? smallest_covering : Jurisdiction.find_by(id: jurisdiction_id)
   end
 
-  # The district of a chamber: the voter's pick, else the one the location falls in, else the only one
-  # the town overlaps.
-  def district(chamber)
-    picked(chamber) || covering.find { it.jurisdictionable.try(:chamber) == chamber } || sole_overlap(chamber)
+  # The county, or a chamber's district: the voter's pick, else the one the location falls in, else the
+  # only one the town overlaps.
+  def area(kind)
+    picked(kind) || covering.find { of_kind?(it, kind) } || sole_overlap(kind)
   end
 
-  def districts
-    CHAMBERS.index_with { district(it) }
+  def areas
+    AREAS.index_with { area(it) }
   end
 
-  # The districts to pick from when the town alone doesn't settle the chamber.
-  def district_choices(chamber)
-    overlapping(chamber).presence || state_districts(chamber)
+  # The areas to pick from when the town alone doesn't settle one.
+  def area_choices(kind)
+    overlapping(kind).presence || state_areas(kind)
   end
 
-  def needs_pick?(chamber)
-    district(chamber).nil? && district_choices(chamber).any?
+  def needs_pick?(kind)
+    area(kind).nil? && area_choices(kind).any?
   end
 
   def ballot_jurisdictions
-    Jurisdiction.and_their_ancestors(Jurisdiction.where(id: [ town, *districts.values ].compact.map(&:id)))
+    Jurisdiction.and_their_ancestors(Jurisdiction.where(id: [ town, *areas.values ].compact.map(&:id)))
   end
 
   def open_races
@@ -82,9 +84,9 @@ class ResidenceClaim
   def save!
     validate!
     if past
-      voter.add_past_residence!(town, started_on: started_on, ended_on: ended_on, districts: districts)
+      voter.add_past_residence!(town, started_on: started_on, ended_on: ended_on, areas: areas)
     else
-      voter.claim_residence!(town, districts: districts, moving: moving)
+      voter.claim_residence!(town, areas: areas, moving: moving)
     end
   end
 
@@ -100,23 +102,32 @@ class ResidenceClaim
     JurisdictionBoundary.effective_on(Date.current).where(jurisdiction: jurisdictions).order(Arel.sql("ST_Area(geometry)")).first&.jurisdiction
   end
 
-  def picked(chamber)
-    id = public_send("#{chamber}_district_id")
-    Jurisdiction.districts_of_chamber(chamber).find_by(id: id) if id
+  def of_kind(kind)
+    kind == "county" ? Jurisdiction.where(jurisdictionable_type: "County") : Jurisdiction.districts_of_chamber(kind)
   end
 
-  def overlapping(chamber)
-    town ? Jurisdiction.districts_of_chamber(chamber).overlapping(town).includes(:jurisdictionable).to_a : []
+  def of_kind?(jurisdiction, kind)
+    kind == "county" ? jurisdiction.jurisdictionable_type == "County" : jurisdiction.jurisdictionable.try(:chamber) == kind
   end
 
-  def sole_overlap(chamber)
-    choices = overlapping(chamber)
+  def picked(kind)
+    id = public_send("#{Residence::AREA_SLOTS.fetch(kind)}_id")
+    of_kind(kind).find_by(id: id) if id
+  end
+
+  def overlapping(kind)
+    @overlapping ||= {}
+    @overlapping[kind] ||= town ? of_kind(kind).overlapping(town).includes(:jurisdictionable).to_a : []
+  end
+
+  def sole_overlap(kind)
+    choices = overlapping(kind)
     choices.first if choices.one?
   end
 
-  def state_districts(chamber)
+  def state_areas(kind)
     state = town&.self_and_ancestors&.find_by(jurisdictionable_type: "State")
-    state ? Jurisdiction.districts_of_chamber(chamber).where(parent: state).includes(:jurisdictionable).sort_by { it.name.to_s }.to_a : []
+    state ? of_kind(kind).where(parent: state).includes(:jurisdictionable).sort_by { it.name.to_s }.to_a : []
   end
 
   def town_found
