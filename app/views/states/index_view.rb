@@ -13,7 +13,7 @@ class Views::States::IndexView < Views::ApplicationView
     IndexPage(title: @parent ? "States in #{@parent.name}" : "States", records: @states, pagy: @pagy, noun: "state", frame: "states-list",
       eyebrow: "Places", lede: "Pick a state to see its statewide races, then find your county or town within it.",
       trail: @parent ? [ [ "Countries", countries_path ], [ @parent.name, @parent ] ] : [ [ "Countries", countries_path ] ],
-      clear_path: list_path, actions: (method(:new_state_link) if allowed_to?(:new?, ::State)), filters: method(:filter_form)) { state_row(it) }
+      clear_path: list_path, actions: (method(:new_state_link) if scaffold_new_resource_visible?(::State)), filters: method(:filter_form)) { state_row(it) }
   end
 
   private

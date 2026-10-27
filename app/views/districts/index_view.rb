@@ -12,7 +12,7 @@ class Views::Districts::IndexView < Views::ApplicationView
   def view_template
     IndexPage(title: "Districts", records: @districts, pagy: @pagy, noun: "district", frame: "districts-list", eyebrow: "Places",
       lede: "Legislative, judicial and local districts. Pick a state and a kind to find yours.", trail: [ [ "States", states_path ] ],
-      clear_path: districts_path, actions: (method(:new_district_link) if allowed_to?(:new?, District)), filters: method(:filter_form)) { district_row(it) }
+      clear_path: districts_path, actions: (method(:new_district_link) if scaffold_new_resource_visible?(District)), filters: method(:filter_form)) { district_row(it) }
   end
 
   private

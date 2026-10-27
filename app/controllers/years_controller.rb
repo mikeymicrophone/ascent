@@ -2,8 +2,8 @@ class YearsController < ApplicationController
   before_action :set_year, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @years = pagy(Year.all)
-    render Views::Years::IndexView.new(years: @years, pagy: @pagy)
+    @pagy, @years = pagy(Year.order(year: :desc))
+    render Views::Years::IndexView.new(years: @years, pagy: @pagy, election_counts: Election.where(year: @years).group(:year_id).count)
   end
 
   def show

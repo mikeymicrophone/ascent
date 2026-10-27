@@ -37,3 +37,8 @@
   @apply break-words;
   overflow-wrap: anywhere;
 }
+
+/* Digits keep one width, so a counting number does not shift its tile. */
+.stat-tile-value {
+  font-variant-numeric: tabular-nums;
+}

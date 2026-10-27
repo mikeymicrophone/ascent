@@ -1,31 +1,19 @@
-class Views::Partials::ResidencePartial < Views::ApplicationView
-  def initialize(residence:)
-    @residence = residence
-  end
+# frozen_string_literal: true
 
-  def view_template(&)
-    div(id: dom_id(@residence), class: "residence-partial") do
-      h3 { @residence.voter.full_name }
-      div do
-        span { "Jurisdiction:" }
-        whitespace
-        jurisdiction_link @residence.jurisdiction
+# A residence's page body: who lives where, since when, and its standing.
+class Views::Partials::ResidencePartial < Views::ApplicationView
+  prop :residence, Residence
+
+  def view_template
+    section(class: "place-section") do
+      section_heading("The residence")
+      dl(class: "place-facts-list") do
+        FactRow(label: "Voter") { link_to @residence.voter.full_name, @residence.voter, class: "text-link" }
+        FactRow(label: "Lives in") { jurisdiction_link @residence.jurisdiction }
+        FactRow(label: "Registered") { @residence.registered_at.strftime("%b %-d, %Y") } if @residence.registered_at
+        FactRow(label: "Status") { @residence.status.humanize }
       end
-      div do
-        span { "Registered at:" }
-        whitespace
-        span { @residence.registered_at.to_fs(:display) }
-      end
-      div do
-        span { "Status:" }
-        whitespace
-        span { @residence.status }
-      end
-      div do
-        span { "Notes:" }
-        whitespace
-        div(class: "formatted-text") { simple_format(@residence.notes) }
-      end
+      p(class: "card-text") { @residence.notes } if @residence.notes.present?
     end
   end
 end

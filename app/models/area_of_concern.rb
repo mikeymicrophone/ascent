@@ -1,5 +1,4 @@
 class AreaOfConcern < ApplicationRecord
-  include Hierarchicable
   has_many :policies, dependent: :nullify
 
   validates :name, presence: true

@@ -10,82 +10,6 @@
   @apply font-['Bricolage_Grotesque'] font-medium text-left;
 }
 
-.expandable-count {
-  @apply font-['Martian_Mono'] font-normal;
-}
-
-.expandable-icon {
-  @apply font-['Bricolage_Grotesque'] text-center select-none;
-}
-
-/* Cities preview typography */
-.filter-info {
-  @apply font-medium;
-}
-
-.view-all {
-  @apply font-medium;
-}
-
-/* Offices preview typography */
-.office-position {
-  @apply font-normal;
-}
-
-/* Elections preview typography */
-.status-indicator {
-  @apply font-medium;
-}
-
-.election-date {
-  @apply font-normal;
-}
-
-/* Candidates preview typography */
-.candidate-party {
-  @apply font-normal;
-}
-
-/* Results preview typography */
-.results-title {
-  @apply font-medium;
-}
-
-.result-rank {
-  @apply font-medium;
-}
-
-.result-votes {
-  @apply font-normal;
-}
-
-.no-results,
-.results-placeholder {
-  @apply font-normal;
-}
-
-/* Candidacies preview typography */
-.candidacy-office {
-  @apply font-normal;
-}
-
-.candidacy-party {
-  @apply font-normal;
-}
-
-/* Voting activity preview typography */
-.voting-office {
-  @apply font-normal;
-}
-
-.voting-participation {
-  @apply font-medium;
-}
-
-.voting-baseline {
-  @apply font-normal;
-}
-
 /* Button typography */
 .primary {
   @apply font-semibold;
@@ -96,47 +20,14 @@
   @apply font-medium;
 }
 
-/* Office holder typography */
-.current-holder-name {
-  @apply font-semibold;
-}
-
-.current-holder-details,
-.current-holder-party {
-  @apply font-normal;
-}
-
-/* Election timeline typography */
-.election-name {
-  @apply font-medium;
-}
-
 .election-meta,
 .election-date,
 .schedule-label {
   @apply font-normal;
 }
 
-.election-today {
-  @apply font-semibold;
-}
-
-.days-until {
-  @apply font-normal;
-}
-
-/* Election results typography */
-.result-rank {
-  @apply font-semibold;
-}
-
 .candidate-name {
   @apply font-medium;
-}
-
-.candidate-party,
-.vote-count {
-  @apply font-normal;
 }
 
 /* Voter stats typography */
@@ -153,59 +44,8 @@
   @apply font-['Bricolage_Grotesque'] font-medium no-underline;
 }
 
-.breadcrumb-current {
-  @apply font-['Bricolage_Grotesque'] font-semibold;
-}
-
 .breadcrumb-separator {
   @apply font-['Bricolage_Grotesque'] font-normal;
-}
-
-/* Quick stats typography */
-.quick-stats .stat-value {
-  @apply font-['Martian_Mono'] font-bold;
-}
-
-.quick-stats .stat-label {
-  @apply font-['Bricolage_Grotesque'] font-medium uppercase tracking-wide;
-}
-
-/* Geographic summary typography */
-.summary-grid .stat-value {
-  @apply font-['Martian_Mono'] font-bold;
-}
-
-.summary-grid .stat-label {
-  @apply font-['Bricolage_Grotesque'] font-normal uppercase tracking-wide;
-}
-
-/* Children preview typography */
-.child-name {
-  @apply font-['Bricolage_Grotesque'] font-medium;
-}
-
-/* Special content typography */
-.description-text {
-  @apply font-['Bricolage_Grotesque'] leading-relaxed;
-}
-
-.formal-content {
-  @apply font-['Bricolage_Grotesque'] leading-relaxed;
-}
-
-.policy-text {
-  @apply font-['Bricolage_Grotesque'] text-base leading-relaxed;
-}
-
-.quote-text {
-  @apply font-['Bricolage_Grotesque'] italic text-lg leading-relaxed;
-}
-
-/* Accent elements */
-.voter-count,
-.election-count,
-.office-count {
-  @apply font-['Martian_Mono'] font-bold;
 }
 
 /* Special page elements */
@@ -213,62 +53,8 @@
   @apply font-['Bricolage_Grotesque'] font-bold text-3xl;
 }
 
-.section-heading {
-  @apply font-['Bricolage_Grotesque'] text-xl;
-}
-
-/* Entity-specific typography */
-.country-name,
-.state-name,
-.city-name {
-  @apply font-['Bricolage_Grotesque'] font-semibold;
-}
-
-.topic-title,
-.issue-title,
-.approach-title {
-  @apply font-['Bricolage_Grotesque'] font-medium;
-}
-
 .candidate-name {
   @apply font-['Bricolage_Grotesque'] font-bold;
-}
-
-.office-title {
-  @apply font-['Bricolage_Grotesque'] font-medium;
-}
-
-.election-name {
-  @apply font-['Bricolage_Grotesque'] font-medium;
-}
-
-/* Enhanced partial typography system */
-.partial-title {
-  @apply font-['Bricolage_Grotesque'] font-bold text-2xl leading-tight;
-}
-
-.info-label {
-  @apply font-['Bricolage_Grotesque'] font-medium text-xs uppercase tracking-wider;
-}
-
-.info-value {
-  @apply font-['Bricolage_Grotesque'] font-semibold text-base;
-}
-
-.content-description {
-  @apply font-['Bricolage_Grotesque'] text-base leading-relaxed;
-}
-
-/* Enhanced status indicator typography */
-.status-indicator {
-  @apply font-['Bricolage_Grotesque'] font-medium text-xs uppercase tracking-wide;
-}
-
-.status-executive,
-.status-mock,
-.status-historical,
-.status-party {
-  @apply font-['Bricolage_Grotesque'] font-medium text-xs;
 }
 
 /* Flash message typography */
@@ -320,11 +106,6 @@
   font-weight: 500;
   line-height: 1.25;
   white-space: nowrap;
-}
-
-/* A candidacy's rating totals */
-.candidacy-ratings-title {
-  @apply font-['Bricolage_Grotesque'] text-sm font-semibold uppercase tracking-wide;
 }
 
 .candidacy-ratings-empty {

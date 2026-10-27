@@ -13,7 +13,7 @@ class Views::Issues::IndexView < Views::ApplicationView
     IndexPage(title: @parent ? "Issues in #{@parent.title}" : "Issues", records: @issues, pagy: @pagy, noun: "issue", frame: "issues-list",
       eyebrow: "Policy", lede: "The public problems within each topic. Open one to see the ways to address it.",
       trail: [ [ "Topics", topics_path ], *([ [ @parent.title, @parent ] ] if @parent) ], clear_path: list_path,
-      actions: (method(:new_issue_link) if allowed_to?(:new?, Issue)), filters: method(:filter_form)) { issue_row(it) }
+      actions: (method(:new_issue_link) if scaffold_new_resource_visible?(Issue)), filters: method(:filter_form)) { issue_row(it) }
   end
 
   private

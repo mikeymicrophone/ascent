@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-# A record's overview previews its first five children and links to the rest.
+# A record's page previews its first five children and links to the rest.
 # That link goes to the children's index, filtered to this parent.
 RSpec.describe "Links to a record's children", type: :request do
   describe "a governance type with more governing bodies than the preview shows" do
@@ -12,11 +12,18 @@ RSpec.describe "Links to a record's children", type: :request do
     end
     let!(:court) { create(:governing_body, name: "Michigan Supreme Court", governance_type: create(:governance_type, :court)) }
 
-    it "renders the governance type list with a link to all of its governing bodies" do
+    it "counts each governance type's bodies, and previews them with a link to all of them" do
       get governance_types_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(%(href="#{governance_type_governing_bodies_path(council)}">View all 6 governing bodies</a>))
+      row = Nokogiri::HTML(response.body).at_css("#list_item_governance_type_#{council.id}")
+      expect(row.at_css(".list-row-meta").text).to eq("6 governing bodies")
+
+      get governance_type_path(council)
+
+      page = Nokogiri::HTML(response.body)
+      expect(page.css(".related-list .list-row").size).to eq(5)
+      expect(page.at_css(%(a[href="#{governance_type_governing_bodies_path(council)}"])).text).to eq("See all 6 governing bodies")
     end
 
     it "lists only that governance type's bodies at the link" do

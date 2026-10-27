@@ -15,7 +15,7 @@ class Views::GoverningBodies::IndexView < Views::ApplicationView
       noun: "governing body", frame: "governing-bodies-list", eyebrow: "Governance",
       lede: "The councils, legislatures, courts and offices that make and carry out laws, and the laws of theirs on Ascent.",
       trail: @parent ? [ [ "Governing bodies", governing_bodies_path ] ] : [ [ "Governance types", governance_types_path ] ],
-      clear_path: list_path, actions: (method(:new_body_link) if allowed_to?(:new?, GoverningBody)), filters: method(:filter_form)) { body_row(it) }
+      clear_path: list_path, actions: (method(:new_body_link) if scaffold_new_resource_visible?(GoverningBody)), filters: method(:filter_form)) { body_row(it) }
   end
 
   private

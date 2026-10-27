@@ -12,7 +12,7 @@ class Views::Offices::IndexView < Views::ApplicationView
     IndexPage(title: "Offices", records: @offices, pagy: @pagy, noun: "office", frame: "offices-list", eyebrow: "Seats",
       lede: "Every seat Ascent knows of, from governor to school board. Search for a title or a place, or pick a state.",
       trail: [ [ "Elections", elections_path ] ], clear_path: offices_path,
-      actions: (method(:new_office_link) if allowed_to?(:new?, Office)), filters: method(:filter_bar)) { office_row(it) }
+      actions: (method(:new_office_link) if scaffold_new_resource_visible?(Office)), filters: method(:filter_bar)) { office_row(it) }
   end
 
   private

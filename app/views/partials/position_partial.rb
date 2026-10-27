@@ -1,41 +1,22 @@
+# frozen_string_literal: true
+
+# A position's page body: its branch and term, and the offices that hold it.
 class Views::Partials::PositionPartial < Views::ApplicationView
-  def initialize(position:)
-    @position = position
-  end
+  OFFICE_LIMIT = 12
 
-  def view_template(&)
-    div(id: dom_id(@position), class: "position-partial") do
-      # Header with title and executive indicator
-      div(class: "partial-header") do
-        h3(class: "partial-title") { @position.title }
-        div(class: "header-indicators") do
-          if @position.branch.present?
-            span(class: "status-indicator status-#{@position.branch}") { @position.branch.titleize }
-          end
-        end
-      end
+  prop :position, Position
 
-      # Main content with improved layout
-      div(class: "partial-content") do
-        # Description with proper typography
-        div(class: "content-section") do
-          div(class: "content-description") { simple_format(@position.description) }
-        end
-
-        # Term information
-        div(class: "info-grid") do
-          div(class: "info-item") do
-            span(class: "info-label") { "Term Length" }
-            span(class: "info-value") { "#{@position.term_length_years} years" }
-          end
-        end
-      end
-
-      expandable(@position, :offices) do |offices|
-        div(class: "expandable-grid") do
-          offices.each { OfficePartial(office: it) }
-        end
+  def view_template
+    section(class: "place-section") do
+      section_heading("About the position")
+      p(class: "card-text") { @position.description } if @position.description.present?
+      dl(class: "place-facts-list") do
+        FactRow(label: "Branch") { @position.branch.humanize } if @position.branch
+        FactRow(label: "Term") { pluralize(@position.term_length_years, "year") } if @position.term_length_years
       end
     end
+    offices = @position.offices.includes(jurisdiction: :jurisdictionable)
+    RelatedList(heading: "Offices", records: offices.limit(OFFICE_LIMIT).to_a, total: offices.count, see_all: offices_path(q: @position.title),
+      noun: "offices") { |office| ListRow(record: office, title: office.name, meta: office.seat_label) }
   end
 end

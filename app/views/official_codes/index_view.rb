@@ -11,7 +11,7 @@ class Views::OfficialCodes::IndexView < Views::ApplicationView
     IndexPage(title: @parent ? "Code for #{@parent.title}" : "Official codes", records: @official_codes, pagy: @pagy, noun: "official code",
       frame: "official-codes-list", eyebrow: "Governance", lede: "The sections of code that carry laws out, with how they are enforced.",
       trail: [ [ "Policies", policies_path ], *([ [ @parent.title, @parent ] ] if @parent) ], clear_path: list_path,
-      actions: (method(:new_code_link) if allowed_to?(:new?, OfficialCode)), filters: method(:filter_form)) { code_row(it) }
+      actions: (method(:new_code_link) if scaffold_new_resource_visible?(OfficialCode)), filters: method(:filter_form)) { code_row(it) }
   end
 
   private

@@ -2,7 +2,7 @@ class VotersController < ApplicationController
   before_action :set_voter, only: %i[ show edit update destroy ]
 
   def index
-    voters_scope = Voter.with_voting_activity
+    voters_scope = Voter.order(:last_name, :first_name, :id)
     @pagy, @voters = pagy(voters_scope)
     render Views::Voters::IndexView.new(voters: @voters, pagy: @pagy)
   end

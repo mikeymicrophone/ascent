@@ -19,7 +19,7 @@ class Views::Races::IndexView < Views::ApplicationView
 
   def view_template
     IndexPage(title: title, records: @races, pagy: @pagy, noun: "race", frame: "races-list", eyebrow: "Races", lede: lede,
-      trail: trail, clear_path: races_path(@scope), actions: (method(:new_race_link) if allowed_to?(:new?, Race)),
+      trail: trail, clear_path: races_path(@scope), actions: (method(:new_race_link) if scaffold_new_resource_visible?(Race)),
       tabs: method(:status_tabs), filters: method(:filter_bar)) { race_row(it) }
   end
 

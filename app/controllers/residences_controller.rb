@@ -2,7 +2,7 @@ class ResidencesController < ApplicationController
   before_action :set_residence, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @residences = pagy(Residence.all)
+    @pagy, @residences = pagy(Residence.includes(:voter, jurisdiction: :jurisdictionable).order(registered_at: :desc))
     render Views::Residences::IndexView.new(residences: @residences, pagy: @pagy)
   end
 

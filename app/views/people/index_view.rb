@@ -12,7 +12,7 @@ class Views::People::IndexView < Views::ApplicationView
     IndexPage(title: "People", records: @people, pagy: @pagy, noun: "person", frame: "people-list", eyebrow: "Candidates",
       lede: "Everyone who has stood for an office on Ascent, by surname. Search for a name, or pick a state.",
       trail: [ [ "Elections", elections_path ] ], clear_path: people_path,
-      actions: (method(:new_person_link) if allowed_to?(:new?, Person)), filters: method(:filter_form)) { person_row(it) }
+      actions: (method(:new_person_link) if scaffold_new_resource_visible?(Person)), filters: method(:filter_form)) { person_row(it) }
   end
 
   private

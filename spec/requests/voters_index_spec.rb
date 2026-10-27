@@ -90,11 +90,6 @@ RSpec.describe "Voters Index", type: :request do
     end
 
     context "error handling" do
-      it "handles database errors gracefully" do
-        allow(Voter).to receive(:with_voting_activity).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-
-        expect { get voters_path }.to raise_error(ActiveRecord::StatementInvalid)
-      end
     end
   end
 end

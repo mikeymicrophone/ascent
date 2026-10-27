@@ -12,7 +12,7 @@ class Views::Municipalities::IndexView < Views::ApplicationView
   def view_template
     IndexPage(title: title, records: @municipalities, pagy: @pagy, noun: "municipality", frame: "municipalities-list", eyebrow: "Places",
       lede: "Find your city or town to see what is on its ballot.", trail: trail, clear_path: municipalities_path(@filters.slice("county_id")),
-      actions: (method(:new_municipality_link) if allowed_to?(:new?, Municipality)), filters: method(:filter_form)) { town_row(it) }
+      actions: (method(:new_municipality_link) if scaffold_new_resource_visible?(Municipality)), filters: method(:filter_form)) { town_row(it) }
   end
 
   private

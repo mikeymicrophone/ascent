@@ -11,7 +11,7 @@ class Views::Counties::IndexView < Views::ApplicationView
   def view_template
     IndexPage(title: "Counties", records: @counties, pagy: @pagy, noun: "county", frame: "counties-list", eyebrow: "Places",
       lede: "Every county and county-level region. Search for yours, or pick a state.", trail: [ [ "States", states_path ] ],
-      clear_path: counties_path, actions: (method(:new_county_link) if allowed_to?(:new?, County)), filters: method(:filter_form)) { county_row(it) }
+      clear_path: counties_path, actions: (method(:new_county_link) if scaffold_new_resource_visible?(County)), filters: method(:filter_form)) { county_row(it) }
   end
 
   private

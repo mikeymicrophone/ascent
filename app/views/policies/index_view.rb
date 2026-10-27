@@ -11,7 +11,7 @@ class Views::Policies::IndexView < Views::ApplicationView
     IndexPage(title: @parent ? "Laws of #{@parent.name}" : "Policies", records: @policies, pagy: @pagy, noun: "policy", frame: "policies-list",
       eyebrow: "Governance", lede: "Laws and policies that put an approach to an issue in place, and the bodies that made them.",
       trail: [ [ "Governing bodies", governing_bodies_path ], *([ [ @parent.name, @parent ] ] if @parent) ], clear_path: list_path,
-      actions: (method(:new_policy_link) if allowed_to?(:new?, Policy)), filters: method(:filter_form)) { policy_row(it) }
+      actions: (method(:new_policy_link) if scaffold_new_resource_visible?(Policy)), filters: method(:filter_form)) { policy_row(it) }
   end
 
   private

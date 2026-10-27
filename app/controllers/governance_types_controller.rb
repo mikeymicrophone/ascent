@@ -2,8 +2,8 @@ class GovernanceTypesController < ApplicationController
   before_action :set_governance_type, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @governance_types = pagy(GovernanceType.all)
-    render Views::GovernanceTypes::IndexView.new(governance_types: @governance_types, pagy: @pagy)
+    @pagy, @governance_types = pagy(GovernanceType.order(:name))
+    render Views::GovernanceTypes::IndexView.new(governance_types: @governance_types, pagy: @pagy, body_counts: GoverningBody.where(governance_type: @governance_types).group(:governance_type_id).count)
   end
 
   def show

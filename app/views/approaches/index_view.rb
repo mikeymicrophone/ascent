@@ -13,7 +13,7 @@ class Views::Approaches::IndexView < Views::ApplicationView
   def view_template
     IndexPage(title: @parent ? "Ways to address #{@parent.title}" : "Approaches", records: @approaches, pagy: @pagy, noun: "approach",
       frame: "approaches-list", eyebrow: "Policy", lede: "Ways to address an issue, with the candidates who take each one and the laws that put it in place.",
-      trail: trail, clear_path: list_path, actions: (method(:new_approach_link) if allowed_to?(:new?, Approach)),
+      trail: trail, clear_path: list_path, actions: (method(:new_approach_link) if scaffold_new_resource_visible?(Approach)),
       filters: method(:filter_form)) { approach_row(it) }
   end
 

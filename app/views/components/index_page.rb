@@ -14,6 +14,7 @@ class Views::Components::IndexPage < Views::ApplicationView
   prop :lede, _Nilable(String)
   prop :trail, Array, default: -> { [] }
   prop :clear_path, _Nilable(String)
+  prop :empty_title, _Nilable(String)
   prop :empty_text, _Nilable(String)
   prop :actions, _Callable?
   prop :tabs, _Callable?
@@ -44,7 +45,7 @@ class Views::Components::IndexPage < Views::ApplicationView
   def empty_state
     section(class: "index-empty") do
       span(class: "index-empty-icon") { icon(:search_x) }
-      h2(class: "card-title") { "No #{@noun.pluralize} match" }
+      h2(class: "card-title") { @empty_title || "No #{@noun.pluralize} match" }
       p(class: "card-text") { @empty_text || "Try a different search or fewer filters." }
       PillLink(label: "Clear filters", path: @clear_path, variant: "outline") if @clear_path
     end

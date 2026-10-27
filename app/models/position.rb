@@ -1,5 +1,6 @@
 class Position < ApplicationRecord
   include GovernmentBranch
+  include Titled
 
   # The position of every nomination office: a place on a general ballot that a primary decides.
   NOMINEE_TITLE = "Nominee".freeze

@@ -10,7 +10,7 @@ class Views::Topics::IndexView < Views::ApplicationView
   def view_template
     IndexPage(title: "Topics", records: @topics, pagy: @pagy, noun: "topic", frame: "topics-list", eyebrow: "Policy",
       lede: "Start from a topic, find an issue within it, then the approaches to it: who takes each one, and where it is already law.",
-      actions: (method(:new_topic_link) if allowed_to?(:new?, Topic)), aside: method(:path)) { topic_row(it) }
+      actions: (method(:new_topic_link) if scaffold_new_resource_visible?(Topic)), aside: method(:path)) { topic_row(it) }
   end
 
   private

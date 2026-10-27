@@ -28,196 +28,11 @@
   max-width: none;
 }
 
-/* Expandable sections */
-.expandable-section {
-  @apply block;
-}
-
 .expandable-header {
   @apply flex items-center justify-between w-full;
 }
 
-.expandable-title {
-  @apply flex items-center;
-}
-
-.expandable-icon {
-  @apply flex-shrink-0;
-}
-
 .expandable-content {
-  @apply block;
-}
-
-/* Cities preview */
-.municipalities-preview {
-  @apply block;
-}
-
-.municipality-preview-item {
-  @apply block;
-}
-
-.municipalities-view-all {
-  @apply block;
-}
-
-.filter-info {
-  @apply block;
-}
-
-/* Offices preview */
-.offices-preview {
-  @apply block;
-}
-
-.office-preview-item {
-  @apply flex items-center;
-}
-
-.office-position {
-  @apply inline;
-}
-
-.offices-view-all {
-  @apply block;
-}
-
-/* Elections preview */
-.elections-preview {
-  @apply block;
-}
-
-.election-preview-item {
-  @apply block;
-}
-
-.election-status {
-  @apply flex items-center;
-}
-
-.status-indicator {
-  @apply inline-flex items-center;
-}
-
-.election-date {
-  @apply inline;
-}
-
-.elections-view-all {
-  @apply block;
-}
-
-/* Candidates preview */
-.candidates-preview {
-  @apply block;
-}
-
-.candidate-preview-item {
-  @apply flex items-center;
-}
-
-.candidate-party {
-  @apply inline;
-}
-
-.candidates-view-all {
-  @apply block;
-}
-
-/* Results preview */
-.results-preview {
-  @apply block;
-}
-
-.results-summary {
-  @apply block;
-}
-
-.results-title {
-  @apply block;
-}
-
-.result-preview-item {
-  @apply flex items-center;
-}
-
-.result-rank {
-  @apply inline-flex;
-}
-
-.result-votes {
-  @apply inline;
-}
-
-.results-view-all {
-  @apply block;
-}
-
-.no-results,
-.results-placeholder {
-  @apply block;
-}
-
-/* Candidacies preview */
-.candidacies-preview {
-  @apply block;
-}
-
-.candidacy-preview-item {
-  @apply block;
-}
-
-.candidacy-header {
-  @apply flex items-center;
-}
-
-.candidacy-office {
-  @apply inline;
-}
-
-.candidacy-details {
-  @apply flex items-center;
-}
-
-.candidacy-party {
-  @apply inline;
-}
-
-.candidacies-view-all {
-  @apply block;
-}
-
-/* Voting activity preview */
-.voting-activity-preview {
-  @apply block;
-}
-
-.voting-activity-item {
-  @apply block;
-}
-
-.voting-activity-header {
-  @apply flex items-center;
-}
-
-.voting-office {
-  @apply inline;
-}
-
-.voting-activity-details {
-  @apply flex items-center;
-}
-
-.voting-participation {
-  @apply inline;
-}
-
-.voting-baseline {
-  @apply inline;
-}
-
-.voting-activity-view-all {
   @apply block;
 }
 
@@ -237,60 +52,13 @@ select {
   @apply block w-full;
 }
 
-/* Office holder layout */
-.current-holder-section {
-  @apply block;
-}
-
-.current-holder-info {
-  @apply flex items-center;
-}
-
-.current-holder-details {
-  @apply inline;
-}
-
 /* Election timeline layout */
 .election-timeline {
   @apply block;
 }
 
-.election-timeline-item {
-  @apply block;
-}
-
-.election-header {
-  @apply block;
-}
-
-.election-main-info {
-  @apply block;
-}
-
 .election-meta {
   @apply flex items-center;
-}
-
-.election-schedule,
-.election-results {
-  @apply block;
-}
-
-.results-list {
-  @apply block;
-}
-
-.result-item {
-  @apply flex items-center;
-}
-
-.more-results {
-  @apply block;
-}
-
-/* Voter stats layout */
-.turnout-stats {
-  @apply block;
 }
 
 .stats-grid {
@@ -309,23 +77,9 @@ select {
   @apply block;
 }
 
-/* Enhanced hierarchical navigation layout - corner to corner */
-.hierarchical-navigation {
-  @apply block w-full;
-  /* Corner-to-corner styling */
-  margin-left: -1rem;
-  margin-right: -1rem;
-  @apply px-4;
-}
-
 .breadcrumb-chain {
   @apply flex items-center justify-between flex-wrap;
   /* Spread breadcrumbs across full width */
-}
-
-.breadcrumb-item {
-  @apply flex items-center flex-col md:flex-row;
-  /* Stack on mobile, spread on desktop */
 }
 
 .breadcrumb-link,
@@ -336,156 +90,6 @@ select {
 .breadcrumb-separator {
   @apply inline-block mx-2 text-lg;
   /* More prominent separators */
-}
-
-.quick-stats {
-  @apply mt-2 md:mt-0 md:ml-4;
-  /* Position stats to the right on larger screens */
-}
-
-.stats-row {
-  @apply flex items-center justify-start md:justify-end flex-wrap gap-3;
-  /* Spread stats across available space */
-}
-
-.quick-stats .stat-item {
-  @apply flex items-center px-3 py-1 rounded-full;
-  /* More distinct stat items */
-  background-color: var(--quick-stats-bg);
-  border: 1px solid var(--quick-stats-border);
-}
-
-.quick-stats .stat-value,
-.quick-stats .stat-label {
-  @apply inline;
-}
-
-/* Drill down section layout */
-.drill-down-content {
-  @apply block;
-}
-
-.children-preview {
-  @apply block;
-}
-
-.child-item {
-  @apply flex items-center;
-}
-
-.child-name {
-  @apply inline;
-}
-
-.children-view-all {
-  @apply block;
-}
-
-/* Geographic summary layout */
-.geographic-summary {
-  @apply block;
-}
-
-.summary-grid {
-  @apply grid;
-}
-
-/* Enhanced partial layout system */
-.partial-header {
-  @apply flex items-start justify-between;
-}
-
-.partial-title {
-  @apply flex-1;
-}
-
-.header-indicators {
-  @apply flex items-center gap-2 flex-wrap;
-}
-
-.partial-content {
-  @apply space-y-4;
-}
-
-.navigation-section {
-  @apply my-4;
-}
-
-.content-section {
-  @apply block;
-}
-
-/* Information grid layout */
-.info-grid {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
-}
-
-.info-item {
-  @apply flex flex-col space-y-1;
-}
-
-.info-label {
-  @apply text-sm font-medium;
-}
-
-.info-value {
-  @apply text-base;
-}
-
-/* Enhanced expandable sections with splay layout */
-.expandable-sections {
-  @apply space-y-6;
-}
-
-.election-vote-action {
-  @apply flex justify-end;
-}
-
-.expandable-grid {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
-  /* Splay out items from left to right with staggered spacing */
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-/* Progressive stagger effect for items splaying left-to-right */
-.expandable-grid > *:nth-child(1) {
-  @apply md:col-start-1;
-}
-
-.expandable-grid > *:nth-child(2) {
-  @apply md:col-start-2;
-}
-
-.expandable-grid > *:nth-child(3) {
-  @apply lg:col-start-3;
-}
-
-.expandable-grid > *:nth-child(4) {
-  @apply xl:col-start-4;
-}
-
-/* Enhanced splay effect for larger screens */
-@media (min-width: 1024px) {
-  .expandable-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .expandable-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-}
-
-/* Results container layout */
-.results-container {
-  @apply space-y-3;
-}
-
-.candidate-preview-item {
-  @apply flex items-center space-x-2;
 }
 
 /* Action bar layout */
@@ -556,20 +160,6 @@ select {
 .resource-title-link .resource-action-icon {
   display: inline-block;
   vertical-align: -0.1em;
-}
-
-.race-partial .partial-header {
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-}
-
-.race-partial .partial-title {
-  flex-basis: 15rem;
-  min-width: 0;
-}
-
-.resource-list-actions {
-  margin-block: 0.75rem 1rem;
 }
 
 .oauth-sign-in {

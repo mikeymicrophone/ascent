@@ -15,7 +15,7 @@ class Views::Candidacies::IndexView < Views::ApplicationView
     IndexPage(title: "Candidacies", records: @candidacies, pagy: @pagy, noun: "candidacy", frame: "candidacies-list", eyebrow: "Candidates",
       lede: "Each time someone has stood for a seat, latest election first. Search for a candidate by name.",
       trail: [ [ "Elections", elections_path ] ], clear_path: candidacies_path(@scope),
-      actions: (method(:new_candidacy_link) if allowed_to?(:new?, Candidacy)), filters: method(:filter_form)) { candidacy_row(it) }
+      actions: (method(:new_candidacy_link) if scaffold_new_resource_visible?(Candidacy)), filters: method(:filter_form)) { candidacy_row(it) }
   end
 
   private

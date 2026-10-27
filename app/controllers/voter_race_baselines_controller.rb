@@ -2,7 +2,7 @@ class VoterRaceBaselinesController < ApplicationController
   before_action :set_voter_race_baseline, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @voter_race_baselines = pagy(VoterRaceBaseline.all)
+    @pagy, @voter_race_baselines = pagy(VoterRaceBaseline.includes(:voter, race: [ { election: :year }, { office: [ :position, { jurisdiction: :jurisdictionable } ] } ]).order(created_at: :desc))
     render Views::VoterRaceBaselines::IndexView.new(voter_race_baselines: @voter_race_baselines, pagy: @pagy)
   end
 

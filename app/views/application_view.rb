@@ -50,7 +50,9 @@ class Views::ApplicationView < Phlex::HTML
     race: :vote, election: :calendar, candidacy: :badge_check, person: :user_round,
     office: :landmark, position: :briefcase, country: :globe, state: :map, county: :map_pinned,
     municipality: :building_2, district: :layout_grid, topic: :tag, issue: :circle_question_mark,
-    approach: :route, stance: :quote, governing_body: :columns_3, policy: :scroll_text, official_code: :file_text
+    approach: :route, stance: :quote, governing_body: :columns_3, policy: :scroll_text, official_code: :file_text,
+    year: :calendar_range, governance_type: :network, area_of_concern: :target, voter: :user, residence: :house, rating: :gauge,
+    voter_race_baseline: :ruler_dimension_line
   }.freeze
 
   def entity_icon(record_or_model)
@@ -125,36 +127,6 @@ class Views::ApplicationView < Phlex::HTML
 
   def jurisdiction_link(jurisdiction)
     link_to jurisdiction.name, jurisdiction.jurisdictionable, class: "link jurisdiction"
-  end
-
-  def expandable(context, collection_or_symbol, title: nil, &block)
-    # Handle array context (future expansion for complex where clauses)
-    if context.is_a?(Array)
-      raise NotImplementedError, "Array context not implemented yet - for future stances filtering by topic AND state"
-    end
-
-    # Determine the collection
-    if collection_or_symbol.is_a?(Symbol)
-      # Fetch collection from context object using symbol
-      if context.nil?
-        raise ArgumentError, "Context cannot be nil when using symbol for collection"
-      end
-      collection = context.send(collection_or_symbol)
-      section_title = title || collection_or_symbol.to_s.humanize
-    else
-      # Use provided collection directly
-      collection = collection_or_symbol
-      section_title = title || collection.first&.class&.name&.pluralize || "Items"
-    end
-
-    return unless collection.respond_to?(:any?) && collection.any?
-
-    ExpandableSection(
-      title: section_title,
-      count: collection.count
-    ) do
-      yield(collection) if block
-    end
   end
 
   # All views that inherit from this have access to methods on their namespace module, including Kits

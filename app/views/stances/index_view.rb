@@ -11,7 +11,7 @@ class Views::Stances::IndexView < Views::ApplicationView
   def view_template
     IndexPage(title: "Stances", records: @stances, pagy: @pagy, noun: "stance", frame: "stances-list", eyebrow: "Policy",
       lede: "Where candidates stand: each stance ties a candidate to an approach on an issue, with the evidence for it.",
-      trail: [ [ "Topics", topics_path ] ], clear_path: stances_path, actions: (method(:new_stance_link) if allowed_to?(:new?, Stance)),
+      trail: [ [ "Topics", topics_path ] ], clear_path: stances_path, actions: (method(:new_stance_link) if scaffold_new_resource_visible?(Stance)),
       filters: method(:filter_form)) { StanceRow(stance: it) }
   end
 

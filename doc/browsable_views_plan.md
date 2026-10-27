@@ -97,3 +97,15 @@ Upgrade `ResourceIndex` and `ResourceShow` themselves onto the kit: the record's
 4. Phase 0 items 8–9 (tokens, motion) and phase 4 as a sweep at the end.
 
 Before starting: the uncommitted mountain CSS and `candidate_column.rb` changes in the working tree belong to other work and should be committed or set aside first.
+
+## Status, end of October 27
+
+All five phases are done, one commit each on `voting-flow`.
+
+- **Phase 0**: the kit (`PageHeader`, `ListRow`, `RelatedList`, `IndexPage`, `Pagination`, icons, motion), the races list and the race page.
+- **Phase 1**: candidacy, person and office pages and their lists, with `FilterForm`, `StanceList` and `OfficialChannels`.
+- **Phase 2**: state, county, district and country pages through `Views::PlaceSections`, which the municipality page shares, and their lists.
+- **Phase 3**: the policy path (`PolicyPath`, `StanceRow`), and governing body, policy and official code pages.
+- **Phase 4**: `ResourceIndex` and `ResourceShow` rebuilt on the kit for the remaining reference data, the hierarchy and preview components and their CSS removed, status and entity colors on brand tokens, the election header on `PageHeader`, and stat tiles that count up.
+
+Left for later: a letter jump on the municipalities list, and the forms (`ResourceFormPage`) and Devise pages, which still use the older scaffold styles.

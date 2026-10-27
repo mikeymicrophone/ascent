@@ -9,7 +9,7 @@ class Views::Countries::IndexView < Views::ApplicationView
   def view_template
     IndexPage(title: "Countries", records: @countries, pagy: @pagy, noun: "country", frame: "countries-list", eyebrow: "Places",
       lede: "The countries Ascent covers. Each leads down through its states to the places where people vote.",
-      actions: (method(:new_country_link) if allowed_to?(:new?, Country))) { country_row(it) }
+      actions: (method(:new_country_link) if scaffold_new_resource_visible?(Country))) { country_row(it) }
   end
 
   private

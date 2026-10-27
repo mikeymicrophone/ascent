@@ -78,7 +78,9 @@
 }
 
 .race-status-repealed,
-.race-status-superseded {
+.race-status-superseded,
+.race-status-withdrawn,
+.race-status-disqualified {
   border-color: var(--brand-pebble);
   color: var(--brand-moss);
   text-decoration: line-through;
