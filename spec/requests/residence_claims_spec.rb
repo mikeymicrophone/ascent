@@ -42,6 +42,42 @@ RSpec.describe "Residence claims", type: :request do
     expect(response.body).to include("We couldn&#39;t place that", "Search for your city or town")
   end
 
+  describe "from a street address" do
+    let(:harbor_street) { CensusGeocoder::Match.new(latitude: 42.5, longitude: -75.5, matched_address: "12 HARBOR ST, PORT MERRITT, CL, 10001") }
+
+    it "finds where the address falls, shows how the Census read it, and sends back only places" do
+      allow(CensusGeocoder).to receive(:locate).with("12 Harbor St, Port Merritt").and_return(harbor_street)
+
+      post preview_residence_claim_path, params: { address: "12 Harbor St, Port Merritt" }
+
+      expect(response.body).to include("The Census matched 12 HARBOR ST, PORT MERRITT, CL, 10001, which falls in Port Merritt.", "Make this my residence")
+      expect(response.body).not_to include('name="address"', 'name="latitude"', 'name="longitude"')
+    end
+
+    it "keeps the address and the point out of the log" do
+      filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
+
+      expect(filter.filter("address" => "12 Harbor St", "latitude" => "42.5", "longitude" => "-75.5", "jurisdiction_id" => "7"))
+        .to eq("address" => "[FILTERED]", "latitude" => "[FILTERED]", "longitude" => "[FILTERED]", "jurisdiction_id" => "7")
+    end
+
+    it "says when the Census can't find the address" do
+      allow(CensusGeocoder).to receive(:locate).and_return(nil)
+
+      post preview_residence_claim_path, params: { address: "99999 Nowhere Lane" }
+
+      expect(response.body).to include("We couldn&#39;t find that address")
+    end
+
+    it "says when the Census lookup isn't answering" do
+      allow(CensusGeocoder).to receive(:locate).and_raise(CensusGeocoder::Unavailable, "timed out")
+
+      post preview_residence_claim_path, params: { address: "12 Harbor St, Port Merritt" }
+
+      expect(response.body).to include("The address lookup isn&#39;t answering right now")
+    end
+  end
+
   it "saves the residence and returns to the ballot" do
     post residence_claim_path, params: { latitude: "42.5", longitude: "-75.5" }
 

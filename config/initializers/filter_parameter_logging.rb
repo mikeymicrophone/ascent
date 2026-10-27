@@ -6,3 +6,6 @@
 Rails.application.config.filter_parameters += [
   :passw, :email, :secret, :token, :_key, :crypt, :salt, :certificate, :otp, :ssn, :cvv, :cvc
 ]
+
+# Where a voter stands or lives is used once to find their places and never kept, logs included.
+Rails.application.config.filter_parameters += [ /\Aaddress\z/, /\Alatitude\z/, /\Alongitude\z/ ]

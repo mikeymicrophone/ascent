@@ -35,7 +35,9 @@ class Views::ResidenceClaims::PreviewView < Views::ApplicationView
   end
 
   def lede
-    if @claim.from_location?
+    if @claim.from_address?
+      "The Census matched #{@claim.matched_address}, which falls in #{@claim.town.name}."
+    elsif @claim.from_location?
       "Your location falls in #{@claim.town.name}."
     else
       "You chose #{@claim.town.name}."

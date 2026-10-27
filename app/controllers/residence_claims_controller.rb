@@ -1,5 +1,6 @@
 # A voter sets where they live: find the place by location or search, confirm what it puts on their
-# ballot, then save it. Locations arrive in a POST body and are never stored.
+# ballot, then save it. Locations and addresses arrive in a POST body, stay out of the logs, and are
+# never stored.
 class ResidenceClaimsController < ApplicationController
   PLACE_RESULTS = 12
 
@@ -29,7 +30,7 @@ class ResidenceClaimsController < ApplicationController
   end
 
   def claim_params
-    params.permit(:latitude, :longitude, :jurisdiction_id, :moving, :county_id, :congressional_district_id, :state_senate_district_id, :state_house_district_id)
+    params.permit(:address, :latitude, :longitude, :jurisdiction_id, :moving, :county_id, :congressional_district_id, :state_senate_district_id, :state_house_district_id)
       .to_h.symbolize_keys.compact_blank
   end
 

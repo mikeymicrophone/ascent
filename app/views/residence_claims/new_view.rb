@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Setting where you live: use this device's location, which finds your districts too, or search for
-# your city or town. Either way the next page shows what it puts on your ballot before anything saves.
+# Setting where you live: use this device's location or a street address, which find your districts
+# too, or search for your city or town. Either way the next page shows what it puts on your ballot before anything saves.
 # The preview answers a POST with a page rather than a redirect, so its forms skip Turbo.
 class Views::ResidenceClaims::NewView < Views::ApplicationView
   prop :query, String
@@ -22,6 +22,7 @@ class Views::ResidenceClaims::NewView < Views::ApplicationView
       end
       div(class: "claim-options") do
         location_option
+        address_option
         search_option
       end
       privacy_note
@@ -57,10 +58,25 @@ class Views::ResidenceClaims::NewView < Views::ApplicationView
     end
   end
 
+  def address_option
+    section(class: "form-card claim-option") do
+      h2(class: "card-title") { "Use my street address" }
+      p(class: "card-text") { "The U.S. Census Bureau's geocoder turns it into a point. We find your city and every district that covers it, then forget the address and the point." }
+      form_with(url: preview_residence_claim_path, class: "place-search", data: { turbo: false }) do
+        label(for: "claim-address", class: "place-search-label") { "Street address, city and state" }
+        div(class: "place-search-row") do
+          input(id: "claim-address", type: "text", name: "address", required: true, autocomplete: "street-address",
+            placeholder: "12 Harbor St, Ansonia, CT", class: "place-search-input")
+          button(type: "submit", class: "pill-button") { "Find my districts" }
+        end
+      end
+    end
+  end
+
   def search_option
     section(class: "form-card claim-option") do
       h2(class: "card-title") { "Search for your city or town" }
-      p(class: "card-text") { "Choosing a place finds its county and state. Districts need your location." }
+      p(class: "card-text") { "Choosing a place finds its county and state. Districts need your location or address." }
       form(action: new_residence_claim_path, method: "get", role: "search", class: "place-search") do
         label(for: "claim-search", class: "place-search-label") { "City, town or county" }
         div(class: "place-search-row") do
@@ -98,7 +114,7 @@ class Views::ResidenceClaims::NewView < Views::ApplicationView
       icon(:lock)
       p do
         strong { "Your location stays yours. " }
-        plain "We keep the places you live in, not where you stood when you set them. Only you see your residence."
+        plain "We keep the places you live in, not your address or where you stood when you set them. Only you see your residence."
       end
     end
   end

@@ -61,6 +61,27 @@ RSpec.describe ResidenceClaim do
     end
   end
 
+  describe "from a street address" do
+    it "places the address through the Census geocoder, then forgets it" do
+      allow(CensusGeocoder).to receive(:locate).with("12 Harbor St, Port Merritt")
+        .and_return(CensusGeocoder::Match.new(latitude: 42.5, longitude: -75.2, matched_address: "12 HARBOR ST, PORT MERRITT"))
+
+      claim = described_class.new(address: "12 Harbor St, Port Merritt", voter: newcomer)
+
+      expect(claim).to be_valid
+      expect(claim).to have_attributes(address: nil, matched_address: "12 HARBOR ST, PORT MERRITT", town: port_merritt)
+      expect(claim.areas).to include("county" => alder_county, "state_house" => assembly_53)
+    end
+
+    it "uses a location it is given rather than looking the address up" do
+      allow(CensusGeocoder).to receive(:locate)
+
+      described_class.new(address: "12 Harbor St", latitude: 42.5, longitude: -75.2, voter: newcomer)
+
+      expect(CensusGeocoder).not_to have_received(:locate)
+    end
+  end
+
   describe "from a searched town" do
     let(:claim) { described_class.new(jurisdiction_id: port_merritt.id, voter: newcomer) }
 

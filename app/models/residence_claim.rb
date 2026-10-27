@@ -3,7 +3,8 @@
 # several can't settle alone, and its House, state senate and state assembly districts.
 #
 # A location is used once, never kept: it finds the smallest town and the county and district of each
-# chamber whose boundaries cover it. A searched town fills in each area it lies wholly inside; where the
+# chamber whose boundaries cover it. A street address becomes a location through the Census geocoder
+# and is dropped as soon as it has one. A searched town fills in each area it lies wholly inside; where the
 # town is split, the voter picks from the areas it overlaps, or from the state's when no boundaries are
 # mapped.
 class ResidenceClaim
@@ -14,6 +15,7 @@ class ResidenceClaim
   AREA_LABELS = { "county" => "County", "congressional" => "U.S. House district", "state_senate" => "State senate district",
                   "state_house" => "State assembly district" }.freeze
 
+  attribute :address, :string
   attribute :latitude, :float
   attribute :longitude, :float
   attribute :jurisdiction_id, :integer
@@ -27,6 +29,8 @@ class ResidenceClaim
   # Whether the voter moved here, ending the other places they live, or lives here as well.
   attribute :moving, :boolean, default: true
   attr_accessor :voter
+  # The address as the Census matched it, for the voter to check; never saved.
+  attr_reader :matched_address
 
   validates :latitude, numericality: { in: -90..90 }, if: :from_location?
   validates :longitude, numericality: { in: -180..180 }, if: :from_location?
@@ -34,8 +38,17 @@ class ResidenceClaim
   validate :town_found
   validate :dates_in_order
 
+  def initialize(...)
+    super
+    locate_address if address.present? && !from_location?
+  end
+
   def from_location?
     latitude.present? && longitude.present?
+  end
+
+  def from_address?
+    matched_address.present?
   end
 
   # The jurisdictions whose boundaries cover the location, today.
@@ -130,8 +143,27 @@ class ResidenceClaim
     state ? of_kind(kind).where(parent: state).includes(:jurisdictionable).sort_by { it.name.to_s }.to_a : []
   end
 
+  # Turns the address into a point, then forgets the address.
+  def locate_address
+    match = CensusGeocoder.locate(address)
+    @address_problem = :unmatched unless match
+    self.latitude, self.longitude, @matched_address = match&.latitude, match&.longitude, match&.matched_address
+  rescue CensusGeocoder::Unavailable
+    @address_problem = :unavailable
+  ensure
+    self.address = nil
+  end
+
   def town_found
-    errors.add(:base, "We couldn't place that location yet. Search for your city or town instead.") unless town
+    errors.add(:base, unplaced_message) unless town
+  end
+
+  def unplaced_message
+    case @address_problem
+    when :unmatched then "We couldn't find that address. Check the street number, city and state, or search for your city or town instead."
+    when :unavailable then "The address lookup isn't answering right now. Use your location or search for your city or town instead."
+    else "We couldn't place that location yet. Search for your city or town instead."
+    end
   end
 
   def dates_in_order
