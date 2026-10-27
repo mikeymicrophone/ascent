@@ -1,0 +1,25 @@
+.stance-group-title {
+  @apply font-['Martian_Mono'] text-xs font-semibold uppercase tracking-[0.08em];
+}
+
+.communication-link {
+  @apply text-[15px] font-semibold;
+}
+
+.communication-meta,
+.privacy-line {
+  @apply text-sm;
+}
+
+.candidacy-ratings .stat-value {
+  @apply text-xl sm:text-3xl leading-none;
+  font-variant-numeric: tabular-nums;
+}
+
+.candidacy-ratings .stat-label {
+  @apply font-['Martian_Mono'] text-xs font-semibold tracking-[0.06em];
+}
+
+.row-badge-priority {
+  text-transform: uppercase;
+}

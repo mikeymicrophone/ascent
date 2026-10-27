@@ -551,23 +551,6 @@ select:focus {
   margin: 0;
 }
 
-.scaffold .race-filters {
-  margin-block: 1.5rem;
-  padding: 1rem;
-  border: 1px solid var(--brand-mist);
-  border-radius: 0.75rem;
-}
-
-.scaffold .race-filters input,
-.scaffold .race-filters select {
-  min-height: 2.75rem;
-  margin-top: 0.375rem;
-}
-
-.scaffold .race-filters .race-filter-summary {
-  margin: 0 0 0 auto;
-}
-
 /* A candidacy's rating totals */
 .candidacy-ratings {
   @apply mt-4;

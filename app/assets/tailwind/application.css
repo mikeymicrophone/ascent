@@ -16,6 +16,7 @@
 @import "./layout/elections_index.css";
 @import "./layout/kit.css";
 @import "./layout/race.css";
+@import "./layout/record.css";
 
 /* Layer 2: Spacing/Size */
 @import "./sizing/scaffold.css";
@@ -29,6 +30,7 @@
 @import "./sizing/elections_index.css";
 @import "./sizing/kit.css";
 @import "./sizing/race.css";
+@import "./sizing/record.css";
 
 /* Layer 3: Typography & Colors */
 @import "./typography/fonts.css";
@@ -43,6 +45,7 @@
 @import "./typography/elections_index.css";
 @import "./typography/kit.css";
 @import "./typography/race.css";
+@import "./typography/record.css";
 
 /* Layer 3: Colors */
 @import "./colors/main.css";
@@ -57,6 +60,7 @@
 @import "./colors/elections_index.css";
 @import "./colors/kit.css";
 @import "./colors/race.css";
+@import "./colors/record.css";
 
 /* Layer 4: State */
 @import "./situation/scaffold.css";

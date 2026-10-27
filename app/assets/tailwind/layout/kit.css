@@ -17,19 +17,19 @@
   @apply flex flex-wrap items-center;
 }
 
-.race-filters {
+.filter-form {
   @apply flex flex-wrap items-center flex-[1_1_640px] min-w-0;
 }
 
-.race-filter {
+.filter-field {
   @apply flex flex-col;
 }
 
-.race-filter-search {
+.filter-field-search {
   @apply flex-[1_1_260px] min-w-0;
 }
 
-.race-filter-actions {
+.filter-actions {
   @apply flex items-center;
 }
 
@@ -124,11 +124,11 @@
     @apply flex-col items-stretch;
   }
 
-  .race-filter {
+  .filter-field {
     @apply flex-[1_1_140px];
   }
 
-  .race-filter-search {
+  .filter-field-search {
     @apply basis-full;
   }
 

@@ -2,9 +2,12 @@ class PeopleController < ApplicationController
   before_action :set_person, only: %i[ show edit update destroy ]
 
   def index
-    people_scope = Person.with_candidacy_details.visible_to(current_voter)
+    people_scope = Person.includes(candidacies: [ :ballot_lines, { race: [ :election, { office: [ :position, { jurisdiction: :jurisdictionable } ] } ] } ])
+      .visible_to(current_voter).order(:last_name, :first_name, :id)
+    people_scope = people_scope.named_like(filters["q"]) if filters["q"].present?
+    people_scope = people_scope.ran_in(Race.in_state(State.includes(:jurisdiction).find(filters["state_id"]))) if filters["state_id"].present?
     @pagy, @people = pagy(people_scope)
-    render Views::People::IndexView.new(people: @people, pagy: @pagy)
+    render Views::People::IndexView.new(people: @people, pagy: @pagy, filters: filters, states: State.order(:name))
   end
 
   def show
@@ -44,6 +47,10 @@ class PeopleController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q, :state_id).to_h
+  end
 
   def set_person
     @person = Person.with_candidacy_details.find(params[:id])

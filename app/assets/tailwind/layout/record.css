@@ -1,0 +1,17 @@
+/* Record pages for people, candidacies and offices: stances by topic, communications, rating totals. */
+
+.stance-groups,
+.stance-group,
+.communication-list,
+.communication-item {
+  @apply flex flex-col;
+}
+
+.stance-group-title,
+.privacy-line {
+  @apply flex items-center;
+}
+
+.candidacy-ratings .stat-item {
+  @apply flex flex-col items-start;
+}

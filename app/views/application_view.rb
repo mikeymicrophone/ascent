@@ -61,8 +61,23 @@ class Views::ApplicationView < Phlex::HTML
   def trail_for(record)
     case record
     when Race then [ [ "Elections", elections_path ], [ record.election.name, record.election ] ]
+    when Candidacy then trail_for(record.race) + [ [ record.race.office.position.title, record.race ] ]
+    when Office then [ [ "Offices", offices_path ], [ record.jurisdiction.name, record.jurisdiction.jurisdictionable ] ]
     when Hierarchicable then record.build_hierarchy_chain[0...-1].map { [ it.name, it ] }
     else [ [ record.model_name.human.pluralize, polymorphic_path(record.class) ] ]
+    end
+  end
+
+  # A race still to be decided: open for mountains, and its election day not yet past.
+  def ahead?(race)
+    race.election.open_to_rating? && race.election.election_date >= Date.current
+  end
+
+  # A section's heading, with a short note beside it such as a count.
+  def section_heading(title, subtitle = nil)
+    div(class: "place-section-heading") do
+      h2(class: "card-title") { title }
+      span(class: "place-section-subtitle") { subtitle } if subtitle
     end
   end
 

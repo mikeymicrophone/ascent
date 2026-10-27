@@ -211,7 +211,7 @@ class Views::Races::ShowView < Views::ApplicationView
     holder = office.current_office_holder
     return unless holder
 
-    FactRow(label: "Held by") { link_to holder.person.full_name, holder.person, class: "text-link" }
+    FactRow(label: "Approval winner, last race") { link_to holder.person.full_name, holder.person, class: "text-link" }
   end
 
   def election_card
@@ -257,13 +257,6 @@ class Views::Races::ShowView < Views::ApplicationView
     button_to simulate_mountain_path(@race), method: :post, class: "resource-action resource-action-simulate", form_class: "resource-action-form" do
       Ui::ActionIcon(kind: :simulate)
       span { "Simulate data" }
-    end
-  end
-
-  def section_heading(title, subtitle)
-    div(class: "place-section-heading") do
-      h2(class: "card-title") { title }
-      span(class: "place-section-subtitle") { subtitle } if subtitle
     end
   end
 end

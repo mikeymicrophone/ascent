@@ -2,11 +2,15 @@ class CandidaciesController < ApplicationController
   before_action :set_candidacy, only: %i[ show edit update destroy ]
 
   def index
-    candidacies_scope = Candidacy.with_election_context.visible_to(current_voter)
+    candidacies_scope = Candidacy.includes(:person, :ballot_lines, race: [ :election, { office: [ :position, { jurisdiction: :jurisdictionable } ] } ])
+      .visible_to(current_voter).joins(race: :election).order("elections.election_date DESC", :id)
     candidacies_scope = candidacies_scope.where(person_id: params[:person_id]) if params[:person_id]
     candidacies_scope = candidacies_scope.where(race_id: params[:race_id]) if params[:race_id]
+    candidacies_scope = candidacies_scope.where(person_id: Person.named_like(filters["q"]).select(:id)) if filters["q"].present?
+    candidacies_scope = candidacies_scope.where(status: filters["status"]) if filters["status"].present?
     @pagy, @candidacies = pagy(candidacies_scope)
-    render Views::Candidacies::IndexView.new(candidacies: @candidacies, pagy: @pagy)
+    render Views::Candidacies::IndexView.new(candidacies: @candidacies, pagy: @pagy, filters: filters,
+      scope: params.permit(:person_id, :race_id).to_h, rating_counts: Rating.where(candidacy: @candidacies).group(:candidacy_id).count)
   end
 
   def show
@@ -47,8 +51,12 @@ class CandidaciesController < ApplicationController
 
   private
 
+  def filters
+    @filters ||= params.permit(:q, :status).to_h
+  end
+
   def set_candidacy
-    @candidacy = Candidacy.find(params[:id])
+    @candidacy = Candidacy.includes(:person, :ballot_lines, primary_candidacy: { office: :nominating_organization }, race: [ :election, { office: [ :position, { jurisdiction: :jurisdictionable } ] } ]).find(params[:id])
   end
 
   def candidacy_params

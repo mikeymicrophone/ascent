@@ -77,33 +77,13 @@ class Views::Races::IndexView < Views::ApplicationView
   end
 
   def filter_form
-    form_with url: races_path, method: :get, class: "race-filters", local: true, aria: { label: "Filter races" } do |form|
-      @scope.each { |key, value| form.hidden_field key, value: value }
-      form.hidden_field :status, value: @filters["status"] if @filters["status"].present?
-      form.hidden_field :near, value: "1" if @filters["near"]
-
-      div(class: "race-filter race-filter-search") do
-        form.label :q, "Search races", class: "visually-hidden"
-        form.search_field :q, value: @filters["q"], placeholder: "Office, election, candidate or place", class: "listing-search-input"
-      end
-      filter_select(form, :state_id, "State", @states.map { [ it.name, it.id ] }, "All states")
-      filter_select(form, :year, "Election year", @years, "All years")
-      filter_select(form, :kind, "Election kind", @kinds.map { [ it.humanize, it ] }, "All kinds")
-      div(class: "race-filter-actions") do
-        button(type: "submit", class: "pill-button") do
-          icon(:list_filter)
-          plain "Apply"
-        end
-        link_to "Clear", races_path(@scope), class: "pill-button pill-button-ghost"
-      end
-    end
-  end
-
-  def filter_select(form, field, label, options, blank)
-    div(class: "race-filter") do
-      form.label field, label, class: "visually-hidden"
-      form.select field, options, { include_blank: blank, selected: @filters[field.to_s] }, class: "race-filter-select"
-    end
+    FilterForm(url: races_path, label: "Filter races", placeholder: "Office, election, candidate or place", values: @filters,
+      clear_path: races_path(@scope), hidden: @scope.merge("status" => @filters["status"], "near" => @filters["near"]),
+      selects: [
+        [ :state_id, "State", @states.map { [ it.name, it.id ] }, "All states" ],
+        [ :year, "Election year", @years, "All years" ],
+        [ :kind, "Election kind", @kinds.map { [ it.humanize, it ] }, "All kinds" ]
+      ])
   end
 
   # The current filters with some changed, dropping the ones that are off.

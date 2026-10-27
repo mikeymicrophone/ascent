@@ -23,6 +23,14 @@ class Office < ApplicationRecord
   scope :with_elections_and_candidates, -> { includes(:position, races: :candidates) }
   scope :with_election_details, -> { includes(races: [ :candidacies, :election ]) }
 
+  # Offices whose position or place a search names.
+  scope :matching, ->(query) {
+    pattern = "%#{sanitize_sql_like(query.strip)}%"
+    where(position_id: Position.where("title ILIKE ?", pattern).select(:id))
+      .or(where(jurisdiction_id: Jurisdiction.named_like(query).select(:id)))
+  }
+  scope :in_state, ->(state) { state.jurisdiction ? where(jurisdiction_id: state.jurisdiction.self_and_descendants.select(:id)) : none }
+
   def name
     return "#{nominating_organization.name} nominee for #{nominee_for.name}" if nomination?
 

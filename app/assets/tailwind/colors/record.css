@@ -1,0 +1,23 @@
+.stance-group-title,
+.communication-meta,
+.privacy-line,
+.candidacy-ratings .stat-label {
+  color: var(--brand-slate);
+}
+
+.communication-item {
+  border-color: var(--brand-contour);
+}
+
+.candidacy-ratings .stat-item {
+  background-color: var(--brand-lichen);
+}
+
+.candidacy-ratings .stat-value {
+  color: var(--brand-basalt);
+}
+
+.row-badge-priority {
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}

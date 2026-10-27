@@ -83,7 +83,7 @@ RSpec.describe "Races Index", type: :request do
       expect(next_page["href"]).to include("status=active")
       expect(next_page["data-turbo-frame"]).to eq("races-list")
       expect(next_page["data-turbo-action"]).to eq("advance")
-      expect(page.css('.race-filters input[name="page"]')).to be_empty
+      expect(page.css('.filter-form input[name="page"]')).to be_empty
     end
 
     it "counts each status in its tab, across the other filters" do
@@ -121,7 +121,7 @@ RSpec.describe "Races Index", type: :request do
 
       page = Nokogiri::HTML(response.body)
       expect(page.at_css('input[name="office_id"]')["value"]).to eq(mayor_office.id.to_s)
-      expect(page.at_css('.race-filters a')["href"]).to eq(races_path(office_id: mayor_office.id))
+      expect(page.at_css('.filter-form a')["href"]).to eq(races_path(office_id: mayor_office.id))
       expect(response.body).not_to include(%(id="list_item_race_#{governor_race.id}"))
     end
   end

@@ -572,31 +572,6 @@ select {
   margin-block: 0.75rem 1rem;
 }
 
-.scaffold .race-filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
-  align-items: end;
-  gap: 1rem;
-}
-
-.scaffold .race-filters > div {
-  margin: 0;
-}
-
-.scaffold .race-filters .race-filter-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-@media (min-width: 64rem) {
-  .scaffold .race-filters {
-    grid-template-columns: minmax(16rem, 2fr) repeat(4, minmax(0, 1fr));
-  }
-}
-
 .oauth-sign-in {
   @apply my-4 flex;
 }

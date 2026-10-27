@@ -2,8 +2,13 @@ class OfficesController < ApplicationController
   before_action :set_office, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @offices = pagy(Office.with_elections_and_candidates.includes(jurisdiction: :jurisdictionable))
-    render Views::Offices::IndexView.new(offices: @offices, pagy: @pagy)
+    offices_scope = Office.preload(:position, jurisdiction: :jurisdictionable, races: [ :election, :candidacies ])
+      .joins(:position).order("positions.title", :id)
+    offices_scope = offices_scope.matching(filters["q"]) if filters["q"].present?
+    offices_scope = offices_scope.in_state(State.includes(:jurisdiction).find(filters["state_id"])) if filters["state_id"].present?
+    offices_scope = offices_scope.where(is_active: true) if filters["active"] == "1"
+    @pagy, @offices = pagy(offices_scope)
+    render Views::Offices::IndexView.new(offices: @offices, pagy: @pagy, filters: filters, states: State.order(:name))
   end
 
   def show
@@ -44,8 +49,12 @@ class OfficesController < ApplicationController
 
   private
 
+  def filters
+    @filters ||= params.permit(:q, :state_id, :active).to_h
+  end
+
   def set_office
-    @office = Office.with_elections_and_candidates.find(params[:id])
+    @office = Office.includes(:position, :governing_body, :chamber, jurisdiction: :jurisdictionable).find(params[:id])
   end
 
   def office_params

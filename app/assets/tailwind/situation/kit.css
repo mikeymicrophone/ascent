@@ -2,7 +2,7 @@
 .list-row-icon,
 .pagination-step,
 .pagination-page,
-.race-filter-select {
+.filter-select {
   @apply transition-colors;
 }
 
@@ -25,7 +25,7 @@
 
 .pagination-step:not(.is-disabled):hover,
 .pagination-page:not(.is-current):hover,
-.race-filter-select:hover {
+.filter-select:hover {
   background-color: var(--brand-contour);
 }
 
@@ -36,7 +36,7 @@
 .list-row-title:focus-visible,
 .pagination-step:focus-visible,
 .pagination-page:focus-visible,
-.race-filter-select:focus-visible {
+.filter-select:focus-visible {
   outline: 3px solid var(--brand-rope);
   outline-offset: 2px;
 }

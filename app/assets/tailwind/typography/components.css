@@ -322,17 +322,6 @@
   white-space: nowrap;
 }
 
-.scaffold .race-filters label {
-  font-family: 'Sora', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.scaffold .race-filters input,
-.scaffold .race-filters select {
-  font-size: 0.875rem;
-}
-
 /* A candidacy's rating totals */
 .candidacy-ratings-title {
   @apply font-['Bricolage_Grotesque'] text-sm font-semibold uppercase tracking-wide;

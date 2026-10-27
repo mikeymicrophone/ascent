@@ -492,10 +492,6 @@ select.error {
   text-underline-offset: 0.18em;
 }
 
-.race-filters {
-  background: var(--brand-paper);
-}
-
 /* A candidacy's rating totals */
 .candidacy-ratings-title {
   color: var(--info-label-color);

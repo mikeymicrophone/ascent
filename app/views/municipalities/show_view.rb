@@ -208,13 +208,6 @@ class Views::Municipalities::ShowView < Views::ApplicationView
     end
   end
 
-  def section_heading(title, subtitle)
-    div(class: "place-section-heading") do
-      h2(class: "card-title") { title }
-      span(class: "place-section-subtitle") { subtitle } if subtitle
-    end
-  end
-
   # Where the city sits, and the wards or districts within it.
   def where_it_is
     SideCard(heading: "Where it is") do

@@ -22,7 +22,7 @@
   @apply m-0;
 }
 
-.race-filter-select {
+.filter-select {
   @apply font-['Bricolage_Grotesque'] text-[15px] font-semibold;
 }
 
@@ -31,4 +31,9 @@
 .pagination-compact {
   @apply font-['Bricolage_Grotesque'] text-[15px] font-semibold no-underline;
   font-variant-numeric: tabular-nums;
+}
+
+.source-card .card-text {
+  @apply break-words;
+  overflow-wrap: anywhere;
 }

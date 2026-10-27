@@ -1,0 +1,43 @@
+.stance-groups {
+  @apply gap-5;
+}
+
+.stance-group {
+  @apply gap-2.5;
+}
+
+.stance-group-title {
+  @apply gap-2 m-0;
+}
+
+.stance-group-title .icon {
+  @apply w-4.5 h-4.5;
+}
+
+.communication-list {
+  @apply gap-3 m-0 p-0 list-none;
+}
+
+.communication-item {
+  @apply gap-0.5 pb-3 border-b last:border-b-0 last:pb-0;
+}
+
+.communication-link .icon {
+  @apply w-3.5 h-3.5;
+}
+
+.candidacy-ratings .stats-grid {
+  @apply gap-2 sm:gap-4 mt-0;
+}
+
+.candidacy-ratings .stat-item {
+  @apply gap-1 p-3 sm:p-4 rounded-2xl text-left min-w-0;
+}
+
+.privacy-line {
+  @apply gap-2 m-0;
+}
+
+.privacy-line .icon {
+  @apply w-4 h-4;
+}
