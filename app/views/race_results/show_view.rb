@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 # What a race's saved mountains add up to, for residents or for visitors: totals only, never named voters.
-# The approval tally sits beside the first-choice count the same mountains give. Charts come later;
-# for now the numbers are tables.
+# The approval tally, charted and then tabled, sits beside the first-choice count the same mountains give.
 class Views::RaceResults::ShowView < Views::ApplicationView
   GROUP_LABELS = { "resident" => "Residents", "visitor" => "Pretend voters" }.freeze
 
@@ -74,6 +73,7 @@ class Views::RaceResults::ShowView < Views::ApplicationView
   def tally
     section(class: "results-card results-tally") do
       h2(class: "card-title") { "Approval tally" }
+      approval_chart
       table(class: "results-table") do
         thead do
           tr do
@@ -95,6 +95,23 @@ class Views::RaceResults::ShowView < Views::ApplicationView
         end
       end
     end
+  end
+
+  def approval_chart
+    ranked = ranked_by :approval_shares
+    Chart(options: approval_chart_options(ranked), rows: ranked.size, modifier: "bars",
+      label: "Approval tally: percent of mountains approving each candidate")
+  end
+
+  def approval_chart_options(ranked)
+    {
+      grid: { left: 8, right: 64, top: 4, bottom: 4, containLabel: true },
+      xAxis: { type: "value", max: 100, show: false },
+      yAxis: { type: "category", inverse: true, axisLine: { show: false },
+               data: ranked.map { candidacies.fetch(it.first).person.full_name } },
+      series: [ { type: "bar", name: "Approved by", barMaxWidth: 26, data: ranked.map(&:last),
+                  label: { show: true, position: "right", formatter: "{c}%", fontWeight: 600 } } ]
+    }
   end
 
   def two_methods

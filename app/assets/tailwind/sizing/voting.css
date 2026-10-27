@@ -511,3 +511,12 @@ textarea.text-input {
 .claim-errors {
   @apply px-4 py-3 rounded-xl;
 }
+
+/* Charts: a bar chart grows a row per candidate. */
+.chart {
+  @apply w-full h-72;
+}
+
+.chart-bars {
+  height: calc(var(--chart-rows, 4) * 40px + 16px);
+}
