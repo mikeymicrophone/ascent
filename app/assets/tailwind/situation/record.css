@@ -1,0 +1,12 @@
+.policy-path-name {
+  @apply transition-colors;
+}
+
+a.policy-path-name:hover {
+  color: var(--brand-rope-deep);
+}
+
+a.policy-path-name:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
+}

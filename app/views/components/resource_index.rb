@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # The page around a list of records: heading, new link, one block per record, and the pager.
-#   ResourceIndex(collection: @issues, pagy: @pagy) { IssuePartial(issue: it) }
+#   ResourceIndex(collection: @years, pagy: @pagy) { YearPartial(year: it) }
 # A list filtered to one parent names it in the heading and links back to the full list:
 #   ResourceIndex(collection: @issues, parent: @topic) { ... }
 # A list can also set its own heading and details, and put controls beside each record's actions:

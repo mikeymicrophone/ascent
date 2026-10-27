@@ -14,6 +14,7 @@ class GoverningBody < ApplicationRecord
   validates :meeting_schedule, presence: true
 
   scope :active, -> { where(is_active: true) }
+  scope :named_like, ->(query) { where("governing_bodies.name ILIKE ?", "%#{sanitize_sql_like(query.strip)}%") }
   scope :inactive, -> { where(is_active: false) }
   scope :by_governance_type, ->(type_id) { where(governance_type_id: type_id) if type_id.present? }
   scope :by_jurisdiction_type, ->(type) { joins(:jurisdiction).where(jurisdictions: { jurisdictionable_type: type }) if type.present? }

@@ -16,7 +16,7 @@ class Views::Components::RelatedList < Views::ApplicationView
   def view_template(&row)
     return if @total.zero? && !@empty
 
-    section(class: "related-list", id: @id) do
+    section(class: "place-section related-list", id: @id) do
       div(class: "place-section-heading") do
         h2(class: "card-title") { @heading }
         span(class: "related-list-count") { delimited(@total) } if @total.positive?

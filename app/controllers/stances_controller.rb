@@ -3,8 +3,12 @@ class StancesController < ApplicationController
 
   # GET /stances or /stances.json
   def index
-    @pagy, @stances = pagy(Stance.includes(:issue, :approach, candidacy: :person).visible_to(current_voter))
-    render Views::Stances::IndexView.new(stances: @stances, pagy: @pagy)
+    stances = Stance.includes(:stance_evidences, approach: :issue, candidacy: [ :person, { race: { office: :position } } ]).visible_to(current_voter)
+      .joins(candidacy: :person).order("people.last_name", "people.first_name", :id)
+    stances = stances.where(candidacy_id: Candidacy.where(person_id: Person.named_like(filters["q"]).select(:id)).select(:id)) if filters["q"].present?
+    stances = stances.where(priority_level: filters["priority_level"]) if filters["priority_level"].present?
+    @pagy, @stances = pagy(stances)
+    render Views::Stances::IndexView.new(stances: @stances, pagy: @pagy, filters: filters)
   end
 
   # GET /stances/1 or /stances/1.json
@@ -62,6 +66,11 @@ class StancesController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q, :priority_level).to_h
+  end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_stance
       @stance = Stance.find(params.expect(:id))

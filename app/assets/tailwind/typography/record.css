@@ -23,3 +23,31 @@
 .row-badge-priority {
   text-transform: uppercase;
 }
+
+.policy-path-label {
+  @apply font-['Martian_Mono'] text-[10.5px] font-semibold uppercase tracking-[0.08em];
+}
+
+.policy-path-name {
+  @apply font-['Bricolage_Grotesque'] text-[15px] font-semibold leading-snug no-underline truncate;
+}
+
+.policy-path-hint {
+  @apply font-normal italic;
+}
+
+.issue-card-title {
+  @apply font-['Bricolage_Grotesque'] text-lg font-bold leading-snug;
+}
+
+.issue-card-approaches {
+  @apply text-sm;
+}
+
+.evidence-quote {
+  @apply text-[15px] italic leading-snug;
+}
+
+.code-text {
+  @apply font-['Martian_Mono'] text-[13px] leading-relaxed;
+}

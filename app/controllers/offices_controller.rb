@@ -7,6 +7,7 @@ class OfficesController < ApplicationController
     offices_scope = offices_scope.matching(filters["q"]) if filters["q"].present?
     offices_scope = offices_scope.in_state(State.includes(:jurisdiction).find(filters["state_id"])) if filters["state_id"].present?
     offices_scope = offices_scope.where(is_active: true) if filters["active"] == "1"
+    offices_scope = offices_scope.where(governing_body_id: filters["governing_body_id"]) if filters["governing_body_id"].present?
     @pagy, @offices = pagy(offices_scope)
     render Views::Offices::IndexView.new(offices: @offices, pagy: @pagy, filters: filters, states: State.order(:name))
   end
@@ -50,7 +51,7 @@ class OfficesController < ApplicationController
   private
 
   def filters
-    @filters ||= params.permit(:q, :state_id, :active).to_h
+    @filters ||= params.permit(:q, :state_id, :active, :governing_body_id).to_h
   end
 
   def set_office

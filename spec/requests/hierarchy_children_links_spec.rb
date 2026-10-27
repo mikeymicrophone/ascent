@@ -27,11 +27,12 @@ RSpec.describe "Links to a record's children", type: :request do
       expect(response.body).not_to include("Michigan Supreme Court")
     end
 
-    it "names the governance type in the heading and links back to every governing body" do
+    it "names the governance type in the heading and leads back to every governing body" do
       get governance_type_governing_bodies_path(council)
 
-      expect(response.body).to include("<h1>Governing bodies for #{council.name}</h1>")
-      expect(response.body).to include(%(href="#{governing_bodies_path}">View all governing bodies</a>))
+      page = Nokogiri::HTML(response.body)
+      expect(page.at_css("h1").text).to eq("Governing bodies for #{council.name}")
+      expect(page.at_css(".breadcrumb a")["href"]).to eq(governing_bodies_path)
     end
 
     it "answers not found for a governance type that does not exist" do

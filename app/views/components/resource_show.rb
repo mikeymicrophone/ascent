@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # The page around one record: heading, the record's content, and its actions.
-#   ResourceShow(record: @issue) { IssuePartial(issue: @issue) }
+#   ResourceShow(record: @year) { YearPartial(year: @year) }
 class Views::Components::ResourceShow < Views::ApplicationView
   prop :record, ActiveRecord::Base
   prop :heading, _Nilable(String)

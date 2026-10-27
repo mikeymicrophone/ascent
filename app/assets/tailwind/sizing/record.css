@@ -41,3 +41,43 @@
 .privacy-line .icon {
   @apply w-4 h-4;
 }
+
+.policy-path-steps {
+  @apply gap-1.5 m-0 p-0 list-none;
+}
+
+.policy-path-step {
+  @apply gap-1 px-4 py-3 rounded-2xl border;
+}
+
+.issue-cards {
+  @apply gap-3;
+}
+
+.issue-card {
+  @apply gap-2 p-4 rounded-2xl border;
+}
+
+.issue-card-title {
+  @apply m-0;
+}
+
+.issue-card-approaches {
+  @apply gap-1.5 m-0 p-0 list-none;
+}
+
+.issue-card-approaches li {
+  @apply gap-1.5;
+}
+
+.issue-card-approaches .icon {
+  @apply w-4 h-4 shrink-0;
+}
+
+.evidence-quote {
+  @apply my-1 pl-3 border-l-[3px];
+}
+
+.code-text p {
+  @apply mb-3 last:mb-0;
+}

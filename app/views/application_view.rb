@@ -50,7 +50,7 @@ class Views::ApplicationView < Phlex::HTML
     race: :vote, election: :calendar, candidacy: :badge_check, person: :user_round,
     office: :landmark, position: :briefcase, country: :globe, state: :map, county: :map_pinned,
     municipality: :building_2, district: :layout_grid, topic: :tag, issue: :circle_question_mark,
-    approach: :route, stance: :quote, governing_body: :columns_3, policy: :scroll_text
+    approach: :route, stance: :quote, governing_body: :columns_3, policy: :scroll_text, official_code: :file_text
   }.freeze
 
   def entity_icon(record_or_model)

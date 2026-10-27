@@ -15,3 +15,33 @@
 .candidacy-ratings .stat-item {
   @apply flex flex-col items-start;
 }
+
+/* The path from a topic to the positions on it. */
+.policy-path-steps {
+  @apply grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.policy-path-step {
+  @apply relative flex flex-col min-w-0;
+}
+
+.issue-cards {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+}
+
+.issue-card,
+.issue-card-approaches {
+  @apply flex flex-col;
+}
+
+.issue-card-approaches li {
+  @apply flex items-center;
+}
+
+@media (max-width: 640px) {
+  .policy-path-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

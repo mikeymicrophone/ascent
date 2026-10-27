@@ -24,7 +24,7 @@ class Views::Offices::IndexView < Views::ApplicationView
   def filter_bar
     active_chip
     FilterForm(url: offices_path, label: "Filter offices", placeholder: "Title or place", values: @filters, clear_path: offices_path,
-      hidden: { "active" => @filters["active"] }, selects: [ [ :state_id, "State", @states.map { [ it.name, it.id ] }, "All states" ] ])
+      hidden: @filters.slice("active", "governing_body_id"), selects: [ [ :state_id, "State", @states.map { [ it.name, it.id ] }, "All states" ] ])
   end
 
   def active_chip

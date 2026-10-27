@@ -3,8 +3,11 @@ class ApproachesController < ApplicationController
 
   # GET /approaches or /approaches.json
   def index
-    @pagy, @approaches = pagy(Approach.by_issue(params[:issue_id]))
-    render Views::Approaches::IndexView.new(approaches: @approaches, pagy: @pagy, parent: filtering_issue)
+    approaches = Approach.includes(issue: :topic).by_issue(params[:issue_id]).order(:title)
+    approaches = approaches.titled_like(filters["q"]) if filters["q"].present?
+    @pagy, @approaches = pagy(approaches)
+    render Views::Approaches::IndexView.new(approaches: @approaches, pagy: @pagy, parent: filtering_issue, filters: filters,
+      stance_counts: Stance.where(approach: @approaches).group(:approach_id).count, policy_counts: Policy.where(approach: @approaches).group(:approach_id).count)
   end
 
   # GET /approaches/1 or /approaches/1.json
@@ -62,6 +65,11 @@ class ApproachesController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q).to_h
+  end
+
     def filtering_issue
       Issue.find(params[:issue_id]) if params[:issue_id]
     end
