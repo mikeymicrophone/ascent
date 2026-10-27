@@ -14,9 +14,9 @@ class Views::Partials::IssuePartial < Views::ApplicationView
       div do
         span { "Description:" }
         whitespace
-        div(class: "mt-1") { simple_format(@issue.description) }
+        div(class: "formatted-text") { simple_format(@issue.description) }
       end
-      
+
       if @show_topic
         div do
           span { "Topic:" }
@@ -24,7 +24,7 @@ class Views::Partials::IssuePartial < Views::ApplicationView
           link_to @issue.topic.title, @issue.topic, class: "link topic"
         end
       end
-      
+
       if @show_approaches
         expandable(@issue, :approaches, title: "Available Approaches") do |approaches|
           ul do

@@ -31,7 +31,7 @@ class Views::Partials::AreaOfConcernPartial < Views::ApplicationView
       expandable(@area_of_concern, :policies) do |policies|
         div(class: "expandable-grid") do
           policies.each do |policy|
-            div { helpers.link_to_name(policy) }
+            div { link_to policy.name, policy }
           end
         end
       end

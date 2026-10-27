@@ -23,13 +23,9 @@ class Views::Partials::GovernanceTypePartial < Views::ApplicationView
             div(class: "content-description") { simple_format(@governance_type.description) }
           end
         end
-        
+
         # Governance information grid
         div(class: "info-grid") do
-          div(class: "info-item") do
-            span(class: "info-label") { "Authority Level" }
-            span(class: "info-value") { @governance_type.authority_level }
-          end
           div(class: "info-item") do
             span(class: "info-label") { "Decision Making Process" }
             span(class: "info-value") { @governance_type.decision_making_process }

@@ -2,12 +2,12 @@ class OfficialCodesController < ApplicationController
   before_action :set_official_code, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @official_codes = pagy(OfficialCode.all)
-    render Views::OfficialCodes::IndexView.new(official_codes: @official_codes, pagy: @pagy, notice: notice)
+    @pagy, @official_codes = pagy(OfficialCode.by_policy(params[:policy_id]))
+    render Views::OfficialCodes::IndexView.new(official_codes: @official_codes, pagy: @pagy, parent: filtering_policy)
   end
 
   def show
-    render Views::OfficialCodes::ShowView.new(official_code: @official_code, notice: notice)
+    render Views::OfficialCodes::ShowView.new(official_code: @official_code)
   end
 
   def new
@@ -43,6 +43,10 @@ class OfficialCodesController < ApplicationController
   end
 
   private
+  def filtering_policy
+    Policy.find(params[:policy_id]) if params[:policy_id]
+  end
+
 
   def set_official_code
     @official_code = OfficialCode.find(params[:id])

@@ -2,12 +2,12 @@ class GoverningBodiesController < ApplicationController
   before_action :set_governing_body, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @governing_bodies = pagy(GoverningBody.all)
-    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy, notice: notice)
+    @pagy, @governing_bodies = pagy(GoverningBody.by_governance_type(params[:governance_type_id]))
+    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy, parent: filtering_governance_type)
   end
 
   def show
-    render Views::GoverningBodies::ShowView.new(governing_body: @governing_body, notice: notice)
+    render Views::GoverningBodies::ShowView.new(governing_body: @governing_body)
   end
 
   def new
@@ -44,11 +44,15 @@ class GoverningBodiesController < ApplicationController
 
   private
 
+  def filtering_governance_type
+    GovernanceType.find(params[:governance_type_id]) if params[:governance_type_id]
+  end
+
   def set_governing_body
     @governing_body = GoverningBody.find(params[:id])
   end
 
   def governing_body_params
-    params.require(:governing_body).permit(:name, :jurisdiction_type, :jurisdiction_id, :description, :meeting_schedule, :is_active, :established_date)
+    params.require(:governing_body).permit(:name, :jurisdiction_id, :governance_type_id, :branch, :description, :meeting_schedule, :is_active, :established_date)
   end
 end

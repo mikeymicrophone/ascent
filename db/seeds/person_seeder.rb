@@ -1,7 +1,7 @@
 class PersonSeeder
   def self.seed
-    people_data = YAML.load_file(Rails.root.join("db", "seeds", "data", "people.yml"))
-    
+    people_data = YAML.load_file(SimulatedSeedDataPaths.file("people.yml"))
+
     people_data.each do |person_data|
       Person.find_or_create_by(email: person_data["email"]) do |person|
         person.first_name = person_data["first_name"]
@@ -11,7 +11,7 @@ class PersonSeeder
         person.bio = person_data["bio"]
       end
     end
-    
+
     puts "Seeded #{Person.count} people"
   end
 end

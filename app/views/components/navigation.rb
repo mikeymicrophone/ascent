@@ -9,17 +9,27 @@ class Views::Components::Navigation < Views::ApplicationView
     else
       render_default_navigation
     end
-    
-    nav(class: "main-navigation") do
+
+    nav(class: "main-navigation", data: { controller: "nav-clearance nav-menu" }) do
       div(class: "nav-container") do
-        div(class: "nav-brand") do
-          link_to "Ascent", root_path, class: "brand-link"
+        div(class: "nav-topbar") do
+          div(class: "nav-brand") do
+            link_to root_path, class: "brand-link", aria: { label: "Ascent home" } do
+              BrandMark()
+              span(class: "brand-wordmark") { "Ascent" }
+            end
+          end
+
+          menu_toggle
+
+          div(class: "nav-auth") do
+            Views::Components::DeviseLinks()
+          end
         end
-        
-        div(class: "nav-links") do
+
+        div(class: "nav-links", id: "site-menu") do
+          primary_links
           @sections.each { render_nav_section it }
-          
-          Views::Components::DeviseLinks()
         end
       end
     end
@@ -33,13 +43,27 @@ class Views::Components::Navigation < Views::ApplicationView
 
   private
 
+  # Voting links lead; reference pages and the public data follow in menus.
   def render_default_navigation
+    add_section("Reference") do |section|
+      section.link("Overview", root_path)
+      section.link("About Approval Voting", approval_voting_path)
+      section.link("Glossary", glossary_path)
+      section.link("For Supporters", supporters_path)
+      section.link("All Mountains", mountains_path)
+    end
+    render_data_navigation
+  end
+
+  def render_data_navigation
     add_section("Jurisdictions") do |section|
       section.link("Countries", countries_path)
       section.link("States", states_path)
-      section.link("Cities", cities_path)
+      section.link("Counties", counties_path)
+      section.link("Municipalities", municipalities_path)
+      section.link("Districts", districts_path)
     end
-    
+
     add_section("Governance") do |section|
       section.link("Positions", positions_path)
       section.link("Governance Types", governance_types_path)
@@ -49,27 +73,45 @@ class Views::Components::Navigation < Views::ApplicationView
       section.link("Policies", policies_path)
       section.link("Official Codes", official_codes_path)
     end
-    
+
     add_section("Policy") do |section|
       section.link("Topics", topics_path)
       section.link("Issues", issues_path)
       section.link("Approaches", approaches_path)
       section.link("Stances", stances_path)
     end
-    
+
     add_section("Elections") do |section|
       section.link("Years", years_path)
       section.link("Elections", elections_path)
+      section.link("Races", races_path)
       section.link("People", people_path)
       section.link("Candidacies", candidacies_path)
     end
-    
+
     add_section("Voting") do |section|
       section.link("Voters", voters_path)
       section.link("Residences", residences_path)
       section.link("Ratings", ratings_path)
-      section.link("Baselines", voter_election_baselines_path)
-      section.link("Mountains", mountains_path)
+      section.link("Baselines", voter_race_baselines_path)
+    end
+  end
+
+  def primary_links
+    div(class: "nav-primary") do
+      link_to "My ballot", ballot_path, class: nav_link_class(ballot_path, "nav-primary-link")
+      link_to "Explore races", ballot_path(anchor: "elsewhere"), class: "nav-primary-link"
+      link_to "Mock election", new_mock_election_path, class: nav_link_class(new_mock_election_path, "nav-primary-link")
+    end
+  end
+
+  # Phones fold the account links and sections behind this button.
+  def menu_toggle
+    button(type: "button", class: "nav-menu-toggle", aria: { expanded: "false", controls: "site-menu" },
+      data: { action: "nav-menu#toggle", nav_menu_target: "toggle" }) do
+      icon(:menu, class: "icon icon-menu nav-menu-open-icon")
+      icon(:x, class: "icon icon-x nav-menu-close-icon")
+      span(class: "nav-menu-label") { "Menu" }
     end
   end
 
@@ -77,7 +119,7 @@ class Views::Components::Navigation < Views::ApplicationView
     div(class: "nav-group", data: { controller: "dropdown" }) do
       div(class: "nav-group-header", data: { action: "click->dropdown#toggle" }) do
         span { section.title }
-        span(class: "nav-group-arrow") { "▼" }
+        span(class: "nav-group-arrow") { icon(:chevron_down) }
       end
       div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
         section.links.each { link_to it[:text], it[:path], class: nav_link_class(it[:path]) }
@@ -85,8 +127,7 @@ class Views::Components::Navigation < Views::ApplicationView
     end
   end
 
-  def nav_link_class(path)
-    base_classes = "nav-link"
+  def nav_link_class(path, base_classes = "nav-link")
     current_page?(path) ? "#{base_classes} active" : base_classes
   end
 

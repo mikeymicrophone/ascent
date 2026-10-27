@@ -1,18 +1,22 @@
 class GoverningBody < ApplicationRecord
+  include GovernmentBranch
+
   belongs_to :governance_type
-  belongs_to :jurisdiction, polymorphic: true
+  belongs_to :jurisdiction
+  has_many :chambers, dependent: :destroy
+  has_many :offices, dependent: :nullify
   has_many :policies
+
   has_many :official_codes, through: :policies
 
   validates :name, presence: true
-  validates :jurisdiction_type, presence: true
   validates :jurisdiction_id, presence: true
   validates :meeting_schedule, presence: true
 
   scope :active, -> { where(is_active: true) }
   scope :inactive, -> { where(is_active: false) }
   scope :by_governance_type, ->(type_id) { where(governance_type_id: type_id) if type_id.present? }
-  scope :by_jurisdiction_type, ->(type) { where(jurisdiction_type: type) if type.present? }
+  scope :by_jurisdiction_type, ->(type) { joins(:jurisdiction).where(jurisdictions: { jurisdictionable_type: type }) if type.present? }
   scope :established_before, ->(date) { where("established_date <= ?", date) if date.present? }
   scope :established_after, ->(date) { where("established_date >= ?", date) if date.present? }
 

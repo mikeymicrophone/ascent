@@ -2,6 +2,7 @@
 class ApplicationPolicy < ActionPolicy::Base
   # Configure authorization contexts
   # We only use :voter, not the default :user
+  authorize :user, optional: true
   authorize :voter, optional: true
 
   private

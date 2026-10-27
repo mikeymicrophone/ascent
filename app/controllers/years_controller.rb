@@ -3,11 +3,11 @@ class YearsController < ApplicationController
 
   def index
     @pagy, @years = pagy(Year.all)
-    render Views::Years::IndexView.new(years: @years, pagy: @pagy, notice: notice)
+    render Views::Years::IndexView.new(years: @years, pagy: @pagy)
   end
 
   def show
-    render Views::Years::ShowView.new(year: @year, notice: notice)
+    render Views::Years::ShowView.new(year: @year)
   end
 
   def new

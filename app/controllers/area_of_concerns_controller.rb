@@ -3,11 +3,11 @@ class AreaOfConcernsController < ApplicationController
 
   def index
     @pagy, @area_of_concerns = pagy(AreaOfConcern.all)
-    render Views::AreaOfConcerns::IndexView.new(area_of_concerns: @area_of_concerns, pagy: @pagy, notice: notice)
+    render Views::AreaOfConcerns::IndexView.new(area_of_concerns: @area_of_concerns, pagy: @pagy)
   end
 
   def show
-    render Views::AreaOfConcerns::ShowView.new(area_of_concern: @area_of_concern, notice: notice)
+    render Views::AreaOfConcerns::ShowView.new(area_of_concern: @area_of_concern)
   end
 
   def new

@@ -1,0 +1,100 @@
+/* The elections list: header, tabs, filters, then elections under sticky day headers. */
+
+.visually-hidden {
+  @apply sr-only;
+}
+
+.elections-page {
+  @apply flex flex-col;
+}
+
+.elections-header {
+  @apply flex flex-wrap items-end justify-between;
+}
+
+.elections-intro {
+  @apply flex flex-col flex-[1_1_520px] min-w-0;
+}
+
+.listing-tabs {
+  @apply flex overflow-x-auto;
+}
+
+.listing-tab {
+  @apply inline-flex items-center shrink-0;
+}
+
+.listing-filters {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.listing-search {
+  @apply flex flex-[1_1_360px] min-w-0;
+}
+
+.listing-search-input {
+  @apply flex-1 min-w-0;
+}
+
+.filter-chips {
+  @apply flex flex-wrap items-center;
+}
+
+.filter-chip {
+  @apply inline-flex items-center;
+}
+
+.day-groups {
+  @apply flex flex-col;
+}
+
+.day-header {
+  @apply sticky z-[5] flex items-center;
+  top: var(--nav-clearance, 0px);
+}
+
+.day-stub {
+  @apply flex flex-col items-center justify-center shrink-0;
+}
+
+.day-header-text {
+  @apply flex flex-col min-w-0;
+}
+
+.election-rows {
+  @apply flex flex-col;
+}
+
+.election-row {
+  @apply relative flex flex-wrap items-center justify-between;
+}
+
+.election-row-main {
+  @apply flex flex-col flex-[1_1_420px] min-w-0;
+}
+
+.election-row-name::after {
+  content: "";
+  @apply absolute inset-0;
+}
+
+.election-row-badges {
+  @apply flex flex-wrap items-center justify-end;
+}
+
+.your-elections {
+  @apply flex flex-col;
+}
+
+.your-elections-head {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.your-election-grid {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+}
+
+.your-election-card {
+  @apply flex flex-col;
+}

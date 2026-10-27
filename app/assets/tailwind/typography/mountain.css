@@ -1,27 +1,37 @@
 /* Mountain Interface Typography */
 
 .page-title {
+  @apply font-['Bricolage_Grotesque'];
   @apply text-3xl font-bold;
   @apply mb-4;
 }
 
 .page-description {
+  @apply font-['Bricolage_Grotesque'];
   @apply text-lg text-gray-600;
   @apply mb-8;
 }
 
 .election-title {
+  @apply font-['Bricolage_Grotesque'];
   @apply text-xl font-semibold;
   @apply mb-2;
 }
 
 .election-meta p {
+  @apply font-['Bricolage_Grotesque'];
   @apply text-sm text-gray-600;
 }
 
 .voter-info p {
+  @apply font-['Bricolage_Grotesque'];
   @apply text-base;
   @apply mb-1;
+}
+
+.primary-candidates-note {
+  @apply font-['Bricolage_Grotesque'];
+  @apply text-sm text-gray-600;
 }
 
 .no-baseline {
@@ -30,12 +40,14 @@
 }
 
 .candidate-name {
+  @apply font-['Bricolage_Grotesque'];
   @apply text-sm font-medium;
   @apply text-center;
   @apply leading-tight;
 }
 
 .party-affiliation {
+  @apply font-['Bricolage_Grotesque'];
   @apply text-xs;
   @apply font-medium;
 }
@@ -61,9 +73,26 @@
 }
 
 .edit-instructions {
+  @apply font-['Bricolage_Grotesque'];
   @apply text-base;
   @apply mb-6;
   @apply p-4;
   @apply bg-blue-50;
   @apply rounded-lg;
+}
+
+.election-context {
+  @apply font-['Bricolage_Grotesque'];
+  @apply text-sm;
+}
+
+.mountain-empty {
+  @apply font-['Bricolage_Grotesque'];
+  @apply text-base;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-tertiary {
+  @apply font-['Bricolage_Grotesque'] font-semibold no-underline;
 }

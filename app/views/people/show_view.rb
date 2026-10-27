@@ -1,26 +1,7 @@
 class Views::People::ShowView < Views::ApplicationView
-  def initialize(person:, notice: nil)
-    @person = person
-    @notice = notice
-  end
+  prop :person, Person
 
-  def view_template(&)
-    div(class: "scaffold person-show", id: dom_id(@person, :show)) do
-      render_notice if @notice.present?
-      
-      h1 { "Showing person" }
-      
-      PersonPartial(person: @person)
-      
-      Ui::ResourceActions(resource: @person)
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
-    end
+  def view_template
+    ResourceShow(record: @person) { PersonPartial(person: @person) }
   end
 end

@@ -1,0 +1,82 @@
+# A fictional candidate, used to test communications and stance evidence without quoting a real person.
+format: micharisma-seeds/v1
+namespace: MIC
+catalog: ASC
+source:
+  contributor: Example Civic Archive
+  url: https://example.com/avery-example
+  captured_on: "2026-10-15"
+records:
+  - type: Country
+    code: COUNTRY-USA
+    attributes: {code: US, name: United States}
+  - type: Position
+    code: POSITION-STATE_REPRESENTATIVE
+    attributes: {title: State Representative}
+  - type: Topic
+    code: TOPIC-ENVIRONMENT
+    attributes: {title: Environment}
+  - type: Issue
+    code: ISSUE-ENVIRONMENT-ENERGY_INTENSIVE_MINING
+    attributes: {title: Energy-Intensive Mining}
+    references: {topic: TOPIC-ENVIRONMENT}
+  - type: Approach
+    code: APPROACH-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM
+    attributes: {title: Time-Limited Permit Moratorium}
+    references: {issue: ISSUE-ENVIRONMENT-ENERGY_INTENSIVE_MINING}
+groups:
+  - scope: {country: COUNTRY-USA}
+    records:
+      - type: State
+        code: STATE-USA-NY
+        attributes: {code: NY, name: New York}
+  - scope: {state: STATE-USA-NY}
+    records:
+      - type: District
+        code: DISTRICT-USA-NY-EXAMPLE-ED_1
+        attributes: {name: New York Example District 1, kind: example district}
+      - type: Person
+        code: PERSON-EXAMPLE_AVERY_NY_ED_1
+        attributes: {username: example_avery_ny_ed_1, username_status: provisional, first_name: Avery, last_name: Example}
+      - type: Office
+        code: OFFICE-USA-NY-EXAMPLE-ED_1
+        attributes: {seat_code: ED_1, is_active: true}
+        references: {position: POSITION-STATE_REPRESENTATIVE, jurisdiction: DISTRICT-USA-NY-EXAMPLE-ED_1}
+      - type: Election
+        code: ELECTION-USA-NY-EXAMPLE-ED_1-2026_GENERAL
+        attributes: {name: New York Example District 1 General Election 2026, kind: general, election_date: "2026-11-03", status: upcoming, is_mock: false, is_historical: false}
+        references: {jurisdiction: DISTRICT-USA-NY-EXAMPLE-ED_1, year: YEAR-2026}
+      - type: Race
+        code: RACE-USA-NY-EXAMPLE-ED_1-2026_GENERAL
+        attributes: {status: upcoming}
+        references: {election: ELECTION-USA-NY-EXAMPLE-ED_1-2026_GENERAL, office: OFFICE-USA-NY-EXAMPLE-ED_1}
+      - type: Candidacy
+        code: CANDIDACY-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1
+        attributes: {status: active, participation: active}
+        references: {race: RACE-USA-NY-EXAMPLE-ED_1-2026_GENERAL, person: PERSON-EXAMPLE_AVERY_NY_ED_1}
+      - type: Channel
+        code: CHANNEL-WEB-AVERYEXAMPLE_EXAMPLE_COM
+        attributes: {platform: website, handle: averyexample.example.com, url: https://example.com/avery-example, official: true}
+        references: {owner: PERSON-EXAMPLE_AVERY_NY_ED_1}
+      - type: Communication
+        code: COMMUNICATION-WEB-AVERYEXAMPLE_EXAMPLE_COM-2026_09_14-TOWN_HALL
+        attributes:
+          kind: video
+          title: Town hall on energy-intensive mining
+          published_on: "2026-09-14"
+          url: https://example.com/avery-example/town-hall
+          duration_seconds: 2710
+          featured_candidacies: [CANDIDACY-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1]
+        references: {channel: CHANNEL-WEB-AVERYEXAMPLE_EXAMPLE_COM}
+      - type: Stance
+        code: STANCE-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM
+        attributes: {priority_level: high}
+        references:
+          candidacy: CANDIDACY-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1
+          approach: APPROACH-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM
+      - type: StanceEvidence
+        code: EVIDENCE-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM-WEBSITE-AVERYEXAMPLE_EXAMPLE_COM-2026_09_14-TOWN_HALL
+        attributes: {relation: states, quote: "We should pause new permits until we know what they cost our water.", offset_seconds: 102}
+        references:
+          stance: STANCE-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AVERY_NY_ED_1-ENVIRONMENT-ENERGY_INTENSIVE_MINING-TIME_LIMITED_PERMIT_MORATORIUM
+          communication: COMMUNICATION-WEB-AVERYEXAMPLE_EXAMPLE_COM-2026_09_14-TOWN_HALL

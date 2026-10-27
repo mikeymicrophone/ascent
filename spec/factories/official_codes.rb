@@ -69,13 +69,12 @@ FactoryBot.define do
       penalty_structure { "No longer applicable. Former penalties were $250 per violation with increasing fines for repeat offenses." }
       effective_date { 3.years.ago }
     end
-    factory :zoning_code_example, traits: [:zoning_code]
-    factory :health_code_example, traits: [:health_code]
-    factory :environmental_code_example, traits: [:environmental_code]
-    factory :business_code_example, traits: [:business_code]
-    factory :housing_code_example, traits: [:housing_code]
-    factory :superseded_code_example, traits: [:superseded]
-    factory :repealed_code_example, traits: [:repealed]
+    factory :zoning_code_example, traits: [ :zoning_code ]
+    factory :health_code_example, traits: [ :health_code ]
+    factory :environmental_code_example, traits: [ :environmental_code ]
+    factory :business_code_example, traits: [ :business_code ]
+    factory :housing_code_example, traits: [ :housing_code ]
+    factory :superseded_code_example, traits: [ :superseded ]
+    factory :repealed_code_example, traits: [ :repealed ]
   end
 end
-

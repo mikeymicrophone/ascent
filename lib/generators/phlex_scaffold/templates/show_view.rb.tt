@@ -1,26 +1,9 @@
 class Views::<%= controller_class_name %>::ShowView < Views::ApplicationView
-  def initialize(<%= singular_table_name %>:, notice: nil)
-    @<%= singular_table_name %> = <%= singular_table_name %>
-    @notice = notice
-  end
+  prop :<%= singular_table_name %>, <%= class_name %>
 
-  def view_template(&)
-    div(class: "scaffold <%= singular_table_name %>-show", id: dom_id(@<%= singular_table_name %>, :show)) do
-      render_notice if @notice.present?
-      
-      h1 { "Showing <%= human_name.downcase %>" }
-      
+  def view_template
+    ResourceShow(record: @<%= singular_table_name %>) do
       Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: @<%= singular_table_name %>)
-      
-      Ui::ResourceActions(resource: @<%= singular_table_name %>)
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
     end
   end
 end

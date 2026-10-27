@@ -1,0 +1,95 @@
+.elections-page {
+  @apply gap-6 pt-8 pb-16;
+}
+
+.elections-header {
+  @apply gap-x-10 gap-y-4;
+}
+
+.elections-intro {
+  @apply gap-3;
+}
+
+.listing-tabs {
+  @apply gap-1 p-1 rounded-2xl border self-start max-w-full;
+}
+
+.listing-tab {
+  @apply min-h-11 gap-2 px-4 rounded-xl;
+}
+
+.listing-tab-count {
+  @apply px-1.5 py-0.5 rounded-md;
+}
+
+.listing-filters {
+  @apply gap-x-6 gap-y-3;
+}
+
+.listing-search {
+  @apply gap-2;
+}
+
+.listing-search-input {
+  @apply min-h-11 px-4 rounded-full border-[1.5px];
+}
+
+.filter-chips {
+  @apply gap-1.5;
+}
+
+.filter-chip {
+  @apply min-h-10 gap-1.5 px-3.5 rounded-full border-[1.5px];
+}
+
+.filter-chip .icon {
+  @apply w-4 h-4;
+}
+
+.day-groups {
+  @apply gap-6 m-0 p-0 list-none;
+}
+
+.day-header {
+  @apply gap-4 py-3;
+}
+
+.day-stub {
+  @apply w-14 h-14 rounded-xl;
+}
+
+.election-rows {
+  @apply m-0 p-0 list-none rounded-[20px] border overflow-hidden;
+}
+
+.election-row {
+  @apply gap-x-5 gap-y-2 px-5 py-4 border-b last:border-b-0;
+}
+
+.election-row-main {
+  @apply gap-1;
+}
+
+.election-row-badges {
+  @apply gap-1.5;
+}
+
+.row-badge {
+  @apply px-2 py-1 rounded-full border-[1.5px] whitespace-nowrap;
+}
+
+.your-elections {
+  @apply gap-3 p-5 rounded-[20px];
+}
+
+.your-elections-head {
+  @apply gap-3;
+}
+
+.your-election-grid {
+  @apply gap-3;
+}
+
+.your-election-card {
+  @apply gap-1 p-4 rounded-2xl border-[1.5px];
+}

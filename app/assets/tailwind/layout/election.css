@@ -1,0 +1,159 @@
+/* The election page: a hero with a date stub, then the ballot sheet beside a side column. */
+
+.election-page {
+  @apply flex flex-col;
+}
+
+.election-hero {
+  @apply flex flex-wrap items-stretch justify-between;
+}
+
+.election-hero-text {
+  @apply flex flex-col items-start flex-[1_1_520px] min-w-0;
+}
+
+.date-stub {
+  @apply flex flex-col flex-[0_1_340px] min-w-0 relative self-start;
+}
+
+.date-stub-top {
+  @apply grid items-end;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "day month" "day weekday";
+}
+
+.date-stub-day { grid-area: day; }
+.date-stub-month { grid-area: month; }
+.date-stub-weekday { grid-area: weekday; }
+
+.date-stub-bottom {
+  @apply flex flex-col flex-1;
+}
+
+.countdown-strip {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, minmax(18px, 1fr));
+}
+
+.election-layout {
+  @apply flex flex-wrap items-start;
+}
+
+.ballot-sheet {
+  @apply flex flex-col flex-[999_1_640px] min-w-0;
+}
+
+.ballot-sheet-head {
+  @apply flex flex-wrap items-baseline justify-between;
+}
+
+.election-aside {
+  @apply flex flex-col flex-[1_1_280px] min-w-0;
+}
+
+.contest-list {
+  @apply flex flex-col;
+}
+
+.contest {
+  @apply grid items-start;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+}
+
+.contest-body {
+  @apply flex flex-col min-w-0;
+}
+
+.contest-head {
+  @apply flex flex-wrap items-baseline;
+}
+
+/* Names fill the row; the actions sit against the right edge, top-aligned with the first names. */
+.contest-single {
+  @apply grid items-start;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.candidate-list {
+  columns: 3 11rem;
+}
+
+.candidate-item {
+  break-inside: avoid;
+}
+
+.contest-actions {
+  @apply flex items-center justify-end;
+}
+
+.icon-action {
+  @apply inline-flex items-center justify-center shrink-0;
+}
+
+.seat-chips {
+  @apply flex flex-wrap;
+}
+
+.seat-chip {
+  @apply inline-flex items-center;
+}
+
+.progress-key {
+  @apply flex flex-wrap;
+}
+
+.sibling-elections {
+  @apply flex flex-col;
+}
+
+.sibling-election {
+  @apply flex flex-col;
+}
+
+@media (max-width: 640px) {
+  .contest {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+  }
+}
+
+/* Candidate names open a card in a popover, centered in the top layer. */
+.candidate-name {
+  @apply inline text-left;
+}
+
+.candidate-popover {
+  @apply m-auto;
+  width: min(26rem, calc(100vw - 2rem));
+}
+
+.candidate-card {
+  @apply flex flex-col;
+}
+
+.candidate-card-head {
+  @apply flex items-start justify-between;
+}
+
+.candidate-card-title {
+  @apply flex flex-col min-w-0;
+}
+
+.endorsement-list {
+  @apply flex flex-col;
+}
+
+.endorsement-item {
+  @apply flex items-baseline justify-between;
+}
+
+.support-stats {
+  @apply grid grid-cols-3;
+}
+
+.support-stat {
+  @apply flex flex-col;
+}
+
+.candidate-card-links {
+  @apply flex flex-wrap;
+}

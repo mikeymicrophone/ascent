@@ -3,13 +3,13 @@ class IssuesController < ApplicationController
 
   # GET /issues or /issues.json
   def index
-    @issues = Issue.all
-    render Views::Issues::IndexView.new(issues: @issues, notice: notice)
+    @pagy, @issues = pagy(Issue.includes(:topic).by_topic(params[:topic_id]).visible_to(current_voter))
+    render Views::Issues::IndexView.new(issues: @issues, pagy: @pagy, parent: filtering_topic)
   end
 
   # GET /issues/1 or /issues/1.json
   def show
-    render Views::Issues::ShowView.new(issue: @issue, notice: notice)
+    render Views::Issues::ShowView.new(issue: @issue)
   end
 
   # GET /issues/new
@@ -62,6 +62,10 @@ class IssuesController < ApplicationController
   end
 
   private
+    def filtering_topic
+      Topic.find(params[:topic_id]) if params[:topic_id]
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_issue
       @issue = Issue.find(params.expect(:id))

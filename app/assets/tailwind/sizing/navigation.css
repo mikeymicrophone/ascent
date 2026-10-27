@@ -5,65 +5,75 @@
 }
 
 .nav-container {
-  @apply px-6 py-4;
+  @apply px-6 pt-4 pb-3;
+}
+
+.nav-topbar {
+  @apply mb-3;
 }
 
 .nav-links {
-  @apply gap-8;
+  @apply gap-3;
 }
 
 /* Dropdown Spacing */
 .nav-group {
-  @apply mx-2;
+  @apply mx-1;
 }
 
 .nav-group-header {
-  @apply px-4 py-2;
+  @apply px-4 py-2.5;
   @apply gap-2;
+  @apply rounded-full;
 }
 
 .nav-group-content {
-  @apply mt-1 p-2;
-  @apply min-w-48;
-  @apply shadow-lg;
-  @apply rounded-md;
+  @apply mt-2 p-2;
+  @apply min-w-56;
+  @apply shadow-lg rounded-2xl;
 }
 
 .nav-group-content .nav-link {
   @apply px-3 py-2;
-  @apply w-full;
+  @apply w-full rounded-xl;
 }
 
 .nav-link {
   @apply px-4 py-2;
-  @apply rounded-md;
+  @apply rounded-xl;
 }
 
 .brand-link {
-  @apply text-xl;
+  @apply text-3xl;
 }
 
 .devise-links {
-  @apply flex items-center gap-4;
+  @apply gap-3;
+}
+
+.nav-auth-link {
+  @apply rounded-full px-3 py-2;
 }
 
 .voter-greeting {
   @apply text-sm font-medium;
 }
 
-/* Responsive spacing adjustments */
-/* Intermediate widths - reduce padding when navigation starts wrapping */
 @media (max-width: 1024px) and (min-width: 769px) {
   .nav-container {
     @apply px-4 py-3;
   }
-  
+
   .nav-links {
-    @apply gap-4;
+    @apply gap-2;
   }
-  
-  .nav-link {
-    @apply px-2 py-1.5;
+
+  .nav-group-header {
+    @apply px-3 py-2;
+  }
+
+  .brand-link {
+    @apply text-[2rem];
   }
 }
 
@@ -71,23 +81,27 @@
   .nav-container {
     @apply px-4 py-3;
   }
-  
+
+  .nav-topbar {
+    @apply mb-2;
+  }
+
   .nav-links {
-    @apply gap-4;
-  }
-  
-  .nav-link {
-    @apply px-3 py-1.5 text-sm;
-  }
-  
-  .brand-link {
-    @apply text-lg;
-  }
-  
-  .devise-links {
     @apply gap-2;
   }
-  
+
+  .nav-group-header {
+    @apply px-3 py-2 text-sm;
+  }
+
+  .brand-link {
+    @apply text-2xl;
+  }
+
+  .devise-links {
+    @apply flex-wrap gap-2;
+  }
+
   .voter-greeting {
     @apply text-xs;
   }
@@ -95,18 +109,47 @@
 
 @media (max-width: 640px) {
   .nav-links {
-    @apply gap-2;
+    @apply gap-1;
   }
-  
-  .nav-link {
-    @apply px-2 py-1 text-xs;
+
+  .nav-group-header {
+    @apply px-2.5 py-1.5 text-xs;
   }
-  
+
   .devise-links {
     @apply gap-1;
   }
-  
+
   .voter-greeting {
-    @apply hidden; /* Hide greeting on very small screens */
+    @apply hidden;
+  }
+}
+
+/* Brand mark and wordmark */
+.brand-link {
+  @apply gap-2;
+}
+
+.brand-mark {
+  @apply w-9 h-9;
+}
+
+.brand-mark-rope {
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.nav-group-arrow .icon {
+  @apply w-3.5 h-3.5;
+}
+
+/* Phone menu button */
+.nav-menu-toggle {
+  @apply gap-1.5 px-3 py-1.5 rounded-full border;
+}
+
+@media (max-width: 768px) {
+  .nav-topbar {
+    @apply gap-y-3;
   }
 }

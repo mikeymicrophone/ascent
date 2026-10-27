@@ -2,12 +2,12 @@ class PoliciesController < ApplicationController
   before_action :set_policy, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @policies = pagy(Policy.all)
-    render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy, notice: notice)
+    @pagy, @policies = pagy(Policy.by_governing_body(params[:governing_body_id]))
+    render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy, parent: filtering_governing_body)
   end
 
   def show
-    render Views::Policies::ShowView.new(policy: @policy, notice: notice)
+    render Views::Policies::ShowView.new(policy: @policy)
   end
 
   def new
@@ -43,6 +43,10 @@ class PoliciesController < ApplicationController
   end
 
   private
+  def filtering_governing_body
+    GoverningBody.find(params[:governing_body_id]) if params[:governing_body_id]
+  end
+
 
   def set_policy
     @policy = Policy.find(params[:id])

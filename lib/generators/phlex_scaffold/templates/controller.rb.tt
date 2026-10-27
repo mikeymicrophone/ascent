@@ -3,11 +3,11 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   def index
     @pagy, @<%= plural_table_name %> = pagy(<%= class_name %>.all)
-    render Views::<%= controller_class_name %>::IndexView.new(<%= plural_table_name %>: @<%= plural_table_name %>, pagy: @pagy, notice: notice)
+    render Views::<%= controller_class_name %>::IndexView.new(<%= plural_table_name %>: @<%= plural_table_name %>, pagy: @pagy)
   end
 
   def show
-    render Views::<%= controller_class_name %>::ShowView.new(<%= singular_table_name %>: @<%= singular_table_name %>, notice: notice)
+    render Views::<%= controller_class_name %>::ShowView.new(<%= singular_table_name %>: @<%= singular_table_name %>)
   end
 
   def new

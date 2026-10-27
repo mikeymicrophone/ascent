@@ -1,122 +1,82 @@
 class ElectionSeeder
   def self.seed
-    # Create elections for various offices and years
-    create_presidential_elections
-    create_gubernatorial_elections
-    create_mayoral_elections
+    # Only create clearly-labelled educational simulations. Source-backed races
+    # are seeded by their reference-data loaders.
     create_mock_elections
-    
+    create_mock_local_elections
+
     puts "Seeded #{Election.count} elections"
   end
-  
+
+  # The simulated candidates' races, from city hall up to the governor's office.
+  # Mayor and Council Member share the demo city; the others prefer offices in its state.
+  MOCK_CITY = "Los Angeles"
+  MOCK_LOCAL_POSITIONS = [
+    "Mayor", "Council Member", "Sheriff", "School Board", "County Commissioner",
+    "District Attorney", "State Representative", "State Senator", "Governor"
+  ].freeze
+
   private
-  
-  def self.create_presidential_elections
-    us = Country.find_by(name: "United States")
-    president_position = Position.find_by(title: "President")
-    
-    return unless us && president_position
-    
-    us_president_office = Office.where(position: president_position, jurisdiction: us).first
-    
-    return unless us_president_office
-    
-    # Create presidential elections for presidential years
-    Year.where(is_presidential_year: true).find_each do |year|
-      Election.find_or_create_by(
-        office: us_president_office,
-        year: year
-      ) do |election|
-        election.election_date = Date.new(year.year, 11, first_tuesday_of_november(year.year))
-        election.status = year.year <= Date.current.year ? "completed" : "upcoming"
-        election.description = "Presidential Election - #{year.year}"
-        election.is_mock = false
-        election.is_historical = year.year < 2020
-      end
-    end
-  end
-  
-  def self.create_gubernatorial_elections
-    # Create governor elections for some states
-    governor_position = Position.find_by(title: "Governor")
-    return unless governor_position
-    
-    # Get some states for governor elections
-    states = State.joins(:country).where(countries: { name: "United States" }).limit(5)
-    
-    states.each do |state|
-      governor_office = state.offices.joins(:position).where(positions: { title: "Governor" }).first
-      next unless governor_office
-      
-      # Create elections for even years
-      Year.where(is_even_year: true).limit(3).find_each do |year|
-        Election.find_or_create_by(
-          office: governor_office,
-          year: year
-        ) do |election|
-          election.election_date = Date.new(year.year, 11, first_tuesday_of_november(year.year))
-          election.status = year.year <= Date.current.year ? "completed" : "upcoming"
-          election.description = "Gubernatorial Election - #{state.name} #{year.year}"
-          election.is_mock = false
-          election.is_historical = year.year < 2022
-        end
-      end
-    end
-  end
-  
-  def self.create_mayoral_elections
-    # Create mayor elections for cities with mayor offices
-    Office.joins(:position).where(positions: { title: "Mayor" }).limit(3).find_each do |mayor_office|
-      # Create elections for some recent years
-      [2022, 2023, 2024].each do |year_num|
-        year = Year.find_by(year: year_num)
-        next unless year
-        
-        Election.find_or_create_by(
-          office: mayor_office,
-          year: year
-        ) do |election|
-          election.election_date = Date.new(year.year, 11, first_tuesday_of_november(year.year))
-          election.status = year.year <= Date.current.year ? "completed" : "upcoming"
-          election.description = "Mayoral Election - #{mayor_office.jurisdiction.name} #{year.year}"
-          election.is_mock = false
-          election.is_historical = false
-        end
-      end
-    end
-  end
-  
+
   def self.create_mock_elections
     # Create some mock elections for educational purposes
     us = Country.find_by(name: "United States")
     president_position = Position.find_by(title: "President")
-    
+
     return unless us && president_position
-    
-    us_president_office = Office.where(position: president_position, jurisdiction: us).first
-    
+
+    us_president_office = Office.where(position: president_position, jurisdiction: us.jurisdiction).first
+
     return unless us_president_office
-    
+
     year_2024 = Year.find_by(year: 2024)
     return unless year_2024
-    
-    Election.find_or_create_by(
-      office: us_president_office,
+
+    election = Election.find_or_create_by(
+      jurisdiction: us.jurisdiction,
       year: year_2024,
       is_mock: true
     ) do |election|
+      election.name = "Mock Presidential Election 2024"
       election.election_date = Date.new(2024, 3, 15)
       election.status = "active"
       election.description = "Mock Presidential Election 2024 - Educational Simulation"
       election.is_historical = false
     end
+
+    Race.find_or_create_by(election: election, office: us_president_office) do |race|
+      race.status = "active"
+    end
   end
-  
-  def self.first_tuesday_of_november(year)
-    # Election Day is the first Tuesday after the first Monday in November
-    first_day = Date.new(year, 11, 1)
-    first_monday = first_day + ((8 - first_day.wday) % 7)
-    first_tuesday = first_monday + 1
-    first_tuesday.day
+
+  def self.create_mock_local_elections
+    city = Municipality.find_by(name: MOCK_CITY)
+    year_2024 = Year.find_by(year: 2024)
+    return unless city && year_2024
+
+    MOCK_LOCAL_POSITIONS.each do |title|
+      office = mock_office_for(title, city)
+      next unless office
+
+      election = Election.find_or_create_by(jurisdiction: office.jurisdiction, year: year_2024, is_mock: true) do |election|
+        election.name = "Mock #{office.jurisdiction.name} Election 2024"
+        election.election_date = Date.new(2024, 11, 5)
+        election.status = "active"
+        election.description = "Mock #{office.jurisdiction.name} Election 2024 - Educational Simulation"
+        election.is_historical = false
+      end
+
+      Race.find_or_create_by(election: election, office: office) do |race|
+        race.status = "active"
+      end
+    end
+  end
+
+  def self.mock_office_for(title, city)
+    offices = Office.joins(:position).where(positions: { title: title }).order(:id)
+
+    offices.find_by(jurisdiction: city.jurisdiction) ||
+      offices.find_by(jurisdiction_id: city.state.jurisdiction.self_and_descendants.select(:id)) ||
+      offices.first
   end
 end

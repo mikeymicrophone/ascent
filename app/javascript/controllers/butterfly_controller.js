@@ -145,7 +145,7 @@ export default class extends Controller {
     // Determine hierarchy level based on element context
     if (element.closest('.country-partial')) return 'country'
     if (element.closest('.state-partial')) return 'state'
-    if (element.closest('.city-partial')) return 'city'
+    if (element.closest('.municipality-partial')) return 'municipality'
     if (element.closest('.topic-partial')) return 'topic'
     if (element.closest('.issue-partial')) return 'issue'
     if (element.closest('.approach-partial')) return 'approach'

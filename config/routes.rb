@@ -1,36 +1,71 @@
 Rails.application.routes.draw do
+  get "glossary" => "pages#glossary", as: :glossary
+  get "supporters" => "pages#supporters", as: :supporters
+  get "approval-voting" => "pages#approval_voting", as: :approval_voting
+  resources :engagements, only: [ :index, :create, :destroy ], path: "saved"
   resources :official_codes
-  resources :policies
+  resources :policies do
+    resources :official_codes, only: [ :index ]
+  end
   resources :stances
   resources :approaches
-  resources :issues
-  resources :topics
-  resources :governing_bodies
+  resources :issues do
+    resources :approaches, only: [ :index ]
+  end
+  resources :topics do
+    resources :issues, only: [ :index ]
+  end
+  resources :governing_bodies do
+    resources :policies, only: [ :index ]
+  end
   resources :area_of_concerns
-  resources :governance_types
-  resources :voter_election_baselines
+  resources :governance_types do
+    resources :governing_bodies, only: [ :index ]
+  end
+  resources :voter_race_baselines
   resources :ratings
 
-  devise_for :voters
+  devise_for :voters, controllers: { omniauth_callbacks: "voters/omniauth_callbacks" }
   resources :voters
   resources :residences
   resources :candidacies
   resources :people
-  resources :elections
+  resource :ballot, only: :show
+  resource :residence_claim, only: %i[new create], path: "ballot/residence" do
+    post :preview
+  end
+  resources :past_residences, only: %i[index new create destroy], path: "ballot/residences" do
+    patch :move_out, on: :member
+  end
+  resources :mock_elections, only: [ :new, :create, :destroy ]
+  get "races/:race_id/results", to: "race_results#show", as: :race_results
+  get "candidacies/:id/card", to: "candidacy_cards#show", as: :candidacy_card
+  resources :elections do
+    resources :races, only: [ :index ]
+  end
+  resources :races
   resources :years
   resources :offices do
-    resources :elections, only: [:index]
+    resources :races, only: [ :index ]
   end
   resources :positions
-  resources :cities
-  resources :states
+  resources :municipalities
+  resources :counties
+  resources :districts
+  resources :states do
+    resources :municipalities, only: [ :index ]
+  end
   resources :countries do
-    resources :states, only: [:index]
+    resources :states, only: [ :index ]
   end
 
-  resources :mountains, only: [:index, :show, :edit, :update] do
+  resources :mountains, only: [ :index, :show, :edit, :update ] do
     member do
       post :simulate
+      patch :primary_candidates
+      patch :draft
+      delete :draft, action: :discard
+      post :save
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -39,10 +74,16 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # Development only: serve SimpleCov coverage reports
+  if Rails.env.development?
+    mount Rack::Files.new(Rails.root.join("coverage")), at: "/coverage"
+    mount Rack::Files.new(Rails.root.join("app/assets/builds")), at: "/dev-assets"
+  end
+
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "countries#index"
+  root "pages#home"
 end

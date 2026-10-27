@@ -1,44 +1,10 @@
 class Views::<%= controller_class_name %>::IndexView < Views::ApplicationView
-  def initialize(<%= plural_table_name %>:, pagy: nil, notice: nil)
-    @<%= plural_table_name %> = <%= plural_table_name %>
-    @pagy = pagy
-    @notice = notice
-  end
+  prop :<%= plural_table_name %>, ActiveRecord::Relation
+  prop :pagy, _Nilable(Pagy)
 
-  def view_template(&)
-    div(class: "scaffold <%= plural_table_name %>-index", id: "index_<%= plural_table_name %>") do
-      render_notice if @notice.present?
-      
-      div do
-        h1 { "<%= human_name.pluralize %>" }
-        link_to "New <%= human_name.downcase %>", 
-                new_<%= singular_route_name %>_path,
-                class: "primary"
-      end
-
-      div(id: "<%= plural_table_name %>") do
-        if @<%= plural_table_name %>.any?
-          @<%= plural_table_name %>.each do |<%= singular_table_name %>|
-            div(id: dom_id(<%= singular_table_name %>, :list_item)) do
-              Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: <%= singular_table_name %>)
-              
-              Ui::ResourceActions(resource: <%= singular_table_name %>)
-            end
-          end
-        else
-          p { "No <%= human_name.downcase.pluralize %> found." }
-        end
-      end
-
-      Views::Components::Pagination(pagy: @pagy) if @pagy
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
+  def view_template
+    ResourceIndex(collection: @<%= plural_table_name %>, pagy: @pagy) do |<%= singular_table_name %>|
+      Views::<%= controller_class_name %>::<%= class_name %>Partial(<%= singular_table_name %>: <%= singular_table_name %>)
     end
   end
 end

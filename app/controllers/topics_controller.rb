@@ -3,13 +3,13 @@ class TopicsController < ApplicationController
 
   # GET /topics or /topics.json
   def index
-    @topics = Topic.all
-    render Views::Topics::IndexView.new(topics: @topics, notice: notice)
+    @pagy, @topics = pagy(Topic.all)
+    render Views::Topics::IndexView.new(topics: @topics, pagy: @pagy)
   end
 
   # GET /topics/1 or /topics/1.json
   def show
-    render Views::Topics::ShowView.new(topic: @topic, notice: notice)
+    render Views::Topics::ShowView.new(topic: @topic)
   end
 
   # GET /topics/new

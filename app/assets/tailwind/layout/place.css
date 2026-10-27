@@ -1,0 +1,102 @@
+/* Place pages (a municipality): header with actions, facts, a main column and a side column. */
+
+.place-page {
+  @apply flex flex-col;
+}
+
+.place-header {
+  @apply flex flex-col items-start;
+}
+
+.place-actions {
+  @apply flex flex-wrap items-center;
+}
+
+.place-layout {
+  @apply flex flex-wrap items-start;
+}
+
+.place-main {
+  @apply flex flex-col flex-[999_1_640px] min-w-0;
+}
+
+.place-aside {
+  @apply flex flex-col flex-[1_1_280px] min-w-0;
+}
+
+.place-section {
+  @apply flex flex-col;
+}
+
+.place-section-heading {
+  @apply flex flex-wrap items-baseline justify-between;
+}
+
+.place-race-grid {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+}
+
+.place-race {
+  @apply flex flex-col justify-between;
+}
+
+.place-race-heading {
+  @apply flex flex-col;
+}
+
+.races-above {
+  @apply flex flex-wrap items-center;
+}
+
+.seat-list {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+}
+
+.seat-item {
+  @apply flex items-baseline justify-between;
+}
+
+.election-timeline {
+  @apply flex flex-col;
+}
+
+.timeline-item {
+  @apply grid items-center;
+  grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+}
+
+.place-facts-list {
+  @apply flex flex-col;
+}
+
+.place-fact-row {
+  @apply flex items-baseline justify-between;
+}
+
+.within-here {
+  @apply flex flex-col;
+}
+
+.chip-list {
+  @apply flex flex-wrap;
+}
+
+.nearby-list {
+  @apply grid grid-cols-2;
+}
+
+@media (max-width: 640px) {
+  .place-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .timeline-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .timeline-date {
+    grid-column: 1 / -1;
+  }
+}

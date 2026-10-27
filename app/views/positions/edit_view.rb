@@ -1,22 +1,7 @@
 class Views::Positions::EditView < Views::ApplicationView
-  def initialize(position:)
-    @position = position
-  end
+  prop :position, Position
 
-  def view_template(&)
-    div(class: "scaffold position-edit", id: dom_id(@position, :edit)) do
-      h1 { "Editing position" }
-      
-      Views::Positions::PositionForm(position: @position)
-      
-      div do
-        link_to "Show this position", 
-                @position,
-                class: "secondary"
-        link_to "Back to positions", 
-                positions_path,
-                class: "secondary"
-      end
-    end
+  def view_template
+    ResourceFormPage(record: @position) { render Views::Positions::PositionForm.new(@position) }
   end
 end

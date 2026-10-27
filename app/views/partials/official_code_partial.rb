@@ -22,22 +22,22 @@ class Views::Partials::OfficialCodePartial < Views::ApplicationView
       div do
         span { "Full text:" }
         whitespace
-        div(class: "mt-1") { simple_format(@official_code.full_text) }
+        div(class: "formatted-text") { simple_format(@official_code.full_text) }
       end
       div do
         span { "Summary:" }
         whitespace
-        div(class: "mt-1") { simple_format(@official_code.summary) }
+        div(class: "formatted-text") { simple_format(@official_code.summary) }
       end
       div do
         span { "Enforcement mechanism:" }
         whitespace
-        div(class: "mt-1") { simple_format(@official_code.enforcement_mechanism) }
+        div(class: "formatted-text") { simple_format(@official_code.enforcement_mechanism) }
       end
       div do
         span { "Penalty structure:" }
         whitespace
-        div(class: "mt-1") { simple_format(@official_code.penalty_structure) }
+        div(class: "formatted-text") { simple_format(@official_code.penalty_structure) }
       end
       div do
         span { "Effective date:" }

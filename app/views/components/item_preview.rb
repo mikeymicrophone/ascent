@@ -59,11 +59,11 @@ class Views::Components::ItemPreview < Views::ApplicationView
   def view_all_path
     # Use Rails path helpers - pluralize association name for index path
     path_method = "#{@association_name}_path"
-    
+
     # Build path with parent object filter
     parent_class = @parent_object.class.name.downcase
     parent_id_param = "#{parent_class}_id"
-    
+
     send(path_method, parent_id_param => @parent_object.id)
   end
 end

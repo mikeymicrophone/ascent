@@ -269,11 +269,11 @@ select.error {
   border-color: var(--quick-stats-border);
 }
 
-.stat-item .stat-value {
+.quick-stats .stat-value {
   color: var(--quick-stats-value);
 }
 
-.stat-item .stat-label {
+.quick-stats .stat-label {
   color: var(--quick-stats-label);
 }
 
@@ -283,11 +283,11 @@ select.error {
   border-color: var(--geo-summary-border);
 }
 
-.summary-value {
+.summary-grid .stat-value {
   color: var(--geo-summary-value);
 }
 
-.summary-label {
+.summary-grid .stat-label {
   color: var(--geo-summary-label);
 }
 
@@ -352,9 +352,9 @@ select.error {
   box-shadow: var(--shadow-soft);
 }
 
-.city-partial {
-  background-color: var(--entity-city-bg);
-  border-color: var(--entity-city);
+.municipality-partial {
+  background-color: var(--entity-municipality-bg);
+  border-color: var(--entity-municipality);
   @apply border-l-4 border-t border-r border-b;
   box-shadow: var(--shadow-soft);
 }
@@ -407,4 +407,100 @@ select.error {
   border-color: var(--card-border);
   @apply border;
   box-shadow: var(--shadow-soft);
+}
+
+/* Flash message colors */
+.flash-notice {
+  background-color: var(--flash-notice-bg);
+  border-color: var(--flash-notice-border);
+  color: var(--flash-notice-text);
+}
+
+.flash-alert {
+  background-color: var(--flash-alert-bg);
+  border-color: var(--flash-alert-border);
+  color: var(--flash-alert-text);
+}
+
+/* Action bar colors */
+.action-bar .action-button {
+  background-color: var(--action-bg);
+  border-color: var(--action-border);
+  color: var(--action-text);
+}
+
+.action-bar .action-button.marked {
+  background-color: var(--action-marked-bg);
+  border-color: var(--action-marked-border);
+  color: var(--action-marked-text);
+}
+
+.action-bar .action-count {
+  background-color: var(--action-count-bg);
+}
+
+.action-bar .action-status {
+  color: var(--action-marked-text);
+}
+
+/* Saved page colors */
+.saved-item {
+  background-color: var(--action-bg);
+  border-color: var(--action-border);
+}
+
+.saved-type,
+.saved-empty {
+  color: var(--action-muted-text);
+}
+
+/* A favorited heart fills in */
+.action-bar .action-favorite.marked .icon-heart {
+  fill: currentColor;
+}
+
+.resource-action-show {
+  color: var(--brand-ink);
+  background: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.resource-action-simulate {
+  color: var(--brand-ink);
+  background: var(--brand-glacier);
+  border-color: var(--brand-mist);
+}
+
+.resource-action:hover {
+  color: var(--brand-link);
+  background: var(--brand-snow);
+  border-color: var(--brand-link);
+}
+
+.resource-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.resource-title-link .resource-action-icon {
+  color: var(--brand-link);
+}
+
+.resource-title-link:hover {
+  color: var(--brand-link);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.race-filters {
+  background: var(--brand-paper);
+}
+
+/* A candidacy's rating totals */
+.candidacy-ratings-title {
+  color: var(--info-label-color);
+}
+
+.candidacy-ratings-empty {
+  color: var(--text-muted);
 }

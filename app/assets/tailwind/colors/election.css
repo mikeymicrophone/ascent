@@ -1,0 +1,171 @@
+.election-page {
+  color: var(--brand-basalt);
+}
+
+/* The stub: a white top with the day, a perforated tear line, and a basalt bottom with the countdown. */
+.date-stub {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+}
+
+.date-stub-month {
+  color: var(--brand-rope-deep);
+}
+
+.date-stub-weekday {
+  color: var(--brand-slate);
+}
+
+.date-stub-bottom {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+  border-top: 2px dashed var(--brand-snow);
+  background-image: radial-gradient(circle at 0 0, var(--brand-lichen) 11px, transparent 12px),
+    radial-gradient(circle at 100% 0, var(--brand-lichen) 11px, transparent 12px);
+}
+
+.countdown-cell {
+  background-color: var(--brand-slate);
+  border-color: var(--brand-moss);
+}
+
+.countdown-cell.is-today {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-snow);
+}
+
+.countdown-cell.is-early-voting {
+  background-color: var(--brand-rope);
+  border-color: var(--brand-rope);
+}
+
+.countdown-cell.is-election-day {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-summit);
+}
+
+.countdown-scale,
+.date-stub-note {
+  color: var(--brand-mist);
+}
+
+/* The ballot sheet: paper, a heavy top rule, and dotted leaders between contests. */
+.ballot-sheet {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+  border-top-color: var(--brand-basalt);
+  box-shadow: 0 1px 0 var(--brand-mist), 0 18px 40px -24px rgba(21, 32, 27, 0.35);
+}
+
+.ballot-sheet-head {
+  border-color: var(--brand-basalt);
+}
+
+.ballot-sheet-meta,
+.contest-meta,
+.contest-candidates,
+.sibling-label {
+  color: var(--brand-slate);
+}
+
+.contest {
+  border-color: var(--brand-pebble);
+}
+
+.candidate-given,
+.candidate-more {
+  color: var(--brand-slate);
+}
+
+.candidate-surname {
+  color: var(--brand-basalt);
+}
+
+.candidate-item::marker {
+  color: var(--brand-pebble);
+}
+
+.icon-action {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.icon-action-primary {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.contest-number {
+  color: var(--brand-pebble);
+}
+
+.contest-level {
+  border-color: var(--brand-mist);
+  color: var(--brand-moss);
+}
+
+.seat-chip {
+  color: var(--brand-basalt);
+}
+
+.seat-chip-untouched {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-gravel);
+}
+
+.seat-chip-started {
+  background-color: var(--brand-rope-wash);
+  border-color: var(--brand-rope-deep);
+}
+
+.seat-chip-saved {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-basalt);
+}
+
+.seat-chip-count {
+  background-color: var(--brand-contour);
+  color: var(--brand-slate);
+}
+
+.seat-chip-saved .seat-chip-count {
+  background-color: var(--brand-summit-wash);
+  color: var(--brand-basalt);
+}
+
+.more-contests-toggle {
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.candidate-name {
+  background: none;
+  color: inherit;
+}
+
+.candidate-popover {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+  box-shadow: 0 24px 60px -20px rgba(21, 32, 27, 0.45);
+}
+
+.candidate-popover::backdrop {
+  background-color: rgba(21, 32, 27, 0.28);
+}
+
+.candidate-card-office,
+.endorsement-kind,
+.support-stat-label,
+.candidate-card-loading {
+  color: var(--brand-slate);
+}
+
+.candidate-card-section {
+  border-color: var(--brand-contour);
+}
+
+.support-stat {
+  background-color: var(--brand-lichen);
+}

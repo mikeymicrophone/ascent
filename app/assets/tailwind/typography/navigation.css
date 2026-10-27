@@ -1,28 +1,41 @@
 /* Navigation Typography - Layer 3: Fonts and text properties */
 
 .brand-link {
-  @apply font-['Caprasimo'] text-2xl;
+  @apply font-['Bricolage_Grotesque'] text-3xl;
   @apply no-underline;
+}
+
+.brand-wordmark {
+  @apply font-extrabold leading-none tracking-tight;
+  font-stretch: 75%;
 }
 
 .nav-link {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Bricolage_Grotesque'] font-semibold;
   @apply no-underline;
 }
 
-/* Dropdown Typography */
 .nav-group-header {
-  @apply font-['Kanit'] font-semibold;
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold uppercase tracking-[0.18em];
   @apply no-underline;
 }
 
 .nav-group-arrow {
-  @apply font-['Kanit'] font-normal;
+  @apply font-['Bricolage_Grotesque'] text-xs font-normal;
 }
 
-/* Auth Links */
+.nav-auth-link,
 .sign-in-link,
 .sign-up-link {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold;
   @apply no-underline;
+}
+
+.voter-greeting {
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold;
+}
+
+/* Phone menu button */
+.nav-menu-toggle {
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold;
 }

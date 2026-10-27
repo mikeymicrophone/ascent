@@ -6,10 +6,11 @@
   input[type="submit"],
   a[class*="button"] {
     &.primary {
-      @apply bg-blue-600 text-white;
-      
+      background-color: var(--btn-primary-bg);
+      @apply text-white;
+
       &:hover {
-        @apply bg-blue-500;
+        background-color: var(--btn-primary-hover);
       }
     }
     
@@ -35,11 +36,6 @@
     @apply bg-white;
   }
   
-  /* Notice Colors */
-  #notice {
-    @apply bg-green-50 text-green-500;
-  }
-  
   /* Form Input Colors */
   input,
   textarea,
@@ -47,7 +43,7 @@
     @apply border-gray-400;
     
     &:focus {
-      @apply outline-blue-600;
+      outline-color: var(--input-focus-ring);
     }
     
     &.error {
@@ -63,7 +59,7 @@
     @apply border-gray-400;
     
     &:focus {
-      @apply outline-blue-600;
+      outline-color: var(--input-focus-ring);
     }
     
     &.error {

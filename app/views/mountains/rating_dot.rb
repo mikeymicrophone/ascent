@@ -12,7 +12,8 @@ class Views::Mountains::RatingDot < Views::Components::Base
     div(
       class: rating_dot_classes,
       style: "top: #{@position_y}px;",
-      title: rating_tooltip
+      title: rating_tooltip,
+      data: { role: "rating-dot" }
     ) do
       # Dot content if needed
     end
@@ -21,14 +22,14 @@ class Views::Mountains::RatingDot < Views::Components::Base
   private
 
   def rating_dot_classes
-    classes = ["rating-dot"]
-    
+    classes = [ "rating-dot" ]
+
     if @has_rating
       classes << (@is_approved ? "approved" : "disapproved")
     else
       classes << "unrated"
     end
-    
+
     classes.join(" ")
   end
 

@@ -14,12 +14,12 @@ class Views::Partials::StancePartial < Views::ApplicationView
     else
       build_default_fields
     end
-    
+
     div(id: dom_id(@stance), class: "stance-partial") do
       HierarchicalNavigation(current_object: @stance)
 
       @fields.each { it[:content].call }
-      
+
       @custom_fields.each do |field|
         div(class: "custom-field") do
           span { "#{field[:label]}:" }
@@ -70,14 +70,14 @@ class Views::Partials::StancePartial < Views::ApplicationView
 
   def add_explanation_field
     return unless @stance.explanation.present?
-    
+
     @fields << {
       type: :explanation,
       content: -> {
         div do
           span { "Explanation:" }
           whitespace
-          div(class: "mt-1") { simple_format(@stance.explanation) }
+          div(class: "formatted-text") { simple_format(@stance.explanation) }
         end
       }
     }
@@ -98,14 +98,14 @@ class Views::Partials::StancePartial < Views::ApplicationView
 
   def add_evidence_field
     return unless @stance.evidence_links.present?
-    
+
     @fields << {
       type: :evidence,
       content: -> {
         div do
           span { "Evidence links:" }
           whitespace
-          div(class: "mt-1") { simple_format(@stance.evidence_links) }
+          div(class: "formatted-text") { simple_format(@stance.evidence_links) }
         end
       }
     }

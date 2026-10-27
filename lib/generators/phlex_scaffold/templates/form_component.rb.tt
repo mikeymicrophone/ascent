@@ -1,87 +1,27 @@
-class Views::<%= controller_class_name %>::<%= class_name %>Form < Views::ApplicationView
-  def initialize(<%= singular_table_name %>:)
-    @<%= singular_table_name %> = <%= singular_table_name %>
-  end
-
-  def view_template(&)
-    form_with(model: @<%= singular_table_name %>, id: dom_id(@<%= singular_table_name %>, :form)) do |form|
-      render_errors if @<%= singular_table_name %>.errors.any?
-      
+class Views::<%= controller_class_name %>::<%= class_name %>Form < Views::Components::Forms::Base
+  def view_template
 <% form_attributes.each do |attribute| -%>
 <% if attribute.password_digest? -%>
-      div do
-        form.label :password
-        form.password_field :password, 
-                            class: input_classes(@<%= singular_table_name %>.errors[:password])
-      end
-
-      div do
-        form.label :password_confirmation
-        form.password_field :password_confirmation,
-                            class: input_classes(@<%= singular_table_name %>.errors[:password_confirmation])
-      end
+    row field(:password).password
+    row field(:password_confirmation).password
 <% elsif attribute.attachments? -%>
-      div do
-        form.label :<%= attribute.column_name %>
-        form.<%= attribute.field_type %> :<%= attribute.column_name %>,
-                                        multiple: true,
-                                        class: input_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
-      end
-<% else -%>
-      div do
-<% if attribute.reference? -%>
+    row field(:<%= attribute.column_name %>).file(multiple: true)
+<% elsif attribute.reference? -%>
 <% association_name = attribute.singular_name -%>
-<% model_name = association_name.classify -%>
-        form.label :<%= attribute.column_name %>, "<%= association_name.humanize %>"
-        form.collection_select :<%= attribute.column_name %>, 
-                               ::<%= model_name %>.all, 
-                               :id, 
-                               :name,
-                               { prompt: "Select a <%= association_name.humanize.downcase %>" },
-                               { class: input_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>]) }
-<% else -%>
-        form.label :<%= attribute.column_name %>
-<% if attribute.field_type == :textarea || attribute.field_type == :text_area -%>
-        form.<%= attribute.field_type %> :<%= attribute.column_name %>,
-                                        rows: 4,
-                                        class: input_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
+    row field(:<%= attribute.column_name %>).collection_select(::<%= association_name.classify %>.all, text: :name, prompt: "Select <%= association_name.humanize.downcase.then { |name| name.match?(/\A[aeiou]/) ? "an #{name}" : "a #{name}" } %>")
+<% elsif attribute.field_type == :textarea || attribute.field_type == :text_area -%>
+    row field(:<%= attribute.column_name %>).textarea(rows: 4)
 <% elsif attribute.field_type == :checkbox || attribute.field_type == :check_box -%>
-        form.<%= attribute.field_type %> :<%= attribute.column_name %>,
-                                        class: checkbox_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
+    row field(:<%= attribute.column_name %>).checkbox
+<% elsif attribute.field_type == :number_field -%>
+    row field(:<%= attribute.column_name %>).number
+<% elsif attribute.field_type == :date_field -%>
+    row field(:<%= attribute.column_name %>).date
+<% elsif attribute.field_type == :datetime_field || attribute.field_type == :datetime_local_field -%>
+    row field(:<%= attribute.column_name %>).datetime
 <% else -%>
-        form.<%= attribute.field_type %> :<%= attribute.column_name %>,
-                                        class: input_classes(@<%= singular_table_name %>.errors[:<%= attribute.column_name %>])
+    row field(:<%= attribute.column_name %>).text
 <% end -%>
 <% end -%>
-      end
-<% end -%>
-
-<% end -%>
-      div do
-        form.submit class: "primary"
-      end
-    end
-  end
-
-  private
-
-  def render_errors
-    div(id: "error_explanation") do
-      h2 { "#{pluralize(@<%= singular_table_name %>.errors.count, 'error')} prohibited this <%= singular_table_name %> from being saved:" }
-      
-      ul(class: "list-disc ml-6") do
-        @<%= singular_table_name %>.errors.each do |error|
-          li { error.full_message }
-        end
-      end
-    end
-  end
-
-  def input_classes(errors)
-    errors.any? ? "error" : ""
-  end
-
-  def checkbox_classes(errors)
-    errors.any? ? "error" : ""
   end
 end

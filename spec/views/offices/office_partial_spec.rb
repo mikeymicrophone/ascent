@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe Views::Offices::OfficePartial, type: :view do
+RSpec.describe Views::Partials::OfficePartial, type: :view do
   let(:position) { create(:position, title: "Mayor") }
-  let(:city) { create(:city, name: "Springfield") }
-  let(:office) { create(:office, position: position, jurisdiction: city, is_active: true, notes: "City executive office") }
-  
+  let(:city) { create(:municipality, :with_jurisdiction, name: "Springfield") }
+  let(:office) { create(:office, position: position, jurisdiction: city.jurisdiction, is_active: true, notes: "City executive office") }
+
   let(:partial) { described_class.new(office: office) }
-  
+
   def render_component(component = partial)
     view_context.render(component)
   end
@@ -20,7 +20,7 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
       c.request = ActionDispatch::TestRequest.create
     end
   end
-  
+
   let(:rendered) { render_component }
 
   describe '#view_template' do
@@ -52,7 +52,7 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
     end
 
     context 'when office is inactive' do
-      let(:inactive_office) { create(:office, :inactive, position: position, jurisdiction: city) }
+      let(:inactive_office) { create(:office, :inactive, position: position, jurisdiction: city.jurisdiction) }
       let(:inactive_partial) { described_class.new(office: inactive_office) }
       let(:inactive_rendered) { render_component(inactive_partial) }
 
@@ -62,7 +62,7 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
     end
 
     context 'when office has multiline notes' do
-      let(:multiline_office) { create(:office, position: position, jurisdiction: city, notes: "Line 1\nLine 2\nLine 3") }
+      let(:multiline_office) { create(:office, position: position, jurisdiction: city.jurisdiction, notes: "Line 1\nLine 2\nLine 3") }
       let(:multiline_partial) { described_class.new(office: multiline_office) }
       let(:multiline_rendered) { render_component(multiline_partial) }
 
@@ -82,12 +82,12 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
     end
 
     context 'when office has elections' do
-      let!(:election1) { create(:election, office: office, election_date: 1.year.ago) }
-      let!(:election2) { create(:election, office: office, election_date: 6.months.ago) }
-      let!(:election3) { create(:election, office: office, election_date: 1.month.ago) }
+      let!(:race1) { create_race_for(office, election_date: 1.year.ago) }
+      let!(:race2) { create_race_for(office, election_date: 6.months.ago) }
+      let!(:race3) { create_race_for(office, election_date: 1.month.ago) }
 
       before do
-        # Reload office to pick up elections association
+        # Reload office to pick up races association
         office.reload
       end
 
@@ -112,7 +112,7 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
       context 'when office has many elections' do
         before do
           # Create additional elections beyond the limit of 3
-          create_list(:election, 5, office: office)
+          5.times { create_race_for(office) }
           office.reload
         end
 
@@ -127,11 +127,11 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
     end
 
     context 'with elections that have candidates' do
-      let!(:election) { create(:election, office: office) }
+      let!(:race) { create_race_for(office) }
       let!(:candidate1) { create(:person, first_name: "John", last_name: "Doe") }
       let!(:candidate2) { create(:person, first_name: "Jane", last_name: "Smith") }
-      let!(:candidacy1) { create(:candidacy, election: election, person: candidate1) }
-      let!(:candidacy2) { create(:candidacy, election: election, person: candidate2) }
+      let!(:candidacy1) { create(:candidacy, race: race, person: candidate1) }
+      let!(:candidacy2) { create(:candidacy, race: race, person: candidate2) }
 
       before do
         office.reload
@@ -140,14 +140,14 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
       it 'renders election with candidate information' do
         expect(rendered).to include("Election History")
         # The elections should include candidate data through the includes
-        expect(office.elections.first.candidates).to include(candidate1, candidate2)
+        expect(office.races.first.candidates).to include(candidate1, candidate2)
       end
     end
   end
 
   describe 'integration with components' do
-    let!(:election) { create(:election, office: office, election_date: 1.year.ago) }
-    let(:office_with_elections) { Office.includes(:elections).find(office.id) }
+    let!(:race) { create_race_for(office, election_date: 1.year.ago) }
+    let(:office_with_elections) { Office.includes(:races).find(office.id) }
     let(:partial_with_elections) { described_class.new(office: office_with_elections) }
     let(:rendered_with_elections) { render_component(partial_with_elections) }
 
@@ -163,11 +163,11 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
 
   describe 'accessibility' do
     it 'includes proper button semantics for expandable sections' do
-      election = create(:election, office: office)
-      office_with_elections = Office.includes(:elections).find(office.id)
+      race = create_race_for(office)
+      office_with_elections = Office.includes(:races).find(office.id)
       partial_with_elections = described_class.new(office: office_with_elections)
       rendered_with_elections = render_component(partial_with_elections)
-      
+
       expect(rendered_with_elections).to include('<button')
       expect(rendered_with_elections).to include('expandable-header')
     end
@@ -181,14 +181,14 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
 
   describe 'current office holder' do
     context 'when office has completed elections' do
-      let(:completed_office) { create(:office, position: position, jurisdiction: city) }
-      let!(:completed_election) { create(:election, office: completed_office, status: 'completed', election_date: 1.year.ago) }
-      let!(:candidacy) { create(:candidacy, election: completed_election) }
-      let!(:voter_baseline) { create(:voter_election_baseline, election: completed_election, baseline: 5) }
+      let(:completed_office) { create(:office, position: position, jurisdiction: city.jurisdiction) }
+      let!(:completed_race) { create_race_for(completed_office, :completed, election_date: 1.year.ago) }
+      let!(:candidacy) { create(:candidacy, race: completed_race) }
+      let!(:voter_baseline) { create(:voter_race_baseline, race: completed_race, baseline: 5) }
       let!(:rating) { create(:rating, candidacy: candidacy, voter: voter_baseline.voter, rating: 7) }
       let(:completed_partial) { described_class.new(office: completed_office) }
       let(:completed_rendered) { render_component(completed_partial) }
-      
+
       before do
         completed_office.reload
       end
@@ -199,7 +199,7 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
       end
 
       it 'shows the winner from most recent completed election' do
-        expect(completed_rendered).to include(candidacy.person.name)
+        expect(completed_rendered).to include(ERB::Util.html_escape(candidacy.person.name))
         expect(completed_rendered).to include('current-holder-name')
       end
     end
@@ -214,10 +214,10 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
 
   describe 'election timeline details' do
     context 'with completed elections' do
-      let!(:completed_election) { create(:election, office: office, status: 'completed', election_date: 1.year.ago) }
-      let!(:candidacy1) { create(:candidacy, election: completed_election) }
-      let!(:candidacy2) { create(:candidacy, election: completed_election) }
-      let!(:voter_baseline) { create(:voter_election_baseline, election: completed_election, baseline: 5) }
+      let!(:completed_race) { create_race_for(office, :completed, election_date: 1.year.ago) }
+      let!(:candidacy1) { create(:candidacy, race: completed_race) }
+      let!(:candidacy2) { create(:candidacy, race: completed_race) }
+      let!(:voter_baseline) { create(:voter_race_baseline, race: completed_race, baseline: 5) }
       let!(:rating1) { create(:rating, candidacy: candidacy1, voter: voter_baseline.voter, rating: 8) }
       let!(:rating2) { create(:rating, candidacy: candidacy2, voter: voter_baseline.voter, rating: 3) }
 
@@ -228,14 +228,14 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
       it 'shows election results for completed elections' do
         expect(rendered).to include('Results')
         expect(rendered).to include('class="election-results"')
-        expect(rendered).to include(candidacy1.person.name)
+        expect(rendered).to include(ERB::Util.html_escape(candidacy1.person.name))
       end
 
       it 'shows voter turnout statistics' do
         expect(rendered).to include('Voter Participation')
         expect(rendered).to include('class="turnout-stats"')
-        expect(rendered).to include('Registered Voters:')
-        expect(rendered).to include('Total Approvals:')
+        expect(rendered).to include('Registered Voters')
+        expect(rendered).to include('Total Approvals')
       end
 
       it 'includes winner indicator for top candidate' do
@@ -245,7 +245,7 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
     end
 
     context 'with upcoming elections' do
-      let!(:upcoming_election) { create(:election, office: office, status: 'upcoming', election_date: 1.month.from_now) }
+      let!(:upcoming_race) { create_race_for(office, :upcoming, election_date: 1.month.from_now) }
 
       before do
         office.reload
@@ -262,9 +262,9 @@ RSpec.describe Views::Offices::OfficePartial, type: :view do
   describe 'performance considerations' do
     it 'works with preloaded associations' do
       # This test ensures the partial works with preloaded data
-      office_with_includes = Office.includes(:position, :elections).find(office.id)
+      office_with_includes = Office.includes(:position, :races).find(office.id)
       partial_with_includes = described_class.new(office: office_with_includes)
-      
+
       expect { render_component(partial_with_includes) }.not_to raise_error
     end
   end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GoverningBodyPolicy < ApplicationPolicy
-  # Voters can view and create governing bodies
   def index?
     true
   end
@@ -11,7 +10,7 @@ class GoverningBodyPolicy < ApplicationPolicy
   end
 
   def create?
-    true
+    admin?
   end
 
   def new?
@@ -19,15 +18,20 @@ class GoverningBodyPolicy < ApplicationPolicy
   end
 
   def edit?
-    true
+    admin?
   end
 
   def update?
     edit?
   end
 
-  # Voters cannot delete governing bodies
   def destroy?
-    false
+    admin?
+  end
+
+  private
+
+  def admin?
+    voter&.admin?
   end
 end

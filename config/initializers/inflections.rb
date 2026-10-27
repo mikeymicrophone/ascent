@@ -14,3 +14,8 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym "RESTful"
 # end
+
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  # Brand classes use micharisma_ filenames while preserving MICharisma casing.
+  inflect.acronym "MICharisma"
+end

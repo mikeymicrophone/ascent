@@ -1,0 +1,43 @@
+.place-section-subtitle,
+.races-above-label,
+.timeline-date,
+.seat-count,
+.place-chip,
+.place-race-seat {
+  @apply font-['Martian_Mono'] text-xs tracking-[0.04em];
+}
+
+.races-above-label {
+  @apply font-semibold uppercase tracking-[0.08em];
+}
+
+.place-race-office {
+  @apply font-['Bricolage_Grotesque'] text-xl font-bold leading-tight m-0;
+  font-stretch: 85%;
+}
+
+.place-race-seat {
+  @apply uppercase;
+}
+
+.races-above-count,
+.seat-title,
+.timeline-name,
+.place-fact-row dd,
+.nearby-list {
+  @apply text-[15px];
+}
+
+.seat-title,
+.timeline-name {
+  @apply font-semibold;
+}
+
+.place-fact-row dt {
+  @apply text-sm;
+}
+
+.stat-tile-date .stat-tile-value {
+  @apply font-['Bricolage_Grotesque'] font-extrabold;
+  font-stretch: 75%;
+}

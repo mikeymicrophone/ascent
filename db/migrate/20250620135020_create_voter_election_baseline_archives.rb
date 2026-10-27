@@ -11,8 +11,8 @@ class CreateVoterElectionBaselineArchives < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
-    add_index :voter_election_baseline_archives, [:voter_id, :election_id], 
+
+    add_index :voter_election_baseline_archives, [ :voter_id, :election_id ],
               name: 'index_baseline_archives_on_voter_and_election'
     add_index :voter_election_baseline_archives, :archived_at
   end

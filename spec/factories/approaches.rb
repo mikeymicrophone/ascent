@@ -53,16 +53,15 @@ FactoryBot.define do
       description { "Establish historic preservation ordinances, create cultural arts funding, and develop community cultural centers to preserve and celebrate local heritage." }
       association :issue, factory: :cultural_preservation_issue
     end
-    factory :affordable_housing_approach, traits: [:affordable_housing_program]
-    factory :school_improvement_approach, traits: [:school_improvement_initiative]
-    factory :transit_expansion_approach, traits: [:transit_expansion]
-    factory :mobile_health_approach, traits: [:mobile_health_clinics]
-    factory :job_training_approach, traits: [:job_training_program]
-    factory :environmental_regulations_approach, traits: [:environmental_regulations]
-    factory :transparency_platform_approach, traits: [:transparency_platform]
-    factory :senior_support_approach, traits: [:senior_support_services]
-    factory :infrastructure_investment_approach, traits: [:infrastructure_investment]
-    factory :cultural_preservation_approach, traits: [:cultural_preservation_program]
+    factory :affordable_housing_approach, traits: [ :affordable_housing_program ]
+    factory :school_improvement_approach, traits: [ :school_improvement_initiative ]
+    factory :transit_expansion_approach, traits: [ :transit_expansion ]
+    factory :mobile_health_approach, traits: [ :mobile_health_clinics ]
+    factory :job_training_approach, traits: [ :job_training_program ]
+    factory :environmental_regulations_approach, traits: [ :environmental_regulations ]
+    factory :transparency_platform_approach, traits: [ :transparency_platform ]
+    factory :senior_support_approach, traits: [ :senior_support_services ]
+    factory :infrastructure_investment_approach, traits: [ :infrastructure_investment ]
+    factory :cultural_preservation_approach, traits: [ :cultural_preservation_program ]
   end
 end
-

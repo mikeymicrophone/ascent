@@ -11,13 +11,13 @@ module Statisticable
         active_elections: item.active_elections_count,
         total_offices: item.total_offices_count
       }
-    when State
+    when State, County
       {
         voters: item.voters.count,
         active_elections: item.active_elections_count,
         total_offices: item.total_offices_count
       }
-    when City
+    when Municipality
       {
         voters: item.voters.count,
         active_elections: item.active_elections.count,
@@ -35,13 +35,13 @@ module Statisticable
     when Country
       electorate_stats.merge({
         total_states: item.states.count,
-        total_cities: item.states.joins(:cities).count
+        total_municipalities: item.states.joins(:municipalities).count
       })
     when State
       electorate_stats.merge({
-        total_cities: item.cities.count
+        total_municipalities: item.municipalities.count
       })
-    when City
+    when Municipality
       electorate_stats
     else
       electorate_stats
@@ -58,8 +58,8 @@ module Statisticable
       "Offices"
     when :total_states
       "States"
-    when :total_cities
-      "Cities"
+    when :total_municipalities
+      "Municipalities"
     else
       key.to_s.humanize
     end

@@ -1,22 +1,7 @@
-# frozen_string_literal: true
-
 class Views::Countries::NewView < Views::ApplicationView
-  
-  def initialize(country:)
-    @country = country
-  end
+  prop :country, Country
 
-  def view_template(&)
-    div(class: "scaffold country-new", id: dom_id(@country, :new)) do
-      h1 { "New country" }
-      
-      Views::Countries::CountryForm(country: @country)
-      
-      div do
-        link_to "Back to countries", 
-                countries_path,
-                class: "secondary"
-      end
-    end
+  def view_template
+    ResourceFormPage(record: @country) { render Views::Countries::CountryForm.new(@country) }
   end
 end

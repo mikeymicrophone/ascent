@@ -1,13 +1,19 @@
 /* Navigation Layout - Layer 1: Layout techniques and responsive design */
 
 .main-navigation {
-  @apply flex;
+  @apply fixed top-0 inset-x-0 w-full;
+  @apply flex justify-center;
   z-index: 50;
 }
 
 .nav-container {
-  @apply flex items-center justify-between flex-wrap;
-  @apply w-full max-w-6xl mx-auto;
+  @apply w-full max-w-7xl mx-auto;
+  @apply flex flex-col;
+}
+
+.nav-topbar {
+  @apply flex items-center justify-between;
+  @apply w-full;
 }
 
 .nav-brand {
@@ -15,7 +21,16 @@
 }
 
 .nav-links {
-  @apply flex items-center flex-wrap;
+  @apply flex items-center justify-center flex-wrap;
+  @apply w-full;
+}
+
+.nav-auth {
+  @apply flex items-center justify-end;
+}
+
+.devise-links {
+  @apply flex items-center;
 }
 
 /* Dropdown Layout */
@@ -28,16 +43,16 @@
 }
 
 .nav-group-content {
-  @apply absolute top-full left-0;
+  @apply absolute top-full left-1/2;
   @apply flex flex-col;
   @apply opacity-0 invisible;
-  @apply transform -translate-y-2;
+  @apply transform -translate-x-1/2 -translate-y-2;
   z-index: 100;
 }
 
 .nav-group[data-dropdown-open="true"] .nav-group-content {
   @apply opacity-100 visible;
-  @apply transform translate-y-0;
+  @apply transform -translate-x-1/2 translate-y-0;
 }
 
 .nav-group[data-dropdown-open="true"] .nav-group-arrow {
@@ -48,14 +63,54 @@
   @apply transition-transform duration-200;
 }
 
-/* Responsive layout adjustments */
+/* The menu button only appears on phones */
+.nav-menu-toggle {
+  @apply hidden;
+}
+
 @media (max-width: 768px) {
-  .nav-container {
-    @apply flex-col items-start;
+  .nav-topbar {
+    @apply flex-row flex-wrap items-center;
   }
-  
+
+  .nav-menu-toggle {
+    @apply inline-flex items-center;
+  }
+
   .nav-links {
+    @apply justify-start;
+  }
+
+  .nav-auth {
     @apply w-full justify-start;
+  }
+
+  /* Folded until the menu button opens them */
+  .main-navigation:not([data-menu-open="true"]) .nav-auth,
+  .main-navigation:not([data-menu-open="true"]) .nav-links {
+    @apply hidden;
+  }
+
+  .main-navigation[data-menu-open="true"] .nav-menu-open-icon,
+  .main-navigation:not([data-menu-open="true"]) .nav-menu-close-icon {
+    @apply hidden;
+  }
+
+  .nav-group-content {
+    @apply left-0;
+    @apply transform translate-x-0 -translate-y-2;
+  }
+
+  .nav-group[data-dropdown-open="true"] .nav-group-content {
+    @apply transform translate-x-0 translate-y-0;
   }
 }
 
+/* Brand mark and wordmark */
+.brand-link {
+  @apply inline-flex items-center;
+}
+
+.nav-group-arrow {
+  @apply inline-flex items-center;
+}

@@ -1,0 +1,78 @@
+/* Voting flow states. The rope-orange focus ring marks wherever the keyboard is. */
+
+.pill-button,
+.nav-primary-link,
+.view-toggle-button,
+.group-toggle-link,
+.suggestion-card,
+.race-card,
+.stepper-button {
+  @apply transition-colors cursor-pointer;
+}
+
+.pill-button:hover {
+  background-color: var(--brand-slate);
+  border-color: var(--brand-slate);
+}
+
+.pill-button-outline:hover,
+.pill-button-ghost:hover {
+  background-color: var(--brand-contour);
+  color: var(--brand-basalt);
+}
+
+.pill-button-summit:hover {
+  background-color: var(--brand-summit-wash);
+  border-color: var(--brand-summit);
+}
+
+.pill-button-quiet:disabled {
+  @apply cursor-default;
+}
+
+.nav-primary-link:hover {
+  background-color: var(--brand-contour);
+}
+
+.nav-primary-link.active:hover {
+  background-color: var(--brand-slate);
+}
+
+.race-card:hover,
+.suggestion-card:hover {
+  border-color: var(--brand-basalt);
+}
+
+.stepper-button:hover {
+  background-color: var(--brand-contour);
+}
+
+.text-link:hover,
+.race-card-link:hover,
+.breadcrumb-link:hover {
+  color: var(--brand-rope-deep);
+}
+
+.pill-button:focus-visible,
+.nav-primary-link:focus-visible,
+.view-toggle-button:focus-visible,
+.group-toggle-link:focus-visible,
+.suggestion-card:focus-visible,
+.stepper-button:focus-visible,
+.rating-slider:focus-visible,
+.text-input:focus-visible,
+.place-search-input:focus-visible,
+.text-link:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
+}
+
+.mountain-page .mountain-chart.baseline-dragging {
+  @apply cursor-ns-resize;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rating-dot {
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+}

@@ -2,13 +2,13 @@ class PeopleController < ApplicationController
   before_action :set_person, only: %i[ show edit update destroy ]
 
   def index
-    people_scope = Person.with_candidacy_details
+    people_scope = Person.with_candidacy_details.visible_to(current_voter)
     @pagy, @people = pagy(people_scope)
-    render Views::People::IndexView.new(people: @people, pagy: @pagy, notice: notice)
+    render Views::People::IndexView.new(people: @people, pagy: @pagy)
   end
 
   def show
-    render Views::People::ShowView.new(person: @person, notice: notice)
+    render Views::People::ShowView.new(person: @person)
   end
 
   def new

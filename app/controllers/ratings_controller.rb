@@ -3,11 +3,11 @@ class RatingsController < ApplicationController
 
   def index
     @pagy, @ratings = pagy(Rating.all)
-    render Views::Ratings::IndexView.new(ratings: @ratings, pagy: @pagy, notice: notice)
+    render Views::Ratings::IndexView.new(ratings: @ratings, pagy: @pagy)
   end
 
   def show
-    render Views::Ratings::ShowView.new(rating: @rating, notice: notice)
+    render Views::Ratings::ShowView.new(rating: @rating)
   end
 
   def new

@@ -3,11 +3,11 @@ class PositionsController < ApplicationController
 
   def index
     @pagy, @positions = pagy(Position.all)
-    render Views::Positions::IndexView.new(positions: @positions, pagy: @pagy, notice: notice)
+    render Views::Positions::IndexView.new(positions: @positions, pagy: @pagy)
   end
 
   def show
-    render Views::Positions::ShowView.new(position: @position, notice: notice)
+    render Views::Positions::ShowView.new(position: @position)
   end
 
   def new
@@ -49,6 +49,6 @@ class PositionsController < ApplicationController
   end
 
   def position_params
-    params.require(:position).permit(:title, :description, :is_executive, :term_length_years)
+    params.require(:position).permit(:title, :description, :branch, :term_length_years)
   end
 end

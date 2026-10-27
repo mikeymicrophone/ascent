@@ -1,0 +1,144 @@
+.elections-page {
+  color: var(--brand-basalt);
+}
+
+.listing-tabs {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.listing-tab {
+  color: var(--brand-basalt);
+}
+
+.listing-tab-count {
+  background-color: var(--brand-contour);
+  color: var(--brand-slate);
+}
+
+.listing-tab.is-current {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.listing-tab.is-current .listing-tab-count {
+  background-color: var(--brand-summit);
+  color: var(--brand-basalt);
+}
+
+.listing-search .listing-search-input {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.filter-chip {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+  color: var(--brand-basalt);
+}
+
+.filter-chip.is-current {
+  background-color: var(--brand-basalt);
+  border-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.filter-chip-near.is-current {
+  background-color: var(--brand-summit);
+  color: var(--brand-basalt);
+}
+
+.day-header {
+  background-color: var(--brand-lichen);
+}
+
+.day-stub {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.day-stub-month {
+  color: var(--brand-summit);
+}
+
+.day-header-meta,
+.election-row-place,
+.election-row-ballot {
+  color: var(--brand-slate);
+}
+
+.election-rows {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.election-row {
+  border-color: var(--brand-contour);
+}
+
+.election-row.is-yours {
+  box-shadow: inset 4px 0 0 var(--brand-summit);
+}
+
+.election-row-name {
+  color: var(--brand-basalt);
+}
+
+.row-badge {
+  border-color: var(--brand-mist);
+  color: var(--brand-slate);
+}
+
+.row-badge-yours {
+  background-color: var(--brand-basalt);
+  border-color: var(--brand-basalt);
+  color: var(--brand-summit);
+}
+
+.row-badge-saved {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.row-badge-following {
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.row-badge-mock {
+  background: repeating-linear-gradient(135deg, var(--brand-snow) 0 6px, var(--brand-contour) 6px 12px);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.row-badge-historical {
+  background-color: var(--brand-stone);
+  border-color: var(--brand-pebble);
+  color: var(--brand-basalt);
+}
+
+.your-elections {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.your-elections .eyebrow,
+.your-elections .text-link {
+  color: var(--brand-summit);
+}
+
+.your-election-card {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-snow);
+  color: var(--brand-basalt);
+}
+
+.your-election-date {
+  color: var(--brand-rope-deep);
+}
+
+.your-election-meta {
+  color: var(--brand-slate);
+}

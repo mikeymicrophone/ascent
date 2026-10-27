@@ -1,0 +1,62 @@
+require 'rails_helper'
+
+RSpec.describe "Pages", type: :request do
+  describe "GET /" do
+    it "renders the project overview" do
+      get root_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Ascent helps communities test richer ways to vote before changing the real world.")
+      expect(response.body).to include("For Philanthropic Partners")
+      expect(response.body).to include("About Approval Voting")
+      expect(response.body).to include("Three ways Ascent turns election reform into something testable.")
+    end
+
+    it "shows active race previews when data exists" do
+      race = create(:race, :active)
+      election = race.election
+      election.update!(description: "A model election for the landing page.")
+
+      get root_path
+
+      expect(response.body).to include(election.name)
+      expect(response.body).to include("Open Mountain")
+    end
+  end
+
+  describe "GET /supporters" do
+    it "renders the philanthropic overview page" do
+      get supporters_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Ascent is building public-interest infrastructure for studying better ballots and clearer governance.")
+      expect(response.body).to include("The value proposition is civic capacity, not party advantage.")
+      expect(response.body).to include("What support could fund next")
+    end
+  end
+
+  describe "GET /glossary" do
+    it "renders the schema glossary page" do
+      get glossary_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("How the current data model names the civic concepts in Ascent.")
+      expect(response.body).to include("Each position belongs to a branch: legislative, executive, or judicial.")
+      expect(response.body).to include("An office can also sit in a GoverningBody")
+      expect(response.body).to include("A voter&#39;s approval threshold for one race.")
+      expect(response.body).to include("Separate namespace from the general Topic model.")
+    end
+  end
+
+  describe "GET /approval-voting" do
+    it "renders the case for approval voting from the content file" do
+      get approval_voting_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("The case for a ballot that can say yes to more than one candidate.")
+      expect(response.body).to include("The spoiler effect")
+      expect(response.body).to include("Approval voting is almost embarrassingly simple.")
+      expect(response.body).to include("This is a working thesis, not a finished proof.")
+    end
+  end
+end

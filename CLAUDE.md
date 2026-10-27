@@ -22,6 +22,8 @@ See `doc/llm-assistant/README.md` for complete navigation guide.
 - You can use the browser to navigate to http://ascent.test
 - Visit a page after you are almost finished editing it to see if it renders without error
 - Always use the format /relative/path/to/file.rb:line_number_or_range when referencing a file
+- we have ast-grep
+
 
 ### Development Server
 - `bin/rails restart` - Restart Rails server (after adding gems, configs, lib - normal code changes do not require restart)

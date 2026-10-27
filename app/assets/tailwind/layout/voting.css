@@ -1,0 +1,402 @@
+/* Voting flow layout: My ballot, the mountain, results and mock elections. */
+
+.nav-primary {
+  @apply flex flex-wrap items-center;
+}
+
+.pill-button {
+  @apply inline-flex items-center justify-center;
+}
+
+.inline-form {
+  @apply inline-flex;
+}
+
+.breadcrumb {
+  @apply flex flex-wrap items-center;
+}
+
+.text-link {
+  @apply inline-flex items-center;
+}
+
+.section-rule {
+  @apply flex items-center;
+}
+
+.section-rule::after {
+  content: "";
+  @apply flex-1;
+}
+
+/* Mode strip */
+.mode-strip-inner {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.mode-strip-main {
+  @apply flex flex-wrap items-center;
+}
+
+/* My ballot */
+.ballot-header {
+  @apply flex flex-wrap items-end justify-between;
+}
+
+.ballot-intro {
+  @apply flex flex-col flex-[1_1_520px] min-w-0;
+}
+
+.residence-card {
+  @apply flex flex-col flex-[0_1_460px] min-w-0;
+}
+
+.residence-card-place {
+  @apply flex items-center;
+}
+
+.residence-card-icon {
+  @apply flex items-center justify-center shrink-0;
+}
+
+.residence-card-text {
+  @apply flex flex-col flex-1 min-w-0;
+}
+
+.progress-bar,
+.progress-counts {
+  @apply flex flex-wrap;
+}
+
+.progress-segment {
+  flex-basis: 0;
+}
+
+.ballot-levels {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(600px, 100%), 1fr));
+}
+
+.ballot-level {
+  @apply flex flex-col min-w-0;
+}
+
+.race-card-grid {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+}
+
+.race-card {
+  @apply flex flex-col justify-between;
+}
+
+.race-card-top,
+.race-card-bottom {
+  @apply flex flex-wrap items-start justify-between;
+}
+
+.race-card-bottom {
+  @apply items-center;
+}
+
+.race-card-heading {
+  @apply flex flex-col min-w-0;
+}
+
+.race-card-actions {
+  @apply flex items-center;
+}
+
+.elsewhere {
+  @apply flex flex-col;
+}
+
+.elsewhere-header {
+  @apply flex flex-wrap items-end justify-between;
+}
+
+.elsewhere-intro {
+  @apply flex flex-col flex-[1_1_460px] min-w-0;
+}
+
+.eyebrow {
+  @apply inline-flex items-center;
+}
+
+.place-search {
+  @apply flex flex-col flex-[1_1_400px] min-w-0;
+}
+
+.place-search-row {
+  @apply flex;
+}
+
+.place-search-input {
+  @apply flex-1 min-w-0;
+}
+
+.suggestion-grid {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+}
+
+.suggestion-card {
+  @apply flex flex-col;
+}
+
+.suggestion-chip {
+  @apply self-start;
+}
+
+/* Mountain page */
+.race-header {
+  @apply flex flex-wrap items-end justify-between;
+}
+
+.race-header-text {
+  @apply flex flex-col min-w-0;
+}
+
+.race-meta,
+.race-header-actions {
+  @apply flex flex-wrap items-center;
+}
+
+.mountain-layout {
+  @apply flex flex-wrap items-start;
+}
+
+.mountain-panel {
+  @apply flex flex-col flex-[999_1_640px] min-w-0;
+}
+
+.mountain-aside {
+  @apply flex flex-col flex-[1_1_280px] min-w-0;
+}
+
+.mountain-toolbar {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.view-toggle,
+.view-toggle-button,
+.mountain-legend,
+.legend-item {
+  @apply flex items-center;
+}
+
+.mountain-page[data-view="mountain"] .mountain-view-list,
+.mountain-page[data-view="list"] .mountain-view-chart {
+  @apply hidden;
+}
+
+.your-vote-count {
+  @apply flex items-baseline;
+}
+
+.approved-list {
+  @apply flex flex-col;
+}
+
+.approved-item {
+  @apply flex items-center;
+}
+
+.approved-check {
+  @apply flex items-center justify-center shrink-0;
+}
+
+.approved-name {
+  @apply flex-1;
+}
+
+.baseline-stepper {
+  @apply flex items-center;
+}
+
+.stepper-button {
+  @apply flex items-center justify-center;
+}
+
+.baseline-value {
+  @apply flex-1 text-center;
+}
+
+.allowance-pips {
+  @apply flex;
+}
+
+.allowance-pip {
+  @apply flex-1;
+}
+
+.rating-steps {
+  @apply flex flex-col list-decimal;
+}
+
+.official-list {
+  @apply flex flex-col;
+}
+
+.official-item {
+  @apply flex justify-between;
+}
+
+.save-bar {
+  @apply sticky z-10 flex flex-wrap items-center justify-between;
+  bottom: 1rem;
+}
+
+.save-bar-text {
+  @apply flex flex-col min-w-0;
+}
+
+.save-bar-actions {
+  @apply flex items-center;
+}
+
+.rating-list {
+  @apply flex flex-col;
+}
+
+.rating-row {
+  @apply grid items-center;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 4rem;
+}
+
+.rating-row-name {
+  @apply flex flex-col min-w-0;
+}
+
+@media (max-width: 640px) {
+  .rating-row {
+    grid-template-columns: minmax(0, 1fr) 3rem;
+  }
+
+  .rating-row-name {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Results */
+.results-header {
+  @apply flex flex-wrap items-end justify-between;
+}
+
+.results-heading {
+  @apply flex flex-col min-w-0;
+}
+
+.group-toggle {
+  @apply flex flex-wrap;
+}
+
+.stat-tiles {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+}
+
+.stat-tile {
+  @apply flex flex-col;
+}
+
+.results-columns {
+  @apply flex flex-wrap items-stretch;
+}
+
+.results-tally {
+  @apply flex-[999_1_560px] min-w-0;
+}
+
+.results-methods {
+  @apply flex-[1_1_320px] min-w-0;
+}
+
+.results-table {
+  @apply w-full;
+}
+
+.privacy-note {
+  @apply flex items-start;
+}
+
+/* Mock elections */
+.mock-form {
+  @apply flex flex-col;
+}
+
+.form-card {
+  @apply flex flex-col;
+}
+
+.form-row {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+}
+
+.form-field {
+  @apply flex flex-col;
+}
+
+.form-actions {
+  @apply flex flex-wrap items-center;
+}
+
+.results-card .pill-button,
+.ballot-empty .pill-button {
+  @apply self-start;
+}
+
+@media (max-width: 640px) {
+  .save-bar {
+    @apply flex-nowrap;
+  }
+
+  .save-bar-detail {
+    @apply hidden;
+  }
+}
+
+/* Setting where you live */
+.claim-page,
+.claim-header {
+  @apply flex flex-col;
+}
+
+.claim-options {
+  @apply grid items-start;
+  grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
+}
+
+.claim-places {
+  @apply flex flex-col;
+}
+
+.claim-place {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.claim-place-text {
+  @apply flex flex-col min-w-0;
+}
+
+/* The ballot's search sits in a row; inside a claim card's column it keeps its natural height. */
+.claim-option .place-search {
+  @apply flex-none;
+}
+
+.residence-timeline {
+  @apply flex flex-col;
+}
+
+.residence-item {
+  @apply flex flex-wrap items-start justify-between;
+}
+
+.residence-item-text {
+  @apply flex flex-col min-w-0;
+}
+
+.claim-confirm {
+  @apply flex flex-col;
+}

@@ -15,10 +15,7 @@ class Views::Components::GeographicSummary < Views::ApplicationView
         calculate_comprehensive_stats(@current_object).each do |stat_key, stat_value|
           next if stat_value.zero?
 
-          div(class: "summary-stat") do
-            span(class: "summary-value") { stat_value }
-            span(class: "summary-label") { humanize_stat_label(stat_key) }
-          end
+          Stat(value: stat_value, label: humanize_stat_label(stat_key))
         end
       end
     end

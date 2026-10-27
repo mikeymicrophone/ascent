@@ -1,0 +1,490 @@
+/* Voting flow colors. Lime summit means approved, orange rope is the baseline; parties are never colors. */
+
+.ballot-page,
+.results-body,
+.mock-body,
+.mountain-page-body {
+  color: var(--brand-basalt);
+}
+
+.ballot-lede,
+.elsewhere-lede,
+.residence-card-districts,
+.race-card-meta,
+.race-card-status,
+.suggestion-meta,
+.progress-count,
+.keyboard-hint,
+.baseline-note,
+.allowance-note,
+.not-approved,
+.your-vote-empty,
+.save-bar-detail,
+.card-text,
+.privacy-note p,
+.breadcrumb,
+.race-meta,
+.legend-item,
+.rating-row-sub,
+.stat-tile-label,
+.eyebrow,
+.section-rule,
+.card-heading,
+.voter-on-behalf {
+  color: var(--brand-slate);
+}
+
+.progress-count strong,
+.not-approved strong,
+.off-ballot-note strong,
+.privacy-note strong {
+  color: var(--brand-basalt);
+}
+
+.section-rule::after {
+  border-color: var(--brand-mist);
+}
+
+/* Navigation */
+.nav-primary-link {
+  color: var(--brand-basalt);
+}
+
+.nav-primary-link.active {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+/* Buttons */
+.pill-button {
+  background-color: var(--brand-basalt);
+  border-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.pill-button-outline {
+  background-color: var(--brand-snow);
+  color: var(--brand-basalt);
+}
+
+.pill-button-outline.is-following {
+  background-color: var(--brand-summit-wash);
+}
+
+.pill-button-ghost {
+  background-color: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+
+.pill-button-summit {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-summit);
+  color: var(--brand-basalt);
+}
+
+.pill-button-quiet {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-mist);
+  color: var(--brand-moss);
+}
+
+.text-link,
+.race-card-link,
+.breadcrumb-link {
+  color: var(--brand-basalt);
+}
+
+/* Mode strip */
+.mode-ballot,
+.mode-real,
+.mode-results {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.mode-ballot .mode-strip-label,
+.mode-real .mode-strip-label,
+.mode-results .mode-strip-label,
+.mode-ballot .mode-strip-icon,
+.mode-real .mode-strip-icon {
+  color: var(--brand-summit);
+}
+
+.mode-ballot .mode-strip-note,
+.mode-real .mode-strip-note,
+.mode-results .mode-strip-note {
+  color: var(--brand-mist);
+}
+
+.mode-pretend {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.mode-strip-action {
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.mode-mock {
+  background: repeating-linear-gradient(135deg, var(--brand-snow) 0 10px, var(--brand-contour) 10px 20px);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.mode-mock .mode-strip-label,
+.mode-mock .mode-strip-text,
+.mode-mock .mode-strip-note {
+  background-color: var(--brand-snow);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.mode-historical {
+  background-color: var(--brand-stone);
+  border-color: var(--brand-pebble);
+  color: var(--brand-basalt);
+}
+
+.mode-historical .mode-strip-note {
+  color: var(--brand-slate);
+}
+
+/* My ballot */
+.residence-card,
+.race-card,
+.suggestion-card,
+.side-card,
+.mountain-panel,
+.results-card,
+.stat-tile,
+.privacy-note,
+.form-card,
+.ballot-empty {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.residence-card-icon {
+  background-color: var(--brand-basalt);
+  color: var(--brand-summit);
+}
+
+.progress-saved {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-basalt);
+}
+
+.progress-started {
+  background-color: var(--brand-rope-wash);
+  border-color: var(--brand-rope-deep);
+}
+
+.progress-not-started {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-gravel);
+}
+
+.state-chip-saved {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.state-chip-started {
+  background-color: var(--brand-rope-wash);
+  border-color: var(--brand-rope-deep);
+  color: var(--brand-rope-deep);
+}
+
+.state-chip-not-started {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-gravel);
+  color: var(--brand-slate);
+}
+
+.race-card-saved .race-card-cta {
+  background-color: var(--brand-snow);
+  color: var(--brand-basalt);
+}
+
+.elsewhere {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-scree-edge);
+}
+
+.place-search .place-search-input,
+.mock-form .text-input,
+.claim-confirm .text-input {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.suggestion-card {
+  color: var(--brand-basalt);
+}
+
+.suggestion-pretend {
+  border-style: dashed;
+  border-color: var(--brand-basalt);
+}
+
+.suggestion-pretend .suggestion-chip {
+  border-style: dashed;
+  border-color: var(--brand-basalt);
+}
+
+.suggestion-mock {
+  background: repeating-linear-gradient(135deg, var(--brand-snow) 0 10px, var(--brand-hatch) 10px 20px);
+  border-color: var(--brand-basalt);
+}
+
+.suggestion-historical {
+  background-color: var(--brand-stone);
+  border-color: var(--brand-pebble);
+}
+
+.suggestion-mock .suggestion-chip,
+.suggestion-historical .suggestion-chip {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+}
+
+.suggestion-new {
+  background-color: var(--brand-summit-wash);
+  border-color: var(--brand-basalt);
+}
+
+.suggestion-new .suggestion-chip {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-basalt);
+}
+
+/* Mountain page */
+.race-status-chip {
+  border-color: var(--brand-basalt);
+}
+
+.race-status-active {
+  background-color: var(--brand-summit);
+}
+
+.race-status-completed {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.race-status-cancelled {
+  border-color: var(--brand-pebble);
+  color: var(--brand-moss);
+  text-decoration: line-through;
+}
+
+.view-toggle,
+.group-toggle {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-mist);
+}
+
+.view-toggle-button,
+.group-toggle-link {
+  background-color: transparent;
+  color: var(--brand-basalt);
+}
+
+.view-toggle-button[aria-pressed="true"],
+.group-toggle-link.is-current {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.legend-approved::before {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-basalt);
+}
+
+.legend-off-ballot::before {
+  background-color: var(--brand-scree);
+  border-color: var(--brand-scree-edge);
+  border-style: dashed;
+}
+
+.approved-item {
+  background-color: var(--brand-summit-wash);
+}
+
+.approved-check {
+  background-color: var(--brand-summit);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.off-ballot-note {
+  border-color: var(--brand-scree-edge);
+  color: var(--brand-slate);
+}
+
+.baseline-heading,
+.baseline-value {
+  color: var(--brand-rope-deep);
+}
+
+.stepper-button {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.baseline-allowance {
+  border-color: var(--brand-contour);
+}
+
+.allowance-pip-used {
+  background-color: var(--brand-basalt);
+  border-color: var(--brand-basalt);
+}
+
+.allowance-pip-pending {
+  background-color: var(--brand-rope);
+  border-color: var(--brand-rope);
+}
+
+.allowance-pip-free {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-gravel);
+}
+
+.official-results {
+  background-color: var(--brand-stone);
+  border-color: var(--brand-pebble);
+}
+
+.save-bar {
+  border-color: var(--brand-basalt);
+  box-shadow: 0 10px 30px rgba(21, 32, 27, 0.16);
+}
+
+.save-bar.is-clean {
+  background-color: var(--brand-snow);
+  color: var(--brand-basalt);
+}
+
+.save-bar.is-dirty {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
+.save-bar.is-dirty .save-bar-detail {
+  color: var(--brand-mist);
+}
+
+/* List view: a lime band above the baseline mark, scree below it. */
+.rating-row {
+  border-color: var(--brand-contour);
+}
+
+.baseline-row {
+  border-bottom-color: var(--brand-basalt);
+}
+
+.baseline-row .rating-row-label,
+.baseline-row .rating-row-value {
+  color: var(--brand-rope-deep);
+}
+
+.rating-slider {
+  accent-color: var(--brand-basalt);
+  background: linear-gradient(90deg, transparent calc(var(--baseline) - 1px), var(--brand-rope) calc(var(--baseline) - 1px) calc(var(--baseline) + 2px), transparent calc(var(--baseline) + 2px)) no-repeat;
+}
+
+.baseline-slider {
+  accent-color: var(--brand-rope-deep);
+  background: none;
+}
+
+.rating-row[data-state="approved"] .rating-row-value {
+  background-color: var(--brand-summit);
+  border-radius: 6px;
+  padding: 0 6px;
+}
+
+.rating-row[data-state="approved"] .rating-slider {
+  accent-color: var(--brand-summit-deep);
+}
+
+.rating-row[data-off-ballot="true"] .rating-row-label {
+  color: var(--brand-slate);
+}
+
+/* Results */
+.stat-tile-baseline .stat-tile-value {
+  color: var(--brand-rope-deep);
+}
+
+.results-table th,
+.results-table td {
+  border-color: var(--brand-contour);
+}
+
+.results-table .is-leader td {
+  background-color: var(--brand-summit-wash);
+}
+
+.results-withheld {
+  border-style: dashed;
+  border-color: var(--brand-scree-edge);
+}
+
+.claim-current,
+.claim-status,
+.claim-place-meta {
+  color: var(--brand-slate);
+}
+
+[data-locate-state="error"] .claim-status {
+  color: var(--brand-rope-deep);
+}
+
+.claim-place {
+  border-color: var(--brand-contour);
+}
+
+.claim-summary .place-chip {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-mist);
+}
+
+.claim-summary .place-chip.is-district {
+  background-color: var(--brand-summit-wash);
+  border-color: var(--brand-basalt);
+}
+
+.residence-timeline {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.residence-item {
+  border-color: var(--brand-contour);
+}
+
+.residence-item.is-current {
+  box-shadow: inset 4px 0 0 var(--brand-summit);
+}
+
+.residence-dates {
+  color: var(--brand-rope-deep);
+}
+
+.residence-item .place-chip {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-mist);
+}
+
+.claim-errors {
+  background-color: var(--brand-rope-wash);
+  color: var(--brand-rope-deep);
+}

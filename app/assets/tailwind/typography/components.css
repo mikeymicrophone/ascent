@@ -2,20 +2,20 @@
 
 /* Link typography */
 .link {
-  @apply font-['Nunito'] font-medium no-underline;
+  @apply font-['Bricolage_Grotesque'] font-medium no-underline;
 }
 
 /* Expandable sections typography */
 .expandable-header {
-  @apply font-['Kanit'] font-medium text-left;
+  @apply font-['Bricolage_Grotesque'] font-medium text-left;
 }
 
 .expandable-count {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-normal;
+  @apply font-['Martian_Mono'] font-normal;
 }
 
 .expandable-icon {
-  @apply font-['Kanit'] text-center select-none;
+  @apply font-['Bricolage_Grotesque'] text-center select-none;
 }
 
 /* Cities preview typography */
@@ -141,132 +141,203 @@
 
 /* Voter stats typography */
 .stat-label {
-  @apply font-['Nunito'] font-medium uppercase tracking-wide;
+  @apply font-['Bricolage_Grotesque'] font-medium uppercase tracking-wide;
 }
 
 .stat-value {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+  @apply font-['Martian_Mono'] font-bold;
 }
 
 /* Hierarchical navigation typography */
 .breadcrumb-link {
-  @apply font-['Nunito'] font-medium no-underline;
+  @apply font-['Bricolage_Grotesque'] font-medium no-underline;
 }
 
 .breadcrumb-current {
-  @apply font-['Kanit'] font-semibold;
+  @apply font-['Bricolage_Grotesque'] font-semibold;
 }
 
 .breadcrumb-separator {
-  @apply font-['Nunito'] font-normal;
+  @apply font-['Bricolage_Grotesque'] font-normal;
 }
 
 /* Quick stats typography */
 .quick-stats .stat-value {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+  @apply font-['Martian_Mono'] font-bold;
 }
 
 .quick-stats .stat-label {
-  @apply font-['Nunito'] font-medium uppercase tracking-wide;
+  @apply font-['Bricolage_Grotesque'] font-medium uppercase tracking-wide;
 }
 
 /* Geographic summary typography */
-.summary-value {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+.summary-grid .stat-value {
+  @apply font-['Martian_Mono'] font-bold;
 }
 
-.summary-label {
-  @apply font-['Nunito'] font-normal uppercase tracking-wide;
+.summary-grid .stat-label {
+  @apply font-['Bricolage_Grotesque'] font-normal uppercase tracking-wide;
 }
 
 /* Children preview typography */
 .child-name {
-  @apply font-['Nunito'] font-medium;
+  @apply font-['Bricolage_Grotesque'] font-medium;
 }
 
 /* Special content typography */
 .description-text {
-  @apply font-['Nunito'] leading-relaxed;
+  @apply font-['Bricolage_Grotesque'] leading-relaxed;
 }
 
 .formal-content {
-  @apply font-['Noto_Serif_Dives_Akuru'] leading-relaxed;
+  @apply font-['Bricolage_Grotesque'] leading-relaxed;
 }
 
 .policy-text {
-  @apply font-['Noto_Serif_Dives_Akuru'] text-base leading-relaxed;
+  @apply font-['Bricolage_Grotesque'] text-base leading-relaxed;
 }
 
 .quote-text {
-  @apply font-['Noto_Serif_Dives_Akuru'] italic text-lg leading-relaxed;
+  @apply font-['Bricolage_Grotesque'] italic text-lg leading-relaxed;
 }
 
 /* Accent elements */
 .voter-count,
 .election-count,
 .office-count {
-  @apply font-['WDXL_Lubrifont_JP_N'] font-bold;
+  @apply font-['Martian_Mono'] font-bold;
 }
 
 /* Special page elements */
 .page-title {
-  @apply font-['Kanit'] font-bold text-3xl;
+  @apply font-['Bricolage_Grotesque'] font-bold text-3xl;
 }
 
 .section-heading {
-  @apply font-['Kanit'] text-xl;
+  @apply font-['Bricolage_Grotesque'] text-xl;
 }
 
 /* Entity-specific typography */
 .country-name,
 .state-name,
 .city-name {
-  @apply font-['Kanit'] font-semibold;
+  @apply font-['Bricolage_Grotesque'] font-semibold;
 }
 
 .topic-title,
 .issue-title,
 .approach-title {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Bricolage_Grotesque'] font-medium;
 }
 
 .candidate-name {
-  @apply font-['Nunito'] font-bold;
+  @apply font-['Bricolage_Grotesque'] font-bold;
 }
 
 .office-title {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Bricolage_Grotesque'] font-medium;
 }
 
 .election-name {
-  @apply font-['Kanit'] font-medium;
+  @apply font-['Bricolage_Grotesque'] font-medium;
 }
 
 /* Enhanced partial typography system */
 .partial-title {
-  @apply font-['Kanit'] font-bold text-2xl leading-tight;
+  @apply font-['Bricolage_Grotesque'] font-bold text-2xl leading-tight;
 }
 
 .info-label {
-  @apply font-['Nunito'] font-medium text-xs uppercase tracking-wider;
+  @apply font-['Bricolage_Grotesque'] font-medium text-xs uppercase tracking-wider;
 }
 
 .info-value {
-  @apply font-['Nunito'] font-semibold text-base;
+  @apply font-['Bricolage_Grotesque'] font-semibold text-base;
 }
 
 .content-description {
-  @apply font-['Nunito'] text-base leading-relaxed;
+  @apply font-['Bricolage_Grotesque'] text-base leading-relaxed;
 }
 
 /* Enhanced status indicator typography */
 .status-indicator {
-  @apply font-['Kanit'] font-medium text-xs uppercase tracking-wide;
+  @apply font-['Bricolage_Grotesque'] font-medium text-xs uppercase tracking-wide;
 }
 
 .status-executive,
 .status-mock,
 .status-historical,
 .status-party {
-  @apply font-['Kanit'] font-medium text-xs;
+  @apply font-['Bricolage_Grotesque'] font-medium text-xs;
+}
+
+/* Flash message typography */
+.flash-notice,
+.flash-alert {
+  @apply font-['Bricolage_Grotesque'] font-medium;
+}
+
+/* Form error list typography */
+.error-messages {
+  @apply list-disc;
+}
+
+/* Action bar typography */
+.action-bar .action-button {
+  @apply font-['Bricolage_Grotesque'] text-xs font-medium;
+}
+
+.action-bar .action-count {
+  @apply font-['Martian_Mono'] text-xs;
+}
+
+.action-bar .action-status {
+  @apply text-xs;
+}
+
+/* Saved page typography */
+.saved-page h1 {
+  @apply font-['Bricolage_Grotesque'] text-3xl;
+}
+
+.saved-section h2 {
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold uppercase tracking-wide;
+}
+
+.saved-type {
+  @apply font-['Bricolage_Grotesque'] text-xs uppercase tracking-wide;
+}
+
+.saved-name {
+  @apply font-['Bricolage_Grotesque'] text-lg;
+}
+
+.resource-action,
+.resource-action > span,
+.scaffold .resource-action > span {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.78125rem;
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.scaffold .race-filters label {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.scaffold .race-filters input,
+.scaffold .race-filters select {
+  font-size: 0.875rem;
+}
+
+/* A candidacy's rating totals */
+.candidacy-ratings-title {
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold uppercase tracking-wide;
+}
+
+.candidacy-ratings-empty {
+  @apply font-['Bricolage_Grotesque'] text-sm;
 }

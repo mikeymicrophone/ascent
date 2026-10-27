@@ -11,7 +11,8 @@ class Views::Components::ExpandableSection < Views::ApplicationView
     div(class: "expandable-section", data: { controller: "expandable-section" }) do
       button(
         class: "expandable-header",
-        data: { 
+        aria: { expanded: @expanded.to_s },
+        data: {
           action: "click->expandable-section#toggle",
           expandable_section_target: "toggle"
         }
@@ -23,12 +24,9 @@ class Views::Components::ExpandableSection < Views::ApplicationView
             span(class: "expandable-count") { "(#{@count})" }
           end
         end
-        div(class: "expandable-icon") do
-          # Using simple text arrows, can be replaced with icons later
-          span(data: { expandable_section_target: "icon" }) { @expanded ? "▼" : "▶" }
-        end
+        div(class: "expandable-icon") { icon(:chevron_right) }
       end
-      
+
       div(
         class: "expandable-content",
         data: { expandable_section_target: "content" },

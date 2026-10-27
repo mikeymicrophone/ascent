@@ -13,7 +13,6 @@ require 'rails_helper'
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
 RSpec.describe "/stances", type: :request do
-  
   # This should return the minimal set of attributes required to create a valid
   # Stance. As you add validations to Stance, be sure to
   # adjust the attributes here as well.
@@ -42,6 +41,9 @@ RSpec.describe "/stances", type: :request do
   end
 
   describe "GET /new" do
+    # Only administrators add records.
+    before { sign_in create(:admin_voter) }
+
     it "renders a successful response" do
       get new_stance_url
       expect(response).to be_successful

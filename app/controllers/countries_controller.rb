@@ -3,11 +3,11 @@ class CountriesController < ApplicationController
 
   def index
     @pagy, @countries = pagy(Country.all)
-    render Views::Countries::IndexView.new(countries: @countries, pagy: @pagy, notice: notice)
+    render Views::Countries::IndexView.new(countries: @countries, pagy: @pagy)
   end
 
   def show
-    render Views::Countries::ShowView.new(country: @country, notice: notice)
+    render Views::Countries::ShowView.new(country: @country)
   end
 
   def new

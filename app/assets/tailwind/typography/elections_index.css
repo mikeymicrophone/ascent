@@ -1,0 +1,58 @@
+.listing-tab-label {
+  @apply font-['Bricolage_Grotesque'] text-[15px] font-semibold;
+}
+
+.listing-tab-count,
+.day-header-meta,
+.day-stub-month,
+.row-badge {
+  @apply font-['Martian_Mono'] text-xs tracking-[0.04em];
+}
+
+.day-stub-month,
+.row-badge {
+  @apply uppercase font-semibold;
+}
+
+.row-badge {
+  @apply text-[10.5px];
+}
+
+.listing-search-input {
+  @apply font-['Bricolage_Grotesque'] text-base;
+}
+
+.filter-chip {
+  @apply font-['Bricolage_Grotesque'] text-sm font-semibold no-underline;
+}
+
+.day-stub-day {
+  @apply font-['Bricolage_Grotesque'] font-extrabold text-[28px] leading-none;
+  font-stretch: 75%;
+}
+
+.day-header-title {
+  @apply font-['Bricolage_Grotesque'] font-bold text-xl m-0 leading-tight;
+  font-stretch: 85%;
+}
+
+.election-row-name {
+  @apply font-['Bricolage_Grotesque'] font-semibold text-[17px] leading-snug no-underline;
+}
+
+.election-row-place,
+.election-row-ballot {
+  @apply text-sm leading-snug;
+}
+
+.your-election-date {
+  @apply font-['Martian_Mono'] text-xs uppercase font-semibold tracking-[0.06em];
+}
+
+.your-election-name {
+  @apply text-base leading-snug;
+}
+
+.your-election-meta {
+  @apply text-sm;
+}

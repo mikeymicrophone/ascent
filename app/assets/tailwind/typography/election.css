@@ -1,0 +1,92 @@
+.date-stub-day {
+  @apply font-['Bricolage_Grotesque'] font-extrabold leading-[0.8] text-[112px];
+  font-stretch: 75%;
+}
+
+.date-stub-month {
+  @apply font-['Martian_Mono'] font-bold uppercase text-2xl;
+}
+
+.date-stub-weekday,
+.countdown-scale,
+.date-stub-note,
+.contest-level,
+.contest-meta,
+.ballot-sheet-meta,
+.sibling-label,
+.seat-chip-count {
+  @apply font-['Martian_Mono'] text-xs tracking-[0.04em];
+}
+
+.date-stub-weekday,
+.contest-level {
+  @apply uppercase;
+}
+
+.date-stub-countdown {
+  @apply font-['Bricolage_Grotesque'] font-extrabold text-3xl leading-none;
+  font-stretch: 85%;
+}
+
+.ballot-sheet-title {
+  @apply font-['Bricolage_Grotesque'] font-extrabold text-4xl m-0 uppercase tracking-tight;
+  font-stretch: 75%;
+}
+
+.contest-number {
+  @apply font-['Martian_Mono'] font-bold text-2xl leading-none;
+}
+
+.contest-title {
+  @apply font-['Bricolage_Grotesque'] font-bold text-2xl leading-tight;
+  font-stretch: 85%;
+}
+
+.contest-candidates,
+.candidate-item {
+  @apply text-[15px] leading-snug;
+}
+
+.candidate-given {
+  @apply font-normal;
+}
+
+.candidate-surname {
+  @apply font-bold;
+}
+
+.candidate-more {
+  @apply italic;
+}
+
+.seat-chip-label,
+.more-contests-toggle,
+.glance-value {
+  @apply text-sm font-semibold;
+}
+
+.glance-value {
+  @apply font-['Martian_Mono'];
+}
+
+.candidate-name {
+  @apply font-['Bricolage_Grotesque'] text-[15px] leading-snug;
+}
+
+.candidate-card-name {
+  @apply font-['Bricolage_Grotesque'] text-2xl leading-tight;
+}
+
+.candidate-card-office,
+.endorsement-kind,
+.support-stat-label {
+  @apply font-['Martian_Mono'] text-[11px] tracking-[0.04em];
+}
+
+.endorsement-name {
+  @apply text-[15px];
+}
+
+.support-stat-value {
+  @apply font-['Martian_Mono'] font-bold text-xl leading-none;
+}

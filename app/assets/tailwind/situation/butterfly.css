@@ -136,9 +136,9 @@
   --butterfly-secondary: var(--entity-state-bg);
 }
 
-.navigation-butterfly.level-city {
-  --butterfly-primary: var(--entity-city);
-  --butterfly-secondary: var(--entity-city-bg);
+.navigation-butterfly.level-municipality {
+  --butterfly-primary: var(--entity-municipality);
+  --butterfly-secondary: var(--entity-municipality-bg);
 }
 
 /* Apply theme colors to wings */
@@ -167,8 +167,8 @@
   background: radial-gradient(ellipse at center, var(--butterfly-primary), transparent 70%);
 }
 
-.navigation-butterfly.level-city .butterfly-wing-left,
-.navigation-butterfly.level-city .butterfly-wing-right {
+.navigation-butterfly.level-municipality .butterfly-wing-left,
+.navigation-butterfly.level-municipality .butterfly-wing-right {
   background: radial-gradient(ellipse at center, var(--butterfly-primary), transparent 70%);
 }
 
@@ -183,7 +183,7 @@
   height: 28px;
 }
 
-.navigation-butterfly.level-city {
+.navigation-butterfly.level-municipality {
   width: 24px;
   height: 24px;
 }

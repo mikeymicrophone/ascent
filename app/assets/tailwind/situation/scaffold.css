@@ -18,7 +18,6 @@
   }
   
   /* Rounded utilities */
-  #notice,
   #error_explanation {
     @apply rounded-md;
   }

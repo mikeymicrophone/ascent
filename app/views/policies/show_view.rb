@@ -1,26 +1,7 @@
 class Views::Policies::ShowView < Views::ApplicationView
-  def initialize(policy:, notice: nil)
-    @policy = policy
-    @notice = notice
-  end
+  prop :policy, Policy
 
-  def view_template(&)
-    div(class: "scaffold policy-show", id: dom_id(@policy, :show)) do
-      render_notice if @notice.present?
-
-      h1 { @policy.title }
-
-      PolicyPartial(policy: @policy)
-
-      Ui::ResourceActions(resource: @policy)
-    end
-  end
-
-  private
-
-  def render_notice
-    p(id: "notice") do
-      @notice
-    end
+  def view_template
+    ResourceShow(record: @policy, heading: @policy.title) { PolicyPartial(policy: @policy) }
   end
 end

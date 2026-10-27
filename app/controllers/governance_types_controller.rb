@@ -3,11 +3,11 @@ class GovernanceTypesController < ApplicationController
 
   def index
     @pagy, @governance_types = pagy(GovernanceType.all)
-    render Views::GovernanceTypes::IndexView.new(governance_types: @governance_types, pagy: @pagy, notice: notice)
+    render Views::GovernanceTypes::IndexView.new(governance_types: @governance_types, pagy: @pagy)
   end
 
   def show
-    render Views::GovernanceTypes::ShowView.new(governance_type: @governance_type, notice: notice)
+    render Views::GovernanceTypes::ShowView.new(governance_type: @governance_type)
   end
 
   def new
@@ -49,6 +49,6 @@ class GovernanceTypesController < ApplicationController
   end
 
   def governance_type_params
-    params.require(:governance_type).permit(:name, :description, :authority_level, :decision_making_process)
+    params.require(:governance_type).permit(:name, :description, :decision_making_process)
   end
 end

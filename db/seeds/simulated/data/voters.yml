@@ -1,0 +1,89 @@
+- first_name: "Emily"
+  last_name: "Johnson"
+  email: "emily.johnson@email.com"
+  birth_date: "1992-03-15"
+  is_verified: true
+
+- first_name: "Michael"
+  last_name: "Chen"
+  email: "michael.chen@email.com"
+  birth_date: "1987-08-22"
+  is_verified: true
+
+- first_name: "Sarah"
+  last_name: "Martinez"
+  email: "sarah.martinez@email.com"
+  birth_date: "1995-12-08"
+  is_verified: false
+
+- first_name: "David"
+  last_name: "Thompson"
+  email: "david.thompson.voter@email.com"
+  birth_date: "1983-06-14"
+  is_verified: true
+
+- first_name: "Jessica"
+  last_name: "Williams"
+  email: "jessica.williams@email.com"
+  birth_date: "1990-11-03"
+  is_verified: true
+
+- first_name: "Robert"
+  last_name: "Davis"
+  email: "robert.davis@email.com"
+  birth_date: "1978-04-27"
+  is_verified: true
+
+- first_name: "Lisa"
+  last_name: "Brown"
+  email: "lisa.brown@email.com"
+  birth_date: "1993-09-19"
+  is_verified: false
+
+- first_name: "James"
+  last_name: "Miller"
+  email: "james.miller@email.com"
+  birth_date: "1986-02-11"
+  is_verified: true
+
+- first_name: "Maria"
+  last_name: "Garcia"
+  email: "maria.garcia.voter@email.com"
+  birth_date: "1991-07-25"
+  is_verified: true
+
+- first_name: "Kevin"
+  last_name: "Lee"
+  email: "kevin.lee@email.com"
+  birth_date: "1985-10-16"
+  is_verified: true
+
+- first_name: "Amanda"
+  last_name: "Taylor"
+  email: "amanda.taylor@email.com"
+  birth_date: "1994-01-30"
+  is_verified: false
+
+- first_name: "Christopher"
+  last_name: "Anderson"
+  email: "christopher.anderson@email.com"
+  birth_date: "1989-05-18"
+  is_verified: true
+
+- first_name: "Rachel"
+  last_name: "White"
+  email: "rachel.white@email.com"
+  birth_date: "1996-12-22"
+  is_verified: true
+
+- first_name: "Daniel"
+  last_name: "Wilson"
+  email: "daniel.wilson@email.com"
+  birth_date: "1981-08-07"
+  is_verified: true
+
+- first_name: "Nicole"
+  last_name: "Moore"
+  email: "nicole.moore@email.com"
+  birth_date: "1988-04-13"
+  is_verified: true

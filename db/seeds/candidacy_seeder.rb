@@ -1,111 +1,19 @@
 class CandidacySeeder
   def self.seed
-    # Create candidacies for various elections
-    create_presidential_candidacies
-    create_gubernatorial_candidacies
-    create_mayoral_candidacies
+    # Never attach fictional people to a source-backed election.
     create_mock_election_candidacies
-    
+    create_mock_local_candidacies
+
     puts "Seeded #{Candidacy.count} candidacies"
   end
-  
+
   private
-  
-  def self.create_presidential_candidacies
-    # Find 2024 presidential election
-    presidential_election = Election.joins(:office, :year)
-                                   .joins(office: :position)
-                                   .where(positions: { title: "President" })
-                                   .where(years: { year: 2024 })
-                                   .where(is_mock: false)
-                                   .first
-    
-    return unless presidential_election
-    
-    # Create candidacies for some people
-    candidates = [
-      { person_email: "marcus.rodriguez@example.com", party: "Democratic", platform: "Focused on economic equality, healthcare access, and climate action." },
-      { person_email: "david.thompson@example.com", party: "Republican", platform: "Committed to constitutional principles, fiscal responsibility, and strong national defense." },
-      { person_email: "sarah.williams@example.com", party: "Independent", platform: "Advocating for political reform, government transparency, and bipartisan solutions." }
-    ]
-    
-    candidates.each do |candidate_data|
-      person = Person.find_by(email: candidate_data[:person_email])
-      next unless person
-      
-      Candidacy.find_or_create_by(
-        person: person,
-        election: presidential_election
-      ) do |candidacy|
-        candidacy.status = "active"
-        candidacy.announcement_date = Date.new(2023, 6, 15)
-        candidacy.party_affiliation = candidate_data[:party]
-        candidacy.platform_summary = candidate_data[:platform]
-      end
-    end
-  end
-  
-  def self.create_gubernatorial_candidacies
-    # Find some gubernatorial elections
-    gubernatorial_elections = Election.joins(:office)
-                                     .joins(office: :position)
-                                     .where(positions: { title: "Governor" })
-                                     .limit(2)
-    
-    people = Person.limit(4).to_a
-    
-    gubernatorial_elections.each_with_index do |election, election_index|
-      # Create 2 candidacies per election
-      election_people = people.slice(election_index * 2, 2)
-      
-      election_people.each_with_index do |person, person_index|
-        party = person_index.even? ? "Democratic" : "Republican"
-        
-        Candidacy.find_or_create_by(
-          person: person,
-          election: election
-        ) do |candidacy|
-          candidacy.status = "active"
-          candidacy.announcement_date = Date.new(2023, 8, 1)
-          candidacy.party_affiliation = party
-          candidacy.platform_summary = "Committed to serving the people of #{election.office.jurisdiction.name} with integrity and vision."
-        end
-      end
-    end
-  end
-  
-  def self.create_mayoral_candidacies
-    # Find some mayoral elections
-    mayoral_elections = Election.joins(:office)
-                               .joins(office: :position)
-                               .where(positions: { title: "Mayor" })
-                               .limit(2)
-    
-    people = Person.limit(4).to_a
-    
-    mayoral_elections.each_with_index do |election, election_index|
-      # Create 2 candidacies per election
-      election_people = people.slice(election_index * 2, 2)
-      
-      election_people.each do |person|
-        Candidacy.find_or_create_by(
-          person: person,
-          election: election
-        ) do |candidacy|
-          candidacy.status = "active"
-          candidacy.announcement_date = Date.new(2023, 9, 15)
-          candidacy.party_affiliation = "Nonpartisan"
-          candidacy.platform_summary = "Dedicated to improving quality of life, economic development, and community engagement in #{election.office.jurisdiction.name}."
-        end
-      end
-    end
-  end
-  
+
   def self.create_mock_election_candidacies
-    # Find mock elections
-    mock_elections = Election.where(is_mock: true).limit(1)
-    
-    mock_elections.each do |election|
+    # Find the mock presidential race
+    mock_races = Race.mock.joins(office: :position).where(positions: { title: "President" }).limit(1)
+
+    mock_races.each do |race|
       # Create several candidacies for educational purposes
       mock_candidates = [
         { person_email: "jennifer.kim@example.com", party: "Progressive", platform: "Technology-forward governance with focus on digital equity and innovation." },
@@ -113,20 +21,50 @@ class CandidacySeeder
         { person_email: "maria.garcia@example.com", party: "Social Democratic", platform: "Social justice, community empowerment, and inclusive economic policy." },
         { person_email: "james.anderson@example.com", party: "Labor", platform: "Workers' rights, union protection, and manufacturing job creation." }
       ]
-      
+
       mock_candidates.each do |candidate_data|
         person = Person.find_by(email: candidate_data[:person_email])
         next unless person
-        
-        Candidacy.find_or_create_by(
+
+        candidacy = Candidacy.find_or_create_by(
           person: person,
-          election: election
+          race: race
         ) do |candidacy|
           candidacy.status = "active"
           candidacy.announcement_date = Date.new(2024, 1, 15)
-          candidacy.party_affiliation = candidate_data[:party]
           candidacy.platform_summary = candidate_data[:platform]
         end
+        candidacy.ballot_lines.find_or_create_by!(label: candidate_data[:party]) do |line|
+          line.kind = "party"
+          line.position = 1
+        end
+      end
+    end
+  end
+
+  # One fictional candidate for each mock local race, chosen to fit their biography.
+  MOCK_LOCAL_CANDIDATES = {
+    "Mayor" => "michael.brown@example.com",
+    "Council Member" => "sarah.williams@example.com",
+    "Sheriff" => "daniel.reyes@example.com",
+    "School Board" => "grace.nakamura@example.com",
+    "County Commissioner" => "alexandra.chen@example.com",
+    "District Attorney" => "david.thompson@example.com",
+    "State Representative" => "marcus.rodriguez@example.com",
+    "State Senator" => "lisa.chang@example.com",
+    "Governor" => "patricia.okafor@example.com"
+  }.freeze
+
+  def self.create_mock_local_candidacies
+    MOCK_LOCAL_CANDIDATES.each do |position_title, email|
+      race = Race.mock.joins(office: :position).find_by(positions: { title: position_title })
+      person = Person.find_by(email: email)
+      next unless race && person
+
+      Candidacy.find_or_create_by(person: person, race: race) do |candidacy|
+        candidacy.status = "active"
+        candidacy.announcement_date = Date.new(2024, 3, 4)
+        candidacy.platform_summary = person.bio
       end
     end
   end

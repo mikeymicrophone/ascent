@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class Views::ApplicationView < Phlex::HTML
+  # Declare arguments with `prop :name, Type` instead of writing an initializer.
+  extend Literal::Properties
+
   # Common helpers are included here to be available in all views.
+  include ScaffoldUiHelper
   include Phlex::Rails::Helpers::DOMID
   include Phlex::Rails::Helpers::LinkTo
   include Phlex::Rails::Helpers::ButtonTo
@@ -12,9 +16,10 @@ class Views::ApplicationView < Phlex::HTML
   include Phlex::Rails::Helpers::Pluralize
   include Phlex::Rails::Helpers::CurrentPage
   include Phlex::Rails::Helpers::Request
+  include Phlex::Rails::Helpers::TurboFrameTag
 
   include Devise::Controllers::Helpers
-  include Pagy::Frontend
+  include ActionPolicy::Behaviour
 
   include Views::Components
   include Views::Partials
@@ -25,6 +30,47 @@ class Views::ApplicationView < Phlex::HTML
   end
 
   private
+
+  def default_authorization_policy_class
+    ApplicationRecordPolicy
+  end
+
+  # Simulated mountain data invents candidates and ratings, so only admins see the controls for it.
+  def can_simulate_mountains?
+    allowed_to?(:simulate?, :mountain, context: { voter: current_voter })
+  end
+
+  # A Lucide icon by name, e.g. icon(:share_2). Hidden from screen readers; the text beside it carries the meaning.
+  def icon(name, **attributes)
+    render PhlexIcons::Lucide.const_get(name.to_s.camelize).new(class: "icon icon-#{name.to_s.dasherize}", aria: { hidden: true }, **attributes)
+  end
+
+  def delimited(number)
+    ActiveSupport::NumberHelper.number_to_delimited(number)
+  end
+
+  # A share from 0 to 100 as a whole percent, or a dash when there is none.
+  def percent(share)
+    share ? "#{share.round}%" : "—"
+  end
+
+  # How far a date is from today: "in 8 days", "today", "3 days ago".
+  def relative_days(date)
+    days = (date - Date.current).to_i
+    if days.positive? then "in #{pluralize(days, "day")}"
+    elsif days.zero? then "today"
+    else "#{pluralize(-days, "day")} ago"
+    end
+  end
+
+  # The popover a ballot opens on a candidate's name, and the Turbo frame its card loads into.
+  def candidate_popover_id(candidacy)
+    "candidate-popover-#{candidacy.id}"
+  end
+
+  def jurisdiction_link(jurisdiction)
+    link_to jurisdiction.name, jurisdiction.jurisdictionable, class: "link jurisdiction"
+  end
 
   def expandable(context, collection_or_symbol, title: nil, &block)
     # Handle array context (future expansion for complex where clauses)

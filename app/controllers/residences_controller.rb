@@ -3,11 +3,11 @@ class ResidencesController < ApplicationController
 
   def index
     @pagy, @residences = pagy(Residence.all)
-    render Views::Residences::IndexView.new(residences: @residences, pagy: @pagy, notice: notice)
+    render Views::Residences::IndexView.new(residences: @residences, pagy: @pagy)
   end
 
   def show
-    render Views::Residences::ShowView.new(residence: @residence, notice: notice)
+    render Views::Residences::ShowView.new(residence: @residence)
   end
 
   def new
@@ -49,6 +49,7 @@ class ResidencesController < ApplicationController
   end
 
   def residence_params
-    params.require(:residence).permit(:registered_at, :status, :notes)
+    params.require(:residence).permit(:voter_id, :jurisdiction_id, :registered_at, :status, :notes, :started_on, :ended_on,
+      :county_id, :congressional_district_id, :state_senate_district_id, :state_house_district_id)
   end
 end

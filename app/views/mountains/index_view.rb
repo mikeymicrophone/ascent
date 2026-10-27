@@ -1,22 +1,35 @@
 # frozen_string_literal: true
 
 class Views::Mountains::IndexView < Views::ApplicationView
-  def initialize(elections:)
-    @elections = elections
+  def initialize(races:)
+    @races = races
   end
 
   def view_template
     div(class: "mountain-index") do
       h1(class: "page-title") { "Mountain Visualizations" }
-      
+
       p(class: "page-description") do
-        "Select an election to view the approval voting mountain interface, " \
+        "Select a race to view the approval voting mountain interface, " \
         "or simulate data for testing."
       end
 
-      div(class: "elections-grid") do
-        @elections.each do |election|
-          render_election_card(election)
+      if @races.any?
+        div(class: "elections-grid") do
+          @races.each do |race|
+            render_race_card(race)
+          end
+        end
+      else
+        div(class: "mountain-empty-state") do
+          h2(class: "subsection-title") { "No active races are ready for the mountain interface." }
+          p(class: "content-text") do
+            "Load or create an active race to demonstrate how expressive ratings translate into approval outcomes."
+          end
+          div(class: "election-actions") do
+            link_to "Browse Races", races_path, class: "btn-secondary"
+            link_to "Project Overview", root_path, class: "btn-tertiary"
+          end
         end
       end
     end
@@ -24,21 +37,31 @@ class Views::Mountains::IndexView < Views::ApplicationView
 
   private
 
-  def render_election_card(election)
+  def render_race_card(race)
     div(class: "election-card") do
-      h3(class: "election-title") { election.name }
-      
-      div(class: "election-meta") do
-        p { "Candidates: #{election.candidacies.count}" }
-        if election.office&.position&.title
-          p { "Office: #{election.office.position.title}" }
+      h3(class: "election-title") do
+        link_to mountain_path(race), class: "resource-title-link" do
+          plain race.name
+          whitespace
+          Ui::ActionIcon(kind: :show)
         end
       end
 
+      div(class: "election-meta") do
+        p { "Election: #{race.election.name}" }
+        p { "Office: #{race.office.position.title}" }
+        p { "Candidates: #{race.candidacies.size}" }
+      end
+
       div(class: "election-actions") do
-        a(href: mountain_path(election), class: "btn-primary") { "View Mountain" }
-        button_to("Simulate Data", simulate_mountain_path(election), 
-                  method: :post, class: "btn-secondary", form: { style: "display: inline;" })
+        a(href: mountain_path(race), class: "btn-primary") { "View Mountain" }
+        if can_simulate_mountains? && race.mock?
+          button_to simulate_mountain_path(race), method: :post,
+            class: "resource-action resource-action-simulate", form_class: "resource-action-form" do
+            Ui::ActionIcon(kind: :simulate)
+            span { "Simulate Data" }
+          end
+        end
       end
     end
   end

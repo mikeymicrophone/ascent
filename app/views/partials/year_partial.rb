@@ -19,7 +19,7 @@ class Views::Partials::YearPartial < Views::ApplicationView
       div do
         span { "Description:" }
         whitespace
-        div(class: "mt-1") { simple_format(@year.description) }
+        div(class: "formatted-text") { simple_format(@year.description) }
       end
 
       expandable(@year, :elections) do |elections|

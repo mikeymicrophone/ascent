@@ -3,13 +3,13 @@ class ApproachesController < ApplicationController
 
   # GET /approaches or /approaches.json
   def index
-    @approaches = Approach.all
-    render Views::Approaches::IndexView.new(approaches: @approaches, notice: notice)
+    @pagy, @approaches = pagy(Approach.by_issue(params[:issue_id]))
+    render Views::Approaches::IndexView.new(approaches: @approaches, pagy: @pagy, parent: filtering_issue)
   end
 
   # GET /approaches/1 or /approaches/1.json
   def show
-    render Views::Approaches::ShowView.new(approach: @approach, notice: notice)
+    render Views::Approaches::ShowView.new(approach: @approach)
   end
 
   # GET /approaches/new
@@ -62,6 +62,10 @@ class ApproachesController < ApplicationController
   end
 
   private
+    def filtering_issue
+      Issue.find(params[:issue_id]) if params[:issue_id]
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_approach
       @approach = Approach.find(params.expect(:id))

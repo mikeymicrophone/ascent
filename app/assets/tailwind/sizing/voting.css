@@ -1,0 +1,513 @@
+/* Voting flow spacing and size. Touch targets stay at least 44px. */
+
+.nav-primary {
+  @apply gap-1;
+}
+
+.nav-primary-link {
+  @apply px-3.5 py-2.5 rounded-full;
+}
+
+.pill-button {
+  @apply min-h-11 px-4 gap-1.5 rounded-full border-[1.5px];
+}
+
+.pill-button .icon {
+  @apply w-4 h-4;
+}
+
+.breadcrumb {
+  @apply gap-1.5;
+}
+
+.text-link {
+  @apply gap-1;
+}
+
+.text-link .icon {
+  @apply w-4 h-4;
+}
+
+.section-rule {
+  @apply gap-3 m-0;
+}
+
+.section-rule::after {
+  @apply border-t;
+}
+
+.card-title,
+.card-heading {
+  @apply m-0;
+}
+
+/* Mode strip */
+.mode-strip {
+  @apply mt-4 rounded-2xl;
+}
+
+.mode-strip-inner {
+  @apply gap-x-6 gap-y-1.5 px-5 py-2.5;
+}
+
+.mode-strip-main {
+  @apply gap-3;
+}
+
+.mode-strip-icon {
+  @apply w-5 h-5;
+}
+
+.mode-strip-action {
+  @apply min-h-10 px-3.5 rounded-full border-[1.5px] inline-flex items-center;
+}
+
+.mode-pretend {
+  @apply border-[2.5px] border-dashed;
+}
+
+.mode-mock,
+.mode-historical {
+  @apply border-[1.5px];
+}
+
+/* My ballot */
+.ballot-page,
+.results-body,
+.mock-body,
+.mountain-page-body {
+  @apply flex flex-col gap-10 pt-8 pb-16;
+}
+
+.ballot-header {
+  @apply gap-x-12 gap-y-6;
+}
+
+.ballot-intro,
+.elsewhere-intro {
+  @apply gap-3;
+}
+
+.residence-card {
+  @apply gap-3 p-5 rounded-[20px] border;
+}
+
+.residence-card-place {
+  @apply gap-3;
+}
+
+.residence-card-icon {
+  @apply w-11 h-11 rounded-xl;
+}
+
+.residence-card-icon .icon {
+  @apply w-5 h-5;
+}
+
+.residence-card-text {
+  @apply gap-0.5;
+}
+
+.progress-bar {
+  @apply gap-1;
+}
+
+.progress-segment {
+  @apply h-2.5 border-[1.5px] first:rounded-l-md last:rounded-r-md;
+}
+
+.progress-counts {
+  @apply gap-x-4 gap-y-1;
+}
+
+.ballot-levels {
+  @apply gap-x-6 gap-y-8;
+}
+
+.ballot-level {
+  @apply gap-3.5;
+}
+
+.race-card-grid,
+.suggestion-grid {
+  @apply gap-4;
+}
+
+.race-card {
+  @apply gap-4 p-5 rounded-[20px] border-[1.5px];
+}
+
+.race-card-top,
+.race-card-bottom {
+  @apply gap-3;
+}
+
+.race-card-heading {
+  @apply gap-1;
+}
+
+.race-card-actions {
+  @apply gap-3;
+}
+
+.race-card-cta .icon {
+  @apply w-4 h-4;
+}
+
+.state-chip,
+.suggestion-chip,
+.race-status-chip {
+  @apply px-2 py-1 rounded-full border-[1.5px] whitespace-nowrap;
+}
+
+.ballot-empty {
+  @apply flex flex-col gap-3 p-7 rounded-[20px] border;
+}
+
+.elsewhere {
+  @apply gap-5 p-7 rounded-[28px] border-2 border-dashed;
+}
+
+.elsewhere-header {
+  @apply gap-x-10 gap-y-5;
+}
+
+.eyebrow {
+  @apply gap-2;
+}
+
+.eyebrow .icon {
+  @apply w-4.5 h-4.5;
+}
+
+.place-search {
+  @apply gap-1.5;
+}
+
+.place-search-row {
+  @apply gap-2;
+}
+
+.place-search .place-search-input,
+.mock-form .text-input,
+.claim-confirm .text-input {
+  @apply min-h-12 px-4 rounded-xl border-[1.5px];
+}
+
+textarea.text-input {
+  @apply py-3;
+}
+
+.suggestion-card {
+  @apply gap-2 p-4 rounded-2xl border-[1.5px];
+}
+
+/* Mountain page */
+.mountain-page-body {
+  @apply gap-6 pt-6;
+}
+
+.race-header {
+  @apply gap-x-8 gap-y-4;
+}
+
+.race-header-text {
+  @apply gap-2.5;
+}
+
+.race-meta {
+  @apply gap-2;
+}
+
+.race-header-actions {
+  @apply gap-2;
+}
+
+.mountain-layout {
+  @apply gap-6;
+}
+
+.mountain-panel {
+  @apply gap-4 p-5 sm:px-6 rounded-[20px] border;
+}
+
+.mountain-aside {
+  @apply gap-4;
+}
+
+.mountain-toolbar {
+  @apply gap-x-5 gap-y-3;
+}
+
+.view-toggle {
+  @apply p-1 rounded-full border;
+}
+
+.view-toggle-button {
+  @apply min-h-10 px-4 gap-2 rounded-full;
+}
+
+.view-toggle-button .icon {
+  @apply w-4.5 h-4.5;
+}
+
+.mountain-legend {
+  @apply gap-4;
+}
+
+.legend-item {
+  @apply gap-1.5;
+}
+
+.legend-item::before {
+  content: "";
+  @apply inline-block w-5 h-2.5 rounded-sm border-[1.5px];
+}
+
+.side-card {
+  @apply flex flex-col gap-3.5 p-5 rounded-[20px] border;
+}
+
+.your-vote-count {
+  @apply gap-2.5 m-0;
+}
+
+.approved-list {
+  @apply gap-1.5 m-0 p-0 list-none;
+}
+
+.approved-item {
+  @apply gap-2.5 px-2.5 py-2 rounded-xl;
+}
+
+.approved-check {
+  @apply w-5.5 h-5.5 rounded-full border-[1.5px];
+}
+
+.approved-check .icon {
+  @apply w-3 h-3;
+}
+
+.your-vote-empty,
+.not-approved,
+.baseline-note,
+.allowance-note {
+  @apply m-0;
+}
+
+.off-ballot-note {
+  @apply m-0 px-3 py-2.5 rounded-xl border border-dashed;
+}
+
+.baseline-stepper {
+  @apply gap-2.5;
+}
+
+.stepper-button {
+  @apply w-11 h-11 rounded-xl border-[1.5px];
+}
+
+.stepper-button .icon {
+  @apply w-4.5 h-4.5;
+}
+
+.baseline-allowance {
+  @apply flex flex-col gap-1.5 pt-2.5 border-t;
+}
+
+.allowance-pips {
+  @apply gap-1;
+}
+
+.allowance-pip {
+  @apply h-2 rounded border-[1.5px];
+}
+
+.rating-explainer {
+  @apply flex flex-col gap-2.5 px-1;
+}
+
+.rating-steps {
+  @apply gap-1.5 m-0 pl-5;
+}
+
+.official-list {
+  @apply gap-1.5 m-0 pl-5;
+}
+
+.save-bar {
+  @apply gap-x-5 gap-y-3 py-3.5 pl-5 pr-4 rounded-2xl border-[1.5px];
+}
+
+.save-bar-text {
+  @apply gap-0.5;
+}
+
+.save-bar-actions {
+  @apply gap-2;
+}
+
+.rating-list {
+  @apply gap-0;
+}
+
+.rating-row {
+  @apply gap-x-5 gap-y-2 py-3.5 border-b;
+}
+
+.rating-row-name {
+  @apply gap-1;
+}
+
+.rating-slider {
+  @apply w-full h-9;
+}
+
+.keyboard-hint {
+  @apply m-0;
+}
+
+.voter-on-behalf {
+  @apply m-0;
+}
+
+/* Results */
+.results-header {
+  @apply gap-x-10 gap-y-4;
+}
+
+.results-heading {
+  @apply gap-2.5;
+}
+
+.group-toggle {
+  @apply p-1 rounded-full border;
+}
+
+.group-toggle-link {
+  @apply min-h-10 px-4 rounded-full inline-flex items-center;
+}
+
+.stat-tiles {
+  @apply gap-4;
+}
+
+.stat-tile {
+  @apply gap-1 px-4.5 py-4 rounded-[18px] border;
+}
+
+.results-columns {
+  @apply gap-6;
+}
+
+.results-card {
+  @apply flex flex-col gap-3.5 p-6 rounded-[20px] border;
+}
+
+.results-table th,
+.results-table td {
+  @apply py-2.5 pr-4 border-b;
+}
+
+.privacy-note {
+  @apply gap-4 px-5 py-4 rounded-2xl border;
+}
+
+.privacy-note .icon {
+  @apply w-5.5 h-5.5 shrink-0;
+}
+
+.privacy-note p {
+  @apply m-0;
+}
+
+/* Mock elections */
+.mock-form {
+  @apply gap-5 max-w-3xl;
+}
+
+.form-card {
+  @apply gap-4 p-6 rounded-[20px] border m-0;
+}
+
+.form-row {
+  @apply gap-4;
+}
+
+.form-field {
+  @apply gap-1.5;
+}
+
+.form-actions {
+  @apply gap-3;
+}
+
+.claim-page {
+  @apply gap-8 pt-8 pb-16 max-w-5xl;
+}
+
+.claim-header {
+  @apply gap-3 items-start;
+}
+
+.claim-current,
+.claim-status {
+  @apply m-0;
+}
+
+.claim-options {
+  @apply gap-5;
+}
+
+.claim-places {
+  @apply m-0 p-0 list-none;
+}
+
+.claim-place {
+  @apply gap-3 py-3 border-b last:border-b-0;
+}
+
+.claim-place-text {
+  @apply gap-0.5;
+}
+
+.claim-summary .chip-list {
+  @apply flex flex-wrap gap-1.5 m-0 p-0 list-none;
+}
+
+.claim-summary .place-chip {
+  @apply px-2 py-1 rounded-md border;
+}
+
+.residence-timeline {
+  @apply m-0 p-0 list-none rounded-[20px] border overflow-hidden;
+}
+
+.residence-item {
+  @apply gap-3 px-5 py-4 border-b last:border-b-0;
+}
+
+.residence-item-text {
+  @apply gap-1;
+}
+
+.residence-item .chip-list,
+.claim-confirm .chip-list {
+  @apply flex flex-wrap gap-1.5 m-0 p-0 list-none;
+}
+
+.residence-item .place-chip {
+  @apply px-2 py-1 rounded-md border;
+}
+
+.claim-confirm {
+  @apply gap-4;
+}
+
+.claim-select {
+  @apply w-full max-w-sm;
+}
+
+.claim-errors {
+  @apply px-4 py-3 rounded-xl;
+}

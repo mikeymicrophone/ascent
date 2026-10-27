@@ -1,11 +1,22 @@
 .main-navigation {
-  background-color: var(--nav-bg);
-  border-color: var(--nav-border);
-  @apply shadow-sm;
+  border-color: color-mix(in oklab, var(--nav-border) 85%, white);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(248, 250, 252, 0.94));
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(14px);
 }
 
 .brand-link {
   color: var(--brand-color);
+}
+
+.nav-group-header,
+.nav-auth-link {
+  color: var(--nav-group-label-color);
+}
+
+.nav-group-header {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.16);
 }
 
 .nav-link {
@@ -17,12 +28,42 @@
   color: var(--nav-link-active-color);
 }
 
-/* Dropdown Colors */
-.nav-group-header {
-  color: var(--nav-group-label-color);
+.nav-auth-link {
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.voter-greeting {
+  color: color-mix(in oklab, var(--nav-link-color) 78%, white);
 }
 
 .nav-group-content {
-  background-color: var(--dropdown-bg);
-  border: 1px solid var(--dropdown-border);
+  background-color: color-mix(in oklab, var(--dropdown-bg) 94%, white);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+}
+
+/* Brand mark colors */
+.brand-mark-far {
+  fill: var(--brand-moss);
+}
+
+.brand-mark-near {
+  fill: var(--brand-basalt);
+}
+
+.brand-mark-summit {
+  fill: var(--brand-summit);
+}
+
+.brand-mark-rope {
+  fill: none;
+  stroke: var(--brand-rope);
+}
+
+/* Phone menu button */
+.nav-menu-toggle {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+  color: var(--brand-ink);
 }

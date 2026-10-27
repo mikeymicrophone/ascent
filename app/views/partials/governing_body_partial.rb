@@ -12,12 +12,27 @@ class Views::Partials::GoverningBodyPartial < Views::ApplicationView
       div do
         span { "Jurisdiction type:" }
         whitespace
-        span { @governing_body.jurisdiction_type }
+        span { @governing_body.jurisdiction.jurisdictionable_type.titleize }
       end
       div do
         span { "Jurisdiction:" }
         whitespace
-        link_to @governing_body.jurisdiction.name, @governing_body.jurisdiction, class: "link jurisdiction"
+        jurisdiction_link @governing_body.jurisdiction
+      end
+      div do
+        span { "Branch:" }
+        whitespace
+        span { @governing_body.branch&.titleize || "None" }
+      end
+      if @governing_body.chambers.any?
+        div do
+          span { "Chambers:" }
+          ul do
+            @governing_body.chambers.each do |chamber|
+              li { chamber.name }
+            end
+          end
+        end
       end
       div do
         span { "Governance type:" }
@@ -27,7 +42,7 @@ class Views::Partials::GoverningBodyPartial < Views::ApplicationView
       div do
         span { "Description:" }
         whitespace
-        div(class: "mt-1") { simple_format(@governing_body.description) }
+        div(class: "formatted-text") { simple_format(@governing_body.description) }
       end
       div do
         span { "Meeting schedule:" }

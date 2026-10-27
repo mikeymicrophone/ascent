@@ -1,0 +1,43 @@
+class PagesController < ApplicationController
+  # Public pages, with no record to authorize.
+  skip_verify_authorized
+
+  def home
+    render Views::Pages::HomeView.new(
+      active_races: active_races,
+      metrics: project_metrics
+    )
+  end
+
+  def glossary
+    render Views::Pages::GlossaryView.new
+  end
+
+  def supporters
+    render Views::Pages::SupportersView.new(
+      active_races: active_races,
+      metrics: project_metrics
+    )
+  end
+
+  def approval_voting
+    render Views::Pages::ApprovalVotingView.new(
+      page: PageContent.load("approval_voting")
+    )
+  end
+
+  private
+
+  def active_races
+    @active_races ||= Race.active.with_naming_details.recent.limit(3)
+  end
+
+  def project_metrics
+    @project_metrics ||= {
+      active_elections: Election.active.count,
+      offices: Office.count,
+      topics: Topic.count,
+      issues: Issue.count
+    }
+  end
+end

@@ -5,7 +5,7 @@
 #
 # Example usage:
 #   SmartFactory.create_or_reuse(:person, count: 5, reuse_likelihood: 7)
-#   SmartFactory.create_or_reuse(:candidacy, :democrat, count: 3, reuse_likelihood: 4, election: election)
+#   SmartFactory.create_or_reuse(:candidacy, :democrat, count: 3, reuse_likelihood: 4, race: race)
 #
 module SmartFactory
   class << self
@@ -31,7 +31,7 @@ module SmartFactory
       raise ArgumentError, "Reuse likelihood must be between 1-10" unless reuse_likelihood.between?(1, 10)
 
       results = []
-      
+
       count.times do
         if should_reuse?(reuse_likelihood) && (existing = find_reusable_object(factory_name, traits, attributes))
           results << existing
@@ -53,7 +53,7 @@ module SmartFactory
         candidacy: 2,        # Very low reuse - each candidacy should be unique
         rating: 1,           # No reuse - each rating is voter-specific
         stance: 1,           # No reuse - each stance is candidacy-specific
-        voter_election_baseline: 8  # High reuse - voters often have similar standards
+        voter_race_baseline: 8      # High reuse - voters often have similar standards
       }
 
       reuse_likelihood = reuse_patterns[factory_name] || 5
@@ -70,26 +70,26 @@ module SmartFactory
     # Finds a suitable existing object for reuse
     def find_reusable_object(factory_name, traits, attributes)
       model_class = factory_name.to_s.classify.constantize
-      
+
       # Build a query to find compatible existing objects
       query = model_class.all
-      
+
       # Apply attribute filters (only for simple attributes)
       attributes.each do |key, value|
         next if value.is_a?(ActiveRecord::Base) # Skip associations
-        
+
         if model_class.column_names.include?(key.to_s)
           query = query.where(key => value)
         end
       end
-      
+
       # Limit to recent objects to keep data fresh
-      if model_class.column_names.include?('created_at')
-        query = query.where('created_at > ?', 6.months.ago)
+      if model_class.column_names.include?("created_at")
+        query = query.where("created_at > ?", 6.months.ago)
       end
-      
+
       # Return a random matching object
-      query.order('RANDOM()').first
+      query.order("RANDOM()").first
     rescue NameError
       # If the model class doesn't exist, don't reuse
       nil

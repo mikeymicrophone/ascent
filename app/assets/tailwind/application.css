@@ -9,6 +9,11 @@
 @import "./layout/main.css";
 @import "./layout/components.css";
 @import "./layout/mountain.css";
+@import "./layout/pages.css";
+@import "./layout/voting.css";
+@import "./layout/place.css";
+@import "./layout/election.css";
+@import "./layout/elections_index.css";
 
 /* Layer 2: Spacing/Size */
 @import "./sizing/scaffold.css";
@@ -16,6 +21,10 @@
 @import "./sizing/main.css";
 @import "./sizing/components.css";
 @import "./sizing/mountain.css";
+@import "./sizing/voting.css";
+@import "./sizing/place.css";
+@import "./sizing/election.css";
+@import "./sizing/elections_index.css";
 
 /* Layer 3: Typography & Colors */
 @import "./typography/fonts.css";
@@ -23,20 +32,35 @@
 @import "./typography/navigation.css";
 @import "./typography/components.css";
 @import "./typography/mountain.css";
+@import "./typography/pages.css";
+@import "./typography/voting.css";
+@import "./typography/place.css";
+@import "./typography/election.css";
+@import "./typography/elections_index.css";
 
 /* Layer 3: Colors */
+@import "./colors/main.css";
 @import "./colors/scaffold.css";
 @import "./colors/navigation.css";
 @import "./colors/components.css";
 @import "./colors/mountain.css";
+@import "./colors/pages.css";
+@import "./colors/voting.css";
+@import "./colors/place.css";
+@import "./colors/election.css";
+@import "./colors/elections_index.css";
 
 /* Layer 4: State */
 @import "./situation/scaffold.css";
 @import "./situation/navigation.css";
 @import "./situation/components.css";
 @import "./situation/mountain.css";
+@import "./situation/pages.css";
+@import "./situation/voting.css";
+@import "./situation/place.css";
+@import "./situation/election.css";
+@import "./situation/elections_index.css";
 @import "./situation/butterfly.css";
 
 /* Layer 5: Plugins */
 @import "./plugins/pagy.tailwind.css";
-

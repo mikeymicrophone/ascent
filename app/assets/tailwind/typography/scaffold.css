@@ -2,53 +2,48 @@
 
 .scaffold {
   /* Base font for body */
-  @apply font-['Nunito'];
+  @apply font-['Bricolage_Grotesque'];
   
   /* Headings */
   h1 {
-    @apply font-['Kanit'] font-bold text-4xl;
+    @apply font-['Bricolage_Grotesque'] font-bold text-4xl;
   }
   
   h2 {
-    @apply font-['Kanit'] text-3xl;
+    @apply font-['Bricolage_Grotesque'] text-3xl;
   }
   
   h3 {
-    @apply font-['Kanit'] font-semibold text-xl;
+    @apply font-['Bricolage_Grotesque'] font-semibold text-xl;
   }
   
   h4 {
-    @apply font-['Kanit'] text-lg;
+    @apply font-['Bricolage_Grotesque'] text-lg;
   }
   
   h5 {
-    @apply font-['Kanit'] text-base;
+    @apply font-['Bricolage_Grotesque'] text-base;
   }
   
   /* Labels and Text */
   label {
-    @apply block font-['Nunito'] font-medium;
+    @apply block font-['Bricolage_Grotesque'] font-medium;
   }
   
   span {
-    @apply font-['Nunito'];
+    @apply font-['Bricolage_Grotesque'];
   }
   
   /* Paragraphs and descriptions */
   p {
-    @apply font-['Nunito'] leading-relaxed;
+    @apply font-['Bricolage_Grotesque'] leading-relaxed;
   }
   
   /* Button Text */
   button,
   input[type="submit"],
   a[class*="button"] {
-    @apply font-['Kanit'] font-medium;
-  }
-  
-  /* Notice Text */
-  #notice {
-    @apply font-['Nunito'] font-medium;
+    @apply font-['Bricolage_Grotesque'] font-medium;
   }
   
   /* Empty State Text */

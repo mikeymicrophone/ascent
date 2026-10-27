@@ -150,19 +150,19 @@ FactoryBot.define do
     end
 
     # Named factories for common scenarios
-    factory :education_area_of_concern, traits: [:education]
-    factory :transportation_area_of_concern, traits: [:transportation]
-    factory :environment_area_of_concern, traits: [:environment]
-    factory :economic_development_area_of_concern, traits: [:economic_development]
-    factory :healthcare_area_of_concern, traits: [:healthcare]
-    factory :housing_area_of_concern, traits: [:housing]
-    factory :social_services_area_of_concern, traits: [:social_services]
-    factory :parks_recreation_area_of_concern, traits: [:parks_recreation]
-    factory :budget_finance_area_of_concern, traits: [:budget_finance]
-    factory :technology_area_of_concern, traits: [:technology]
-    factory :agriculture_area_of_concern, traits: [:agriculture]
-    factory :energy_area_of_concern, traits: [:energy]
-    factory :immigration_area_of_concern, traits: [:immigration]
-    factory :arts_culture_area_of_concern, traits: [:arts_culture]
+    factory :education_area_of_concern, traits: [ :education ]
+    factory :transportation_area_of_concern, traits: [ :transportation ]
+    factory :environment_area_of_concern, traits: [ :environment ]
+    factory :economic_development_area_of_concern, traits: [ :economic_development ]
+    factory :healthcare_area_of_concern, traits: [ :healthcare ]
+    factory :housing_area_of_concern, traits: [ :housing ]
+    factory :social_services_area_of_concern, traits: [ :social_services ]
+    factory :parks_recreation_area_of_concern, traits: [ :parks_recreation ]
+    factory :budget_finance_area_of_concern, traits: [ :budget_finance ]
+    factory :technology_area_of_concern, traits: [ :technology ]
+    factory :agriculture_area_of_concern, traits: [ :agriculture ]
+    factory :energy_area_of_concern, traits: [ :energy ]
+    factory :immigration_area_of_concern, traits: [ :immigration ]
+    factory :arts_culture_area_of_concern, traits: [ :arts_culture ]
   end
 end

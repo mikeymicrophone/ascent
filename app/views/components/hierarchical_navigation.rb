@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 class Views::Components::HierarchicalNavigation < Views::ApplicationView
-  include Statisticable
+  prop :current_object, Hierarchicable
+  prop :show_stats, _Boolean, default: true
+  prop :expandable, _Boolean, default: true
 
-  def initialize(current_object:, show_stats: true, expandable: true, &drill_down_block)
-    @current_object = current_object
-    @show_stats = show_stats
-    @expandable = expandable
-    @drill_down_block = drill_down_block
+  def after_initialize
     @hierarchy_chain = @current_object.build_hierarchy_chain
     @custom_stats = []
     @custom_sections = []
@@ -22,13 +20,9 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
       breadcrumb_chain
 
       if @expandable && @current_object.has_navigation_children?
-        if @drill_down_block
-          drill_down_section(&@drill_down_block)
-        else
-          drill_down_section do
-            render Views::Components::ChildrenPreview.new(current_object: @current_object)
-            render Views::Components::GeographicSummary.new(current_object: @current_object)
-          end
+        drill_down_section do
+          render Views::Components::ChildrenPreview.new(current_object: @current_object)
+          render Views::Components::GeographicSummary.new(current_object: @current_object)
         end
       end
 
@@ -48,58 +42,20 @@ class Views::Components::HierarchicalNavigation < Views::ApplicationView
     div(class: "breadcrumb-chain") do
       @hierarchy_chain.each_with_index do |item, index|
         breadcrumb_item item, index
-        span(class: "breadcrumb-separator") { ">" } unless index == @hierarchy_chain.length - 1
+        span(class: "breadcrumb-separator") { icon(:chevron_right) } unless index == @hierarchy_chain.length - 1
       end
     end
   end
 
   def breadcrumb_item(item, index)
-    span(class: "breadcrumb-item #{'current' if item == @current_object}") do
+    span(class: [ "breadcrumb-item", ("current" if item == @current_object) ]) do
       if item != @current_object
         link_to item.name, item, class: "breadcrumb-link"
       else
         span(class: "breadcrumb-current") { item.name }
       end
 
-      if @show_stats
-        quick_stats(item)
-      end
-    end
-  end
-
-  def quick_stats(item)
-    stats = electorate_stats_for(item)
-
-    div(class: "quick-stats") do
-      div(class: "stats-row") do
-        if stats[:voters] > 0
-          span(class: "stat-item voter-count") do
-            span(class: "stat-value") { stats[:voters] }
-            span(class: "stat-label") { "voters" }
-          end
-        end
-
-        if stats[:active_elections] > 0
-          span(class: "stat-item election-count") do
-            span(class: "stat-value") { stats[:active_elections] }
-            span(class: "stat-label") { "active elections" }
-          end
-        end
-
-        if stats[:total_offices] > 0
-          span(class: "stat-item office-count") do
-            span(class: "stat-value") { stats[:total_offices] }
-            span(class: "stat-label") { "offices" }
-          end
-        end
-
-        @custom_stats.each do |custom_stat|
-          span(class: "stat-item custom-stat") do
-            span(class: "stat-value") { custom_stat[:value] }
-            span(class: "stat-label") { custom_stat[:label] }
-          end
-        end
-      end
+      QuickStats(item: item, custom_stats: @custom_stats) if @show_stats
     end
   end
 
