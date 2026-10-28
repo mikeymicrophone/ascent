@@ -14,7 +14,6 @@ RSpec.describe SeedLayers do
         SeedDataPaths.file("canadian_provinces.yml")
       ])
       expect(MunicipalitySeeder).to receive(:seed)
-      expect(PositionSeeder).to receive(:seed)
       expect(YearSeeder).to receive(:seed)
       expect(GubernatorialRaceSeeder).to receive(:seed)
       expect(SeedManifests).to receive(:seed)

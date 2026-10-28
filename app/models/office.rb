@@ -31,10 +31,16 @@ class Office < ApplicationRecord
   }
   scope :in_state, ->(state) { state.jurisdiction ? where(jurisdiction_id: state.jurisdiction.self_and_descendants.select(:id)) : none }
 
+  # "Mayor of Albany", "Governor of New York", "Senator from Texas", or, for a district, "State Senator in New York, District 21".
   def name
     return "#{nominating_organization.name} nominee for #{nominee_for.name}" if nomination?
 
-    position.title + " - " + jurisdiction.name
+    place = jurisdiction.jurisdictionable
+    return district_name(place) if place.is_a?(District)
+    # A legislator elected statewide represents the state rather than governing it.
+    return "#{position.title} from #{place_with_article(place.name)}" if place.is_a?(State) && position.legislative?
+
+    "#{position.title} of #{place_with_article(place.name)}"
   end
 
   # The seat's code as words: DISTRICT_10 reads "District 10", AT_LARGE "At large".
@@ -61,6 +67,17 @@ class Office < ApplicationRecord
   end
 
   private
+
+  def district_name(district)
+    return "#{position.title} in #{district.name}" unless district.state
+
+    "#{position.title} in #{place_with_article(district.state.name)}, #{district.label}"
+  end
+
+  # Places named as a union or a district take "the": the United States, the District of Columbia.
+  def place_with_article(name)
+    name.match?(/\A(?:United|District of) /) ? "the #{name}" : name
+  end
 
   def race_elections_match_jurisdiction
     if jurisdiction && races.includes(election: :jurisdiction).any? { !it.election.jurisdiction.contains?(jurisdiction) }

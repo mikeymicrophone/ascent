@@ -32,7 +32,7 @@ RSpec.describe "Nominations", type: :model do
   end
 
   it "names the organization and the office it nominates for" do
-    expect(nomination(democrats).name).to eq("Democratic Party nominee for Governor - Georgia")
+    expect(nomination(democrats).name).to eq("Democratic Party nominee for Governor of Georgia")
   end
 
   describe "gathering primary candidates into the general" do

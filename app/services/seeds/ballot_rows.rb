@@ -18,37 +18,37 @@ module Seeds
     ].freeze
 
     # Federal and state office titles are printed differently in each state.
-    # Each maps to a shared Position and, for numbered seats, the kind of District that elects it.
+    # Each maps to a Position's code in manifests/foundation.yml and, for numbered seats, the kind of District that elects it.
     STATE_LEVEL_OFFICES = {
-      "Representative in Congress" => [ "Representative", "Congressional District" ],
-      "Member, House of Representatives" => [ "Representative", "Congressional District" ],
-      "United States Representative" => [ "Representative", "Congressional District" ],
-      "Senator in Congress" => [ "Senator" ],
-      "Member, United States Senate" => [ "Senator" ],
-      "United States Senator" => [ "Senator" ],
-      "Governor" => [ "Governor" ],
-      "Lt. Governor" => [ "Lieutenant Governor" ],
-      "Lieutenant Governor" => [ "Lieutenant Governor" ],
-      "Attorney General" => [ "Attorney General" ],
-      "Secretary of State" => [ "Secretary of State" ],
-      "Secretary of the State" => [ "Secretary of State" ],
-      "Treasurer" => [ "Treasurer" ],
-      "Comptroller" => [ "Comptroller" ],
-      "Auditor" => [ "Auditor" ],
-      "Chief Financial Officer" => [ "Chief Financial Officer" ],
-      "Commissioner of Agriculture" => [ "Commissioner of Agriculture" ],
-      "Councillor" => [ "Governor's Councillor", "Governor's Council District" ],
-      "State Senator" => [ "State Senator", "State Senate District" ],
-      "Senator in General Court" => [ "State Senator", "State Senate District" ],
-      "Member of Assembly" => [ "State Representative", "Assembly District" ],
-      "State Representative" => [ "State Representative", "State House District" ],
-      "Representative in General Court" => [ "State Representative", "State House District" ],
-      "Member, House of Delegates" => [ "State Representative", "House of Delegates District" ],
-      "Supreme Court Justice" => [ "Justice", "Judicial District" ],
-      "District Court of Appeal" => [ "Appellate Judge", "District Court of Appeal" ],
-      "Circuit Judge" => [ "Circuit Judge", "Judicial Circuit" ],
-      "State Attorney" => [ "State Attorney", "Judicial Circuit" ],
-      "Public Defender" => [ "Public Defender", "Judicial Circuit" ]
+      "Representative in Congress" => [ "POSITION-REPRESENTATIVE", "Congressional District" ],
+      "Member, House of Representatives" => [ "POSITION-REPRESENTATIVE", "Congressional District" ],
+      "United States Representative" => [ "POSITION-REPRESENTATIVE", "Congressional District" ],
+      "Senator in Congress" => [ "POSITION-SENATOR" ],
+      "Member, United States Senate" => [ "POSITION-SENATOR" ],
+      "United States Senator" => [ "POSITION-SENATOR" ],
+      "Governor" => [ "POSITION-GOVERNOR" ],
+      "Lt. Governor" => [ "POSITION-LIEUTENANT_GOVERNOR" ],
+      "Lieutenant Governor" => [ "POSITION-LIEUTENANT_GOVERNOR" ],
+      "Attorney General" => [ "POSITION-ATTORNEY_GENERAL" ],
+      "Secretary of State" => [ "POSITION-SECRETARY_OF_STATE" ],
+      "Secretary of the State" => [ "POSITION-SECRETARY_OF_STATE" ],
+      "Treasurer" => [ "POSITION-TREASURER" ],
+      "Comptroller" => [ "POSITION-COMPTROLLER" ],
+      "Auditor" => [ "POSITION-AUDITOR" ],
+      "Chief Financial Officer" => [ "POSITION-CHIEF_FINANCIAL_OFFICER" ],
+      "Commissioner of Agriculture" => [ "POSITION-COMMISSIONER_OF_AGRICULTURE" ],
+      "Councillor" => [ "POSITION-GOVERNORS_COUNCILLOR", "Governor's Council District" ],
+      "State Senator" => [ "POSITION-STATE_SENATOR", "State Senate District" ],
+      "Senator in General Court" => [ "POSITION-STATE_SENATOR", "State Senate District" ],
+      "Member of Assembly" => [ "POSITION-STATE_REPRESENTATIVE", "Assembly District" ],
+      "State Representative" => [ "POSITION-STATE_REPRESENTATIVE", "State House District" ],
+      "Representative in General Court" => [ "POSITION-STATE_REPRESENTATIVE", "State House District" ],
+      "Member, House of Delegates" => [ "POSITION-STATE_REPRESENTATIVE", "House of Delegates District" ],
+      "Supreme Court Justice" => [ "POSITION-JUSTICE", "Judicial District" ],
+      "District Court of Appeal" => [ "POSITION-APPELLATE_JUDGE", "District Court of Appeal" ],
+      "Circuit Judge" => [ "POSITION-CIRCUIT_JUDGE", "Judicial Circuit" ],
+      "State Attorney" => [ "POSITION-STATE_ATTORNEY", "Judicial Circuit" ],
+      "Public Defender" => [ "POSITION-PUBLIC_DEFENDER", "Judicial Circuit" ]
     }.freeze
 
     # Labels with the same meaning in every state.
@@ -97,8 +97,9 @@ module Seeds
       "#{label}: #{values.join("; ")}." if values.any?
     end
 
+    # A bare "County" names no place; the row's county field says which.
     def places(text)
-      text.to_s.split(";").map(&:strip).compact_blank
+      text.to_s.split(";").map(&:strip).compact_blank.reject { |place| place.casecmp?("County") }
     end
 
     def county_name?(place)

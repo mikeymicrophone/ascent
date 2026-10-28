@@ -8,7 +8,7 @@ RSpec.describe "Candidate Management", type: :system do
   let!(:country) { create(:country, name: "United States") }
   let!(:california) { create(:state, :with_jurisdiction, name: "California", country: country) }
   let!(:year) { create(:year, year: 2024) }
-  let!(:governor) { create(:position, title: "Governor", description: "Chief executive of the state") }
+  let!(:governor) { create(:position, :governor, description: "Chief executive of the state") }
   let!(:office) { create(:office, position: governor, jurisdiction: california.jurisdiction) }
   let!(:race) { create_race_for(office, :upcoming, year: year) }
 
@@ -44,7 +44,7 @@ RSpec.describe "Candidate Management", type: :system do
         visit candidacy_path(candidacy)
 
         expect(page).to have_content("Sarah Martinez")
-        expect(page).to have_content("Governor - California")
+        expect(page).to have_content("Governor of California")
         expect(page).to have_content("announced")
       end
 

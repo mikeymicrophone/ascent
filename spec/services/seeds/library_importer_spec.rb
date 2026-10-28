@@ -29,7 +29,7 @@ RSpec.describe Seeds::LibraryImporter do
     race = candidacy.race
     expect(race).to have_attributes(entity_code: "RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL", certification_status: "certified")
     expect(race.election).to have_attributes(entity_code: "ELECTION-USA-NY-ASSEMBLY-AD_125-2024_GENERAL", year: Year.find_by!(year: 2024))
-    expect(race.office).to have_attributes(seat_code: "AD_125", name: "State Representative - New York Assembly District 125")
+    expect(race.office).to have_attributes(seat_code: "AD_125", name: "State Representative in New York, District 125")
 
     district = District.find_by!(entity_code: "DISTRICT-USA-NY-ASSEMBLY-AD_125")
     expect(district.jurisdiction.parent.jurisdictionable).to eq(State.find_by!(entity_code: "STATE-USA-NY"))

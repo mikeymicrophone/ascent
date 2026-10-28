@@ -16,7 +16,7 @@ module Views
     end
 
     def race_context(race)
-      [ race.office.position.title, race.office.jurisdiction.name ].compact.join(" in ")
+      race.office.name
     end
   end
 end
