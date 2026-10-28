@@ -37,6 +37,12 @@ export default class extends Controller {
     this.setView(event.params.view)
   }
 
+  togglePartyEndorsements(event) {
+    const visible = this.element.dataset.partyEndorsements !== "true"
+    this.element.dataset.partyEndorsements = String(visible)
+    event.currentTarget.setAttribute("aria-pressed", String(visible))
+  }
+
   // Phones get the list: sliders are easier to thumb than columns.
   isPhoneWidth() {
     return window.matchMedia("(max-width: 640px)").matches
@@ -59,7 +65,7 @@ export default class extends Controller {
   }
 
   nudgeBaseline(event) {
-    const current = this.baselineValue() ?? 250
+    const current = this.baselineValue() ?? 200
     this.applyBaselineUpdate(Math.max(0, Math.min(500, current + event.params.step)), { glide: true })
   }
 
@@ -287,15 +293,10 @@ export default class extends Controller {
     }
 
     const ratingValueElement = column.querySelector("[data-role='rating-value']")
-    const noRatingElement = column.querySelector("[data-role='no-rating']")
 
     if (ratingValueElement) {
       ratingValueElement.textContent = `Rating: ${ratingValue}`
       ratingValueElement.hidden = false
-    }
-
-    if (noRatingElement) {
-      noRatingElement.hidden = true
     }
   }
 

@@ -39,7 +39,7 @@ class Views::Mountains::YourVote < Views::ApplicationView
   end
 
   def not_approved_text
-    names = @mountain.not_approved_candidacies.map { [ it.person.full_name, ("(not rated)" unless @mountain.ratings.key?(it.id)) ].compact.join(" ") }
+    names = @mountain.not_approved_candidacies.map { it.person.full_name }
     names.any? ? names.join(", ") : "no one"
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_28_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -391,6 +391,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
     t.string "username"
     t.string "username_status"
     t.boolean "fictional", default: false, null: false
+    t.string "portrait_url"
+    t.string "portrait_credit"
+    t.string "portrait_source_url"
     t.index ["entity_code"], name: "index_people_on_entity_code", unique: true
     t.index ["username"], name: "index_people_on_username", unique: true
   end

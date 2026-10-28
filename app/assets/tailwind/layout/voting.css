@@ -178,6 +178,10 @@
   @apply flex flex-wrap items-center justify-between;
 }
 
+.mountain-footer {
+  @apply flex justify-start;
+}
+
 .view-toggle,
 .view-toggle-button,
 .mountain-legend,
@@ -243,12 +247,11 @@
 }
 
 .save-bar {
-  @apply sticky z-10 flex flex-wrap items-center justify-between;
-  bottom: 1rem;
+  @apply sticky top-4 z-10 flex flex-wrap items-center justify-end self-end;
 }
 
 .save-bar-text {
-  @apply flex flex-col min-w-0;
+  @apply absolute right-0 top-full hidden flex-col min-w-0;
 }
 
 .save-bar-actions {
@@ -345,16 +348,6 @@
 .results-card .pill-button,
 .ballot-empty .pill-button {
   @apply self-start;
-}
-
-@media (max-width: 640px) {
-  .save-bar {
-    @apply flex-nowrap;
-  }
-
-  .save-bar-detail {
-    @apply hidden;
-  }
 }
 
 /* Setting where you live */

@@ -19,15 +19,19 @@ class Views::Mountains::EditView < Views::ApplicationView
           section(class: "mountain-panel", aria: { label: "Your mountain" }) do
             mountain_toolbar
             @mountain_data.empty? ? render_empty_state : mountain_form
+            div(class: "mountain-footer") do
+              button(type: "button", class: "pill-button pill-button-outline party-endorsements-toggle", aria: { pressed: "false" },
+                data: { action: "mountain-editor#togglePartyEndorsements" }) { "Party endorsements" }
+            end
           end
           aside(class: "mountain-aside", aria: { label: "Your vote" }) do
+            Views::Mountains::SaveBar(mountain: @mountain)
             Views::Mountains::YourVote(mountain: @mountain)
             Views::Mountains::BaselineCard(mountain: @mountain)
             Views::Mountains::OfficialResults(race: @race) if @race.official_results_revealed_to?(@voter)
             rating_explainer
           end
         end
-        Views::Mountains::SaveBar(mountain: @mountain)
       end
     end
   end
@@ -38,6 +42,7 @@ class Views::Mountains::EditView < Views::ApplicationView
     {
       controller: "mountain-editor",
       view: "mountain",
+      party_endorsements: "false",
       "mountain-editor-max-height-value": Views::Mountains.max_height,
       "mountain-editor-draft-url-value": draft_mountain_path(@race, voter_id: @voter.id)
     }

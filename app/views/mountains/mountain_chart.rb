@@ -34,7 +34,6 @@ class Views::Mountains::MountainChart < Views::ApplicationView
               rating_value: candidacy_data[:rating_value],
               has_rating: candidacy_data[:has_rating],
               is_approved: candidacy_data[:is_approved],
-              baseline: (baseline_value if baseline_set?),
               editable: @editable,
               rating_input_id: rating_input_id(candidacy_data[:candidacy])
             )
@@ -73,9 +72,8 @@ class Views::Mountains::MountainChart < Views::ApplicationView
     yield(self) if block
   end
 
-  # The baseline is a number from 0 to 500, or nil until the voter sets one.
   def baseline_value
-    @baseline || (250 if @editable)
+    @baseline || (Mountain::DEFAULT_BASELINE if @editable)
   end
 
   def show_baseline?

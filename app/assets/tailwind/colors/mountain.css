@@ -55,6 +55,7 @@
 }
 
 /* Parties are text, never colors. */
+.party-endorsements,
 .party-democratic,
 .party-republican,
 .party-independent,
@@ -101,12 +102,18 @@
 /* Peaks: scree below the line, a lime summit above it, and the rope drawn across. */
 .peak-body,
 .peak-summit,
+.peak-ridge,
 .peak-rope {
   vector-effect: non-scaling-stroke;
 }
 
 .peak-body {
   fill: var(--brand-scree);
+  stroke: none;
+}
+
+.peak-ridge {
+  fill: none;
   stroke: var(--brand-scree-edge);
   stroke-width: 1.5;
   stroke-linejoin: round;
@@ -114,14 +121,15 @@
 
 .candidate-column.off-ballot .peak-body {
   fill: var(--brand-hatch);
+}
+
+.candidate-column.off-ballot .peak-ridge {
   stroke-dasharray: 5 4;
 }
 
 .peak-summit {
   fill: var(--brand-summit);
-  stroke: var(--brand-summit-deep);
-  stroke-width: 1.5;
-  stroke-linejoin: round;
+  stroke: none;
 }
 
 .peak-rope {

@@ -1,6 +1,8 @@
 # One account on one platform, such as a campaign's YouTube channel or a candidate's Instagram.
 class Channel < ApplicationRecord
   PLATFORMS = %w[website youtube instagram tiktok x bluesky facebook threads other].freeze
+  PLATFORM_LABELS = { "website" => "Website", "youtube" => "YouTube", "instagram" => "Instagram", "tiktok" => "TikTok",
+    "x" => "X", "bluesky" => "Bluesky", "facebook" => "Facebook", "threads" => "Threads", "other" => "Other" }.freeze
   # Stored as each owner's base class, so a party is an Organization.
   OWNER_TYPES = %w[Person Organization Candidacy].freeze
 
@@ -11,10 +13,15 @@ class Channel < ApplicationRecord
   validates :handle, presence: true, uniqueness: { scope: :platform }
   validates :owner_type, inclusion: { in: OWNER_TYPES }, allow_nil: true
   validates :official, inclusion: { in: [ true, false ] }
+  validates :url, format: { with: %r{\Ahttps?://\S+\z} }, allow_blank: true
 
   scope :official, -> { where(official: true) }
 
   def name
-    "#{handle} on #{platform}"
+    "#{handle} on #{platform_label}"
+  end
+
+  def platform_label
+    PLATFORM_LABELS.fetch(platform)
   end
 end

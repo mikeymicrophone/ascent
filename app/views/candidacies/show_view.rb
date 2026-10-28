@@ -12,16 +12,19 @@ class Views::Candidacies::ShowView < Views::ApplicationView
 
   def view_template
     div(class: "record-page candidacy-page", id: dom_id(@candidacy, :show)) do
-      PageHeader(title: person.full_name, trail: trail_for(@candidacy), eyebrow: eyebrow, lede: lede, record: @candidacy,
-        chips: method(:chips)) do
-        primary_action
-        PillLink(label: "Person page", path: person_path(person), icon: :user_round, variant: "outline")
+      div(class: "profile-header") do
+        PageHeader(title: person.full_name, trail: trail_for(@candidacy), eyebrow: eyebrow, lede: lede, record: @candidacy,
+          chips: method(:chips)) do
+          primary_action
+          PillLink(label: "Person page", path: person_path(person), icon: :user_round, variant: "outline")
+        end
+        ProfilePortrait(person: person)
       end
       div(class: "place-layout") do
         div(class: "place-main") do
+          communications_section
           stances_section
           endorsements_section
-          communications_section
           rating_totals
           rivals
         end
@@ -57,6 +60,7 @@ class Views::Candidacies::ShowView < Views::ApplicationView
   end
 
   def chips
+    span(class: "row-badge row-badge-mock") { "Invented for a mock election" } if person.fictional
     StatusChip(status: @candidacy.status.downcase)
     labels = @candidacy.ballot_lines.map(&:label)
     labels = [ @candidacy.primary_summary ] if labels.empty? && @candidacy.primary_candidacy
@@ -122,25 +126,9 @@ class Views::Candidacies::ShowView < Views::ApplicationView
   end
 
   def communications_section
-    communications = @candidacy.featured_communications.includes(:channel).order(published_on: :desc).limit(COMMUNICATION_LIMIT).to_a
-    return if communications.empty?
-
-    section(class: "place-section") do
-      section_heading("In their own words", nil)
-      ul(class: "communication-list") { communications.each { communication_item(it) } }
-    end
-  end
-
-  def communication_item(communication)
-    li(class: "communication-item") do
-      a(href: communication.url, class: "text-link communication-link", target: "_blank", rel: "noopener") do
-        plain communication.name
-        icon(:external_link)
-      end
-      span(class: "communication-meta") do
-        [ communication.kind.humanize, communication.channel&.name, communication.published_on.strftime("%b %-d, %Y") ].compact.join(" · ")
-      end
-    end
+    communications = Communication.for_profile(person, [ @candidacy ]).includes(:channel)
+      .order(published_on: :desc, id: :desc).limit(COMMUNICATION_LIMIT).to_a
+    CommunicationGallery(communications: communications)
   end
 
   # Only totals: a rating is private to its voter, so no one may see who rated the candidate or how.

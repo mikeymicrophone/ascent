@@ -7,12 +7,16 @@ class Views::People::ShowView < Views::ApplicationView
 
   def view_template
     div(class: "record-page person-page", id: dom_id(@person, :show)) do
-      PageHeader(title: @person.full_name, trail: trail_for(@person), eyebrow: eyebrow, lede: lede, record: @person,
-        chips: method(:chips)) do
-        PillLink(label: "Latest candidacy", path: candidacy_path(latest), icon: :badge_check) if latest
+      div(class: "profile-header") do
+        PageHeader(title: @person.full_name, trail: trail_for(@person), eyebrow: eyebrow, lede: lede, record: @person,
+          chips: method(:chips)) do
+          PillLink(label: "Latest candidacy", path: candidacy_path(latest), icon: :badge_check) if latest
+        end
+        ProfilePortrait(person: @person)
       end
       div(class: "place-layout") do
         div(class: "place-main") do
+          CommunicationGallery(communications: communications)
           candidacies_section
           latest_stances
         end
@@ -35,6 +39,10 @@ class Views::People::ShowView < Views::ApplicationView
 
   def latest
     candidacies.first
+  end
+
+  def communications
+    Communication.for_profile(@person, candidacies).includes(:channel).order(published_on: :desc, id: :desc).limit(8).to_a
   end
 
   def eyebrow

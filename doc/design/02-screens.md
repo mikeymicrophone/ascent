@@ -16,8 +16,11 @@ Screens are listed in order of importance. Each lists what it shows today and wh
 
 The heart of the product, at `/mountains/:race`. Only the signed-in voter whose mountain it is, or an admin, can open it.
 
-- **Today:** a header with the race name, a link to its election, the voter's name, and their baseline or a prompt to set one. Below that, an instruction panel, then a chart: a 0 to 500 axis on the left, a horizontal baseline line with a draggable label on the right, and one column per candidate. In each column the voter clicks or drags to set a rating; a dot marks it. Under each column are the candidate's name, the rating (or "no rating"), and a link to their policy positions. A Save Changes button submits everything, and the page stays editable after saving.
+- **Today:** a header with the race name and election, followed by a mountain or list view. The chart has a 0 to 500 axis, a draggable baseline, and one column per candidate. New mountains start with a baseline of 200; saved baselines keep their values. Under each column are the candidate's name, their rating when set, and a link to any policy positions. Unrated candidates have no "Not rated" label.
+- **Save controls:** Discard and Save mountain appear in the right sidebar when there are unsaved changes. A Saved button shows the saved state. Change details appear on hover or keyboard focus. The page stays editable after saving.
+- **Ridge:** the mountain connects neighboring candidate ratings directly. It does not drop to zero between rated candidates. The area above the baseline stays lime, and the ridge follows rating changes and resizing.
 - **Primary candidates:** when a race's primaries had other candidates, the header says how many, with an Include primary candidates / Remove primary candidates button. Included candidates appear as extra columns labelled "Off the ballot; ran in the Democratic Party primary" (or the top-two primary).
+- **Party endorsements:** the Party endorsements button at the bottom left of the mountain panel shows or hides current party endorsements below candidate names in both views. They start hidden. Nonparty and withdrawn endorsements are excluded; ballot designations and primary-race context remain separate.
 - **Empty state:** "No candidates yet for this race", with Simulate Data for admins and a link back to the race.
 - **It has to:**
   - make the baseline the obvious control, and show which candidates are approved, both as it moves and at rest;
@@ -48,6 +51,9 @@ At `/races`. Filters for search text, state, election year, status and election 
 - **Candidacy** (`/candidacies/:id`): the person's name, status and ballot labels, the race and election, policy positions, and rating totals: how many voters rated the candidate, the average rating, and how many approve. Ratings are private, so this page must never show which voter rated the candidate or how.
 - **Person** (`/people/:id`): their candidacies over time, with office, date, status and party.
 - They have to present a candidate as a person: stances with their evidence, official channels and communications, endorsements, and room for the multi-dimensional evaluation to come (ASC-59).
+- **Portraits:** the person and their candidacies share a portrait, with a credit and source link when supplied. Admins can edit these fields on the person form. Profiles without an image show initials.
+- **Sites and socials:** official channels distinguish personal accounts from campaign accounts. A candidacy shows its own campaign channels; the person page includes their campaigns over time.
+- **Videos and statements:** both pages show linked publications with their title, source, date, and summary. YouTube and public Vimeo players load after Play video is clicked. Direct MP4, WebM, and Ogg video links have native playback controls. Unsupported links stay accessible through Open original. Removed publications retain their status and any archive link, with no player.
 
 ## 7. Office and election
 

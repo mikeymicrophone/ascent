@@ -1,3 +1,58 @@
+.profile-header {
+  @apply gap-5 sm:gap-8;
+}
+
+.profile-portrait {
+  @apply m-0;
+}
+
+.profile-portrait-image,
+.profile-portrait-placeholder {
+  @apply rounded-2xl;
+}
+
+.profile-portrait-credit {
+  @apply mt-2;
+}
+
+.profile-channel-list {
+  @apply list-none m-0 p-0 gap-3;
+}
+
+.profile-channel {
+  @apply gap-1 pb-3 border-b last:border-b-0 last:pb-0;
+}
+
+.communication-gallery {
+  @apply gap-5;
+}
+
+.communication-card {
+  @apply rounded-2xl border;
+}
+
+.communication-card-body {
+  @apply p-4 gap-2;
+}
+
+.communication-title {
+  @apply m-0;
+}
+
+.communication-player {
+  @apply border-0;
+  min-height: 200px;
+}
+
+.communication-play {
+  @apply gap-2 p-5 border-0;
+  min-height: 200px;
+}
+
+.communication-play .icon {
+  @apply w-10 h-10;
+}
+
 .stance-groups {
   @apply gap-5;
 }

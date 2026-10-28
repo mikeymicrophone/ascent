@@ -1,3 +1,27 @@
+.profile-portrait-placeholder {
+  @apply font-['Bricolage_Grotesque'] text-3xl sm:text-6xl font-bold;
+}
+
+.profile-portrait-credit {
+  @apply text-xs leading-snug;
+}
+
+.profile-channel .text-link {
+  overflow-wrap: anywhere;
+}
+
+.communication-title {
+  @apply font-['Bricolage_Grotesque'] text-xl font-bold leading-snug;
+}
+
+.communication-play {
+  @apply text-base font-semibold;
+}
+
+.communication-play-provider {
+  @apply text-xs font-normal;
+}
+
 .stance-group-title {
   @apply font-['Martian_Mono'] text-xs font-semibold uppercase tracking-[0.08em];
 }

@@ -181,7 +181,7 @@ class MountainsController < ApplicationController
 
   # Each candidate as the voter sees them now, with any unsaved draft laid over the saved ratings.
   def build_mountain_data
-    @race.candidacies_for(@voter).active.with_rating_details.map do |candidacy|
+    @race.candidacies_for(@voter).active.with_rating_details.includes(endorsements: :endorser).map do |candidacy|
       rating = mountain.ratings[candidacy.id]
 
       {

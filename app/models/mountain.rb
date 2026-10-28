@@ -2,6 +2,7 @@
 # laid over them. Saving publishes the draft into ratings and the baseline, which archive what they
 # replace, and fixes whether the mountain counts with the race's residents or with visitors.
 class Mountain
+  DEFAULT_BASELINE = 200
   PROGRESS_STATES = %w[saved started not_started].freeze
 
   attr_reader :voter, :race
@@ -37,7 +38,7 @@ class Mountain
   end
 
   def baseline
-    draft.baseline || saved_baseline
+    draft.baseline || saved_baseline || DEFAULT_BASELINE
   end
 
   def approved?(candidacy)
@@ -68,9 +69,10 @@ class Mountain
 
   # What saving would change: the candidacies whose rating moves, and the baseline's move, if any.
   def unsaved_changes
+    previous_baseline = saved_baseline || DEFAULT_BASELINE
     {
       candidacy_ids: draft.ratings_by_candidacy.reject { |candidacy_id, value| saved_ratings[candidacy_id] == value }.keys,
-      baseline: ([ saved_baseline, draft.baseline ] if draft.baseline && draft.baseline != saved_baseline)
+      baseline: ([ previous_baseline, draft.baseline ] if draft.baseline && draft.baseline != previous_baseline)
     }
   end
 

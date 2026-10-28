@@ -47,7 +47,8 @@
   text-wrap: balance;
 }
 
-.party-affiliation {
+.party-affiliation,
+.party-endorsements {
   @apply font-['Bricolage_Grotesque'];
   @apply text-xs;
   @apply font-medium;

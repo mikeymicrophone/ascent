@@ -16,8 +16,31 @@ RSpec.describe Mountain do
   before { [ ventura_quinn, lindqvist, okafor ] }
 
   it "starts untouched, with nothing to save" do
+    expect(mountain.baseline).to eq(200)
     expect(mountain.progress).to eq("not_started")
     expect(mountain).not_to be_unsaved
+    expect(VoterRaceBaseline.where(voter: voter, race: race)).to be_empty
+  end
+
+  it "uses and saves the default baseline when only ratings change" do
+    mountain.revise_draft!(ratings: { ventura_quinn.id => "201", lindqvist.id => "200" }, baseline: "200")
+
+    expect(mountain.approved_candidacies).to eq([ ventura_quinn ])
+    expect(mountain.unsaved_changes[:baseline]).to be_nil
+    mountain.save!
+
+    expect(mountain.saved_baseline).to eq(200)
+    expect(mountain.progress).to eq("saved")
+  end
+
+  it "preserves a saved baseline and a draft baseline of zero" do
+    mountain.publish!(ratings: {}, baseline: 280)
+    expect(mountain.baseline).to eq(280)
+
+    mountain.revise_draft!(baseline: 0)
+    expect(mountain.baseline).to eq(0)
+    mountain.save!
+    expect(mountain.baseline).to eq(0)
   end
 
   it "keeps dragged ratings in a draft that shows as started until saved" do
@@ -26,7 +49,7 @@ RSpec.describe Mountain do
     expect(MountainDraft.find_by!(voter: voter, race: race).ratings).to eq(ventura_quinn.id.to_s => 410, lindqvist.id.to_s => 120)
     expect(Rating.where(voter: voter)).to be_empty
     expect(mountain.progress).to eq("started")
-    expect(mountain.unsaved_changes).to eq(candidacy_ids: [ ventura_quinn.id, lindqvist.id ], baseline: [ nil, 280 ])
+    expect(mountain.unsaved_changes).to eq(candidacy_ids: [ ventura_quinn.id, lindqvist.id ], baseline: [ 200, 280 ])
     expect(mountain.approved_candidacies).to eq([ ventura_quinn ])
   end
 

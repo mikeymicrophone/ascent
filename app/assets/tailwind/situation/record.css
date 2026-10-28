@@ -10,3 +10,15 @@ a.policy-path-name:focus-visible {
   outline: 3px solid var(--brand-rope);
   outline-offset: 2px;
 }
+.communication-play {
+  @apply cursor-pointer transition-colors;
+}
+
+.communication-play:hover {
+  background-color: var(--brand-contour);
+}
+
+.communication-play:focus-visible {
+  @apply outline-2 outline-offset-[-4px];
+  outline-color: var(--brand-rope);
+}

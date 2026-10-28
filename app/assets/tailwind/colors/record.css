@@ -1,3 +1,24 @@
+.profile-portrait-placeholder,
+.communication-play {
+  background-color: var(--brand-lichen);
+  color: var(--brand-basalt);
+}
+
+.profile-portrait-credit,
+.communication-play-provider,
+.communication-unavailable {
+  color: var(--brand-slate);
+}
+
+.profile-channel,
+.communication-card {
+  border-color: var(--brand-mist);
+}
+
+.communication-card {
+  background-color: var(--brand-snow);
+}
+
 .stance-group-title,
 .communication-meta,
 .privacy-line,

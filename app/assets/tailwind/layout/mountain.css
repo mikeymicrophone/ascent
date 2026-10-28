@@ -69,6 +69,14 @@
   @apply -mx-3 mt-4 text-center;
 }
 
+.party-endorsements {
+  @apply block;
+}
+
+.mountain-page[data-party-endorsements="false"] .party-endorsements {
+  @apply hidden;
+}
+
 .y-axis-labels {
   /* Level with the rating areas: the chart's padding plus each column's. */
   @apply absolute left-0 top-8;
@@ -138,10 +146,9 @@
   @apply inline-flex items-center justify-center;
 }
 
-/* A peak spreads 70% of a column either side of its centered line, under the dot. */
 .mountain-peak {
   @apply absolute top-0 h-full overflow-visible pointer-events-none;
-  left: -20%;
-  width: 140%;
+  left: 50%;
+  width: calc(100% + 2rem);
   z-index: 0;
 }

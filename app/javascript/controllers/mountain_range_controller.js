@@ -6,12 +6,10 @@ import { gsap } from "gsap"
 // on the chart (peaks, dots and the baseline line) so they always agree. The mountain editor tells it
 // what changed through mountain-editor:rated and mountain-editor:baseline-moved.
 // Connects to data-controller="mountain-range"
-const PEAK_SPREAD = 70
-
 export default class extends Controller {
   static targets = ["column", "baseline"]
   static values = {
-    baseline: { type: Number, default: 250 },
+    baseline: { type: Number, default: 200 },
     baselineSet: Boolean,
     logLevel: { type: String, default: "warn" }
   }
@@ -19,8 +17,12 @@ export default class extends Controller {
   connect() {
     this.line = { value: this.baselineValue }
     this.peaks = new Map(this.columnTargets.map((column) => [ column, this.startingPeak(column) ]))
-    this.resizeObserver = new ResizeObserver(() => this.placeBaseline())
+    this.resizeObserver = new ResizeObserver(() => {
+      this.sizeSegments()
+      this.placeBaseline()
+    })
     this.resizeObserver.observe(this.element)
+    this.sizeSegments()
     this.drawAll()
     this.markReady()
     this.riseIntoView()
@@ -32,11 +34,15 @@ export default class extends Controller {
   }
 
   rate({ detail: { candidacyId, rating, glide } }) {
-    const column = this.columnTargets.find((target) => target.dataset.candidacyId === String(candidacyId))
+    const index = this.columnTargets.findIndex((target) => target.dataset.candidacyId === String(candidacyId))
+    const column = this.columnTargets[index]
     if (!column) return
 
     column.dataset.rating = rating
-    this.tween(this.peaks.get(column), { height: rating }, glide, () => this.drawColumn(column))
+    this.tween(this.peaks.get(column), { height: rating }, glide, () => {
+      this.drawColumn(column)
+      if (index > 0) this.drawColumn(this.columnTargets[index - 1])
+    })
   }
 
   moveBaseline({ detail: { baseline, glide } }) {
@@ -88,30 +94,50 @@ export default class extends Controller {
     const height = Math.max(0, Math.min(500, peak.height))
     const baseline = this.line.value
     const aboveLine = this.baselineSetValue && height > baseline
-    this.setShape(column, "peak-body", height > 0 ? this.peakPath(height) : "")
-    this.setShape(column, "peak-summit", aboveLine ? this.summitPath(height, baseline) : "")
-    this.setShape(column, "peak-rope", aboveLine ? this.ropePath(height, baseline) : "")
+    const next = this.columnTargets[this.columnTargets.indexOf(column) + 1]
+    const nextHeight = next ? Math.max(0, Math.min(500, this.peaks.get(next).height)) : null
+    this.setShape(column, "peak-body", next ? this.peakPath(height, nextHeight) : "")
+    this.setShape(column, "peak-ridge", next ? `M 0 ${500 - height} L 100 ${500 - nextHeight}` : "")
+    this.setShape(column, "peak-summit", next && this.baselineSetValue ? this.summitPath(height, nextHeight, baseline) : "")
+    this.setShape(column, "peak-rope", next && this.baselineSetValue ? this.ropePath(height, nextHeight, baseline) : "")
     this.placeDot(column, height)
     if (aboveLine && !peak.wasAboveLine) this.pulseSummit(column)
     peak.wasAboveLine = aboveLine
   }
 
-  peakPath(height) {
-    return `M ${-PEAK_SPREAD} 500 L 0 ${500 - height} L ${PEAK_SPREAD} 500 Z`
+  sizeSegments() {
+    this.columnTargets.forEach((column, index) => {
+      const next = this.columnTargets[index + 1]
+      const svg = column.querySelector(".mountain-peak")
+      const currentArea = column.querySelector(".rating-area").getBoundingClientRect()
+      const nextArea = next?.querySelector(".rating-area").getBoundingClientRect()
+      svg.style.width = nextArea ? `${nextArea.left + nextArea.width / 2 - currentArea.left - currentArea.width / 2}px` : "0px"
+    })
   }
 
-  summitPath(height, baseline) {
-    const spread = this.spreadAtBaseline(height, baseline)
-    return `M ${-spread} ${500 - baseline} L 0 ${500 - height} L ${spread} ${500 - baseline} Z`
+  peakPath(height, nextHeight) {
+    return `M 0 ${500 - height} L 100 ${500 - nextHeight} L 100 500 L 0 500 Z`
   }
 
-  ropePath(height, baseline) {
-    const spread = this.spreadAtBaseline(height, baseline)
-    return `M ${-spread} ${500 - baseline} H ${spread}`
+  summitPath(height, nextHeight, baseline) {
+    if (height <= baseline && nextHeight <= baseline) return ""
+
+    const [left, right] = this.summitBounds(height, nextHeight, baseline)
+    return `M ${left} ${500 - Math.max(height, baseline)} L ${right} ${500 - Math.max(nextHeight, baseline)} L ${right} ${500 - baseline} L ${left} ${500 - baseline} Z`
   }
 
-  spreadAtBaseline(height, baseline) {
-    return PEAK_SPREAD * (1 - baseline / height)
+  ropePath(height, nextHeight, baseline) {
+    if (height <= baseline && nextHeight <= baseline) return ""
+
+    const [left, right] = this.summitBounds(height, nextHeight, baseline)
+    return `M ${left} ${500 - baseline} H ${right}`
+  }
+
+  summitBounds(height, nextHeight, baseline) {
+    if (height >= baseline && nextHeight >= baseline) return [0, 100]
+
+    const crossing = 100 * (height - baseline) / (height - nextHeight)
+    return height > baseline ? [0, crossing] : [crossing, 100]
   }
 
   setShape(column, role, path) {
