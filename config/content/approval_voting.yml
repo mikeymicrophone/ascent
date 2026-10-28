@@ -8,12 +8,12 @@
 
 hero:
   kicker: About Approval Voting
-  title: The case for a ballot that can say yes to more than one candidate.
+  title:
   lead: >
-    Plurality voting asks you to pick a single name, even when that forces a
-    strategic lie. Approval voting asks a simpler question: which of these people
-    would you accept in the office? That small change would drain a lot of poison
-    out of the process, and it might change how people govern once they get there.
+    Approval Voting means you can vote for as many candidates as you like.
+    But, there's no ranking: each vote is simply yes or no.
+    This system can produce powerful results, and is simple enough that polls can play an important role (saving voters time).
+    But people love ranking; it feels very natural to say who is your favorite.  This is why I created Expressive Voting.
   actions:
     - text: Try a Mountain
       path: mountains
@@ -29,22 +29,22 @@ sections:
     items:
       - title: The spoiler effect
         copy: >
-          When two similar candidates split a constituency, both can lose to a
-          less-liked rival. Voters learn to abandon the person they actually
-          prefer. Parties learn they must nominate exactly one person, even when
-          several credible ones exist.
-      - title: Emotional overload
+          Spoiler candidates play an enormous role in most US elections.
+          It has always been obvious that this irony crushes our spirit while erasing our progress.
+          And every year strategists concoct new ways to make it worse.
+        kicker: Approval Voting eliminates the spoiler effect (even better than Ranked Choice)
+      - title: Dominance of traditional parties
         copy: >
-          A lot of the cost of elections is not information. It is the negative
-          energy the contest demands, and that energy does not necessarily
-          dissipate when the results are certified. A ballot that punishes
-          honesty makes the whole season feel more existential than it needs to.
+          There are a few thousand people who are still proud to be a Democrat or a Republican.
+          Hundreds of millions of Americans are VERY proud NOT TO BE the other one.
+          But even when "the right side" wins, they often can't solve problems.
+        kicker: Approval Voting doesn't need parties at all.  The only challenge is analyzing a large pool of candidates.
       - title: Cynical governance
         copy: >
-          When power is contested by very few factions, there is little
-          presumption of trust. Decisions get calculated to maximize control.
-          Officials spend their term preparing for the next binary fight instead
-          of pursuing goals that almost everyone already shares.
+          In a one-vote election, a candidate can never zero in on exactly why you voted for them.
+          They spend their energy making sure to stay in power, in case they eventually figure it out.
+          The best way to do this is to keep people distracted by obnoxious sound-bites, oversimplifying painful (and often tragic) topics.
+        kicker: When similar but distinct campaigns compete fairly (rather than sabotage and spoil), policies gets refined, and true character is displayed.
 
   - type: prose
     surface: band

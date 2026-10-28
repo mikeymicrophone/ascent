@@ -1,3 +1,11 @@
+.profile-image-gallery {
+  @apply gap-5;
+}
+
+.profile-image-fields {
+  @apply border rounded-xl p-4 mb-4;
+}
+
 .profile-header {
   @apply gap-5 sm:gap-8;
 }

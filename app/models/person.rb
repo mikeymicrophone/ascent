@@ -1,5 +1,6 @@
 class Person < ApplicationRecord
   include Engageable
+  include Illustrated
 
   has_many :candidacies, dependent: :destroy
   has_many :races, -> { distinct }, through: :candidacies
@@ -7,7 +8,6 @@ class Person < ApplicationRecord
 
   # Ballots name candidates without contact details, and some print only a surname.
   validates :last_name, presence: true
-  validates :portrait_url, :portrait_source_url, format: { with: %r{\Ahttps?://\S+\z} }, allow_blank: true
   validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   # Generated usernames stay provisional until a verified handle replaces them.
   validates :username, uniqueness: true, format: { with: /\A[a-z0-9_]+\z/ }, allow_blank: true

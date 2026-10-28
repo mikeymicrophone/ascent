@@ -6,8 +6,6 @@ class Views::People::PersonForm < Views::Components::Forms::Base
     row field(:email).text
     row field(:birth_date).date
     row field(:bio).textarea(rows: 4)
-    row field(:portrait_url).input(type: :url), label: "Portrait image URL"
-    row field(:portrait_credit).text, label: "Photo credit"
-    row field(:portrait_source_url).input(type: :url), label: "Photo source URL"
+    ProfileImageFields(record: model)
   end
 end

@@ -2,10 +2,13 @@ require "rails_helper"
 
 RSpec.describe "Profile media", type: :request do
   let(:person) do
-    create(:person, first_name: "Marisol", middle_name: nil, last_name: "Vega", portrait_url: "https://images.example.org/marisol.jpg",
-      portrait_credit: "Riverside Studio", portrait_source_url: "https://example.org/portraits/marisol")
+    create(:person, first_name: "Marisol", middle_name: nil, last_name: "Vega")
   end
   let(:candidacy) { create(:candidacy, person: person) }
+  let!(:portrait) do
+    create(:image, url: "https://images.example.org/marisol.jpg", alt_text: "Portrait of Marisol Vega",
+      credit: "Riverside Studio", source_url: "https://example.org/portraits/marisol").tap { person.images << it }
+  end
 
   it "shows the same credited portrait on the person and candidacy pages" do
     [ person_path(person), candidacy_path(candidacy) ].each do |path|
@@ -13,9 +16,9 @@ RSpec.describe "Profile media", type: :request do
 
       expect(response).to have_http_status(:ok)
       page = Nokogiri::HTML(response.body)
-      expect(page.at_css(".profile-portrait-image")["src"]).to eq(person.portrait_url)
+      expect(page.at_css(".profile-portrait-image")["src"]).to eq(portrait.url)
       expect(page.at_css(".profile-portrait-image")["alt"]).to eq("Portrait of Marisol Vega")
-      expect(page.at_css(".profile-portrait-credit a")["href"]).to eq(person.portrait_source_url)
+      expect(page.at_css(".profile-portrait-credit a")["href"]).to eq(portrait.source_url)
       expect(page.at_css(".profile-portrait-credit").text).to eq("Riverside Studio")
     end
   end
@@ -40,12 +43,12 @@ RSpec.describe "Profile media", type: :request do
   end
 
   it "keeps a photo source accessible when no credit text was supplied" do
-    person.update!(portrait_credit: nil)
+    portrait.update!(credit: nil)
 
     get person_path(person)
 
     source = Nokogiri::HTML(response.body).at_css(".profile-portrait-credit a")
-    expect(source["href"]).to eq(person.portrait_source_url)
+    expect(source["href"]).to eq(portrait.source_url)
     expect(source.text).to eq("Photo source")
   end
 
@@ -81,15 +84,114 @@ RSpec.describe "Profile media", type: :request do
     expect(response.body).to include("no longer available", "Archived copy", "Local radio interview")
   end
 
-  it "lets an admin edit portrait details and rejects executable URLs" do
+  it "lets an admin edit shared images and rejects executable URLs" do
     sign_in create(:voter, admin: true)
 
-    patch person_path(person), params: { person: { portrait_url: "https://images.example.org/new.jpg", portrait_credit: "City Studio" } }
+    placement = person.image_placements.sole
+    patch person_path(person), params: { person: { image_placements_attributes: [ { id: placement.id,
+      image_attributes: { id: portrait.id, url: "https://images.example.org/new.jpg", credit: "City Studio" } } ] } }
     expect(response).to redirect_to(person)
-    expect(person.reload.portrait_credit).to eq("City Studio")
+    expect(portrait.reload.credit).to eq("City Studio")
 
-    patch person_path(person), params: { person: { portrait_url: "javascript:alert(1)" } }
+    patch person_path(person), params: { person: { image_placements_attributes: [ { id: placement.id,
+      image_attributes: { id: portrait.id, url: "javascript:alert(1)" } } ] } }
     expect(response).to have_http_status(:unprocessable_content)
-    expect(person.reload.portrait_url).to eq("https://images.example.org/new.jpg")
+    expect(portrait.reload.url).to eq("https://images.example.org/new.jpg")
+  end
+
+  it "shows several ordered images, prefers campaign images, and deduplicates shared placements" do
+    campaign = create(:image, alt_text: "Marisol at a campaign meeting")
+    second = create(:image, alt_text: "Marisol volunteering")
+    person.image_placements.create!(image: second, position: 1)
+    candidacy.image_placements.create!(image: campaign, position: 0)
+    candidacy.image_placements.create!(image: portrait, position: 1)
+
+    get candidacy_path(candidacy)
+    images = Nokogiri::HTML(response.body).css(".profile-portrait-image")
+    expect(images.map { it["src"] }).to eq([ campaign.url, portrait.url, second.url ])
+
+    get person_path(person)
+    images = Nokogiri::HTML(response.body).css(".profile-portrait-image")
+    expect(images.map { it["src"] }).to eq([ portrait.url, second.url ])
+  end
+
+  it "lets admins attach and unlink existing images on a candidacy without deleting them" do
+    sign_in create(:voter, admin: true)
+    patch candidacy_path(candidacy), params: { candidacy: { image_placements_attributes: [ { image_id: portrait.id } ] } }
+    expect(response).to redirect_to(candidacy)
+    expect(candidacy.images).to eq([ portrait ])
+
+    placement = candidacy.image_placements.sole
+    patch candidacy_path(candidacy), params: { candidacy: { image_placements_attributes: [ { id: placement.id, _destroy: "1" } ] } }
+    expect(response).to redirect_to(candidacy)
+    expect(candidacy.images.reload).to be_empty
+    expect(person.images).to eq([ portrait ])
+    expect(Image.exists?(portrait.id)).to be(true)
+  end
+
+  it "shows image management fields and retains invalid new image values" do
+    sign_in create(:voter, admin: true)
+    get edit_person_path(person)
+    expect(response).to have_http_status(:ok)
+    expect(response.body).to include("Use an existing image", "Add a new image", "Remove from this profile")
+
+    patch person_path(person), params: { person: { image_placements_attributes: [ { position: 0,
+      image_attributes: { url: "javascript:alert(1)", credit: "City Studio" } } ] } }
+    expect(response).to have_http_status(:unprocessable_content)
+    expect(response.body).to include("javascript:alert(1)", "City Studio")
+    expect(person.images.reload).to eq([ portrait ])
+  end
+
+  it "prevents a non-admin from changing shared images" do
+    sign_in create(:voter)
+    patch person_path(person), params: { person: { image_placements_attributes: [ { id: person.image_placements.sole.id,
+      image_attributes: { id: portrait.id, credit: "Changed" } } ] } }
+    expect(response).to redirect_to(root_path)
+    expect(portrait.reload.credit).to eq("Riverside Studio")
+  end
+
+  it "retains a reused image through a failed profile save and a form resubmission" do
+    sign_in create(:voter, admin: true)
+    reused = create(:image)
+    patch person_path(person), params: { person: { last_name: "", image_placements_attributes: [ { image_id: reused.id } ] } }
+    expect(response).to have_http_status(:unprocessable_content)
+
+    form = Nokogiri::HTML(response.body).at_css("form[action='#{person_path(person)}']")
+    pairs = form.css("input, select, textarea").filter_map do |input|
+      next if input["name"].blank? || input["type"] == "file" || input.ancestors("fieldset[disabled]").any?
+      next if input["type"] == "checkbox" && !input["checked"]
+      value = case input.name
+      when "select" then (input.at_css("option[selected]") || input.at_css("option"))["value"]
+      when "textarea" then input.text
+      else input["value"]
+      end
+      [ input["name"], value ]
+    end
+    values = Rack::Utils.parse_nested_query(URI.encode_www_form(pairs))
+    values.fetch("person")["last_name"] = "Vega"
+    patch person_path(person), params: values
+
+    expect(response).to redirect_to(person)
+    expect(person.images.reload).to contain_exactly(portrait, reused)
+  end
+
+  it "uploads an Active Storage image and renders a portrait variant" do
+    sign_in create(:voter, admin: true)
+    get edit_person_path(person)
+    form = Nokogiri::HTML(response.body).at_css("form[action='#{person_path(person)}']")
+    expect(form["enctype"]).to eq("multipart/form-data")
+    expect(form.at_css("fieldset[disabled] button").text).to eq("Generate portrait")
+    expect(form.css("fieldset[disabled] option").size).to eq(4)
+
+    upload = Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/files/portrait.png"), "image/png")
+    patch person_path(person), params: { person: { image_placements_attributes: [ { position: 0,
+      image_attributes: { file: upload, alt_text: "A new uploaded portrait" } } ] } }
+    expect(response).to redirect_to(person)
+    stored = person.images.reload.find { it.file.attached? }
+    expect(stored.file.blob.filename.to_s).to eq("portrait.png")
+    get person_path(person)
+    page = Nokogiri::HTML(response.body)
+    uploaded = page.at_css("img[alt='A new uploaded portrait']")
+    expect(uploaded["src"]).to include("/rails/active_storage/representations/")
   end
 end

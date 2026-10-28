@@ -15,7 +15,8 @@ module Seeds
       "District" => District, "Organization" => Organization, "Party" => Party, "Position" => Position, "Office" => Office,
       "Election" => Election, "Race" => Race, "Person" => Person, "Candidacy" => Candidacy,
       "Topic" => Topic, "Issue" => Issue, "Approach" => Approach, "Stance" => Stance,
-      "Channel" => Channel, "Communication" => Communication, "StanceEvidence" => StanceEvidence
+      "Channel" => Channel, "Communication" => Communication, "StanceEvidence" => StanceEvidence,
+      "Image" => Image, "ImagePlacement" => ImagePlacement
     }.freeze
     JURISDICTION_OWNERS = %w[Country State County Municipality District].freeze
     SCOPE_ASSOCIATIONS = {
@@ -23,11 +24,13 @@ module Seeds
       "Organization" => %w[state], "Party" => %w[state], "Office" => %w[position jurisdiction], "Election" => %w[jurisdiction year],
       "Race" => %w[election office], "Candidacy" => %w[race person],
       "Issue" => %w[topic], "Approach" => %w[issue], "Stance" => %w[candidacy approach],
-      "Communication" => %w[channel], "StanceEvidence" => %w[stance communication]
+      "Communication" => %w[channel], "StanceEvidence" => %w[stance communication],
+      "ImagePlacement" => %w[image]
     }.freeze
     # The types a polymorphic reference may name, recognized by their registered code or its marker.
     # A party's code names a Party, which is stored as the Organization it is.
-    POLYMORPHIC_TYPES = { [ "Channel", "owner" ] => Channel::OWNER_TYPES + %w[Party] }.freeze
+    POLYMORPHIC_TYPES = { [ "Channel", "owner" ] => Channel::OWNER_TYPES + %w[Party],
+      [ "ImagePlacement", "subject" ] => ImagePlacement::SUBJECT_TYPES }.freeze
     # Keys that identify an uncoded record created by another seeder, so it can adopt its code.
     NATURAL_KEYS = {
       Country => %w[code], State => %w[country code], County => %w[state name],
@@ -36,7 +39,7 @@ module Seeds
       Election => %w[jurisdiction election_date kind], Race => %w[election office], Candidacy => %w[race person],
       Topic => %w[title], Issue => %w[topic title], Approach => %w[issue title],
       Stance => %w[candidacy approach], Channel => %w[platform handle], Communication => %w[url],
-      StanceEvidence => %w[stance communication]
+      StanceEvidence => %w[stance communication], Image => %w[url], ImagePlacement => %w[image subject]
     }.freeze
     BLANK_NATURAL_KEYS = { Office => %w[seat_code] }.freeze
     NESTED_ATTRIBUTES = { "Candidacy" => %w[ballot_lines], "Communication" => %w[featured_candidacies] }.freeze

@@ -9,7 +9,7 @@ RSpec.describe "Pages", type: :request do
       expect(response.body).to include("Ascent helps communities test richer ways to vote before changing the real world.")
       expect(response.body).to include("For Philanthropic Partners")
       expect(response.body).to include("About Approval Voting")
-      expect(response.body).to include("Three ways Ascent turns election reform into something testable.")
+      expect(response.body).to include("Expressive Voting turns elections into a collaboration.")
     end
 
     it "shows active race previews when data exists" do
@@ -53,7 +53,7 @@ RSpec.describe "Pages", type: :request do
       get approval_voting_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("The case for a ballot that can say yes to more than one candidate.")
+      expect(response.body).to include("Approval Voting means you can vote for as many candidates as you like.")
       expect(response.body).to include("The spoiler effect")
       expect(response.body).to include("Approval voting is almost embarrassingly simple.")
       expect(response.body).to include("This is a working thesis, not a finished proof.")

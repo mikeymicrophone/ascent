@@ -1,5 +1,15 @@
 /* Record pages for people, candidacies and offices: stances by topic, communications, rating totals. */
 
+.profile-image-gallery {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+}
+
+.profile-image-gallery .profile-portrait-image {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+}
+
 .profile-header {
   @apply grid items-start;
   grid-template-columns: minmax(0, 1fr) 12rem;

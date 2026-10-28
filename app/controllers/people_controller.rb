@@ -58,6 +58,6 @@ class PeopleController < ApplicationController
 
   def person_params
     params.require(:person).permit(:first_name, :last_name, :middle_name, :email, :birth_date, :bio,
-      :portrait_url, :portrait_credit, :portrait_source_url)
+      image_placements_attributes: [ :id, :image_id, :position, :_destroy, image_attributes: %i[id file url alt_text credit source_url] ])
   end
 end

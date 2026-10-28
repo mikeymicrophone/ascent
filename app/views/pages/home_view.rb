@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Views::Pages::HomeView < Views::ApplicationView
-  def initialize(active_races:, metrics:)
+  def initialize(page:, active_races:, metrics:)
+    @page = page
     @active_races = active_races
     @metrics = metrics
   end
@@ -19,17 +20,16 @@ class Views::Pages::HomeView < Views::ApplicationView
   private
 
   def render_hero
+    hero = @page.fetch(:hero)
     section(class: "story-hero") do
-      p(class: "story-kicker") { "Civic simulation for approval voting and policy clarity" }
-      h1(class: "story-title") { "Ascent helps communities test richer ways to vote before changing the real world." }
-      p(class: "story-lead") do
-        "The project models elections, expressive ratings, and issue positions in one place so researchers, organizers, and donors can study how voter choice, candidate coalitions, and policy responsibility actually interact."
-      end
+      p(class: "story-kicker") { hero.fetch(:kicker) }
+      h1(class: "story-title") { hero.fetch(:title) }
+      p(class: "story-lead") { hero.fetch(:lead).squish }
 
       div(class: "story-actions") do
-        link_to "Explore the Mountain Demo", mountains_path, class: "btn-primary"
-        link_to "About Approval Voting", approval_voting_path, class: "btn-secondary"
-        link_to "For Philanthropic Partners", supporters_path, class: "btn-tertiary"
+        link_to hero.fetch(:mountains_link), mountains_path, class: "btn-primary"
+        link_to hero.fetch(:approval_voting_link), approval_voting_path, class: "btn-secondary"
+        link_to hero.fetch(:supporters_link), supporters_path, class: "btn-tertiary"
       end
     end
   end
@@ -40,7 +40,7 @@ class Views::Pages::HomeView < Views::ApplicationView
         @metrics.each do |metric_key, value|
           article(class: "story-metric-card") do
             p(class: "story-metric-value") { value.to_s }
-            p(class: "story-metric-label") { metric_label(metric_key) }
+            p(class: "story-metric-label") { @page.fetch(:metrics).fetch(metric_key) }
           end
         end
       end
@@ -48,50 +48,43 @@ class Views::Pages::HomeView < Views::ApplicationView
   end
 
   def render_pillars
+    pillars = @page.fetch(:pillars)
     section(class: "story-section") do
       div(class: "story-section-heading") do
-        p(class: "story-section-kicker") { "What the platform is for" }
-        h2(class: "story-section-title") { "Three ways Ascent turns election reform into something testable." }
+        p(class: "story-section-kicker") { pillars.fetch(:kicker) }
+        h2(class: "story-section-title") { pillars.fetch(:title) }
       end
 
       div(class: "story-card-grid") do
-        render_pillar(
-          "Expressive ballots",
-          "Approval-style ratings let voters signal more than one acceptable outcome, which makes spoiler-risk and coalition behavior easier to observe."
-        )
-        render_pillar(
-          "Preference simulation",
-          "Mountain views translate raw ratings into a visible distribution so people can inspect whether consensus candidates exist and where polarization lives."
-        )
-        render_pillar(
-          "Policy responsibility",
-          "Issues, approaches, offices, and jurisdictions sit in the same model so the public can ask whether a given office can actually act on a promise."
-        )
+        pillars.fetch(:items).each do |item|
+          render_pillar(item.fetch(:title), item.fetch(:copy).squish)
+        end
       end
     end
   end
 
   def render_trust_section
+    trust = @page.fetch(:trust)
     section(class: "story-band") do
       div(class: "story-section-heading") do
-        p(class: "story-section-kicker") { "Designed for cross-partisan scrutiny" }
-        h2(class: "story-section-title") { "The framing stays civic and practical, not partisan." }
+        p(class: "story-section-kicker") { trust.fetch(:kicker) }
+        h2(class: "story-section-title") { trust.fetch(:title) }
       end
 
       div(class: "story-card-grid story-card-grid-compact") do
-        render_trust_card("Voter agency", "People can express layered preferences instead of being forced into a single strategic choice.")
-        render_trust_card("Institutional fit", "The system links policy claims back to real offices and jurisdictions, which helps keep promises legible.")
-        render_trust_card("Transparent experimentation", "Mock elections and simulation data let communities explore reforms without pretending theory is enough.")
-        render_trust_card("Local usefulness", "The data model is structured around places, offices, and residents, which keeps the project grounded in administration.")
+        trust.fetch(:items).each do |item|
+          render_trust_card(item.fetch(:title), item.fetch(:copy).squish)
+        end
       end
     end
   end
 
   def render_active_races
+    races = @page.fetch(:active_races)
     section(class: "story-section") do
       div(class: "story-section-heading") do
-        p(class: "story-section-kicker") { "Current workspace" }
-        h2(class: "story-section-title") { "Active election spaces ready for exploration." }
+        p(class: "story-section-kicker") { races.fetch(:kicker) }
+        h2(class: "story-section-title") { races.fetch(:title) }
       end
 
       if @active_races.any?
@@ -102,21 +95,20 @@ class Views::Pages::HomeView < Views::ApplicationView
               h3(class: "story-election-title") { race.election.name }
               p(class: "story-election-summary") { race.description.presence || race.election.description }
               div(class: "story-card-actions") do
-                link_to "Open Mountain", mountain_path(race), class: "btn-primary"
-                link_to "See Race Data", race_path(race), class: "btn-secondary"
+                link_to races.fetch(:mountain_link), mountain_path(race), class: "btn-primary"
+                link_to races.fetch(:race_link), race_path(race), class: "btn-secondary"
               end
             end
           end
         end
       else
+        empty = races.fetch(:empty)
         article(class: "story-callout") do
-          h3(class: "story-callout-title") { "No active races are loaded yet." }
-          p(class: "story-callout-copy") do
-            "The supporting data model is already in place, so the next step is to seed or model a live example and use the mountain interface to walk people through it."
-          end
+          h3(class: "story-callout-title") { empty.fetch(:title) }
+          p(class: "story-callout-copy") { empty.fetch(:copy).squish }
           div(class: "story-card-actions") do
-            link_to "Browse Election Data", elections_path, class: "btn-secondary"
-            link_to "Review Jurisdictions", countries_path, class: "btn-tertiary"
+            link_to empty.fetch(:elections_link), elections_path, class: "btn-secondary"
+            link_to empty.fetch(:jurisdictions_link), countries_path, class: "btn-tertiary"
           end
         end
       end

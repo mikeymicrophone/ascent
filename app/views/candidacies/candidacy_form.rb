@@ -6,5 +6,6 @@ class Views::Candidacies::CandidacyForm < Views::Components::Forms::Base
     row field(:announcement_date).date
     row field(:participation).select_choices([ [ "Active", "active" ], [ "Inactive", "inactive" ], [ "Off-ballot, approvable", "off_ballot" ] ])
     row field(:platform_summary).textarea(rows: 4)
+    ProfileImageFields(record: model)
   end
 end
