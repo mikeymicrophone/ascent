@@ -1,0 +1,23 @@
+<% content_for :title, "#{title} · Ascent" %>
+<% content_for :authentication_page, "true" %>
+<div class="auth-shell">
+  <aside class="auth-story" aria-label="About Ascent">
+    <%= link_to "MICharisma", "https://micharisma.com", class: "auth-family" %>
+    <div class="auth-story-copy">
+      <p class="auth-eyebrow">A little more say.</p>
+      <h2>More than<br>one vote.</h2>
+      <p>Explore candidates, compare ideas, and build your ballot.</p>
+    </div>
+    <div class="auth-landscape" aria-hidden="true"><%= render Views::Components::BrandMark.new %></div>
+    <p class="auth-story-footer">Ascent · A MICharisma app</p>
+  </aside>
+  <section class="auth-card" aria-labelledby="auth-title">
+    <header class="auth-heading">
+      <p class="auth-eyebrow">Your Ascent account</p>
+      <h1 id="auth-title"><%= title %></h1>
+      <p><%= description %></p>
+    </header>
+    <%= yield %>
+  </section>
+</div>
+<p class="auth-credit">Made by <%= link_to "MICharisma", "https://micharisma.com" %></p>

@@ -78,7 +78,7 @@ About Approval Voting (`/approval-voting`), the Glossary (`/glossary`, the schem
 
 ## 12. Sign-in and sign-up
 
-Devise's pages, still unstyled ERB: email and password, remember me, and Continue with Google. Sign-up asks for first and last name too. They should match the rest of the redesign.
+Signup, login, password reset, and confirmation resend use the shared MICharisma account card. Desktop has a plum story panel with Ascent's mountain mark beside a white form; phones show the form and MICharisma credit. The form has persistent labels, inline errors, autocomplete attributes, and visible keyboard focus. Google appears above email access when configured. Sign-up asks for first and last name too. CTA labels keep Devise's wording. Account settings retain the main application layout.
 
 ## Reference data and forms
 

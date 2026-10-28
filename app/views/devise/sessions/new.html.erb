@@ -1,0 +1,18 @@
+<%= render layout: "devise/shared/card", locals: { title: "Log in", description: "Pick up where you left off." } do %>
+  <%= render "devise/shared/google" %>
+  <%= form_for resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" } do |form| %>
+    <%= auth_field form, :email, type: :email, autofocus: true, autocomplete: "email", required: true %>
+    <%= auth_field form, :password, type: :password, autocomplete: "current-password", required: true %>
+    <div class="auth-options">
+      <% if devise_mapping.rememberable? %>
+        <%= form.label :remember_me, class: "auth-remember" do %>
+          <%= form.check_box :remember_me %>
+          <span>Remember me</span>
+        <% end %>
+      <% end %>
+      <%= link_to "Forgot your password?", new_password_path(resource_name) %>
+    </div>
+    <%= form.button "Log in", class: "auth-submit" %>
+  <% end %>
+  <%= render "devise/shared/links" %>
+<% end %>

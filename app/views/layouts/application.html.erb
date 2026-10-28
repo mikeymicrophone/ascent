@@ -31,9 +31,19 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body data-controller="butterfly" data-butterfly-level-value="<%= controller_name %>" data-butterfly-enabled-value="true" data-butterfly-log-level-value="debug">
-    <%= render Views::Components::Navigation.new %>
-    <main class="main-content">
+  <body class="<%= "auth-page" if content_for?(:authentication_page) %>" data-controller="butterfly" data-butterfly-level-value="<%= controller_name %>" data-butterfly-enabled-value="<%= !content_for?(:authentication_page) %>" data-butterfly-log-level-value="debug">
+    <% if content_for?(:authentication_page) %>
+      <header class="auth-header">
+        <%= link_to root_path, class: "auth-product", aria: { label: "Ascent home" } do %>
+          <%= render Views::Components::BrandMark.new %>
+          <span>Ascent</span>
+        <% end %>
+        <%= link_to "Back to Ascent", root_path, class: "auth-back" %>
+      </header>
+    <% else %>
+      <%= render Views::Components::Navigation.new %>
+    <% end %>
+    <main class="<%= content_for?(:authentication_page) ? "auth-main" : "main-content" %>" id="main-content">
       <%= render Views::Components::FlashMessages.new %>
       <%= yield %>
     </main>

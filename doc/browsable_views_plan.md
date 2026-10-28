@@ -108,4 +108,4 @@ All five phases are done, one commit each on `voting-flow`.
 - **Phase 3**: the policy path (`PolicyPath`, `StanceRow`), and governing body, policy and official code pages.
 - **Phase 4**: `ResourceIndex` and `ResourceShow` rebuilt on the kit for the remaining reference data, the hierarchy and preview components and their CSS removed, status and entity colors on brand tokens, the election header on `PageHeader`, and stat tiles that count up.
 
-Left for later: a letter jump on the municipalities list, and the forms (`ResourceFormPage`) and Devise pages, which still use the older scaffold styles.
+Left for later: a letter jump on the municipalities list and the forms (`ResourceFormPage`), which still use the older scaffold styles. Signup, login, password reset, and confirmation resend now use the MICharisma account layout described in `design/02-screens.md`.

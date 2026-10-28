@@ -17,6 +17,7 @@
 @import "./layout/kit.css";
 @import "./layout/race.css";
 @import "./layout/record.css";
+@import "./layout/authentication.css";
 
 /* Layer 2: Spacing/Size */
 @import "./sizing/scaffold.css";
@@ -31,6 +32,7 @@
 @import "./sizing/kit.css";
 @import "./sizing/race.css";
 @import "./sizing/record.css";
+@import "./sizing/authentication.css";
 
 /* Layer 3: Typography & Colors */
 @import "./typography/fonts.css";
@@ -46,6 +48,7 @@
 @import "./typography/kit.css";
 @import "./typography/race.css";
 @import "./typography/record.css";
+@import "./typography/authentication.css";
 
 /* Layer 3: Colors */
 @import "./colors/main.css";
@@ -61,6 +64,7 @@
 @import "./colors/kit.css";
 @import "./colors/race.css";
 @import "./colors/record.css";
+@import "./colors/authentication.css";
 
 /* Layer 4: State */
 @import "./situation/scaffold.css";
@@ -75,5 +79,6 @@
 @import "./situation/kit.css";
 @import "./situation/race.css";
 @import "./situation/record.css";
+@import "./situation/authentication.css";
 @import "./situation/butterfly.css";
 

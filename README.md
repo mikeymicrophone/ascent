@@ -25,6 +25,22 @@ A pretty interesting side benefit would be if we established a decent way for ci
 
 The pending [jurisdiction schema](doc/jurisdiction_schema.md) uses PostGIS within PostgreSQL. Install the PostGIS server extension and GEOS before applying it. The subsequent [Election and Race split](doc/election_race_schema.md) separates shared voting events from office contests. Models and factories now use these schemas. The migrations do not convert existing data; controllers, routes, views, and seeds still need updates before applying them to the working application.
 
+## Account access
+
+Signup, login, confirmation resend, and password reset share a MICharisma account layout. The design uses plum and cream, Bricolage Grotesque, and Ascent's mountain mark. The form partials live in `app/views/devise/shared`, with scoped `authentication.css` files in the existing Tailwind folders. Accounts remain specific to Ascent.
+
+Google sign-in uses `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, or Rails credentials at `google.client_id` and `google.client_secret`. Both values must exist when Rails boots for the Google button to appear. Restart Rails after changing them. Verified Google emails link to an existing Ascent voter with that email; otherwise Google sign-in creates a confirmed voter.
+
+Register the exact callback URL in the Google OAuth web client's authorized redirect URIs:
+
+- Local Rails server on port 3000: `http://localhost:3000/voters/auth/google_oauth2/callback`
+- Staging: `https://ascent-staging-staging.up.railway.app/voters/auth/google_oauth2/callback`
+- Production: the production HTTPS origin followed by `/voters/auth/google_oauth2/callback`.
+
+Google rejects `.test` callback hosts under its [redirect URI validation rules](https://developers.google.com/identity/protocols/oauth2/web-server#uri-validation). For local OAuth, run Rails on `localhost` and start sign-in on that same origin, or use a registered public development hostname. Ordinary page previews can still use `https://ascent.test`.
+
+Outbound account email is pending [ASC-112](https://linear.app/ascent-approval/issue/ASC-112/configure-transactional-email-for-account-confirmation-and-password). Production still needs a sender, a transport, and the correct mailer host before email signup confirmation and password reset work through delivered messages. Provider candidates are Cloudflare and Mailgun, with PostShiba preferred if a free plan becomes available. Automated account tests use the test mailer and mocked Google responses.
+
 ## Seed Data
 
 Ascent has two explicit seed layers:
