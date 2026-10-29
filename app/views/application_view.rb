@@ -52,7 +52,7 @@ class Views::ApplicationView < Phlex::HTML
     municipality: :building_2, district: :layout_grid, topic: :tag, issue: :circle_question_mark,
     approach: :route, stance: :quote, governing_body: :columns_3, policy: :scroll_text, official_code: :file_text,
     year: :calendar_range, governance_type: :network, area_of_concern: :target, voter: :user, residence: :house, rating: :gauge,
-    voter_race_baseline: :ruler_dimension_line
+    voter_race_baseline: :ruler_dimension_line, organization: :building_2, party: :flag, endorsement: :badge_check
   }.freeze
 
   def entity_icon(record_or_model)

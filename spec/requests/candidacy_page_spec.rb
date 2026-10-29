@@ -44,7 +44,7 @@ RSpec.describe "Candidacy page", type: :request do
     get candidacy_path(candidacy)
 
     expect(response.body).to include("No stances are recorded yet.")
-    expect(response.body).not_to include(">Endorsements<")
+    expect(Nokogiri::HTML(response.body).css(".place-main h2").map(&:text)).not_to include("Endorsements")
   end
 
   it "lists current endorsements, strongest first" do

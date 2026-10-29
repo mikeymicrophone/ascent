@@ -119,7 +119,7 @@ class Views::Candidacies::ShowView < Views::ApplicationView
 
   def endorsement_item(endorsement)
     li(class: "endorsement-item") do
-      strong(class: "endorsement-name") { endorsement.endorser.name }
+      strong(class: "endorsement-name") { link_to endorsement.endorser.name, endorsement.endorser, class: "text-link" }
       span(class: "endorsement-kind") do
         endorsement.kind == "ballot_line" ? "Party line" : [ "Endorsed", endorsement.endorsed_on&.strftime("%b %Y") ].compact.join(" · ")
       end

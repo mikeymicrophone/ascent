@@ -87,6 +87,9 @@ class Views::Components::Navigation < Views::ApplicationView
       section.link("Races", races_path)
       section.link("People", people_path)
       section.link("Candidacies", candidacies_path)
+      section.link("Organizations", organizations_path)
+      section.link("Parties", parties_path)
+      section.link("Endorsements", endorsements_path)
     end
 
     add_section("Voting") do |section|

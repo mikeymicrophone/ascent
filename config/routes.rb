@@ -30,6 +30,9 @@ Rails.application.routes.draw do
   resources :residences
   resources :candidacies
   resources :people
+  resources :organizations, only: %i[index show]
+  resources :parties, only: %i[index show]
+  resources :endorsements, only: %i[index show]
   resource :ballot, only: :show
   resource :residence_claim, only: %i[new create], path: "ballot/residence" do
     post :preview

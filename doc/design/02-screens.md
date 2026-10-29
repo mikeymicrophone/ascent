@@ -62,13 +62,21 @@ At `/races`. Filters for search text, state, election year, status and election 
 - **Office** (`/offices/:id`): the current holder and party, then an election history and timeline with results, winners, and days until the next election.
 - **Election** (`/elections/:id`): name, status, kind, mock or historical chips, date, and its races with candidate counts. A statewide primary can hold dozens of district nominations.
 
+Organizations, Parties, and Endorsements have public directories and detail pages, linked from the Elections menu. Organizations includes parties and filters by name or abbreviation, state, and kind. Parties lists state parties with name or abbreviation search and a state filter. Organization and party profiles show current endorsements, nominating offices, and official channels. All endorsements opens that organization's full endorsement history.
+
+Endorsements searches endorser and candidate names and filters by kind and current or withdrawn status. Details link to the endorser, candidacy, and election and show recorded dates and notes. Candidacy pages and candidate cards link endorser names to organization, party, or person profiles. Dropdown changes apply immediately; search uses Apply or Enter. Pagination retains filters, and Clear resets them.
+
 ## 8. Places
 
 States, counties, municipalities and districts. A breadcrumb trail up the hierarchy, quick stats, and previews of the places below, each with a View all link. These are reference pages; they matter mainly as the way a voter finds their own races.
 
+Counties filter by State; Municipalities by State and County; Districts by State and Kind of district. Dropdown changes apply immediately. A selected state narrows the county or district-kind choices and clears an incompatible selection. Name search combines with the dropdowns and uses Apply or Enter. Pagination retains filters, and Clear resets them.
+
 ## 9. Policy
 
 Topics, issues, approaches and stances: a chain from a public problem to a candidate's position on a way of solving it. Each is a list and a detail page today. It has to read as a path a voter can follow, not four separate tables.
+
+The Approaches list has title search, Topic, and Issue filters with Apply and Clear. Changing Topic or Issue applies the filters immediately. Changing Topic refreshes Issue options and clears a selected issue from another topic. Issue options include their topic to distinguish similar titles. Title search can use Apply or Enter. The filters combine and stay selected while paging. An issue's nested Approaches list stays within that issue and offers title search; Clear keeps the issue context.
 
 ## 10. Saved
 

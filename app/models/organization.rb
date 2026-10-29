@@ -10,4 +10,9 @@ class Organization < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :state_id }
   validates :kind, inclusion: { in: KINDS }, unless: -> { is_a?(Party) }
+
+  scope :named_like, ->(query) {
+    pattern = "%#{sanitize_sql_like(query.strip)}%"
+    where("organizations.name ILIKE :pattern OR organizations.abbreviation ILIKE :pattern", pattern: pattern)
+  }
 end

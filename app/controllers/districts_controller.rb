@@ -3,12 +3,14 @@ class DistrictsController < ApplicationController
 
   def index
     districts_scope = District.includes(jurisdiction: { parent: :jurisdictionable }).in_natural_order
-    districts_scope = districts_scope.named_like(filters["q"]) if filters["q"].present?
     districts_scope = districts_scope.in_state(State.includes(:jurisdiction).find(filters["state_id"])) if filters["state_id"].present?
+    kinds = districts_scope.except(:includes, :order).distinct.order(:kind).pluck(:kind)
+    filters.delete("kind") if filters["state_id"].present? && !kinds.include?(filters["kind"])
+    districts_scope = districts_scope.named_like(filters["q"]) if filters["q"].present?
     districts_scope = districts_scope.where(kind: filters["kind"]) if filters["kind"].present?
     @pagy, @districts = pagy(districts_scope)
     render Views::Districts::IndexView.new(districts: @districts, pagy: @pagy, filters: filters, states: State.order(:name),
-      kinds: District.distinct.order(:kind).pluck(:kind))
+      kinds: kinds)
   end
 
   def show

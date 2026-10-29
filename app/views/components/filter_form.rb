@@ -12,9 +12,11 @@ class Views::Components::FilterForm < Views::ApplicationView
   prop :clear_path, String
   prop :selects, Array, default: -> { [] }
   prop :hidden, Hash, default: -> { {} }
+  prop :submit_on_change, _Boolean, default: false
 
   def view_template
-    form_with url: @url, method: :get, class: "filter-form", local: true, aria: { label: @label } do |form|
+    form_with url: @url, method: :get, class: "filter-form", local: true, aria: { label: @label },
+      data: { controller: ("form-submit" if @submit_on_change) } do |form|
       @hidden.compact_blank.each { |key, value| form.hidden_field key, value: value }
       div(class: "filter-field filter-field-search") do
         form.label :q, @placeholder, class: "visually-hidden"
@@ -36,7 +38,8 @@ class Views::Components::FilterForm < Views::ApplicationView
   def select_field(form, field, label, options, blank)
     div(class: "filter-field") do
       form.label field, label, class: "visually-hidden"
-      form.select field, options, { include_blank: blank, selected: @values[field.to_s] }, class: "filter-select"
+      form.select field, options, { include_blank: blank, selected: @values[field.to_s] }, class: "filter-select",
+        data: { action: ("change->form-submit#submit" if @submit_on_change) }
     end
   end
 end
