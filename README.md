@@ -43,6 +43,10 @@ Outbound account email is pending [ASC-112](https://linear.app/ascent-approval/i
 
 ## Seed Data
 
+The seed repository's [entity catalog](db/seeds/ascent_seed_data/catalog/README.md) lists existing codes by type and state. Its [contributor guide](db/seeds/ascent_seed_data/CONTRIBUTING.md#find-existing-records) documents offline lookup and catalog regeneration.
+
+County geographic identifiers use `fips`, a five-digit string such as `"01001"`. Run `bin/rails db:migrate` before importing the updated county manifests. Replace County `attributes.code` with `attributes.fips` in other seed files; top-level entity codes and Country and State code attributes keep their existing meanings. The migration preserves county values and fills missing FIPS from recorded county Census GEOIDs. It stops if existing values disagree. The boundary importer uses FIPS for county matching and fills missing county FIPS when it records a boundary.
+
 Ascent has two explicit seed layers:
 
 - **Reference data** is the factual geographic and election-calendar foundation. Its YAML is sourced from the Git submodule at `db/seeds/ascent_seed_data`, and `bin/rails db:seed` (including `bin/setup`) loads only this layer.

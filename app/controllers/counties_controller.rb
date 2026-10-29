@@ -58,6 +58,6 @@ class CountiesController < ApplicationController
   end
 
   def county_params
-    params.require(:county).permit(:name, :code, :state_id)
+    params.require(:county).permit(:name, :fips, :state_id)
   end
 end
