@@ -66,6 +66,8 @@ Organizations, Parties, and Endorsements have public directories and detail page
 
 Endorsements searches endorser and candidate names and filters by kind and current or withdrawn status. Details link to the endorser, candidacy, and election and show recorded dates and notes. Candidacy pages and candidate cards link endorser names to organization, party, or person profiles. Dropdown changes apply immediately; search uses Apply or Enter. Pagination retains filters, and Clear resets them.
 
+Endorsements also filters by the race's State, County, and Race level, independently of where the endorser is based. State includes races in its jurisdiction and descendants. County includes county races, municipalities assigned to the county, and their nested districts; it does not infer overlapping state or congressional districts. State narrows County choices and clears an incompatible county. National includes country and congressional district races and the catalog's President, Senator, and Representative positions, including their nomination races. State covers other state races and districts nested directly under a state. Local covers county, municipal, and nested district races. All filters combine, apply on dropdown changes, and persist while paging, including within an organization's endorsement history.
+
 ## 8. Places
 
 States, counties, municipalities and districts. A breadcrumb trail up the hierarchy, quick stats, and previews of the places below, each with a View all link. These are reference pages; they matter mainly as the way a voter finds their own races.

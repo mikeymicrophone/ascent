@@ -22,6 +22,7 @@ class Endorsement < ApplicationRecord
   # The endorsements worth naming: party lines and strong public endorsements still standing.
   scope :major, -> { current.where(kind: "ballot_line").or(current.where(strength: MAJOR_STRENGTH..)) }
   scope :strongest_first, -> { order(Arel.sql("endorsements.strength DESC NULLS LAST"), :endorsed_on, :id) }
+  scope :for_races, ->(races) { joins(candidacy: :race).merge(races) }
 
   scope :matching, ->(query) {
     organizations = where(endorser_type: "Organization", endorser_id: Organization.named_like(query).select(:id))

@@ -30,6 +30,21 @@ class Office < ApplicationRecord
       .or(where(jurisdiction_id: Jurisdiction.named_like(query).select(:id)))
   }
   scope :in_state, ->(state) { state.jurisdiction ? where(jurisdiction_id: state.jurisdiction.self_and_descendants.select(:id)) : none }
+  scope :national, -> {
+    jurisdictions = Jurisdiction.where(jurisdictionable_type: "Country")
+      .or(Jurisdiction.where(jurisdictionable_type: "District", jurisdictionable_id: District.where("kind LIKE ?", "%congressional%").select(:id)))
+    positions = Position.where(entity_code: %w[POSITION-PRESIDENT POSITION-SENATOR POSITION-REPRESENTATIVE])
+    offices = where(jurisdiction_id: jurisdictions.select(:id)).or(where(position_id: positions.select(:id)))
+    offices.or(where(nominee_for_office_id: offices.select(:id)))
+  }
+  scope :local, -> {
+    jurisdictions = Jurisdiction.and_their_descendants(Jurisdiction.where(jurisdictionable_type: %w[County Municipality]))
+    where(jurisdiction_id: jurisdictions.select(:id)).where.not(id: national.select(:id))
+  }
+  scope :state_level, -> {
+    jurisdictions = Jurisdiction.and_their_descendants(Jurisdiction.where(jurisdictionable_type: "State"))
+    where(jurisdiction_id: jurisdictions.select(:id)).where.not(id: national.select(:id)).where.not(id: local.select(:id))
+  }
 
   # "Mayor of Albany", "Governor of New York", "Senator from Texas", or, for a district, "State Senator in New York, District 21".
   def name

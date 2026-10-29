@@ -46,6 +46,21 @@ class Race < ApplicationRecord
   scope :in_state, ->(state) {
     state.jurisdiction ? joins(:office).where(offices: { jurisdiction_id: state.jurisdiction.self_and_descendants.select(:id) }) : none
   }
+  scope :in_county, ->(county) {
+    roots = Jurisdiction.where(jurisdictionable: county)
+      .or(Jurisdiction.where(jurisdictionable_type: "Municipality", jurisdictionable_id: county.municipalities.select(:id)))
+    in_jurisdictions(Jurisdiction.and_their_descendants(roots))
+  }
+  scope :national, -> { joins(:office).merge(Office.national) }
+  scope :state_level, -> { joins(:office).merge(Office.state_level) }
+  scope :local, -> { joins(:office).merge(Office.local) }
+  scope :at_level, ->(level) {
+    case level
+    when "national" then national
+    when "state" then state_level
+    when "local" then local
+    end
+  }
 
   scope :matching, ->(query) {
     pattern = "%#{sanitize_sql_like(query.strip)}%"
