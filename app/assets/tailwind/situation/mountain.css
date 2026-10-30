@@ -151,10 +151,6 @@
   @apply shadow-md;
 }
 
-.rating-area.is-dragging {
-  @apply bg-gray-50;
-}
-
 .mountain-chart.baseline-dragging .baseline-line {
   @apply border-blue-600;
 }

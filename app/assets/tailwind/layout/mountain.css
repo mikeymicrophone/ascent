@@ -200,3 +200,8 @@
   width: calc(100% + 2rem);
   z-index: 0;
 }
+
+.mountain-left-edge {
+  left: 0;
+  width: 50%;
+}
