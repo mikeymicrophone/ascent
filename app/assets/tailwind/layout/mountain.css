@@ -141,7 +141,7 @@
   @apply flex items-center;
   /* Never capture column clicks — only the label handle is interactive */
   @apply pointer-events-none;
-  z-index: 1;
+  z-index: 3;
 }
 
 .baseline-line {
