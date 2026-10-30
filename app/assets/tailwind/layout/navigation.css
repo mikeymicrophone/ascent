@@ -114,3 +114,9 @@
 .nav-group-arrow {
   @apply inline-flex items-center;
 }
+
+/* Links lead with an icon */
+.nav-link,
+.nav-primary-link {
+  @apply inline-flex items-center;
+}

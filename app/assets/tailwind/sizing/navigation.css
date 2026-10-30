@@ -153,3 +153,9 @@
     @apply gap-y-3;
   }
 }
+
+/* Link icons */
+.nav-link,
+.nav-primary-link {
+  @apply gap-2;
+}

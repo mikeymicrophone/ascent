@@ -46,65 +46,65 @@ class Views::Components::Navigation < Views::ApplicationView
   # Voting links lead; reference pages and the public data follow in menus.
   def render_default_navigation
     add_section("Reference") do |section|
-      section.link("Overview", root_path)
-      section.link("About Approval Voting", approval_voting_path)
-      section.link("Glossary", glossary_path)
-      section.link("For Supporters", supporters_path)
-      section.link("All Mountains", mountains_path)
+      section.link("Overview", root_path, :layout_dashboard)
+      section.link("About Approval Voting", approval_voting_path, :circle_check_big)
+      section.link("Glossary", glossary_path, :book_open)
+      section.link("For Supporters", supporters_path, :heart_handshake)
+      section.link("All Mountains", mountains_path, :mountain)
     end
     render_data_navigation
   end
 
   def render_data_navigation
     add_section("Jurisdictions") do |section|
-      section.link("Countries", countries_path)
-      section.link("States", states_path)
-      section.link("Counties", counties_path)
-      section.link("Municipalities", municipalities_path)
-      section.link("Districts", districts_path)
+      section.link("Countries", countries_path, ENTITY_ICONS[:country])
+      section.link("States", states_path, ENTITY_ICONS[:state])
+      section.link("Counties", counties_path, ENTITY_ICONS[:county])
+      section.link("Municipalities", municipalities_path, ENTITY_ICONS[:municipality])
+      section.link("Districts", districts_path, ENTITY_ICONS[:district])
     end
 
     add_section("Governance") do |section|
-      section.link("Positions", positions_path)
-      section.link("Governance Types", governance_types_path)
-      section.link("Areas of Concern", area_of_concerns_path)
-      section.link("Governing Bodies", governing_bodies_path)
-      section.link("Offices", offices_path)
-      section.link("Policies", policies_path)
-      section.link("Official Codes", official_codes_path)
+      section.link("Positions", positions_path, ENTITY_ICONS[:position])
+      section.link("Governance Types", governance_types_path, ENTITY_ICONS[:governance_type])
+      section.link("Areas of Concern", area_of_concerns_path, ENTITY_ICONS[:area_of_concern])
+      section.link("Governing Bodies", governing_bodies_path, ENTITY_ICONS[:governing_body])
+      section.link("Offices", offices_path, ENTITY_ICONS[:office])
+      section.link("Policies", policies_path, ENTITY_ICONS[:policy])
+      section.link("Official Codes", official_codes_path, ENTITY_ICONS[:official_code])
     end
 
     add_section("Policy") do |section|
-      section.link("Topics", topics_path)
-      section.link("Issues", issues_path)
-      section.link("Approaches", approaches_path)
-      section.link("Stances", stances_path)
+      section.link("Topics", topics_path, ENTITY_ICONS[:topic])
+      section.link("Issues", issues_path, ENTITY_ICONS[:issue])
+      section.link("Approaches", approaches_path, ENTITY_ICONS[:approach])
+      section.link("Stances", stances_path, ENTITY_ICONS[:stance])
     end
 
     add_section("Elections") do |section|
-      section.link("Years", years_path)
-      section.link("Elections", elections_path)
-      section.link("Races", races_path)
-      section.link("People", people_path)
-      section.link("Candidacies", candidacies_path)
-      section.link("Organizations", organizations_path)
-      section.link("Parties", parties_path)
-      section.link("Endorsements", endorsements_path)
+      section.link("Years", years_path, ENTITY_ICONS[:year])
+      section.link("Elections", elections_path, ENTITY_ICONS[:election])
+      section.link("Races", races_path, ENTITY_ICONS[:race])
+      section.link("People", people_path, ENTITY_ICONS[:person])
+      section.link("Candidacies", candidacies_path, ENTITY_ICONS[:candidacy])
+      section.link("Organizations", organizations_path, ENTITY_ICONS[:organization])
+      section.link("Parties", parties_path, ENTITY_ICONS[:party])
+      section.link("Endorsements", endorsements_path, ENTITY_ICONS[:endorsement])
     end
 
     add_section("Voting") do |section|
-      section.link("Voters", voters_path)
-      section.link("Residences", residences_path)
-      section.link("Ratings", ratings_path)
-      section.link("Baselines", voter_race_baselines_path)
+      section.link("Voters", voters_path, ENTITY_ICONS[:voter])
+      section.link("Residences", residences_path, ENTITY_ICONS[:residence])
+      section.link("Ratings", ratings_path, ENTITY_ICONS[:rating])
+      section.link("Baselines", voter_race_baselines_path, ENTITY_ICONS[:voter_race_baseline])
     end
   end
 
   def primary_links
     div(class: "nav-primary") do
-      link_to "My ballot", ballot_path, class: nav_link_class(ballot_path, "nav-primary-link")
-      link_to "Explore races", ballot_path(anchor: "elsewhere"), class: "nav-primary-link"
-      link_to "Mock election", new_mock_election_path, class: nav_link_class(new_mock_election_path, "nav-primary-link")
+      link_to(ballot_path, class: nav_link_class(ballot_path, "nav-primary-link")) { link_content "My ballot", :clipboard_check }
+      link_to(ballot_path(anchor: "elsewhere"), class: "nav-primary-link") { link_content "Explore races", :compass }
+      link_to(new_mock_election_path, class: nav_link_class(new_mock_election_path, "nav-primary-link")) { link_content "Mock election", :flask_conical }
     end
   end
 
@@ -125,9 +125,14 @@ class Views::Components::Navigation < Views::ApplicationView
         span(class: "nav-group-arrow") { icon(:chevron_down) }
       end
       div(class: "nav-group-content", data: { dropdown_target: "menu" }) do
-        section.links.each { link_to it[:text], it[:path], class: nav_link_class(it[:path]) }
+        section.links.each { |link| link_to(link[:path], class: nav_link_class(link[:path])) { link_content link[:text], link[:icon] } }
       end
     end
+  end
+
+  def link_content(text, icon_name)
+    icon(icon_name)
+    span { text }
   end
 
   def nav_link_class(path, base_classes = "nav-link")
@@ -152,8 +157,8 @@ class Views::Components::Navigation < Views::ApplicationView
       @links = []
     end
 
-    def link(text, path)
-      @links << { text: text, path: path }
+    def link(text, path, icon)
+      @links << { text: text, path: path, icon: icon }
     end
   end
 end
