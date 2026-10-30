@@ -12,7 +12,7 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   def view_template
     div(class: "mountain-page", data: editor_data) do
-      ModeStrip(race: @race, voter: @voter)
+      ModeStrip(race: @race, voter: @voter) unless pretend_vote?
       div(class: "mountain-page-body") do
         race_header
         div(class: "mountain-layout") do
@@ -38,6 +38,10 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   private
 
+  def pretend_vote?
+    @race.mode_for(@voter) == "pretend"
+  end
+
   def editor_data
     {
       controller: "mountain-editor",
@@ -61,9 +65,12 @@ class Views::Mountains::EditView < Views::ApplicationView
         end
         p(class: "voter-on-behalf") { "Voter: #{@voter.name}" } unless @voter == current_voter
       end
-      div(class: "race-header-actions") do
-        follow_button if current_voter
-        PillLink(label: "Results", path: race_results_path(@race), icon: :chart_column, variant: "outline")
+      div(class: "mountain-header-side") do
+        ModeStrip(race: @race, voter: @voter) if pretend_vote?
+        div(class: "race-header-actions") do
+          follow_button if current_voter
+          PillLink(label: "Results", path: race_results_path(@race), icon: :chart_column, variant: "outline")
+        end
       end
     end
   end

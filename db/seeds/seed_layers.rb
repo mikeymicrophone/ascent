@@ -41,6 +41,8 @@ module SeedLayers
     SeedManifests.seed
     MunicipalitySeeder.seed
     GubernatorialRaceSeeder.seed
+    activated_races = Race.upcoming.update_all(status: "active", updated_at: Time.current)
+    puts "Activated #{activated_races} upcoming races"
     puts "✅ Reference data seeded"
   end
 

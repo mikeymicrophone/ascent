@@ -27,7 +27,7 @@ RSpec.describe Seeds::LibraryImporter do
     expect(candidacy.ballot_labels).to eq("Democratic; Working Families")
 
     race = candidacy.race
-    expect(race).to have_attributes(entity_code: "RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL", certification_status: "certified")
+    expect(race).to have_attributes(entity_code: "RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL", certification_status: "certified", status: "completed")
     expect(race.election).to have_attributes(entity_code: "ELECTION-USA-NY-ASSEMBLY-AD_125-2024_GENERAL", year: Year.find_by!(year: 2024))
     expect(race.office).to have_attributes(seat_code: "AD_125", name: "State Representative in New York, District 125")
 
@@ -287,10 +287,13 @@ RSpec.describe Seeds::LibraryImporter do
         importer.call([ primary, field ])
 
         general = Race.find_by!(entity_code: race)
+        expect(general.status).to eq("active")
+        expect(general.election.status).to eq("upcoming")
         expect(general.candidacies.map { [ it.person.last_name, it.participation, it.entity_code.present? ] })
           .to contain_exactly([ "Bell", "active", true ], [ "Odom", "off_ballot", false ])
         expect(importer.report[:primary_candidates_added]).to contain_exactly("Ronan Odom for Representative")
-        expect { described_class.new.call([ primary, field ]) }.not_to change(Candidacy, :count)
+        expect { importer.call([ primary, field ]) }.not_to change(Candidacy, :count)
+        expect(importer.report[:conflicts]).to be_empty
       end
 
       it "lets the data place a primary candidate on the general's ballot, keeping their candidacy" do

@@ -10,6 +10,53 @@
   border-color: var(--brand-mist);
 }
 
+.mountain-race-card {
+  background: linear-gradient(145deg, #fffdf8, var(--brand-snow) 65%);
+  color: var(--brand-basalt);
+  border-color: var(--brand-mist);
+  box-shadow: 0 2px 3px rgba(21, 32, 27, 0.03), 0 16px 32px -24px rgba(21, 32, 27, 0.3);
+}
+
+.mountain-race-card::before {
+  background: repeating-radial-gradient(ellipse at 100% 0%, transparent 0 19px, var(--brand-contour) 20px 21px, transparent 22px 38px);
+  opacity: 0.5;
+  mask-image: linear-gradient(225deg, #000, transparent 75%);
+}
+
+.mountain-race-title a {
+  color: inherit;
+}
+
+.mountain-race-election,
+.mountain-race-mode,
+.mountain-race-details {
+  color: var(--brand-moss);
+}
+
+.mountain-race-mode::before {
+  background: var(--brand-summit-deep);
+}
+
+.mountain-race-card[data-mode="mock"] .mountain-race-mode::before {
+  background: var(--brand-rope);
+}
+
+.mountain-race-year {
+  background: var(--brand-snow);
+  border-color: var(--brand-mist);
+  color: var(--brand-slate);
+}
+
+.mountain-race-details {
+  background: var(--brand-lichen);
+  border-color: var(--brand-contour);
+}
+
+.mountain-race-link {
+  background: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
 .candidate-column {
   @apply bg-transparent;
 }

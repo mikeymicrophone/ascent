@@ -410,7 +410,9 @@ module Seeds
 
     def desired_attributes(record)
       model = MODELS.fetch(record.type)
-      cast_attributes(model, record.attributes.except(*NESTED_ATTRIBUTES.fetch(record.type, [])))
+      attributes = cast_attributes(model, record.attributes.except(*NESTED_ATTRIBUTES.fetch(record.type, [])))
+      attributes["status"] = "active" if record.type == "Race" && attributes["status"] == "upcoming"
+      attributes
     end
 
     def associations_for(record)

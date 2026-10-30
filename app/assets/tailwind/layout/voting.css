@@ -157,6 +157,49 @@
   @apply flex flex-col min-w-0;
 }
 
+.mountain-page .race-header {
+  @apply items-start;
+}
+
+.mountain-page .race-header-text {
+  @apply flex-[1_1_28rem];
+}
+
+.mountain-header-side {
+  @apply ml-auto flex flex-col items-end;
+}
+
+.mountain-header-side .mode-strip-main {
+  @apply grid;
+  grid-template-columns: auto auto;
+}
+
+.mountain-header-side .mode-strip-icon {
+  grid-row: span 2;
+}
+
+.mountain-header-side .mode-strip-text {
+  grid-column: 2;
+}
+
+@media (max-width: 640px) {
+  .mountain-header-side {
+    display: contents;
+  }
+
+  .mountain-header-side .mode-strip {
+    @apply order-first ml-auto;
+  }
+
+  .mountain-page .race-header-text {
+    flex: 1 0 100%;
+  }
+
+  .mountain-header-side .race-header-actions {
+    @apply ml-auto;
+  }
+}
+
 .race-meta,
 .race-header-actions {
   @apply flex flex-wrap items-center;

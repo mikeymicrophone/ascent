@@ -4,6 +4,54 @@
   @apply container mx-auto px-4 py-8;
 }
 
+.mountain-race-grid {
+  @apply grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3;
+}
+
+.mountain-race-card {
+  @apply relative isolate flex min-w-0 flex-col overflow-hidden;
+}
+
+.mountain-race-card::before {
+  content: "";
+  @apply pointer-events-none absolute right-0 top-0 -z-10;
+}
+
+.mountain-race-card-body {
+  @apply flex flex-1 flex-col items-start;
+}
+
+.mountain-race-card-top {
+  @apply flex w-full items-center justify-between;
+}
+
+.mountain-race-mode,
+.mountain-race-details time,
+.mountain-race-details > span {
+  @apply inline-flex items-center;
+}
+
+.mountain-race-mode::before {
+  content: "";
+  @apply block shrink-0 rounded-full;
+}
+
+.mountain-race-details {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.mountain-race-actions {
+  @apply flex flex-col;
+}
+
+.mountain-race-link {
+  @apply flex items-center justify-between;
+}
+
+.mountain-race-simulate .resource-action {
+  @apply w-full justify-center;
+}
+
 .elections-grid {
   @apply grid gap-6;
   @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;

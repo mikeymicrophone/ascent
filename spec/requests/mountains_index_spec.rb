@@ -34,10 +34,10 @@ RSpec.describe "Mountains", type: :request do
         get mountains_path
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include(active_race.name)
-        expect(response.body).to include("Election: #{active_race.election.name}")
-        expect(response.body).to include("Candidates: 2")
-        expect(response.body).to include("Office: Mayor")
+        expect(response.body).to include(active_race.office.name)
+        expect(response.body).to include(active_race.election.name)
+        expect(response.body).to include("2 candidates")
+        expect(response.body).to include("Mock election")
         expect(response.body).to include("View Mountain")
         expect(response.body).to include("Simulate Data")
       end

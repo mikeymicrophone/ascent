@@ -20,7 +20,20 @@ RSpec.describe SeedLayers do
       expect(VoterSeeder).not_to receive(:seed)
       expect(ElectionSeeder).not_to receive(:seed)
 
+      upcoming = create(:race, status: "upcoming")
+      completed = create(:race, status: "completed")
+      cancelled = create(:race, status: "cancelled")
+      seeded_race = nil
+      allow(GubernatorialRaceSeeder).to receive(:seed) do
+        seeded_race = create(:race, status: "upcoming")
+      end
+
       described_class.seed_reference!
+
+      expect(upcoming.reload.status).to eq("active")
+      expect(seeded_race.reload.status).to eq("active")
+      expect(completed.reload.status).to eq("completed")
+      expect(cancelled.reload.status).to eq("cancelled")
     end
   end
 
