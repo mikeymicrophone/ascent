@@ -29,6 +29,7 @@
       <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <% end %>
     <%= javascript_importmap_tags %>
+    <%= umami_tracker %>
   </head>
 
   <body class="<%= "auth-page" if content_for?(:authentication_page) %>" data-controller="butterfly" data-butterfly-level-value="<%= controller_name %>" data-butterfly-enabled-value="<%= !content_for?(:authentication_page) %>" data-butterfly-log-level-value="debug">
