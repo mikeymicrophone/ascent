@@ -104,3 +104,5 @@ gem "scenic", "~> 1.9"
 gem "active_median", "~> 1.0"
 # GeoJSON reading for TIGER/Line boundary imports [https://github.com/rgeo/rgeo-geojson]
 gem "rgeo-geojson", "~> 2.2"
+
+gem "ahoy_matey", "~> 5.5"

@@ -5,6 +5,8 @@ class Voter < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable,
          :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
+  has_many :ahoy_visits, class_name: "Ahoy::Visit", foreign_key: :user_id, dependent: :nullify
+  has_many :ahoy_events, class_name: "Ahoy::Event", foreign_key: :user_id, dependent: :nullify
   has_many :residences, dependent: :destroy
   has_many :jurisdictions, through: :residences
   has_many :ratings, dependent: :destroy
