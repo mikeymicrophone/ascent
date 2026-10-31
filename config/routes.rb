@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get "supporters" => "pages#supporters", as: :supporters
   get "approval-voting" => "pages#approval_voting", as: :approval_voting
   get "terms-of-service" => "pages#terms_of_service", as: :terms_of_service
+  get "inquiries" => "inquiries#new", as: :new_inquiry
+  post "inquiries" => "inquiries#create", as: :inquiries
 
   resources :engagements, only: [ :index, :create, :destroy ], path: "saved"
   resources :official_codes

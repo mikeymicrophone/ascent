@@ -52,6 +52,7 @@ class Views::Components::Navigation < Views::ApplicationView
       section.link("Seed data FAQ", faq_path, :git_pull_request)
       section.link("For Supporters", supporters_path, :heart_handshake)
       section.link("All Mountains", mountains_path, :mountain)
+      section.link("Inquiries", new_inquiry_path, :mail)
     end
     render_data_navigation
     if current_voter&.can_review?

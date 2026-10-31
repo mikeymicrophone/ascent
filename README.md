@@ -75,6 +75,12 @@ Public influencer pages show active links and statements inside collapsed **Link
 
 Custom invite phrases, profile code entry, registration opt-out, profile unlinking, and further referral reports are deferred. Phrase matching must be case insensitive. Jev moderation must permit mild insults such as "trash those garbage idiots" while rejecting vulgar or violent phrases beyond the agreed threshold. This step does not call Jev or require a Jev API key.
 
+## Inquiries
+
+The public inquiry form at `/inquiries` accepts an email address, subject, and message. Subject buttons fill the subject field, which remains editable. Signed-in voters start with their account email; visitors can submit without an account. The form is linked from Reference and the footer.
+
+Valid submissions enqueue `InquiryMailer.inquiry_email` through Active Job. The recipient is `INQUIRY_RECIPIENT_EMAIL`, defaulting to `support@ascent.ing`, and Reply-To is the submitted email. Messages from signed-in voters also include their name and voter ID. Delivery uses the existing application mail configuration and requires a running job worker. Invalid submissions display errors and retain the entered values.
+
 ## Seed Data
 
 The seed repository's [entity catalog](db/seeds/ascent_seed_data/catalog/README.md) lists existing codes by type and state. Its [contributor guide](db/seeds/ascent_seed_data/CONTRIBUTING.md#find-existing-records) documents offline lookup and catalog regeneration.

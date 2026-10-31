@@ -1,0 +1,4 @@
+From: <%= @email %><% if @voter %> (<%= @voter.full_name %>, Voter #<%= @voter.id %>)<% end %>
+Subject: <%= @subject %>
+
+<%= @message %>
