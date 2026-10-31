@@ -67,6 +67,27 @@ RSpec.describe "Map explorer", type: :request do
     expect(payload["outline"]["properties"]["name"]).to eq(state.name)
   end
 
+  it "overlays multiple selected layers, reports unavailable ones, and keeps an accessible legend" do
+    boundary(state.jurisdiction)
+    boundary(county.jurisdiction)
+    district = create(:district, name: "NY-10", kind: "congressional district")
+    jurisdiction = create(:jurisdiction, jurisdictionable: district, parent: state.jurisdiction)
+    boundary(jurisdiction)
+
+    get map_path(state_id: state.id, layers: %w[counties congressional state_senate])
+    page = Nokogiri::HTML(response.body)
+    expect(page.css('input[name="layers[]"][checked]').map { it["value"] }).to match_array(%w[counties congressional state_senate])
+    expect(page.at_css('.map-legend[aria-label="Map layer legend"]')).to be_present
+    expect(response.body).to include("Unavailable on this map: State senate districts")
+
+    get features_map_path(state_id: state.id, layers: %w[counties congressional state_senate])
+    expect(payload["layers"].map { it["key"] }).to eq(%w[counties congressional state_senate])
+    expect(payload["features"].map { it["properties"]["layer"] }.uniq).to match_array(%w[counties congressional])
+    expect(payload["unavailable_layers"].map { it["key"] }).to eq([ "state_senate" ])
+    expect(payload["legend"].map { it["key"] }).to include("counties", "congressional", "state_senate")
+  end
+
+
   it "selects each legislative chamber independently and links districts to their own pages" do
     kinds = { "congressional" => "congressional district", "state_senate" => "state senate district", "state_house" => "assembly district" }
     districts = kinds.to_h do |layer, kind|
@@ -103,14 +124,17 @@ RSpec.describe "Map explorer", type: :request do
     page = Nokogiri::HTML(response.body)
     expect(page.at_css(%(.map-place-links a[href="#{county_path(county)}"]))).to be_present
     expect(page.at_css('a[href="/map"]')).to be_present
-    expect(page.at_css('select[name="layer"] option[selected]')["value"]).to eq("counties")
+    expect(page.at_css('input[name="layers[]"][value="counties"]')["checked"]).to be_present
 
     get features_map_path(state_id: state.id)
     expect(payload).to include("features" => [], "outline" => nil, "vintages" => [])
+    expect(payload["unavailable_layers"].map { it["key"] }).to eq([ "counties" ])
 
     get map_path(state_id: state.id, layer: "state_senate")
     expect(response.body).to include("No state senate districts are recorded here yet.")
+    expect(response.body).to include("Unavailable on this map: State senate districts")
   end
+
 
   it "rejects unknown states, non-US states, and unknown layers" do
     canada = create(:country, code: "CA")
@@ -137,5 +161,22 @@ RSpec.describe "Map explorer", type: :request do
     get features_map_path, params: { state_id: [ state.id, other_state.id ] }
 
     expect(response).to have_http_status(:bad_request)
+  end
+
+  it "caches display GeoJSON and refreshes after a boundary update" do
+    allow(Rails.cache).to receive(:fetch).and_call_original
+    first_boundary = boundary(state.jurisdiction)
+
+    get features_map_path
+    first = response.body
+    expect(response.headers["Cache-Control"]).to include("max-age=3600")
+
+    get features_map_path
+    expect(response.body).to eq(first)
+
+    first_boundary.update!(valid_until: Date.new(2025, 1, 1))
+    boundary(state.jurisdiction, from: Date.new(2025, 1, 1))
+    get features_map_path
+    expect(JSON.parse(response.body)["vintages"]).to eq([ 2025 ])
   end
 end

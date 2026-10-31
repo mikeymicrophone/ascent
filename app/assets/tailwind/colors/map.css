@@ -12,3 +12,11 @@
   outline: 3px solid #17251e;
   outline-offset: 2px;
 }
+
+.map-legend-item.is-unavailable {
+  opacity: 0.65;
+}
+
+.map-unavailable {
+  color: #8a4b1f;
+}

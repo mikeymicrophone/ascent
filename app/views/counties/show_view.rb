@@ -23,6 +23,7 @@ class Views::Counties::ShowView < Views::ApplicationView
         end
         aside(class: "place-aside", aria: { label: "Around #{@county.name}" }) do
           where_it_is
+          boundary_side_card
           nearby
           admin_actions
         end
@@ -79,10 +80,12 @@ class Views::Counties::ShowView < Views::ApplicationView
   end
 
   def nearby
-    neighbors = @county.state.counties.where.not(id: @county.id).order(:name).limit(NEIGHBOR_LIMIT).to_a
+    geometric = BoundaryNeighborhood.for(@county).same_layer_neighbors.first(NEIGHBOR_LIMIT)
+    neighbors = geometric.presence || @county.state.counties.where.not(id: @county.id).order(:name).limit(NEIGHBOR_LIMIT).to_a
     return if neighbors.empty?
 
-    SideCard(heading: "Other counties in #{@county.state.name}") do
+    heading = geometric.present? ? "Adjacent counties" : "Other counties in #{@county.state.name}"
+    SideCard(heading: heading) do
       ul(class: "nearby-list") { neighbors.each { |neighbor| li { link_to neighbor.name, neighbor, class: "text-link" } } }
       link_to "All counties in #{@county.state.name}", counties_path(state_id: @county.state_id), class: "text-link"
     end

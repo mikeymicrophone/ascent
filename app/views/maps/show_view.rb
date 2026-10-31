@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Views::Maps::ShowView < Views::ApplicationView
   prop :explorer, MapExplorer
 
@@ -12,7 +14,7 @@ class Views::Maps::ShowView < Views::ApplicationView
       end
       map_filters
       map_panel
-      place_list
+      place_lists
     end
   end
 
@@ -23,7 +25,11 @@ class Views::Maps::ShowView < Views::ApplicationView
   end
 
   def lede
-    @explorer.state ? "Choose a county or district to see its offices, elections, and races." : "Choose a state, then explore its counties and legislative districts."
+    if @explorer.state
+      "Toggle counties and district layers together, then choose a shape to open its place page."
+    else
+      "Choose a state, then explore its counties and legislative districts."
+    end
   end
 
   def map_filters
@@ -36,10 +42,20 @@ class Views::Maps::ShowView < Views::ApplicationView
           class: "filter-select", data: { action: "change->form-submit#submit" }
       end
       if @explorer.state
-        div(class: "filter-field") do
-          form.label :layer, "Show boundaries", class: "visually-hidden"
-          form.select :layer, MapExplorer::LAYERS.map { |value, label| [ label, value ] },
-            { selected: @explorer.layer }, class: "filter-select", data: { action: "change->form-submit#submit" }
+        fieldset(class: "map-layer-toggles") do
+          legend(class: "map-layer-legend-title") { "Boundary layers" }
+          MapExplorer::LAYERS.each do |value, label|
+            label(class: "map-layer-toggle") do
+              input(
+                type: "checkbox",
+                name: "layers[]",
+                value: value,
+                checked: @explorer.layers.include?(value),
+                data: { action: "change->form-submit#submit" }
+              )
+              span { label }
+            end
+          end
         end
       end
       button(type: "submit", class: "pill-button") { "Explore" }
@@ -48,9 +64,12 @@ class Views::Maps::ShowView < Views::ApplicationView
 
   def map_panel
     section(class: "map-panel", aria: { label: "Interactive boundary map" },
-      data: { controller: "boundary-map", boundary_map_url_value: features_map_path(state_id: @explorer.state&.id, layer: @explorer.layer),
-              boundary_map_selected_state_value: !!@explorer.state,
-              action: "turbo:before-cache@document->boundary-map#disconnect" }) do
+      data: {
+        controller: "boundary-map",
+        boundary_map_url_value: features_map_path(state_id: @explorer.state&.id, layers: @explorer.layers),
+        boundary_map_selected_state_value: !!@explorer.state,
+        action: "turbo:before-cache@document->boundary-map#disconnect"
+      }) do
       p(class: "map-status", role: "status", data: { boundary_map_target: "status" }) { "Explore using the map or the place links below." }
       div(class: "map-canvas", role: "region", hidden: true, aria: { label: "#{title} interactive map" }, data: { boundary_map_target: "canvas" })
       unless @explorer.state
@@ -64,23 +83,56 @@ class Views::Maps::ShowView < Views::ApplicationView
           end
         end
       end
+      render_legend if @explorer.state
+      render_unavailable if @explorer.state
       p(class: "map-vintage", data: { boundary_map_target: "vintage" }) { "Recorded boundary vintages appear when the map loads." }
       p(class: "card-text") { "Source: U.S. Census Bureau TIGER/Line. Display outlines are simplified; recorded boundary dates are shown above." }
       noscript { p(class: "card-text") { "Use the links below to explore without JavaScript." } }
     end
   end
 
-  def place_list
-    section(class: "place-section", aria: { label: "#{@explorer.label} links" }) do
-      section_heading(@explorer.label, "#{@explorer.records.size} places")
-      if @explorer.records.any?
-        ul(class: "map-place-links") do
-          @explorer.records.each do |record|
-            li { link_to record.name, @explorer.record_path(record), class: "text-link" }
+  def render_legend
+    ul(class: "map-legend", aria: { label: "Map layer legend" }) do
+      @explorer.layer_status.select { it[:selected] }.each do |entry|
+        li(class: [ "map-legend-item", ("is-unavailable" unless entry[:available]) ].compact.join(" ")) do
+          span(class: "map-legend-swatch", style: { background: entry[:style][:fill], border_color: entry[:style][:color] })
+          span { entry[:label] }
+          span(class: "map-legend-count") { entry[:available] ? "#{entry[:feature_count]} mapped" : "unavailable" }
+        end
+      end
+    end
+  end
+
+  def render_unavailable
+    missing = @explorer.unavailable_layers
+    return if missing.empty?
+
+    p(class: "map-unavailable", role: "status") do
+      "Unavailable on this map: #{missing.map { it[:label] }.to_sentence}. No boundary geometry is recorded for #{'that layer'.pluralize(missing.size)} yet."
+    end
+  end
+
+  def place_lists
+    if @explorer.state
+      @explorer.layers.each do |layer_key|
+        places = @explorer.records_for(layer_key)
+        section(class: "place-section", aria: { label: "#{MapExplorer::LAYERS.fetch(layer_key)} links" }) do
+          section_heading(MapExplorer::LAYERS.fetch(layer_key), "#{places.size} places")
+          if places.any?
+            ul(class: "map-place-links") do
+              places.each { |record| li { link_to record.name, @explorer.record_path(record), class: "text-link" } }
+            end
+          else
+            p(class: "card-text") { "No #{MapExplorer::LAYERS.fetch(layer_key).downcase} are recorded here yet." }
           end
         end
-      else
-        p(class: "card-text") { "No #{@explorer.label.downcase} are recorded here yet. Choose another layer or state." }
+      end
+    else
+      section(class: "place-section", aria: { label: "States links" }) do
+        section_heading("States", "#{@explorer.records.size} places")
+        ul(class: "map-place-links") do
+          @explorer.records.each { |record| li { link_to record.name, @explorer.record_path(record), class: "text-link" } }
+        end
       end
     end
   end

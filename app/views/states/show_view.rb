@@ -25,6 +25,7 @@ class Views::States::ShowView < Views::ApplicationView
         end
         aside(class: "place-aside", aria: { label: "Around #{@state.name}" }) do
           where_it_is
+          boundary_side_card
           admin_actions
         end
       end
@@ -77,20 +78,24 @@ class Views::States::ShowView < Views::ApplicationView
     races_within(races_path(state_id: @state.id))
   end
 
-  # Too many towns to list, so a search that opens the towns list narrowed to this state.
+  # Too many towns to list, so a compact search that opens the towns list narrowed to this state.
   def town_finder
     return if town_count.zero?
 
-    section(class: "place-section") do
-      section_heading("Cities and towns", delimited(town_count))
-      form(action: municipalities_path, method: "get", role: "search", class: "listing-search") do
+    section(class: "place-town-finder") do
+      div(class: "place-town-finder-heading") do
+        h2(class: "place-town-finder-title") { "Cities and towns" }
+        span(class: "place-section-subtitle") { delimited(town_count) }
+      end
+      form(action: municipalities_path, method: "get", role: "search", class: "place-town-finder-form") do
         input(type: "hidden", name: "state_id", value: @state.id)
         label(for: "town-search", class: "visually-hidden") { "Find a city or town in #{@state.name}" }
-        input(id: "town-search", type: "search", name: "q", placeholder: "Find a city or town in #{@state.name}", class: "listing-search-input")
-        button(type: "submit", class: "pill-button") { "Find" }
+        input(id: "town-search", type: "search", name: "q", placeholder: "Find a city or town", class: "place-town-finder-input")
+        button(type: "submit", class: "place-town-finder-submit") { "Find" }
       end
     end
   end
+
 
   # The legislative and judicial districts drawn across the state, counted by kind.
   def district_kinds

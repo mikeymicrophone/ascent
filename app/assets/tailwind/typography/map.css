@@ -8,3 +8,16 @@
   font-size: 1.125rem;
   font-weight: 600;
 }
+
+.map-layer-legend-title {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.map-legend-count,
+.map-unavailable {
+  font-family: "Martian Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}

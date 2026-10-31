@@ -116,6 +116,15 @@ test("lazy candidate-card frames do not count as page visits", async () => {
   assert.equal(app.events.length, 0)
 })
 
+test("multiple map layers are one named browse filter", async () => {
+  const app = await harness()
+  app.root.count = 3
+  app.analytics.pageAnalytics.start("/map?state_id=5&layers[]=counties&layers[]=congressional")
+  const browse = app.events.find(event => event.name === "browse_refined")
+  assert.equal(browse.properties.filter_names.join(","), "state_id,layers")
+  assert.equal(browse.properties.result_count, 3)
+})
+
 test("opt-outs suppress browser events and paths omit tokens and query strings", async () => {
   const app = await harness()
   app.metadata.enabled = false

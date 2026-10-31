@@ -3,10 +3,42 @@
 }
 
 .place-section,
-.place-race {
+.place-race,
+.jurisdiction-outline-panel {
   background-color: var(--brand-snow);
   border-color: var(--brand-mist);
 }
+
+.jurisdiction-outline-frame {
+  background-color: #edf2e7;
+}
+
+.jurisdiction-outline-shape path {
+  fill: #dce7c8;
+  stroke: #6a765c;
+  stroke-width: 0.015;
+  stroke-linejoin: round;
+}
+
+.jurisdiction-neighborhood-shape path.is-neighbor {
+  fill: #e8eee0;
+  stroke: #9aa58c;
+  stroke-width: 0.012;
+}
+
+.jurisdiction-neighborhood-shape path.is-selected {
+  fill: #bccf55;
+  stroke: #17251e;
+  stroke-width: 0.02;
+}
+
+
+.jurisdiction-outline-empty,
+.jurisdiction-outline-note,
+.jurisdiction-outline-vintage {
+  color: var(--brand-slate);
+}
+
 
 .place-section-subtitle,
 .timeline-date,
@@ -16,6 +48,18 @@
 .place-race-seat {
   color: var(--brand-slate);
 }
+
+.place-town-finder-input {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+  color: var(--brand-basalt);
+}
+
+.place-town-finder-submit {
+  background-color: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
 
 .races-above {
   background-color: var(--brand-lichen);

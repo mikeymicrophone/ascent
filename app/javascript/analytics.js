@@ -64,7 +64,9 @@ class PageAnalytics {
 
   trackBrowse(url, root) {
     const query = new URL(url, window.location.origin).searchParams
-    const names = [...query.keys()].filter(name => /^(q|.*_id|year|status|kind|near|layer)$/.test(name) && query.get(name))
+    const names = [...new Set([...query.keys()]
+      .filter(name => /^(q|.*_id|year|status|kind|near|layers?)$/.test(name.replace(/\[\]$/, "")) && query.get(name))
+      .map(name => name.replace(/\[\]$/, "")))]
     if (!names.length || (!root.querySelector(".filter-form") && !document.querySelector(".filter-form"))) return
 
     const count = root.querySelector("[data-analytics-result-count]") || (root.dataset?.analyticsResultCount !== undefined ? root : null)

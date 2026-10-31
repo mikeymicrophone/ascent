@@ -21,6 +21,7 @@ class Views::Districts::ShowView < Views::ApplicationView
         end
         aside(class: "place-aside", aria: { label: "Around #{@district.name}" }) do
           where_it_is
+          boundary_side_card
           siblings
           admin_actions
         end
