@@ -38,48 +38,12 @@
 }
 
 .place-race {
-  @apply flex flex-row items-stretch justify-between;
-}
-
-.place-race-body {
-  @apply flex flex-col flex-1 min-w-0 justify-between;
+  @apply flex flex-col justify-between;
 }
 
 .place-race-heading {
   @apply flex flex-col;
 }
-
-.jurisdiction-outline {
-  @apply flex flex-col;
-}
-
-.jurisdiction-outline-panel {
-  @apply border;
-}
-
-.jurisdiction-outline-compact {
-  @apply flex flex-col items-center flex-none;
-}
-
-.jurisdiction-outline-frame {
-  @apply flex items-center justify-center overflow-hidden;
-}
-
-.jurisdiction-outline-shape {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.jurisdiction-outline-exports {
-  @apply flex flex-wrap;
-}
-
-.jurisdiction-neighborhood {
-  @apply flex flex-col border;
-}
-
-
 
 .races-above {
   @apply flex flex-wrap items-center;
@@ -139,4 +103,33 @@
 
 .place-chip-link {
   @apply inline-flex items-center;
+}
+
+.place-town-finder {
+  @apply flex flex-col;
+}
+
+.place-town-finder-heading {
+  @apply flex flex-wrap items-baseline;
+}
+
+.place-town-finder-form {
+  @apply flex items-center min-w-0;
+}
+
+.place-town-finder-input {
+  @apply flex-1 min-w-0;
+}
+
+.influencer-content-form,
+.influencer-content-item {
+  @apply flex flex-col items-start;
+}
+
+.influencer-disclosure {
+  @apply block;
+}
+
+.influencer-disclosure summary {
+  @apply cursor-pointer;
 }

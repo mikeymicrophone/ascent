@@ -3,25 +3,18 @@
 .timeline-date,
 .seat-count,
 .place-chip,
-.place-race-seat,
-.jurisdiction-outline-vintage,
-.jurisdiction-outline-empty {
+.place-race-seat {
   @apply font-['Martian_Mono'] text-xs tracking-[0.04em];
 }
 
-.jurisdiction-outline-heading {
-  @apply font-['Bricolage_Grotesque'] text-lg font-semibold m-0;
-}
-
-.jurisdiction-outline-note,
-.jurisdiction-outline-exports {
-  @apply text-sm leading-6;
-}
-
-.jurisdiction-neighborhood-subheading {
+.place-town-finder-title {
   @apply font-['Bricolage_Grotesque'] text-base font-semibold m-0;
 }
 
+.place-town-finder-input,
+.place-town-finder-submit {
+  @apply font-['Bricolage_Grotesque'] text-sm;
+}
 
 
 .races-above-label {

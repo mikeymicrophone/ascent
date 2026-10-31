@@ -30,7 +30,10 @@
 }
 
 .place-chip-link:focus-visible,
-.place-race-link:focus-visible {
+.place-race-link:focus-visible,
+.place-town-finder-input:focus-visible,
+.place-town-finder-submit:focus-visible {
   outline: 3px solid var(--brand-rope);
   outline-offset: 2px;
 }
+
