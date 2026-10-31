@@ -223,6 +223,22 @@ textarea.text-input {
   @apply gap-2;
 }
 
+.mountain-header-side {
+  @apply gap-3;
+}
+
+.mountain-header-side .mode-strip {
+  @apply mt-0;
+}
+
+.mountain-header-side .mode-strip-inner {
+  @apply px-3 py-2;
+}
+
+.mountain-header-side .mode-strip-main {
+  @apply gap-x-2 gap-y-0.5;
+}
+
 .mountain-layout {
   @apply gap-6;
 }

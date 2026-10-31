@@ -36,6 +36,9 @@ RSpec.describe "Mountain drafts", type: :request do
 
     expect(response.body).to include("Pretend vote", "Your vote", "All changes saved", "Rate Dana Okafor", "Follow race")
     page = Nokogiri::HTML(response.body)
+    notice = page.at_css(".race-header .mode-pretend")
+    expect(notice.at_css(".mode-strip-text").text).to eq("counted separately")
+    expect(notice.css("a, button")).to be_empty
     expect(page.at_css("input[name='baseline']")["value"]).to eq("200")
     expect(page.css("[data-role='baseline-slider']").map { it["value"] }).to eq([ "200", "200" ])
     expect(page.at_css(".baseline-label").text).to eq("Baseline: 200")

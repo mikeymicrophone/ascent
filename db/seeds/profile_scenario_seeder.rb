@@ -1,3 +1,5 @@
+require "stringio"
+
 class ProfileScenarioSeeder
   NAME = "New York Civic Forum 2026".freeze
   CANDIDATES = [
@@ -74,7 +76,13 @@ class ProfileScenarioSeeder
     end
     return unless index.zero?
 
-    candidacy.person.update!(portrait_url: "https://ascent.test/portraits/marisol-vega.png", portrait_credit: "AI-generated portrait")
+    image = Image.find_or_initialize_by(url: "https://ascent.test/portraits/marisol-vega.png")
+    image.update!(credit: "AI-generated portrait", alt_text: "Portrait of Marisol Vega")
+    unless image.file.attached?
+      image.file.attach(io: StringIO.new(File.binread(Rails.root.join("public/portraits/marisol-vega.png"))),
+        filename: "marisol-vega.png", content_type: "image/png", metadata: { ai_generated: true })
+    end
+    candidacy.person.image_placements.find_or_create_by!(image: image)
     social = Channel.find_or_initialize_by(platform: "bluesky", handle: "marisolvega.example")
     social.update!(owner: candidacy.person, official: true, url: "https://bsky.app/profile/marisolvega.example")
     video = Communication.find_or_initialize_by(url: "https://ascent.test/media/marisol-vega-introduction.mp4")

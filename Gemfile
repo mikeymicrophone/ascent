@@ -57,8 +57,7 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.14"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -105,3 +104,5 @@ gem "scenic", "~> 1.9"
 gem "active_median", "~> 1.0"
 # GeoJSON reading for TIGER/Line boundary imports [https://github.com/rgeo/rgeo-geojson]
 gem "rgeo-geojson", "~> 2.2"
+
+gem "ahoy_matey", "~> 5.5"

@@ -15,7 +15,7 @@ class Views::Mountains::IndexView < Views::ApplicationView
       end
 
       if @races.any?
-        div(class: "elections-grid") do
+        div(class: "mountain-race-grid") do
           @races.each do |race|
             render_race_card(race)
           end
@@ -38,26 +38,44 @@ class Views::Mountains::IndexView < Views::ApplicationView
   private
 
   def render_race_card(race)
-    div(class: "election-card") do
-      h3(class: "election-title") do
-        link_to mountain_path(race), class: "resource-title-link" do
-          plain race.name
-          whitespace
-          Ui::ActionIcon(kind: :show)
+    article(class: "mountain-race-card", data: { mode: race.election.mode }) do
+      div(class: "mountain-race-card-body") do
+        div(class: "mountain-race-card-top") do
+          span(class: "mountain-race-mode") do
+            case race.election.mode
+            when "mock" then "Mock election"
+            when "historical" then "Historical replay"
+            else "Election"
+            end
+          end
+          span(class: "mountain-race-year") { race.year.year.to_s }
+        end
+
+        h2(class: "mountain-race-title") do
+          link_to race.office.name, mountain_path(race)
+        end
+        p(class: "mountain-race-election") { race.election.name }
+      end
+
+      div(class: "mountain-race-details") do
+        time(datetime: race.election_date.iso8601) do
+          icon(:calendar_days)
+          plain race.election_date.strftime("%b %-d, %Y")
+        end
+        span do
+          icon(:users_round)
+          plain pluralize(race.candidacies.size, "candidate")
         end
       end
 
-      div(class: "election-meta") do
-        p { "Election: #{race.election.name}" }
-        p { "Office: #{race.office.position.title}" }
-        p { "Candidates: #{race.candidacies.size}" }
-      end
-
-      div(class: "election-actions") do
-        a(href: mountain_path(race), class: "btn-primary") { "View Mountain" }
+      div(class: "mountain-race-actions") do
+        link_to mountain_path(race), class: "mountain-race-link" do
+          span { "View Mountain" }
+          icon(:arrow_up_right)
+        end
         if can_simulate_mountains? && race.mock?
           button_to simulate_mountain_path(race), method: :post,
-            class: "resource-action resource-action-simulate", form_class: "resource-action-form" do
+            class: "resource-action resource-action-simulate", form_class: "mountain-race-simulate" do
             Ui::ActionIcon(kind: :simulate)
             span { "Simulate Data" }
           end

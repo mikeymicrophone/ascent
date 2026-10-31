@@ -12,10 +12,11 @@ class Views::People::ShowView < Views::ApplicationView
           chips: method(:chips)) do
           PillLink(label: "Latest candidacy", path: candidacy_path(latest), icon: :badge_check) if latest
         end
-        ProfilePortrait(person: @person)
+        ProfilePortrait(person: @person, image: images.first)
       end
       div(class: "place-layout") do
         div(class: "place-main") do
+          ProfileImages(person: @person, images: images)
           CommunicationGallery(communications: communications)
           candidacies_section
           latest_stances
@@ -43,6 +44,10 @@ class Views::People::ShowView < Views::ApplicationView
 
   def communications
     Communication.for_profile(@person, candidacies).includes(:channel).order(published_on: :desc, id: :desc).limit(8).to_a
+  end
+
+  def images
+    @images ||= @person.images.to_a
   end
 
   def eyebrow

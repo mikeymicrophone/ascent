@@ -22,7 +22,7 @@ class Views::Districts::IndexView < Views::ApplicationView
   end
 
   def filter_form
-    FilterForm(url: districts_path, label: "Filter districts", placeholder: "District name", values: @filters, clear_path: districts_path,
+    FilterForm(url: districts_path, label: "Filter districts", placeholder: "District name", values: @filters, clear_path: districts_path, submit_on_change: true,
       selects: [
         [ :state_id, "State", @states.map { [ it.name, it.id ] }, "All states" ],
         [ :kind, "Kind of district", @kinds.map { [ it.capitalize, it ] }, "Every kind" ]

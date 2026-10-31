@@ -5,7 +5,7 @@ RSpec.describe "Races Index", type: :request do
   let!(:state) { create(:state, :with_jurisdiction, name: "California", country: country) }
   let!(:city) { create(:municipality, :with_jurisdiction, name: "Los Angeles", state: state) }
   let!(:mayor_office) { create(:office, position: create(:position, title: "Mayor"), jurisdiction: city.jurisdiction) }
-  let!(:governor_office) { create(:office, position: create(:position, title: "Governor"), jurisdiction: state.jurisdiction) }
+  let!(:governor_office) { create(:office, position: create(:position, :governor), jurisdiction: state.jurisdiction) }
   let!(:mayor_race) { create_race_for(mayor_office, :active) }
   let!(:governor_race) { create_race_for(governor_office, :upcoming) }
   let!(:candidacy) { create(:candidacy, race: mayor_race, person: create(:person, first_name: "Karen", middle_name: nil, last_name: "Bass")) }
@@ -15,8 +15,8 @@ RSpec.describe "Races Index", type: :request do
       get races_path
 
       expect(response).to have_http_status(200)
-      expect(response.body).to include("Mayor - Los Angeles")
-      expect(response.body).to include("Governor - California")
+      expect(response.body).to include("Mayor of Los Angeles")
+      expect(response.body).to include("Governor of California")
     end
 
     it "combines the selected filters and preserves their values" do
@@ -112,8 +112,8 @@ RSpec.describe "Races Index", type: :request do
       get office_races_path(mayor_office)
 
       expect(response).to have_http_status(200)
-      expect(response.body).to include("Mayor - Los Angeles", "Races for Mayor - Los Angeles")
-      expect(response.body).not_to include("Governor - California")
+      expect(response.body).to include("Mayor of Los Angeles", "Races for Mayor of Los Angeles")
+      expect(response.body).not_to include("Governor of California")
     end
 
     it "retains the office scope when applying or clearing filters" do
@@ -131,8 +131,8 @@ RSpec.describe "Races Index", type: :request do
       get election_races_path(governor_race.election)
 
       expect(response).to have_http_status(200)
-      expect(response.body).to include("Governor - California")
-      expect(response.body).not_to include("Mayor - Los Angeles")
+      expect(response.body).to include("Governor of California")
+      expect(response.body).not_to include("Mayor of Los Angeles")
     end
   end
 end

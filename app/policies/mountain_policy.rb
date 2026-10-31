@@ -17,4 +17,10 @@ class MountainPolicy < ApplicationPolicy
   def simulate?
     voter&.admin? || false
   end
+
+  def share?
+    voter.present? && record == voter
+  end
+
+  alias_rule :unshare?, to: :share?
 end

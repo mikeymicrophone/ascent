@@ -1,5 +1,40 @@
 /* Mountain Interface Sizing */
 
+.mountain-sharing,
+.mountain-sharing-actions {
+  gap: 0.75rem;
+}
+
+.mountain-sharing {
+  padding: 1.25rem;
+  border: 1px solid;
+  border-radius: 1rem;
+}
+
+.public-mountain {
+  max-width: 75rem;
+  gap: 1.25rem;
+}
+
+.public-mountain-preview {
+  width: 100%;
+  height: auto;
+}
+
+.public-mountain-ratings {
+  width: 100%;
+}
+
+.public-mountain-ratings caption {
+  margin-bottom: 0.75rem;
+}
+
+.public-mountain-ratings th,
+.public-mountain-ratings td {
+  padding: 0.75rem;
+  border-bottom: 1px solid;
+}
+
 .mountain-chart {
   @apply p-4;
   min-height: 500px;
@@ -53,6 +88,69 @@
 
 .election-card {
   @apply min-h-48;
+}
+
+.mountain-race-card {
+  @apply rounded-[1.5rem] border;
+}
+
+.mountain-race-card::before {
+  @apply h-44 w-60;
+}
+
+.mountain-race-card-body {
+  @apply gap-3 px-6 pt-6 pb-7;
+}
+
+.mountain-race-card-top {
+  @apply gap-3 mb-4;
+}
+
+.mountain-race-mode {
+  @apply gap-2;
+}
+
+.mountain-race-mode::before {
+  @apply h-1.5 w-1.5;
+}
+
+.mountain-race-year {
+  @apply rounded-md border px-2 py-1;
+}
+
+.mountain-race-title,
+.mountain-race-election {
+  @apply m-0;
+}
+
+.mountain-race-title {
+  @apply max-w-full;
+  overflow-wrap: anywhere;
+}
+
+.mountain-race-details {
+  @apply gap-x-4 gap-y-2 border-y px-6 py-4;
+}
+
+.mountain-race-details time,
+.mountain-race-details > span {
+  @apply gap-2;
+}
+
+.mountain-race-details .icon {
+  @apply h-4 w-4 shrink-0;
+}
+
+.mountain-race-actions {
+  @apply gap-3 p-5;
+}
+
+.mountain-race-link {
+  @apply min-h-12 gap-4 rounded-xl px-4 py-3;
+}
+
+.mountain-race-link .icon {
+  @apply h-5 w-5 shrink-0;
 }
 
 /* Two lines for every name, so the ratings beneath line up across the columns. */

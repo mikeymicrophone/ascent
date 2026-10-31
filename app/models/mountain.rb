@@ -28,6 +28,23 @@ class Mountain
     saved_baseline_record&.baseline
   end
 
+  def publication
+    PublicMountain.find_by(voter: voter, race: race)
+  end
+
+  def share!
+    voter.with_lock do
+      reload
+      record = publication || PublicMountain.new(voter: voter, race: race)
+      record.refresh!(self)
+      record
+    end
+  end
+
+  def unshare!
+    voter.with_lock { publication&.destroy! }
+  end
+
   def saved_ratings
     @saved_ratings ||= Rating.where(voter: voter, candidacy: candidacies).pluck(:candidacy_id, :rating).to_h
   end
@@ -111,10 +128,12 @@ class Mountain
   # Writes ratings and a baseline straight to the saved mountain, replacing any draft. A blank rating
   # removes the saved one; a blank baseline removes the saved baseline.
   def publish!(ratings:, baseline:)
-    ActiveRecord::Base.transaction do
+    voter.with_lock do
       ratings.each { |candidacy_id, value| publish_rating!(candidacies.find(candidacy_id), value) }
       publish_baseline!(baseline)
       discard!
+      reload
+      publication&.refresh!(self)
     end
     reload
   end

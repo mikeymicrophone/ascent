@@ -7,6 +7,8 @@ class Views::Approaches::IndexView < Views::ApplicationView
   prop :pagy, _Nilable(Pagy)
   prop :parent, _Nilable(Issue)
   prop :filters, Hash
+  prop :topics, ActiveRecord::Relation
+  prop :issues, ActiveRecord::Relation
   prop :stance_counts, Hash
   prop :policy_counts, Hash
 
@@ -34,7 +36,11 @@ class Views::Approaches::IndexView < Views::ApplicationView
   end
 
   def filter_form
-    FilterForm(url: list_path, label: "Filter approaches", placeholder: "Approach title", values: @filters, clear_path: list_path)
+    FilterForm(url: list_path, label: "Filter approaches", placeholder: "Approach title", values: @filters, clear_path: list_path, submit_on_change: true,
+      selects: (@parent ? [] : [
+        [ :topic_id, "Topic", @topics.map { [ it.title, it.id ] }, "Every topic" ],
+        [ :issue_id, "Issue", @issues.map { [ "#{it.topic.title} · #{it.title}", it.id ] }, "Every issue" ]
+      ]))
   end
 
   def approach_row(approach)

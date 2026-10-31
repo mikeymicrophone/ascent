@@ -21,7 +21,7 @@ class Views::Counties::IndexView < Views::ApplicationView
   end
 
   def filter_form
-    FilterForm(url: counties_path, label: "Filter counties", placeholder: "County name", values: @filters, clear_path: counties_path,
+    FilterForm(url: counties_path, label: "Filter counties", placeholder: "County name", values: @filters, clear_path: counties_path, submit_on_change: true,
       selects: [ [ :state_id, "State", @states.map { [ it.name, it.id ] }, "All states" ] ])
   end
 

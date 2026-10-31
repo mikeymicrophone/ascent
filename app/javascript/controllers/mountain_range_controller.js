@@ -95,14 +95,20 @@ export default class extends Controller {
     const baseline = this.line.value
     const aboveLine = this.baselineSetValue && height > baseline
     const next = this.columnTargets[this.columnTargets.indexOf(column) + 1]
-    const nextHeight = next ? Math.max(0, Math.min(500, this.peaks.get(next).height)) : null
-    this.setShape(column, "peak-body", next ? this.peakPath(height, nextHeight) : "")
-    this.setShape(column, "peak-ridge", next ? `M 0 ${500 - height} L 100 ${500 - nextHeight}` : "")
-    this.setShape(column, "peak-summit", next && this.baselineSetValue ? this.summitPath(height, nextHeight, baseline) : "")
-    this.setShape(column, "peak-rope", next && this.baselineSetValue ? this.ropePath(height, nextHeight, baseline) : "")
+    const nextHeight = next ? Math.max(0, Math.min(500, this.peaks.get(next).height)) : 0
+    this.drawSegment(column.querySelector(".mountain-peak"), height, nextHeight, baseline)
+    const leftEdge = column.querySelector(".mountain-left-edge")
+    if (leftEdge) this.drawSegment(leftEdge, 0, height, baseline)
     this.placeDot(column, height)
     if (aboveLine && !peak.wasAboveLine) this.pulseSummit(column)
     peak.wasAboveLine = aboveLine
+  }
+
+  drawSegment(svg, height, nextHeight, baseline) {
+    this.setShape(svg, "peak-body", this.peakPath(height, nextHeight))
+    this.setShape(svg, "peak-ridge", `M 0 ${500 - height} L 100 ${500 - nextHeight}`)
+    this.setShape(svg, "peak-summit", this.baselineSetValue ? this.summitPath(height, nextHeight, baseline) : "")
+    this.setShape(svg, "peak-rope", this.baselineSetValue ? this.ropePath(height, nextHeight, baseline) : "")
   }
 
   sizeSegments() {
@@ -111,7 +117,8 @@ export default class extends Controller {
       const svg = column.querySelector(".mountain-peak")
       const currentArea = column.querySelector(".rating-area").getBoundingClientRect()
       const nextArea = next?.querySelector(".rating-area").getBoundingClientRect()
-      svg.style.width = nextArea ? `${nextArea.left + nextArea.width / 2 - currentArea.left - currentArea.width / 2}px` : "0px"
+      const width = nextArea ? nextArea.left + nextArea.width / 2 - currentArea.left - currentArea.width / 2 : currentArea.width / 2
+      svg.style.width = `${width}px`
     })
   }
 

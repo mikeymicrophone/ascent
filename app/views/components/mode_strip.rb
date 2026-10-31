@@ -38,7 +38,7 @@ class Views::Components::ModeStrip < Views::ApplicationView
     case mode
     when "ballot" then "Real election · you live in #{home_place_name}"
     when "real" then "Sign in to build a mountain for this race"
-    when "pretend" then "You don't live in #{@race.office.jurisdiction.name}. Your mountain is counted with visitors, never with residents."
+    when "pretend" then "counted separately"
     when "mock" then mock_text
     when "historical" then historical_text
     end
@@ -61,7 +61,6 @@ class Views::Components::ModeStrip < Views::ApplicationView
   def mode_aside
     case mode
     when "ballot", "real" then countdown
-    when "pretend" then link_to("Go to my ballot", ballot_path, class: "mode-strip-action")
     when "mock" then span(class: "mode-strip-note") { "Not a real race" }
     when "historical" then span(class: "mode-strip-note") { "Real result shown after you save" }
     end

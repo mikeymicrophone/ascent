@@ -60,6 +60,7 @@ class CandidaciesController < ApplicationController
   end
 
   def candidacy_params
-    params.require(:candidacy).permit(:person_id, :race_id, :status, :announcement_date, :participation, :platform_summary)
+    params.require(:candidacy).permit(:person_id, :race_id, :status, :announcement_date, :participation, :platform_summary,
+      image_placements_attributes: [ :id, :image_id, :position, :_destroy, image_attributes: %i[id file url alt_text credit source_url] ])
   end
 end

@@ -18,10 +18,11 @@ class Views::Candidacies::ShowView < Views::ApplicationView
           primary_action
           PillLink(label: "Person page", path: person_path(person), icon: :user_round, variant: "outline")
         end
-        ProfilePortrait(person: person)
+        ProfilePortrait(person: person, image: images.first)
       end
       div(class: "place-layout") do
         div(class: "place-main") do
+          ProfileImages(person: person, images: images)
           communications_section
           stances_section
           endorsements_section
@@ -118,7 +119,7 @@ class Views::Candidacies::ShowView < Views::ApplicationView
 
   def endorsement_item(endorsement)
     li(class: "endorsement-item") do
-      strong(class: "endorsement-name") { endorsement.endorser.name }
+      strong(class: "endorsement-name") { link_to endorsement.endorser.name, endorsement.endorser, class: "text-link" }
       span(class: "endorsement-kind") do
         endorsement.kind == "ballot_line" ? "Party line" : [ "Endorsed", endorsement.endorsed_on&.strftime("%b %Y") ].compact.join(" · ")
       end
@@ -129,6 +130,10 @@ class Views::Candidacies::ShowView < Views::ApplicationView
     communications = Communication.for_profile(person, [ @candidacy ]).includes(:channel)
       .order(published_on: :desc, id: :desc).limit(COMMUNICATION_LIMIT).to_a
     CommunicationGallery(communications: communications)
+  end
+
+  def images
+    @images ||= (@candidacy.images.to_a + person.images.to_a).uniq(&:id)
   end
 
   # Only totals: a rating is private to its voter, so no one may see who rated the candidate or how.

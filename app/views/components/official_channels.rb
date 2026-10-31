@@ -16,7 +16,11 @@ class Views::Components::OfficialChannels < Views::ApplicationView
           li(class: "profile-channel") do
             channel_link(channel)
             span(class: "communication-meta") do
-              channel.owner.is_a?(Candidacy) ? "Campaign · #{channel.owner.election.election_date.year}" : "Personal"
+              case channel.owner
+              when Candidacy then "Campaign · #{channel.owner.election.election_date.year}"
+              when Organization then "Organization"
+              else "Personal"
+              end
             end
           end
         end

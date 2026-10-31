@@ -127,7 +127,9 @@ module Seeds
     def owners(feature, state)
       case feature.kind
       when :state then State.where(id: state.id)
-      when :county then County.in_state(state).named(feature.full_name, feature.name)
+      when :county
+        counties = County.in_state(state)
+        counties.where(fips: feature.geoid).presence || counties.where(fips: nil).named(feature.full_name, feature.name)
       when :place then Municipality.in_state(state).named(feature.name)
       when :county_subdivision then county_subdivisions(feature, state)
       when :congressional_district then District.of_chamber("congressional").named(congressional_name(feature, state))
@@ -194,6 +196,7 @@ module Seeds
     def write(jurisdiction, feature, geometry, state)
       ActiveRecord::Base.transaction do
         jurisdiction ||= create_district(feature, state)
+        jurisdiction.jurisdictionable.update!(fips: feature.geoid) if feature.kind == :county && jurisdiction.jurisdictionable.fips.nil?
         jurisdiction.update!(census_class: feature.census_class, census_geoid: feature.geoid) unless jurisdiction.census_geoid
         jurisdiction.update!(parent: state.jurisdiction) if feature.district? && jurisdiction.parent_id.nil? && state&.jurisdiction
         write_boundary(jurisdiction, geometry)

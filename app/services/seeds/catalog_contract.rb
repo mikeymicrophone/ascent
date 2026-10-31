@@ -43,6 +43,7 @@ module Seeds
                  end
       end
       schema = { "type" => "array", "items" => schema } if column.respond_to?(:array) && column.array
+      schema["pattern"] = "^[0-9]{5}$" if model == County && column.name == "fips"
       column.null && !schema.empty? ? { "anyOf" => [ schema, { "type" => "null" } ] } : schema
     end
 

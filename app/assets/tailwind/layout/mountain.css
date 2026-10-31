@@ -1,7 +1,83 @@
 /* Mountain Interface Layout */
 
+.mountain-sharing,
+.mountain-sharing-actions {
+  display: grid;
+}
+
+.public-mountain {
+  margin-inline: auto;
+  display: grid;
+}
+
+.public-mountain-preview {
+  display: block;
+}
+
+.public-mountain-ratings {
+  border-collapse: collapse;
+}
+
+.public-mountain-ratings caption {
+  text-align: left;
+}
+
+.public-mountain-ratings th,
+.public-mountain-ratings td {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
 .mountain-index {
   @apply container mx-auto px-4 py-8;
+}
+
+.mountain-race-grid {
+  @apply grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3;
+}
+
+.mountain-race-card {
+  @apply relative isolate flex min-w-0 flex-col overflow-hidden;
+}
+
+.mountain-race-card::before {
+  content: "";
+  @apply pointer-events-none absolute right-0 top-0 -z-10;
+}
+
+.mountain-race-card-body {
+  @apply flex flex-1 flex-col items-start;
+}
+
+.mountain-race-card-top {
+  @apply flex w-full items-center justify-between;
+}
+
+.mountain-race-mode,
+.mountain-race-details time,
+.mountain-race-details > span {
+  @apply inline-flex items-center;
+}
+
+.mountain-race-mode::before {
+  content: "";
+  @apply block shrink-0 rounded-full;
+}
+
+.mountain-race-details {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.mountain-race-actions {
+  @apply flex flex-col;
+}
+
+.mountain-race-link {
+  @apply flex items-center justify-between;
+}
+
+.mountain-race-simulate .resource-action {
+  @apply w-full justify-center;
 }
 
 .elections-grid {
@@ -93,7 +169,7 @@
   @apply flex items-center;
   /* Never capture column clicks — only the label handle is interactive */
   @apply pointer-events-none;
-  z-index: 1;
+  z-index: 3;
 }
 
 .baseline-line {
@@ -151,4 +227,9 @@
   left: 50%;
   width: calc(100% + 2rem);
   z-index: 0;
+}
+
+.mountain-left-edge {
+  left: 0;
+  width: 50%;
 }

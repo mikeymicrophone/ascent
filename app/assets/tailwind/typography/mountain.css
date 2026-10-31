@@ -1,5 +1,9 @@
 /* Mountain Interface Typography */
 
+.mountain-sharing {
+  font-size: 0.875rem;
+}
+
 .page-title {
   @apply font-['Bricolage_Grotesque'];
   @apply text-3xl font-bold;
@@ -16,6 +20,38 @@
   @apply font-['Bricolage_Grotesque'];
   @apply text-xl font-semibold;
   @apply mb-2;
+}
+
+.mountain-race-card {
+  @apply font-['Bricolage_Grotesque'];
+}
+
+.mountain-race-title {
+  @apply text-[1.65rem] font-bold leading-[1.15] tracking-tight;
+  text-wrap: balance;
+}
+
+.mountain-race-title a,
+.mountain-race-link {
+  @apply no-underline;
+}
+
+.mountain-race-election {
+  @apply text-sm leading-relaxed;
+}
+
+.mountain-race-mode,
+.mountain-race-year {
+  @apply font-['Martian_Mono'] text-[10px] uppercase tracking-[0.08em];
+}
+
+.mountain-race-details {
+  @apply text-sm font-medium;
+  font-variant-numeric: tabular-nums;
+}
+
+.mountain-race-link {
+  @apply text-sm font-semibold;
 }
 
 .election-meta p {

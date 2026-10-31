@@ -12,7 +12,7 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   def view_template
     div(class: "mountain-page", data: editor_data) do
-      ModeStrip(race: @race, voter: @voter)
+      ModeStrip(race: @race, voter: @voter) unless pretend_vote?
       div(class: "mountain-page-body") do
         race_header
         div(class: "mountain-layout") do
@@ -26,6 +26,7 @@ class Views::Mountains::EditView < Views::ApplicationView
           end
           aside(class: "mountain-aside", aria: { label: "Your vote" }) do
             Views::Mountains::SaveBar(mountain: @mountain)
+            Views::Mountains::Sharing(mountain: @mountain) if @voter == current_voter
             Views::Mountains::YourVote(mountain: @mountain)
             Views::Mountains::BaselineCard(mountain: @mountain)
             Views::Mountains::OfficialResults(race: @race) if @race.official_results_revealed_to?(@voter)
@@ -37,6 +38,10 @@ class Views::Mountains::EditView < Views::ApplicationView
   end
 
   private
+
+  def pretend_vote?
+    @race.mode_for(@voter) == "pretend"
+  end
 
   def editor_data
     {
@@ -61,9 +66,12 @@ class Views::Mountains::EditView < Views::ApplicationView
         end
         p(class: "voter-on-behalf") { "Voter: #{@voter.name}" } unless @voter == current_voter
       end
-      div(class: "race-header-actions") do
-        follow_button if current_voter
-        PillLink(label: "Results", path: race_results_path(@race), icon: :chart_column, variant: "outline")
+      div(class: "mountain-header-side") do
+        ModeStrip(race: @race, voter: @voter) if pretend_vote?
+        div(class: "race-header-actions") do
+          follow_button if current_voter
+          PillLink(label: "Results", path: race_results_path(@race), icon: :chart_column, variant: "outline")
+        end
       end
     end
   end

@@ -61,7 +61,7 @@ class Views::Candidacies::Card < Views::ApplicationView
 
   def endorsement_item(endorsement)
     li(class: "endorsement-item") do
-      strong(class: "endorsement-name") { endorsement.endorser.name }
+      strong(class: "endorsement-name") { link_to endorsement.endorser.name, endorsement.endorser, class: "text-link" }
       span(class: "endorsement-kind") { endorsement_kind(endorsement) }
     end
   end

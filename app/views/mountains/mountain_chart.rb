@@ -28,12 +28,13 @@ class Views::Mountains::MountainChart < Views::ApplicationView
         ) if show_baseline?
 
         div(class: "candidate-columns") do
-          @candidacies.each do |candidacy_data|
+          @candidacies.each_with_index do |candidacy_data, index|
             CandidateColumn(
               candidacy: candidacy_data[:candidacy],
               rating_value: candidacy_data[:rating_value],
               has_rating: candidacy_data[:has_rating],
               is_approved: candidacy_data[:is_approved],
+              left_edge: index.zero?,
               editable: @editable,
               rating_input_id: rating_input_id(candidacy_data[:candidacy])
             )

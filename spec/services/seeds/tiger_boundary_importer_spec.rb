@@ -56,6 +56,19 @@ RSpec.describe Seeds::TigerBoundaryImporter do
     expect(port_merritt.jurisdiction.reload).to have_attributes(census_class: "G4110", census_geoid: "5057000")
     expect(house_12a.jurisdiction.boundaries.sole.geometry.geometry_type).to eq(RGeo::Feature::MultiPolygon)
     expect(alder_county.jurisdiction.boundaries.sole.valid_from).to eq(Date.new(2025, 1, 1))
+    expect(alder_county.reload.fips).to eq("50001")
+  end
+
+  it "matches a county by FIPS even when its name differs, without writing in a dry run" do
+    alder_county.update!(name: "Alder County Government", fips: "50001")
+    county_file = collection_file("tl_2025_us_county.geojson", [ county_feature ])
+    report = described_class.new(vintage: 2025, dry_run: true).import(county_file)
+    expect(report).to include(matched: 1, written: 0)
+    expect(alder_county.jurisdiction.reload.census_geoid).to be_nil
+
+    report = described_class.new(vintage: 2025).import(county_file)
+    expect(report).to include(matched: 1, written: 1)
+    expect(alder_county.jurisdiction.reload.census_geoid).to eq(alder_county.reload.fips)
   end
 
   it "lets a voter's location find their town and districts once boundaries are in" do

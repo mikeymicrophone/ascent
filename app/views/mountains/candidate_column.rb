@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
 class Views::Mountains::CandidateColumn < Views::Components::Base
-  def initialize(candidacy:, rating_value:, has_rating:, is_approved:, editable: false, rating_input_id: nil)
+  def initialize(candidacy:, rating_value:, has_rating:, is_approved:, left_edge:, editable: false, rating_input_id: nil)
     @candidacy = candidacy
     @rating_value = rating_value
     @has_rating = has_rating
     @is_approved = is_approved
     @editable = editable
     @rating_input_id = rating_input_id
+    @left_edge = left_edge
   end
 
   def view_template
     div(class: column_classes, data: column_data) do
       div(class: "rating-area", data: rating_area_data) do
         peak
+        peak(left_edge: true) if @left_edge
         render Views::Mountains::RatingDot.new(
           rating_value: @rating_value,
           has_rating: @has_rating,
@@ -41,8 +43,9 @@ class Views::Mountains::CandidateColumn < Views::Components::Base
     end
   end
 
-  def peak
-    svg(class: "mountain-peak", viewbox: "0 0 100 500", preserveaspectratio: "none", aria: { hidden: true }) do |s|
+  def peak(left_edge: false)
+    classes = left_edge ? "mountain-peak mountain-left-edge" : "mountain-peak"
+    svg(class: classes, viewbox: "0 0 100 500", preserveaspectratio: "none", aria: { hidden: true }) do |s|
       s.path(class: "peak-body", data: { role: "peak-body" })
       s.path(class: "peak-summit", data: { role: "peak-summit" })
       s.path(class: "peak-ridge", data: { role: "peak-ridge" })

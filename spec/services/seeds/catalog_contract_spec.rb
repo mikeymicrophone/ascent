@@ -30,4 +30,10 @@ RSpec.describe Seeds::CatalogContract do
     published = SeedDataPaths.primary_root.join("schemas/asc.contract.json")
     expect(published.read).to eq(JSON.pretty_generate(contract) + "\n")
   end
+
+  it "publishes county FIPS as a five-digit string instead of a generic code" do
+    attributes = contract.dig("entities", "County", "attributes")
+    expect(attributes).not_to have_key("code")
+    expect(attributes.fetch("fips")).to eq("anyOf" => [ { "type" => "string", "pattern" => "^[0-9]{5}$" }, { "type" => "null" } ])
+  end
 end
