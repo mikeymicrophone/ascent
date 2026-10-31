@@ -13,6 +13,7 @@ class Race < ApplicationRecord
   has_many :voter_race_baseline_archives, dependent: :delete_all
   has_many :voter_race_preferences, dependent: :delete_all
   has_many :mountain_drafts, dependent: :delete_all
+  has_many :public_mountains, dependent: :destroy
   has_many :mountain_ratings
   has_many :official_results, dependent: :destroy
 

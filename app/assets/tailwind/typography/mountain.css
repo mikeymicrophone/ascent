@@ -1,5 +1,9 @@
 /* Mountain Interface Typography */
 
+.mountain-sharing {
+  font-size: 0.875rem;
+}
+
 .page-title {
   @apply font-['Bricolage_Grotesque'];
   @apply text-3xl font-bold;

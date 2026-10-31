@@ -29,7 +29,9 @@ class Views::Mountains::SaveBar < Views::ApplicationView
   end
 
   def detail
-    return "Your ratings and baseline are private to you." unless @mountain.unsaved?
+    unless @mountain.unsaved?
+      return @mountain.publication ? "Your saved ratings and baseline are public." : "Your ratings and baseline are private to you."
+    end
 
     [ changed_ratings_text, changed_baseline_text ].compact.join(" · ")
   end

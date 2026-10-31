@@ -1,5 +1,15 @@
 /* Mountain Interface Colors */
 
+.mountain-sharing {
+  background: var(--brand-snow);
+}
+
+.mountain-sharing,
+.public-mountain-ratings th,
+.public-mountain-ratings td {
+  border-color: var(--brand-mist);
+}
+
 .mountain-chart {
   background-color: var(--brand-snow);
   border-color: var(--brand-mist);

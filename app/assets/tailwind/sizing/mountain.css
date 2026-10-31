@@ -1,5 +1,40 @@
 /* Mountain Interface Sizing */
 
+.mountain-sharing,
+.mountain-sharing-actions {
+  gap: 0.75rem;
+}
+
+.mountain-sharing {
+  padding: 1.25rem;
+  border: 1px solid;
+  border-radius: 1rem;
+}
+
+.public-mountain {
+  max-width: 75rem;
+  gap: 1.25rem;
+}
+
+.public-mountain-preview {
+  width: 100%;
+  height: auto;
+}
+
+.public-mountain-ratings {
+  width: 100%;
+}
+
+.public-mountain-ratings caption {
+  margin-bottom: 0.75rem;
+}
+
+.public-mountain-ratings th,
+.public-mountain-ratings td {
+  padding: 0.75rem;
+  border-bottom: 1px solid;
+}
+
 .mountain-chart {
   @apply p-4;
   min-height: 500px;

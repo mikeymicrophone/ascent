@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_30_142652) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -520,6 +520,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_142652) do
     t.index ["entity_code"], name: "index_positions_on_entity_code", unique: true
   end
 
+  create_table "public_mountains", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.bigint "race_id", null: false
+    t.jsonb "snapshot", null: false
+    t.binary "preview_png", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["race_id"], name: "index_public_mountains_on_race_id"
+    t.index ["voter_id", "race_id"], name: "index_public_mountains_on_voter_id_and_race_id", unique: true
+    t.index ["voter_id"], name: "index_public_mountains_on_voter_id"
+  end
+
   create_table "races", force: :cascade do |t|
     t.string "certification_status"
     t.datetime "created_at", null: false
@@ -803,6 +815,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_142652) do
   add_foreign_key "policies", "approaches"
   add_foreign_key "policies", "area_of_concerns"
   add_foreign_key "policies", "governing_bodies"
+  add_foreign_key "public_mountains", "races"
+  add_foreign_key "public_mountains", "voters"
   add_foreign_key "races", "elections"
   add_foreign_key "races", "offices"
   add_foreign_key "rating_archives", "candidacies"

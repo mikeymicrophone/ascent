@@ -41,7 +41,7 @@ The overwhelmed voter is the hardest case and the most important one: a 2026 gen
 - **Policy:** topics, issues, approaches, stances and the evidence behind them, plus governing bodies, policies and official codes.
 - **Voting:** the mountain, where a signed-in voter rates candidates, sets a baseline and saves; approval results for completed races.
 - **Engagement:** on almost every record a visitor can save, favorite, follow, hide or share it, and a Saved page collects what they marked.
-- **Accounts:** sign-in with email or Google. A voter's ratings, baselines and mountains are private to them and to admins. Admins also see controls to create, edit and delete reference data, and to simulate mountain data.
+- **Accounts:** sign-in with email or Google. Mountains are private to voters and admins by default. A voter can make individual saved mountains public, sharing their name, ratings, and baseline on a read-only page with a PNG preview. Unsaved drafts stay private. Admins also see controls to create, edit and delete reference data, and to simulate mountain data.
 
 ## What is planned
 

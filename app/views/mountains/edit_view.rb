@@ -26,6 +26,7 @@ class Views::Mountains::EditView < Views::ApplicationView
           end
           aside(class: "mountain-aside", aria: { label: "Your vote" }) do
             Views::Mountains::SaveBar(mountain: @mountain)
+            Views::Mountains::Sharing(mountain: @mountain) if @voter == current_voter
             Views::Mountains::YourVote(mountain: @mountain)
             Views::Mountains::BaselineCard(mountain: @mountain)
             Views::Mountains::OfficialResults(race: @race) if @race.official_results_revealed_to?(@voter)

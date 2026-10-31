@@ -18,6 +18,7 @@ The heart of the product, at `/mountains/:race`. Only the signed-in voter whose 
 
 - **Today:** a header with the race name and election, followed by a mountain or list view. The chart has a 0 to 500 axis, a draggable baseline, and one column per candidate. New mountains start with a baseline of 200; saved baselines keep their values. Under each column are the candidate's name, their rating when set, and a link to any policy positions. Unrated candidates have no "Not rated" label.
 - **Save controls:** Discard and Save mountain appear in the right sidebar when there are unsaved changes. A Saved button shows the saved state. Change details appear on hover or keyboard focus. The page stays editable after saving.
+- **Sharing:** a private-by-default Sharing panel lets the voter make this saved mountain public. The public page shows their name, saved ratings, and baseline, with a stored PNG for link previews. Unsaved drafts stay private. Public mountains have Share mountain, View public mountain, and Make private controls. Making one private removes its page and image from Ascent; social sites may retain copies.
 - **Ridge:** the mountain connects neighboring candidate ratings directly. It does not drop to zero between rated candidates. The area above the baseline stays lime, and the ridge follows rating changes and resizing.
 - **Primary candidates:** when a race's primaries had other candidates, the header says how many, with an Include primary candidates / Remove primary candidates button. Included candidates appear as extra columns labelled "Off the ballot; ran in the Democratic Party primary" (or the top-two primary).
 - **Party endorsements:** the Party endorsements button at the bottom left of the mountain panel shows or hides current party endorsements below candidate names in both views. They start hidden. Nonparty and withdrawn endorsements are excluded; ballot designations and primary-race context remain separate.
@@ -28,7 +29,7 @@ The heart of the product, at `/mountains/:race`. Only the signed-in voter whose 
   - make the difference between on-ballot and off-ballot candidates clear without making the off-ballot ones look lesser;
   - show unsaved changes, and not lose them (today the primary-candidates button reloads the page and drops unsaved edits, ASC-64);
   - work by keyboard and screen reader, not only by dragging;
-  - leave room for daily limits on baseline changes (ASC-57) and for sharing (ASC-58).
+  - leave room for further sharing tools such as verified links and QR codes (ASC-58).
 
 ## 2. Mountains, the race picker
 

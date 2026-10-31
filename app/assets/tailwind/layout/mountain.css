@@ -1,5 +1,33 @@
 /* Mountain Interface Layout */
 
+.mountain-sharing,
+.mountain-sharing-actions {
+  display: grid;
+}
+
+.public-mountain {
+  margin-inline: auto;
+  display: grid;
+}
+
+.public-mountain-preview {
+  display: block;
+}
+
+.public-mountain-ratings {
+  border-collapse: collapse;
+}
+
+.public-mountain-ratings caption {
+  text-align: left;
+}
+
+.public-mountain-ratings th,
+.public-mountain-ratings td {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
 .mountain-index {
   @apply container mx-auto px-4 py-8;
 }

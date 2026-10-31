@@ -15,6 +15,7 @@ class Voter < ApplicationRecord
   has_many :engagements, dependent: :destroy
   has_many :voter_race_preferences, dependent: :delete_all
   has_many :mountain_drafts, dependent: :delete_all
+  has_many :public_mountains, dependent: :destroy
   has_many :created_elections, class_name: "Election", foreign_key: :creator_id, inverse_of: :creator, dependent: :nullify
 
   validates :first_name, presence: true

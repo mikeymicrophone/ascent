@@ -378,6 +378,20 @@ end
 - Cross-browser compatibility
 - Mobile responsiveness validation
 
+## Public mountains
+
+Mountains are private by default. The voter can choose **Make public** in a mountain's Sharing panel after saving a baseline and at least one rating. This publishes their name, saved ratings, and baseline. Unsaved drafts stay private. Admin access to another voter's editor does not include permission to publish or withdraw it.
+
+`PublicMountain` stores one snapshot and one 1200 × 630 PNG per voter and race. The PNG bytes are in PostgreSQL so the snapshot and image change in one transaction. `Mountain#share!`, `#unshare!`, and `#publish!` lock the voter to serialize publication, withdrawal, and mountain saves. Repeated publication reuses the public URL. Saving a public mountain or changing its primary-candidate inclusion refreshes the snapshot and PNG. Name changes appear when the snapshot next refreshes. A public mountain must retain a saved baseline and at least one active candidate's saved rating. Withdraw it before clearing those values. Editing lower-level Rating records does not refresh the snapshot.
+
+`GET /public_mountains/:id` is a read-only page available without signing in. Its Open Graph tags contain an absolute, versioned PNG URL at `/public_mountains/:id.png`. Both responses use `Cache-Control: no-store`, and preview crawlers bypass the modern-browser restriction. The private editor and draft endpoints retain their existing access rules.
+
+The image uses libvips to render an escaped SVG with the Ascent palette. `script/render_mountain_preview` runs in a separate Ruby process and enables the SVG loader there. Rails keeps its restrictions on uploaded image decoders. The Docker image includes DejaVu fonts. Ratings above the baseline are approved. Equality is not approval. Unrated candidates remain distinct from a rating of zero, and primary candidates appear only when the voter included them. The image selects up to ten highest-rated candidates, with original ID order breaking ties at the cutoff, then draws them in original ID order. A partial preview is labelled. The public page lists every candidate in the snapshot.
+
+**Make private** deletes the publication, so its page and PNG return 404. A later publication has a new URL. Social sites may retain copies they already fetched. Deleting the voter or race deletes its publications.
+
+Publication checks are in `spec/requests/public_mountains_spec.rb` and `spec/services/mountain_preview_spec.rb`. These cover empty and single-candidate mountains, rating and baseline endpoints, unrated values, Unicode and escaping, stable ordering and crowded previews, repeated publication, draft exclusion, and owner-only visibility changes. The voter row lock defines the order of concurrent publication, withdrawal, and saved changes. A unique index permits only one publication per voter and race. The requirements probe resolved these nine applicable boundaries with explicit requirements. There are no unresolved boundaries or judgment-only checks.
+
 ## Future Enhancements
 
 ### Phase 2 Features
@@ -387,7 +401,7 @@ end
 - Multiple voter comparison view
 
 ### Phase 3 Features
-- Export to SVG/PNG
+- Downloadable SVG export. Public mountains already have stored PNG previews.
 - Historical rating timelines
 - Advanced filtering and sorting
 - Embedding in external sites
@@ -400,10 +414,11 @@ end
 
 ## Security and Privacy
 
-### Public Rating Display
-- All ratings visible to public (by design)
-- No authentication required for viewing
-- Voter identity tied to URLs (transparent)
+### Public rating display
+- Mountains and drafts are private to the voter and admins by default.
+- A voter can publish a saved mountain with their name, ratings, and baseline.
+- Published snapshots and their PNG previews need no authentication. Drafts and editing remain private.
+- Withdrawing a publication removes its page and PNG from Ascent.
 
 ### Data Validation
 - Rating bounds enforcement (0-500)
