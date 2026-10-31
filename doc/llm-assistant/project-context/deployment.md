@@ -1,4 +1,37 @@
-# Railway production
+# Railway deployments
+
+## Staging
+
+The `staging` branch is prepared for Railway project `ascent`, environment `staging`
+(`4d3f6033-e84b-4c46-8981-255dd3d51325`), service `ascent-staging`
+(`751fde16-4d76-446c-9dc2-8dbf92df7723`). The service has the domains
+`https://begin.ascent.ing` and `https://ascent-staging-staging.up.railway.app`.
+
+Set `RAILS_ENV=staging` to load `config/environments/staging.rb`. It inherits
+production settings for HTTPS, eager loading, PostShiba, Solid Cache, and Solid
+Queue. Account-email links use `https://begin.ascent.ing`. Set `APP_HOST` to change
+that host. The `staging` entries in the database, cache, queue, and cable YAML
+files configure the four database connections and Solid Cable.
+
+Runtime variables must include `SECRET_KEY_BASE`, `DATABASE_URL`,
+`CACHE_DATABASE_URL`, `QUEUE_DATABASE_URL`, and `CABLE_DATABASE_URL`. Keep the
+staging databases and secret key separate from production. Use `postgis://` for
+the database URLs. Set `PORT=80`, `HTTP_PORT=80`, and `SOLID_QUEUE_IN_PUMA=true`.
+The upload volume is mounted at `/rails/storage`.
+
+Doppler project `ascent`, config `stg`, has `GOOGLE_CLIENT_ID`,
+`GOOGLE_CLIENT_SECRET`, and `POSTSHIBA_API_KEY`. Supply those keys through Railway
+variables or a Doppler integration. The Rails environment file reads environment
+variables and does not fetch secrets from Doppler. Register the staging origin
+followed by `/voters/auth/google_oauth2/callback` with Google.
+
+Use the root Dockerfile, `/up` as the health check, and
+`./bin/rails db:prepare` as the pre-deploy command with a 3600-second timeout.
+The Docker entrypoint also runs `db:prepare` before the default server command.
+Changing the Rails environment file does not change Railway variables or enable
+GitHub auto-deploy.
+
+## Production
 
 Project `ascent`: `960d98ac-f430-4165-9f9e-28d00f2b9b6d`.
 Production environment: `259bfed3-8ac2-4f04-a90b-26f00942cbca`.
@@ -66,7 +99,8 @@ heartbeats. Cache and upload storage passed reversible write/read checks. The
 focused local suite passed 65 examples with zero failures. Google and Umami remained
 unconfigured; delivered email was not tested.
 
-The full catalog exposed a performance issue in `/mountains`: the response was
+That release exposed a performance issue in `/mountains`: the response was
 17,230,691 bytes, and Rails reported about 5.9 seconds and 17,934 queries, including
-cached queries. `MountainsController#index` loads every active race. Server-side
-pagination and reducing repeated queries remain follow-up work.
+cached queries. At the time, `MountainsController#index` loaded every active race.
+The current `staging` branch ranks races in SQL, paginates 25 races per page,
+and shares the national-prominence lookup between ranking and display.
