@@ -59,7 +59,7 @@ active_races:
   empty:
     title: No active races are loaded yet.
     copy: >
-      The supporting data model is already in place, so the next step is to seed
-      or model a live example and use the mountain interface to walk people through it.
+      Browse election and jurisdiction records, or open a mountain once an active
+      race is available.
     elections_link: Browse Election Data
     jurisdictions_link: Review Jurisdictions

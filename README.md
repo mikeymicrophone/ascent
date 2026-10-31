@@ -25,6 +25,12 @@ A pretty interesting side benefit would be if we established a decent way for ci
 
 The pending [jurisdiction schema](doc/jurisdiction_schema.md) uses PostGIS within PostgreSQL. Install the PostGIS server extension and GEOS before applying it. The subsequent [Election and Race split](doc/election_race_schema.md) separates shared voting events from office contests. Models and factories now use these schemas. The migrations do not convert existing data; controllers, routes, views, and seeds still need updates before applying them to the working application.
 
+## Page copy
+
+Public page copy lives in `config/content`: `home.yml`, `approval_voting.yml`, `faq.yml`, `glossary.yml`, and `supporters.yml`. `PageContent.load` reads these files; the page views retain layout, live metrics, and race previews. Preserve the content keys and interpolation placeholders when editing copy. The Supporters page uses placeholders such as `%{active_elections}` in `footprint.copy`.
+
+Terms of Service text remains in `app/views/pages/terms_of_service.html.erb`.
+
 ## Account access
 
 Signup, login, confirmation resend, and password reset share a MICharisma account layout. The design uses plum and cream, Bricolage Grotesque, and Ascent's mountain mark. The form partials live in `app/views/devise/shared`, with scoped `authentication.css` files in the existing Tailwind folders. Accounts remain specific to Ascent.

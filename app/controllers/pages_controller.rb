@@ -11,7 +11,9 @@ class PagesController < ApplicationController
   end
 
   def glossary
-    render Views::Pages::GlossaryView.new
+    render Views::Pages::GlossaryView.new(
+      page: PageContent.load("glossary")
+    )
   end
 
   def faq
@@ -22,6 +24,7 @@ class PagesController < ApplicationController
 
   def supporters
     render Views::Pages::SupportersView.new(
+      page: PageContent.load("supporters"),
       active_races: active_races,
       metrics: project_metrics
     )

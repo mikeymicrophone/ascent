@@ -23,5 +23,25 @@ RSpec.describe PageContent do
         filename: "playgrounds_once_per_decade.yml"
       )
     end
+
+    it "loads the supporters page copy" do
+      page = described_class.load("supporters")
+
+      expect(page.fetch(:hero)).to include(:kicker, :title, :lead, :actions)
+      expect(page.fetch(:funding).fetch(:items)).to all(include(:title, :copy))
+      expect(page.fetch(:values).fetch(:items)).to all(include(:title, :copy))
+      expect(page.fetch(:support_targets).fetch(:items)).to all(include(:title, :copy))
+      expect(page.fetch(:footprint)).to include(:title, :copy, :mountain_link, :empty)
+      expect(page.dig(:footprint, :copy)).to include("%{active_elections}", "%{offices}", "%{topics}", "%{issues}")
+    end
+
+    it "loads the glossary page copy" do
+      page = described_class.load("glossary")
+
+      expect(page.fetch(:hero)).to include(:kicker, :title, :lead, :actions)
+      expect(page.fetch(:flow).fetch(:items)).to all(include(:title, :chain, :copy))
+      expect(page.fetch(:sections)).to all(include(:kicker, :title, :entries))
+      expect(page.fetch(:sections).flat_map { it.fetch(:entries) }).to all(include(:term, :definition))
+    end
   end
 end

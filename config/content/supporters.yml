@@ -1,0 +1,87 @@
+# For philanthropic partners
+# Edit this file to change the page at /supporters.
+#
+# footprint.copy interpolates live metrics with %{active_elections}, %{offices},
+# %{topics}, and %{issues}.
+# Action path keys are route helper names without "_path":
+#   mountains -> mountains_path, root -> root_path, etc.
+
+hero:
+  kicker: For philanthropic partners
+  title: Ascent is building public-interest infrastructure for studying better ballots and clearer governance.
+  lead: >
+    The project is useful to donors who want civic work that can be examined from
+    more than one ideological angle: it is focused on voter expression,
+    administrative clarity, and transparent local experimentation.
+  actions:
+    - text: See the Live Interface
+      path: mountains
+      style: primary
+    - text: Return to Overview
+      path: root
+      style: tertiary
+
+funding:
+  kicker: Why philanthropic capital matters
+  title: This kind of civic product benefits from patient funding before it can prove itself at scale.
+  items:
+    - title: Research-grade prototypes
+      copy: >
+        The platform can host comparative election experiments without forcing a
+        municipality to adopt a reform before the evidence exists.
+    - title: Public explanation
+      copy: >
+        The mountain interface and linked policy data make abstract election design
+        questions easier to explain to voters, journalists, and civic leaders.
+    - title: Local pilots
+      copy: >
+        Support can fund small, auditable pilots in specific jurisdictions where the
+        tradeoffs of expressive ballots can be observed in practice.
+
+values:
+  kicker: Built to earn trust across ideological lines
+  title: The value proposition is civic capacity, not party advantage.
+  items:
+    - title: Choice and competition
+      copy: >
+        People concerned about the spoiler effect can inspect whether broader voter
+        choice produces stronger consensus outcomes.
+    - title: Accountability and restraint
+      copy: >
+        People concerned about governmental overreach can trace promises back to the
+        actual office that has legal authority to act.
+    - title: Administrative legibility
+      copy: >
+        Election data, offices, voters, and policy issues live in one schema, which
+        creates a cleaner base for audits and public explanation.
+    - title: Practical experimentation
+      copy: >
+        The project treats reform as something to be tested in simulations and pilots
+        rather than sold as a slogan.
+
+support_targets:
+  kicker: What support could fund next
+  title: A grant can sharpen both the product and the evidence around it.
+  items:
+    - title: Test harnesses and model specs
+      copy: >
+        Improve reliability around election aggregation, simulation, and data
+        integrity so demonstrations are credible under scrutiny.
+    - title: Public-facing narratives
+      copy: >
+        Expand explainer pages, walkthroughs, and example elections so non-technical
+        stakeholders can evaluate the concept quickly.
+    - title: Seed datasets and demos
+      copy: >
+        Create richer mock jurisdictions, offices, and policy issue trees that make
+        the mountain interface feel concrete rather than abstract.
+
+footprint:
+  title: Current footprint
+  copy: >
+    The repository currently models %{active_elections} active elections,
+    %{offices} offices, %{topics} topics, and %{issues} issues.
+  mountain_link: Open Mountain
+  empty:
+    elections_link: Browse Elections
+    jurisdictions_link: Inspect Jurisdictions
