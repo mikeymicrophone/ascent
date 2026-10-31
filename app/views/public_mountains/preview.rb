@@ -10,6 +10,15 @@ class Views::PublicMountains::Preview < Phlex::SVG
     svg(xmlns: "http://www.w3.org/2000/svg", width: 1200, height: 630, viewBox: "0 0 1200 630", role: "img") do
       rect(width: 1200, height: 630, fill: "#F2F4EE")
       label(48, 48, "ASCENT · APPROVAL VOTING", size: 18)
+      svg(x: 988, y: 6, width: 44, height: 44, viewBox: "0 0 40 40") do
+        path(d: "M1 34 L11 19 L21 34 Z", fill: "#57645C")
+        path(d: "M7 34 L22 6 L37 34 Z", fill: "#15201B")
+        path(d: "M16.64 16 L22 6 L27.36 16 Z", fill: "#C5EE3F")
+        path(d: "M2 16 H38", fill: "none", stroke: "#E05A12", stroke_width: 2.5, stroke_linecap: "round")
+      end
+      text(x: 1152, y: 40, fill: "#15201B", font_family: "DejaVu Sans, sans-serif", font_size: 32,
+        font_weight: "bold", text_anchor: "end") { "Ascent" }
+      label(1152, 64, "https://ascent.ing", size: 16, anchor: "end")
       label(48, 98, "#{shorten(@snapshot.fetch("voter_name"), 42)}'s mountain", size: 34)
       label(48, 134, shorten(@snapshot.fetch("race_name"), 78), size: 23)
       label(48, 165, shorten(@snapshot.fetch("election_name"), 95), size: 18)
