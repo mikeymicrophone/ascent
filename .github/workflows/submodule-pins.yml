@@ -1,0 +1,25 @@
+name: Check Docker submodule pins
+
+on:
+  pull_request:
+  push:
+    branches: [main, staging]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Match Docker sources to Git submodules
+        shell: bash
+        run: |
+          git config --file .gitmodules --get-regexp '^submodule\..*\.path$' |
+            while read -r key path; do
+              url=$(git config --file .gitmodules --get "${key%.path}.url")
+              revision=$(git ls-tree HEAD -- "$path" | awk '$1 == "160000" { print $3 }')
+              test -n "$revision"
+              grep -Fx "ADD ${url}#${revision} /${path}" Dockerfile
+            done

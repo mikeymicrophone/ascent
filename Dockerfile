@@ -9,6 +9,11 @@
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=4.0.9
+
+FROM scratch AS submodules
+ADD https://github.com/MICharisma/ascent_seed_data.git#801ae518d9d9b2ffba260e58302e9b7fbafdb38d /db/seeds/ascent_seed_data
+ADD https://github.com/mikeymicrophone/micharisma_seeders.git#8357fe34bbf00cdba83585bf97ef058ca1854f10 /lib/micharisma_seeders
+
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 # Rails app lives here
@@ -41,6 +46,7 @@ RUN bundle install && \
 
 # Copy application code
 COPY . .
+COPY --from=submodules / /rails/
 
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/

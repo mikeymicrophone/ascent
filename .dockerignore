@@ -4,6 +4,9 @@
 /.git/
 /.gitignore
 
+/db/seeds/ascent_seed_data
+/lib/micharisma_seeders
+
 # Ignore bundler config.
 /.bundle
 

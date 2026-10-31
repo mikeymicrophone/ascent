@@ -31,6 +31,21 @@ The Docker entrypoint also runs `db:prepare` before the default server command.
 Changing the Rails environment file does not change Railway variables or enable
 GitHub auto-deploy.
 
+### Automatic staging deployments
+
+Railway's native GitHub auto-deploy builds pushes to `staging`. The root Dockerfile
+fetches both public submodule repositories over HTTPS using full commit hashes.
+The build excludes local submodule directories and copies the fetched contents into
+the application before precompilation. No submodule credentials or GitHub Actions
+deployment token are required.
+
+When changing a submodule's recorded commit, update the matching `ADD` source in
+`Dockerfile`. When adding a submodule, add its pinned `ADD` source and exclude its
+local directory in `.dockerignore`. `.github/workflows/submodule-pins.yml` checks
+that every declared submodule matches its Docker source on pull requests and pushes
+to `main` or `staging`. The same Dockerfile behavior applies to production builds;
+this setup does not deploy production.
+
 ## Production
 
 Project `ascent`: `960d98ac-f430-4165-9f9e-28d00f2b9b6d`.
