@@ -52,6 +52,10 @@
   color: var(--story-accent);
 }
 
+.error-code {
+  color: var(--brand-rope-deep);
+}
+
 .story-lead,
 .story-card-copy,
 .story-election-summary,

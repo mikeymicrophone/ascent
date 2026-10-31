@@ -1,0 +1,34 @@
+# Error pages
+# Edit this file to change the copy for /404 and /500 (and the production exception pages).
+#
+# Action path keys are route helper names without "_path".
+
+not_found:
+  code: "404"
+  kicker: Path not found
+  title: This trail does not lead to a page.
+  lead: >
+    The address may be mistyped, or the page may have moved. Head back to the
+    overview or open a live mountain while you reorient.
+  actions:
+    - text: Return to Overview
+      path: root
+      style: primary
+    - text: Try a Mountain
+      path: mountains
+      style: secondary
+
+internal_server_error:
+  code: "500"
+  kicker: Something slipped
+  title: Ascent hit an unexpected fault.
+  lead: >
+    The request could not be finished. The team can inspect the logs. You can
+    return home and try again in a moment.
+  actions:
+    - text: Return to Overview
+      path: root
+      style: primary
+    - text: Browse Elections
+      path: elections
+      style: secondary

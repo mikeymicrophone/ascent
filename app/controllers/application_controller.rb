@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include AnalyticsTracking
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  allow_browser versions: :modern, unless: -> { controller_name == "public_mountains" }
+  allow_browser versions: :modern, unless: -> { controller_name.in?(%w[public_mountains errors]) }
 
   include Pagy::Method
 

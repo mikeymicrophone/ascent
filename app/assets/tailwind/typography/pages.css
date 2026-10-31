@@ -15,6 +15,10 @@
   @apply font-['Martian_Mono'] text-4xl leading-none;
 }
 
+.error-code {
+  @apply font-['Martian_Mono'] text-6xl font-semibold leading-none tracking-tight md:text-8xl;
+}
+
 .story-metric-label {
   @apply font-['Bricolage_Grotesque'] text-sm uppercase tracking-[0.2em];
 }

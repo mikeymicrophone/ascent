@@ -87,4 +87,36 @@ RSpec.describe "Pages", type: :request do
       expect(response.body).to include(%(href="#{terms_of_service_path}"))
     end
   end
+
+  describe "error pages" do
+    around do |example|
+      show_exceptions = Rails.application.env_config["action_dispatch.show_exceptions"]
+      detailed = Rails.application.env_config["action_dispatch.show_detailed_exceptions"]
+      Rails.application.env_config["action_dispatch.show_exceptions"] = :all
+      Rails.application.env_config["action_dispatch.show_detailed_exceptions"] = false
+      example.run
+    ensure
+      Rails.application.env_config["action_dispatch.show_exceptions"] = show_exceptions
+      Rails.application.env_config["action_dispatch.show_detailed_exceptions"] = detailed
+    end
+
+    it "renders the branded not-found page for unknown routes" do
+      get "/this-ascent-path-does-not-exist"
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).to include("This trail does not lead to a page.")
+      expect(response.body).to include("Return to Overview")
+    end
+
+    it "renders the branded internal error page when a controller raises" do
+      allow_any_instance_of(PagesController).to receive(:home).and_raise(StandardError, "forced error page")
+
+      get root_path
+
+      expect(response).to have_http_status(:internal_server_error)
+      expect(response.body).to include("Ascent hit an unexpected fault.")
+      expect(response.body).to include("Browse Elections")
+    end
+  end
 end
+

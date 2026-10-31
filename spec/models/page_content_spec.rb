@@ -43,5 +43,15 @@ RSpec.describe PageContent do
       expect(page.fetch(:sections)).to all(include(:kicker, :title, :entries))
       expect(page.fetch(:sections).flat_map { it.fetch(:entries) }).to all(include(:term, :definition))
     end
+
+    it "loads the error page copy" do
+      page = described_class.load("errors")
+
+      expect(page.fetch(:not_found)).to include(:code, :kicker, :title, :lead, :actions)
+      expect(page.fetch(:internal_server_error)).to include(:code, :kicker, :title, :lead, :actions)
+      expect(page.dig(:not_found, :code)).to eq("404")
+      expect(page.dig(:internal_server_error, :code)).to eq("500")
+    end
   end
 end
+
