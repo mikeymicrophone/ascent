@@ -16,7 +16,8 @@ class GubernatorialRaceSeeder
     )
     position = Position.find_by!(title: "Governor")
     jurisdiction = SeedJurisdictions.ensure(state, parent: state.country.jurisdiction)
-    office = Office.find_or_create_by!(position: position, jurisdiction: jurisdiction, notes: nil) do |record|
+    # Notes describe an office; they never identify it. A nomination to the office shares its position and jurisdiction.
+    office = Office.find_or_create_by!(position: position, jurisdiction: jurisdiction, nominee_for_office_id: nil) do |record|
       record.is_active = true
     end
 
