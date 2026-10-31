@@ -19,6 +19,20 @@ class MountainsController < ApplicationController
     render_mountain_editor
   end
 
+  def share
+    mountain.share!
+    redirect_to mountain_path(@race), notice: "Your mountain is now public."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to mountain_path(@race), alert: e.record.errors.full_messages.to_sentence
+  rescue MountainPreview::Error
+    redirect_to mountain_path(@race), alert: "Could not create the mountain image. Please try again."
+  end
+
+  def unshare
+    mountain.unshare!
+    redirect_to mountain_path(@race), notice: "Your mountain is now private."
+  end
+
   def update
     mountain.publish!(ratings: rating_params, baseline: params[:baseline].presence)
 
@@ -57,9 +71,14 @@ class MountainsController < ApplicationController
 
   def primary_candidates
     included = params[:included] == "1"
-    @voter.include_primary_candidates!(@race, included)
+    @voter.with_lock do
+      @voter.include_primary_candidates!(@race, included)
+      mountain.reload.publication&.refresh!(mountain)
+    end
     redirect_to mountain_path(@race, voter_id: @voter.id),
                 notice: included ? "Primary candidates added to your mountain." : "Primary candidates removed from your mountain."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to mountain_path(@race, voter_id: @voter.id), alert: e.record.errors.full_messages.to_sentence
   end
 
   def simulate
@@ -181,7 +200,7 @@ class MountainsController < ApplicationController
 
   # Each candidate as the voter sees them now, with any unsaved draft laid over the saved ratings.
   def build_mountain_data
-    @race.candidacies_for(@voter).active.with_rating_details.map do |candidacy|
+    @race.candidacies_for(@voter).active.with_rating_details.includes(endorsements: :endorser).map do |candidacy|
       rating = mountain.ratings[candidacy.id]
 
       {

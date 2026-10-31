@@ -1,5 +1,6 @@
 class Person < ApplicationRecord
   include Engageable
+  include Illustrated
 
   has_many :candidacies, dependent: :destroy
   has_many :races, -> { distinct }, through: :candidacies
@@ -21,6 +22,12 @@ class Person < ApplicationRecord
       .joins(candidacies: { race: :election })
       .order("elections.election_date DESC")
   }
+
+  scope :named_like, ->(query) {
+    where("concat_ws(' ', first_name, middle_name, last_name) ILIKE ?", "%#{sanitize_sql_like(query.strip)}%")
+  }
+  # People with a candidacy in any of the races given.
+  scope :ran_in, ->(races) { where(id: Candidacy.where(race: races).select(:person_id)) }
 
   def full_name
     [ first_name, middle_name, last_name ].compact.join(" ")

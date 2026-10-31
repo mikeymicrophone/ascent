@@ -100,3 +100,7 @@
     grid-column: 1 / -1;
   }
 }
+
+.place-chip-link {
+  @apply inline-flex items-center;
+}

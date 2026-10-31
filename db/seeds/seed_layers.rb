@@ -3,7 +3,6 @@ module SeedLayers
     country_seeder
     state_seeder
     municipality_seeder
-    position_seeder
     year_seeder
     seed_manifests
     gubernatorial_race_seeder
@@ -37,12 +36,13 @@ module SeedLayers
       SeedDataPaths.file("us_states.yml"),
       SeedDataPaths.file("canadian_provinces.yml")
     ])
-    PositionSeeder.seed
     YearSeeder.seed
     # Manifests first, so places they define arrive with their counties before cities.yml adopts them.
     SeedManifests.seed
     MunicipalitySeeder.seed
     GubernatorialRaceSeeder.seed
+    activated_races = Race.upcoming.update_all(status: "active", updated_at: Time.current)
+    puts "Activated #{activated_races} upcoming races"
     puts "✅ Reference data seeded"
   end
 

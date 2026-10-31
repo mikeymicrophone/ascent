@@ -3,8 +3,12 @@ class ApproachesController < ApplicationController
 
   # GET /approaches or /approaches.json
   def index
-    @pagy, @approaches = pagy(Approach.by_issue(params[:issue_id]))
-    render Views::Approaches::IndexView.new(approaches: @approaches, pagy: @pagy, parent: filtering_issue)
+    approaches = Approach.includes(issue: :topic).by_topic(filters["topic_id"]).by_issue(filters["issue_id"]).order(:title, :id)
+    approaches = approaches.titled_like(filters["q"]) if filters["q"].present?
+    @pagy, @approaches = pagy(approaches)
+    render Views::Approaches::IndexView.new(approaches: @approaches, pagy: @pagy, parent: filtering_issue, filters: filters,
+      topics: Topic.order(:title), issues: Issue.includes(:topic).by_topic(filters["topic_id"]).order(:title),
+      stance_counts: Stance.where(approach: @approaches).group(:approach_id).count, policy_counts: Policy.where(approach: @approaches).group(:approach_id).count)
   end
 
   # GET /approaches/1 or /approaches/1.json
@@ -62,9 +66,18 @@ class ApproachesController < ApplicationController
   end
 
   private
-    def filtering_issue
-      Issue.find(params[:issue_id]) if params[:issue_id]
+
+  def filters
+    @filters ||= params.permit(:q, :topic_id, :issue_id).to_h.tap do |values|
+      if values["topic_id"].present? && values["issue_id"].present? && request.path_parameters[:issue_id].blank?
+        values.delete("issue_id") unless Issue.by_topic(values["topic_id"]).exists?(id: values["issue_id"])
+      end
     end
+  end
+
+  def filtering_issue
+    Issue.find(request.path_parameters[:issue_id]) if request.path_parameters[:issue_id].present?
+  end
 
     # Use callbacks to share common setup or constraints between actions.
     def set_approach

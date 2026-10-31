@@ -223,6 +223,22 @@ textarea.text-input {
   @apply gap-2;
 }
 
+.mountain-header-side {
+  @apply gap-3;
+}
+
+.mountain-header-side .mode-strip {
+  @apply mt-0;
+}
+
+.mountain-header-side .mode-strip-inner {
+  @apply px-3 py-2;
+}
+
+.mountain-header-side .mode-strip-main {
+  @apply gap-x-2 gap-y-0.5;
+}
+
 .mountain-layout {
   @apply gap-6;
 }
@@ -336,15 +352,15 @@ textarea.text-input {
 }
 
 .save-bar {
-  @apply gap-x-5 gap-y-3 py-3.5 pl-5 pr-4 rounded-2xl border-[1.5px];
+  @apply gap-2 p-2 rounded-2xl border-[1.5px] max-w-full;
 }
 
 .save-bar-text {
-  @apply gap-0.5;
+  @apply gap-0.5 mt-2 p-3 rounded-xl border w-64;
 }
 
 .save-bar-actions {
-  @apply gap-2;
+  @apply gap-2 flex-wrap justify-end;
 }
 
 .rating-list {
@@ -510,4 +526,21 @@ textarea.text-input {
 
 .claim-errors {
   @apply px-4 py-3 rounded-xl;
+}
+
+/* Charts: a bar chart grows a row per candidate. */
+.chart {
+  @apply w-full h-72;
+}
+
+.chart-bars {
+  height: calc(var(--chart-rows, 4) * 40px + 16px);
+}
+
+.baseline-sweep-slider {
+  @apply w-full h-9;
+}
+
+.baseline-sweep {
+  @apply gap-0.5;
 }

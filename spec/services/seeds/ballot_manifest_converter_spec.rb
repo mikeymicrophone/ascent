@@ -18,10 +18,30 @@ RSpec.describe Seeds::BallotManifestConverter do
     path.write(contents)
   end
 
+  # The catalog's coded Positions, which every converted office names by code.
+  def write_foundation
+    positions = {
+      "GOVERNOR" => "Governor", "REPRESENTATIVE" => "Representative", "ATTORNEY_GENERAL" => "Attorney General",
+      "STATE_SENATOR" => "State Senator", "APPELLATE_JUDGE" => "Appellate Judge", "SHERIFF" => "Sheriff",
+      "TOWN_SUPERVISOR" => "Town Supervisor", "TOWN_CLERK" => "Town Clerk", "COUNCIL_MEMBER" => "Council Member",
+      "MAYOR" => "Mayor", "SCHOOL_BOARD_MEMBER" => "School Board Member"
+    }.map { |suffix, title| { "type" => "Position", "code" => "POSITION-#{suffix}", "attributes" => { "title" => title } } }
+    write("manifests/foundation.yml", {
+      "format" => "micharisma-seeds/v1", "namespace" => "MIC", "catalog" => "ASC",
+      "records" => [ { "type" => "Country", "code" => "COUNTRY-USA", "attributes" => { "code" => "US", "name" => "United States" } } ] + positions
+    }.to_yaml)
+  end
+
+  def write_offices(offices)
+    write("conversion/2026/new_york/offices.yml", offices.to_yaml)
+  end
+
   before do
     FileUtils.rm_rf(root)
     write("us_states.yml", { "states" => [ { "code" => "NY", "name" => "New York", "country_code" => "US" } ] }.to_yaml)
-    write("positions.yml", [ { "title" => "Sheriff", "description" => "The chief law enforcement officer for a county.", "branch" => "executive" } ].to_yaml)
+    write_foundation
+    write_offices("Sheriff" => "POSITION-SHERIFF", "Town Supervisor" => "POSITION-TOWN_SUPERVISOR", "Town Clerk" => "POSITION-TOWN_CLERK",
+                  "School Board - Special" => "POSITION-SCHOOL_BOARD_MEMBER")
     write("races/2026/new_york/state/governor.yml", [
       row("Governor", "", "Kathy Hochul", "Democratic"),
       row("Governor", "", "Kathy Hochul", "Working Families")
@@ -123,15 +143,57 @@ RSpec.describe Seeds::BallotManifestConverter do
 
     aurora = Municipality.find_by!(name: "Aurora")
     expect(aurora.county.name).to eq("Erie County")
-    supervisor = Race.find_by!(entity_code: "RACE-USA-NY-AURORA-TOWN_SUPERVISOR-TOWN_OF_AURORA-2026_GENERAL")
-    expect(supervisor.office).to have_attributes(seat_code: "TOWN_OF_AURORA", jurisdiction: aurora.jurisdiction)
+    # The district column prints the town itself, so it names no seat.
+    supervisor = Race.find_by!(entity_code: "RACE-USA-NY-AURORA-TOWN_SUPERVISOR-2026_GENERAL")
+    expect(supervisor.office).to have_attributes(seat_code: nil, jurisdiction: aurora.jurisdiction)
     expect(supervisor.candidacies.sole.ballot_lines).to be_empty
 
-    school = Race.find_by!(entity_code: "RACE-USA-NY-SCHOOL_BOARD_SPECIAL-ERIE_COUNTY_NIAGARA_COUNTY-SEAT_2-2026_SPECIAL")
-    expect(school.election).to have_attributes(kind: "special", name: "New York School Board - Special (Erie County, Niagara County) Special Election 2026")
-    expect(Position.find_by!(title: "School Board - Special").description).to eq("Office title as printed on 2026 official candidate lists.")
-    curated = YAML.load_file(root.join("manifests/foundation.yml")).fetch("records").find { |entry| entry.dig("attributes", "title") == "Sheriff" }
-    expect(curated["attributes"]).to eq("title" => "Sheriff")
+    school = Race.find_by!(entity_code: "RACE-USA-NY-SCHOOL_BOARD_MEMBER-ERIE_COUNTY_NIAGARA_COUNTY-SEAT_2-2026_SPECIAL")
+    expect(school.election).to have_attributes(kind: "special", name: "New York School Board Member (Erie County, Niagara County) Special Election 2026")
+    expect(school.office.position.entity_code).to eq("POSITION-SCHOOL_BOARD_MEMBER")
+    expect(Position.pluck(:title)).not_to include("School Board - Special")
+  end
+
+  it "shares one Position among titles that print a place, seat, or term" do
+    write_offices("SUPERVISOR-BEDFORD" => { "position" => "POSITION-TOWN_SUPERVISOR", "town" => "Town of Bedford" },
+                  "Ward 1 Council Member" => { "position" => "POSITION-COUNCIL_MEMBER", "seat" => "Ward 1" },
+                  "COUNCILMEMBER-UNEXP.-WARD 1" => { "position" => "POSITION-COUNCIL_MEMBER", "seat" => "Ward 1", "term" => "Unexpired Term" },
+                  "Mayor - Alberta" => "POSITION-MAYOR")
+    write("races/2026/new_york/local/westchester.yml", [
+      row("SUPERVISOR-BEDFORD", "", "Ann Lee", "Nonpartisan", level: "local", county: "Westchester"),
+      row("Ward 1 Council Member", "Town of Queensbury Ward 1", "Bo Diaz", "Nonpartisan", level: "local", county: "Warren", jurisdiction: "Town of Queensbury"),
+      row("COUNCILMEMBER-UNEXP.-WARD 1", "", "Cy Park", "Nonpartisan", level: "local", county: "Warren", jurisdiction: "Town of Queensbury"),
+      row("Mayor - Alberta", "Town of Alberta", "Di Fox", "Nonpartisan", level: "local", county: "BRUNSWICK COUNTY", jurisdiction: "BRUNSWICK COUNTY")
+    ].to_yaml)
+
+    convert
+    Year.create!(year: 2026, is_even_year: true, is_presidential_year: false)
+    Seeds::LibraryImporter.new.call(Dir.glob(root.join("manifests/**/*.yml").to_s))
+
+    expect(Race.find_by!(entity_code: "RACE-USA-NY-TOWN_OF_BEDFORD-TOWN_SUPERVISOR-2026_GENERAL").office.jurisdiction.name).to eq("Town of Bedford")
+    regular, unexpired = Race.where(entity_code: [ "RACE-USA-NY-TOWN_OF_QUEENSBURY-COUNCIL_MEMBER-WARD_1-2026_GENERAL",
+                                                   "RACE-USA-NY-TOWN_OF_QUEENSBURY-COUNCIL_MEMBER-WARD_1-UNEXPIRED_TERM-2026_GENERAL" ]).order(:entity_code)
+    expect(unexpired.office).to eq(regular.office)
+    # A town printed in the district column of a county-wide row is the office's place.
+    mayor = Race.find_by!(entity_code: "RACE-USA-NY-TOWN_OF_ALBERTA-MAYOR-2026_GENERAL").office
+    expect(mayor.jurisdiction.jurisdictionable).to have_attributes(name: "Town of Alberta", county: County.find_by!(name: "Brunswick County"))
+    expect(Office.joins(:position).where(positions: { title: "Council Member" }).count).to eq(1)
+  end
+
+  it "refuses a local title offices.yml leaves out" do
+    write("races/2026/new_york/local/erie.yml", [ row("Dog Catcher", "", "Ann Lee", "Nonpartisan", level: "local", county: "Erie") ].to_yaml)
+
+    expect { convert }.to raise_error(Seeds::BallotManifestConverter::Error, /"Dog Catcher" is missing from .*offices.yml/)
+  end
+
+  it "refuses to merge two printed contests into one race" do
+    write_offices("Council Member" => "POSITION-COUNCIL_MEMBER", "Council Member (to fill vacancy)" => "POSITION-COUNCIL_MEMBER")
+    write("races/2026/new_york/local/erie.yml", [
+      row("Council Member", "", "Ann Lee", "Nonpartisan", level: "local", county: "Erie", jurisdiction: "Aurora"),
+      row("Council Member (to fill vacancy)", "", "Bo Diaz", "Nonpartisan", level: "local", county: "Erie", jurisdiction: "Aurora")
+    ].to_yaml)
+
+    expect { convert }.to raise_error(Seeds::BallotManifestConverter::Error, /would share RACE-USA-NY-AURORA-COUNCIL_MEMBER-2026_GENERAL; give each its own seat or term/)
   end
 
   # Connecticut's towns belong to planning regions rather than the counties its ballots still print.
@@ -158,7 +220,7 @@ RSpec.describe Seeds::BallotManifestConverter do
       expect(Municipality.find_by!(name: "Holland").county.entity_code).to eq("COUNTY-USA-NY-SOUTHTOWNS")
       expect(County.where(name: "Erie County")).not_to exist
       expect(root.join("manifests/2026/new_york/local/southtowns.yml")).to exist
-      expect(Race.find_by!(entity_code: "RACE-USA-NY-AURORA-TOWN_SUPERVISOR-TOWN_OF_AURORA-2026_GENERAL")).to be_present
+      expect(Race.find_by!(entity_code: "RACE-USA-NY-AURORA-TOWN_SUPERVISOR-2026_GENERAL")).to be_present
     end
 
     it "refuses a town the list leaves out" do

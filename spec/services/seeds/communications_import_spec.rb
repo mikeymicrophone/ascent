@@ -32,6 +32,35 @@ RSpec.describe "Importing communications and stance evidence" do
     expect(importer.report[:features_added]).to be_empty
   end
 
+  it "attaches worker account submissions in JSON and YAML to existing people and candidacies" do
+    importer = Seeds::LibraryImporter.new
+    importer.call([ town_hall ])
+    person = Person.find_by!(username: "example_avery_ny_ed_1")
+    candidacy = person.candidacies.sole
+    template = Rails.root.join("db/seeds/ascent_seed_data/examples/candidate_accounts.json")
+    document = JSON.parse(template.read)
+    document.fetch("records").zip([ person, candidacy ]).each do |record, owner|
+      record.fetch("references")["owner"] = owner.entity_code
+    end
+
+    Dir.mktmpdir("candidate-accounts") do |directory|
+      paths = %w[json yml].map do |extension|
+        path = File.join(directory, "accounts.#{extension}")
+        File.write(path, extension == "json" ? JSON.generate(document) : YAML.dump(document))
+        path
+      end
+      expect { importer.call([ paths.first ]) }.to change(Channel, :count).by(2)
+      document.fetch("records").zip([ person, candidacy ]).each do |record, owner|
+        channel = Channel.find_by!(entity_code: record.fetch("code"))
+        expect(channel).to have_attributes(owner: owner, official: true, url: record.dig("attributes", "url"))
+      end
+      expect { importer.call(paths) }.not_to change(Channel, :count)
+      expect(importer.report[:conflicts]).to be_empty
+      expect(Person.count).to eq(1)
+      expect(Candidacy.count).to eq(1)
+    end
+  end
+
   # A platform and handle name one account, so a second code for it has to be declared as an alias.
   it "refuses a second code for the same account" do
     Seeds::LibraryImporter.new.call([ town_hall ])

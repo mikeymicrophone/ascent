@@ -36,7 +36,7 @@ The brand colors live in `app/assets/tailwind/variables/colors.css`. Every other
 
 **Contrast.** Ink, ink-soft and link pass 4.5:1 on every light ground above (6.1 to 14.0). Summit-deep passes on all of them too (4.7 to 6.1). **Summit gold itself is only about 3:1**, so use it for borders, icons, the check and large text, never for body text; marked labels use summit-deep.
 
-**Status and entity colors** still come straight from Tailwind's palette (green for active, blue for upcoming, amber for historical, and so on, plus a color per entity type such as country, state or office). They predate the brand and are the first thing a redesign should bring into it.
+**Status and entity colors** now come from the brand too. `StatusChip` outlines a status in basalt, fills the open and in-force ones (active, enacted) with summit and the finished ones (completed) with basalt, and strikes through the ended ones (cancelled, withdrawn, repealed). Each kind of record is told apart by its Lucide icon rather than a color, and the old per-entity colors are a single slate on contour. No role variable points at Tailwind's palette any more.
 
 **Parties are not colors.** Ascent is cross-partisan. Do not color candidates or parties red and blue; a party or ballot label is text in a neutral chip.
 

@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Ascent" %></title>
+    <title><%= content_for(:title) || @public_mountain&.title || "Ascent" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <meta name="view-transition" content="same-origin">
 
     <%= yield :head %>
+    <% if @public_mountain %>
+      <meta property="og:type" content="website">
+      <meta property="og:site_name" content="Ascent">
+      <meta property="og:title" content="<%= @public_mountain.title %>">
+      <meta property="og:description" content="<%= @public_mountain.description %>">
+      <meta property="og:url" content="<%= public_mountain_url(@public_mountain) %>">
+      <meta property="og:image" content="<%= public_mountain_url(@public_mountain, format: :png, v: @public_mountain.updated_at.to_f) %>">
+      <meta property="og:image:type" content="image/png">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+      <meta property="og:image:alt" content="<%= @public_mountain.description %>">
+      <meta name="twitter:card" content="summary_large_image">
+      <link rel="canonical" href="<%= public_mountain_url(@public_mountain) %>">
+    <% end %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
@@ -28,11 +43,22 @@
       <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <% end %>
     <%= javascript_importmap_tags %>
+    <%= umami_tracker %>
   </head>
 
-  <body data-controller="butterfly" data-butterfly-level-value="<%= controller_name %>" data-butterfly-enabled-value="true" data-butterfly-log-level-value="debug">
-    <%= render Views::Components::Navigation.new %>
-    <main class="main-content">
+  <body class="<%= "auth-page" if content_for?(:authentication_page) %>" data-controller="butterfly" data-butterfly-level-value="<%= controller_name %>" data-butterfly-enabled-value="<%= !content_for?(:authentication_page) %>" data-butterfly-log-level-value="debug">
+    <% if content_for?(:authentication_page) %>
+      <header class="auth-header">
+        <%= link_to root_path, class: "auth-product", aria: { label: "Ascent home" } do %>
+          <%= render Views::Components::BrandMark.new %>
+          <span>Ascent</span>
+        <% end %>
+        <%= link_to "Back to Ascent", root_path, class: "auth-back" %>
+      </header>
+    <% else %>
+      <%= render Views::Components::Navigation.new %>
+    <% end %>
+    <main class="<%= content_for?(:authentication_page) ? "auth-main" : "main-content" %>" id="main-content">
       <%= render Views::Components::FlashMessages.new %>
       <%= yield %>
     </main>

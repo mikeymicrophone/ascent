@@ -3,8 +3,11 @@ class IssuesController < ApplicationController
 
   # GET /issues or /issues.json
   def index
-    @pagy, @issues = pagy(Issue.includes(:topic).by_topic(params[:topic_id]).visible_to(current_voter))
-    render Views::Issues::IndexView.new(issues: @issues, pagy: @pagy, parent: filtering_topic)
+    issues = Issue.includes(:topic).by_topic(params[:topic_id] || filters["topic_id"]).visible_to(current_voter).order(:title)
+    issues = issues.titled_like(filters["q"]) if filters["q"].present?
+    @pagy, @issues = pagy(issues)
+    render Views::Issues::IndexView.new(issues: @issues, pagy: @pagy, parent: filtering_topic, filters: filters, topics: Topic.order(:title),
+      approach_counts: Approach.where(issue: @issues).group(:issue_id).count)
   end
 
   # GET /issues/1 or /issues/1.json
@@ -62,6 +65,11 @@ class IssuesController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q, :topic_id).to_h
+  end
+
     def filtering_topic
       Topic.find(params[:topic_id]) if params[:topic_id]
     end

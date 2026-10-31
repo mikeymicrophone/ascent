@@ -14,3 +14,23 @@
   outline: 3px solid var(--brand-rope);
   outline-offset: 2px;
 }
+
+.place-chip-link,
+.place-race-link {
+  @apply transition-colors;
+}
+
+.place-chip-link:hover {
+  background-color: var(--brand-summit-wash);
+  border-color: var(--brand-summit-deep);
+}
+
+.place-race-link:hover {
+  color: var(--brand-rope-deep);
+}
+
+.place-chip-link:focus-visible,
+.place-race-link:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
+}

@@ -4,6 +4,7 @@ class PagesController < ApplicationController
 
   def home
     render Views::Pages::HomeView.new(
+      page: PageContent.load("home"),
       active_races: active_races,
       metrics: project_metrics
     )

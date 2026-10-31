@@ -70,4 +70,13 @@ RSpec.describe "Google sign-in", type: :request do
     expect(response).to redirect_to(new_voter_registration_path)
     expect(Voter.find_by!(email: "rosa.delgado@example.com").uid).to be_nil
   end
+
+  it "returns to the styled login page when Google authorization fails" do
+    expect { sign_in_with(:access_denied) }.not_to change(Voter, :count)
+
+    expect(response).to redirect_to(new_voter_session_path)
+    follow_redirect!
+    expect(response.body).to include("Google sign-in did not finish. Please try again.")
+    expect(Nokogiri::HTML(response.body).at_css(".auth-shell h1").text).to eq("Log in")
+  end
 end

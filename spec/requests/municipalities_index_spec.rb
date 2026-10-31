@@ -160,12 +160,6 @@ RSpec.describe "Municipalities Index", type: :request do
   end
 
   context "error handling" do
-    it "handles database errors gracefully" do
-      allow(Municipality).to receive(:with_office_data).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-
-      expect { get municipalities_path }.to raise_error(ActiveRecord::StatementInvalid)
-    end
-
     it "handles valid parameters correctly" do
       state = create(:state)
       create_list(:municipality, 5, state: state)

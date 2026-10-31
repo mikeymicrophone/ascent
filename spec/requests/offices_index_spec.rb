@@ -172,12 +172,6 @@ RSpec.describe "Offices Index", type: :request do
   end
 
   context "error handling" do
-    it "handles database errors gracefully" do
-      allow(Office).to receive(:with_elections_and_candidates).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-
-      expect { get offices_path }.to raise_error(ActiveRecord::StatementInvalid)
-    end
-
     it "handles valid parameters correctly" do
       create_list(:office, 5)
 

@@ -1,40 +1,21 @@
+# frozen_string_literal: true
+
+# An area of concern's page body: its domain and scope, and the laws within it.
 class Views::Partials::AreaOfConcernPartial < Views::ApplicationView
-  def initialize(area_of_concern:)
-    @area_of_concern = area_of_concern
-  end
+  prop :area_of_concern, AreaOfConcern
 
-  def view_template(&)
-    div(id: dom_id(@area_of_concern), class: "area_of_concern-partial") do
-      div(class: "partial-header") do
-        h3(class: "partial-title") { @area_of_concern.name }
+  def view_template
+    section(class: "place-section") do
+      section_heading("About this area")
+      p(class: "card-text") { @area_of_concern.description } if @area_of_concern.description.present?
+      dl(class: "place-facts-list") do
+        FactRow(label: "Domain") { @area_of_concern.policy_domain } if @area_of_concern.policy_domain.present?
+        FactRow(label: "Scope") { @area_of_concern.regulatory_scope } if @area_of_concern.regulatory_scope.present?
       end
-
-      div(class: "partial-content") do
-        if @area_of_concern.description.present?
-          div(class: "content-section") do
-            div(class: "content-description") { simple_format(@area_of_concern.description) }
-          end
-        end
-
-        div(class: "info-grid") do
-          div(class: "info-item") do
-            span(class: "info-label") { "Policy Domain" }
-            span(class: "info-value") { @area_of_concern.policy_domain }
-          end
-          div(class: "info-item") do
-            span(class: "info-label") { "Regulatory Scope" }
-            span(class: "info-value") { @area_of_concern.regulatory_scope }
-          end
-        end
-      end
-
-      expandable(@area_of_concern, :policies) do |policies|
-        div(class: "expandable-grid") do
-          policies.each do |policy|
-            div { link_to policy.name, policy }
-          end
-        end
-      end
+    end
+    policies = @area_of_concern.policies.includes(:governing_body).order(:title).to_a
+    RelatedList(heading: "Laws in this area", records: policies, total: policies.size) do |policy|
+      ListRow(record: policy, title: policy.title, meta: policy.governing_body&.name) { StatusChip(status: policy.status) }
     end
   end
 end

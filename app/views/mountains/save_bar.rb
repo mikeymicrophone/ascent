@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-# The sticky bar under the mountain: what saving would change, with Discard and Save mountain, or a
-# note that everything is saved and private.
 class Views::Mountains::SaveBar < Views::ApplicationView
   prop :mountain, Mountain
 
   def view_template
-    div(class: "save-bar #{@mountain.unsaved? ? "is-dirty" : "is-clean"}", id: "mountain-save-bar", role: "region",
+    div(class: "save-bar #{@mountain.unsaved? ? "is-dirty" : "is-clean"}", id: "mountain-save-bar", role: "region", tabindex: 0,
       aria: { label: "Save", live: "polite" }) do
       div(class: "save-bar-text") do
         strong(class: "save-bar-title") { bar_title }
@@ -31,7 +29,9 @@ class Views::Mountains::SaveBar < Views::ApplicationView
   end
 
   def detail
-    return "Your ratings and baseline are private to you." unless @mountain.unsaved?
+    unless @mountain.unsaved?
+      return @mountain.publication ? "Your saved ratings and baseline are public." : "Your ratings and baseline are private to you."
+    end
 
     [ changed_ratings_text, changed_baseline_text ].compact.join(" · ")
   end

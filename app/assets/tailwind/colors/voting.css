@@ -296,6 +296,7 @@
 }
 
 .view-toggle-button[aria-pressed="true"],
+.party-endorsements-toggle[aria-pressed="true"],
 .group-toggle-link.is-current {
   background-color: var(--brand-basalt);
   color: var(--brand-snow);
@@ -379,6 +380,11 @@
 
 .save-bar.is-dirty .save-bar-detail {
   color: var(--brand-mist);
+}
+
+.save-bar-text {
+  background-color: inherit;
+  border-color: inherit;
 }
 
 /* List view: a lime band above the baseline mark, scree below it. */
@@ -487,4 +493,8 @@
 .claim-errors {
   background-color: var(--brand-rope-wash);
   color: var(--brand-rope-deep);
+}
+
+.baseline-sweep-scale {
+  color: var(--brand-moss);
 }

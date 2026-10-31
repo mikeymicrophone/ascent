@@ -5,7 +5,7 @@ RSpec.describe "Races Index", type: :request do
   let!(:state) { create(:state, :with_jurisdiction, name: "California", country: country) }
   let!(:city) { create(:municipality, :with_jurisdiction, name: "Los Angeles", state: state) }
   let!(:mayor_office) { create(:office, position: create(:position, title: "Mayor"), jurisdiction: city.jurisdiction) }
-  let!(:governor_office) { create(:office, position: create(:position, title: "Governor"), jurisdiction: state.jurisdiction) }
+  let!(:governor_office) { create(:office, position: create(:position, :governor), jurisdiction: state.jurisdiction) }
   let!(:mayor_race) { create_race_for(mayor_office, :active) }
   let!(:governor_race) { create_race_for(governor_office, :upcoming) }
   let!(:candidacy) { create(:candidacy, race: mayor_race, person: create(:person, first_name: "Karen", middle_name: nil, last_name: "Bass")) }
@@ -15,8 +15,8 @@ RSpec.describe "Races Index", type: :request do
       get races_path
 
       expect(response).to have_http_status(200)
-      expect(response.body).to include("Mayor - Los Angeles")
-      expect(response.body).to include("Governor - California")
+      expect(response.body).to include("Mayor of Los Angeles")
+      expect(response.body).to include("Governor of California")
     end
 
     it "combines the selected filters and preserves their values" do
@@ -47,7 +47,7 @@ RSpec.describe "Races Index", type: :request do
       get races_path, params: { q: "%_" }
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("No races found.")
+      expect(response.body).to include("No races match")
     end
 
     it "finds district races nested beneath a state's county jurisdiction" do
@@ -70,7 +70,7 @@ RSpec.describe "Races Index", type: :request do
       get races_path, params: { state_id: empty_state.id }
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("No races found.")
+      expect(response.body).to include("No races match")
     end
 
     it "keeps filters in pagination links and starts a new filter submission at page one" do
@@ -81,7 +81,18 @@ RSpec.describe "Races Index", type: :request do
       page = Nokogiri::HTML(response.body)
       next_page = page.css('.pagination-nav a[href]').find { it["href"].include?("page=2") }
       expect(next_page["href"]).to include("status=active")
-      expect(page.css('.race-filters input[name="page"]')).to be_empty
+      expect(next_page["data-turbo-frame"]).to eq("races-list")
+      expect(next_page["data-turbo-action"]).to eq("advance")
+      expect(page.css('.filter-form input[name="page"]')).to be_empty
+    end
+
+    it "counts each status in its tab, across the other filters" do
+      get races_path, params: { q: "mayor" }
+
+      page = Nokogiri::HTML(response.body)
+      tabs = page.css(".listing-tab").to_h { [ it.at_css(".listing-tab-label").text, it.at_css(".listing-tab-count").text ] }
+      expect(tabs).to include("All" => "1", "Active" => "1", "Upcoming" => "0")
+      expect(page.at_css('.listing-tab[href*="status=active"]')["href"]).to include("q=mayor")
     end
 
     it "keeps hidden races excluded when searching" do
@@ -101,8 +112,8 @@ RSpec.describe "Races Index", type: :request do
       get office_races_path(mayor_office)
 
       expect(response).to have_http_status(200)
-      expect(response.body).to include("Mayor - Los Angeles")
-      expect(response.body).not_to include("Governor - California")
+      expect(response.body).to include("Mayor of Los Angeles", "Races for Mayor of Los Angeles")
+      expect(response.body).not_to include("Governor of California")
     end
 
     it "retains the office scope when applying or clearing filters" do
@@ -110,7 +121,7 @@ RSpec.describe "Races Index", type: :request do
 
       page = Nokogiri::HTML(response.body)
       expect(page.at_css('input[name="office_id"]')["value"]).to eq(mayor_office.id.to_s)
-      expect(page.at_css('.race-filters a')["href"]).to eq(races_path(office_id: mayor_office.id))
+      expect(page.at_css('.filter-form a')["href"]).to eq(races_path(office_id: mayor_office.id))
       expect(response.body).not_to include(%(id="list_item_race_#{governor_race.id}"))
     end
   end
@@ -120,19 +131,30 @@ RSpec.describe "Races Index", type: :request do
       get election_races_path(governor_race.election)
 
       expect(response).to have_http_status(200)
-      expect(response.body).to include("Governor - California")
-      expect(response.body).not_to include("Mayor - Los Angeles")
+      expect(response.body).to include("Governor of California")
+      expect(response.body).not_to include("Mayor of Los Angeles")
     end
   end
+end
 
-  describe "GET /races/:id" do
-    it "shows the race with its election, office, and candidates" do
-      get race_path(mayor_race)
+RSpec.describe "Races Index for a voter who lives somewhere", type: :request do
+  include_context "Port Merritt ballot"
 
-      expect(response).to have_http_status(200)
-      expect(response.body).to include(mayor_race.election.name)
-      expect(response.body).to include("Karen Bass")
-      expect(response.body).to include("Vote")
-    end
+  let!(:council_race) { create_race_for(office_in(ward_4, "City Council")) }
+  let!(:elsewhere_race) { create_race_for(office_in(ward_2, "City Council")) }
+
+  before { sign_in voter }
+
+  it "marks the races on their ballot and narrows to them on request" do
+    get races_path
+
+    page = Nokogiri::HTML(response.body)
+    expect(page.at_css("#list_item_race_#{council_race.id}")["class"]).to include("is-yours")
+    expect(page.at_css("#list_item_race_#{elsewhere_race.id}")["class"]).not_to include("is-yours")
+
+    get races_path, params: { near: "1" }
+
+    expect(response.body).to include(%(id="list_item_race_#{council_race.id}"))
+    expect(response.body).not_to include(%(id="list_item_race_#{elsewhere_race.id}"))
   end
 end

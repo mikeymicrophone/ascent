@@ -5,6 +5,8 @@ class Voter < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable,
          :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
+  has_many :ahoy_visits, class_name: "Ahoy::Visit", foreign_key: :user_id, dependent: :nullify
+  has_many :ahoy_events, class_name: "Ahoy::Event", foreign_key: :user_id, dependent: :nullify
   has_many :residences, dependent: :destroy
   has_many :jurisdictions, through: :residences
   has_many :ratings, dependent: :destroy
@@ -13,6 +15,7 @@ class Voter < ApplicationRecord
   has_many :engagements, dependent: :destroy
   has_many :voter_race_preferences, dependent: :delete_all
   has_many :mountain_drafts, dependent: :delete_all
+  has_many :public_mountains, dependent: :destroy
   has_many :created_elections, class_name: "Election", foreign_key: :creator_id, inverse_of: :creator, dependent: :nullify
 
   validates :first_name, presence: true

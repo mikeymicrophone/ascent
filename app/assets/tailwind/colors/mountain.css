@@ -1,5 +1,15 @@
 /* Mountain Interface Colors */
 
+.mountain-sharing {
+  background: var(--brand-snow);
+}
+
+.mountain-sharing,
+.public-mountain-ratings th,
+.public-mountain-ratings td {
+  border-color: var(--brand-mist);
+}
+
 .mountain-chart {
   background-color: var(--brand-snow);
   border-color: var(--brand-mist);
@@ -10,12 +20,60 @@
   border-color: var(--brand-mist);
 }
 
+.mountain-race-card {
+  background: linear-gradient(145deg, #fffdf8, var(--brand-snow) 65%);
+  color: var(--brand-basalt);
+  border-color: var(--brand-mist);
+  box-shadow: 0 2px 3px rgba(21, 32, 27, 0.03), 0 16px 32px -24px rgba(21, 32, 27, 0.3);
+}
+
+.mountain-race-card::before {
+  background: repeating-radial-gradient(ellipse at 100% 0%, transparent 0 19px, var(--brand-contour) 20px 21px, transparent 22px 38px);
+  opacity: 0.5;
+  mask-image: linear-gradient(225deg, #000, transparent 75%);
+}
+
+.mountain-race-title a {
+  color: inherit;
+}
+
+.mountain-race-election,
+.mountain-race-mode,
+.mountain-race-details {
+  color: var(--brand-moss);
+}
+
+.mountain-race-mode::before {
+  background: var(--brand-summit-deep);
+}
+
+.mountain-race-card[data-mode="mock"] .mountain-race-mode::before {
+  background: var(--brand-rope);
+}
+
+.mountain-race-year {
+  background: var(--brand-snow);
+  border-color: var(--brand-mist);
+  color: var(--brand-slate);
+}
+
+.mountain-race-details {
+  background: var(--brand-lichen);
+  border-color: var(--brand-contour);
+}
+
+.mountain-race-link {
+  background: var(--brand-basalt);
+  color: var(--brand-snow);
+}
+
 .candidate-column {
   @apply bg-transparent;
 }
 
+/* The column's line runs up its middle, through the peak and the name below it. */
 .rating-area {
-  border-color: var(--brand-contour);
+  background: linear-gradient(var(--brand-contour), var(--brand-contour)) center / 1px 100% no-repeat;
 }
 
 /* Rating dot states: a lime summit is approved; below the line stays scree. Never red and green. */
@@ -54,6 +112,7 @@
 }
 
 /* Parties are text, never colors. */
+.party-endorsements,
 .party-democratic,
 .party-republican,
 .party-independent,
@@ -95,4 +154,43 @@
   @apply bg-white;
   @apply border-gray-200;
   @apply text-gray-700;
+}
+
+/* Peaks: scree below the line, a lime summit above it, and the rope drawn across. */
+.peak-body,
+.peak-summit,
+.peak-ridge,
+.peak-rope {
+  vector-effect: non-scaling-stroke;
+}
+
+.peak-body {
+  fill: var(--brand-scree);
+  stroke: none;
+}
+
+.peak-ridge {
+  fill: none;
+  stroke: var(--brand-scree-edge);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.candidate-column.off-ballot .peak-body {
+  fill: var(--brand-hatch);
+}
+
+.candidate-column.off-ballot .peak-ridge {
+  stroke-dasharray: 5 4;
+}
+
+.peak-summit {
+  fill: var(--brand-summit);
+  stroke: none;
+}
+
+.peak-rope {
+  fill: none;
+  stroke: var(--brand-rope);
+  stroke-width: 2;
 }

@@ -16,7 +16,7 @@ RSpec.describe "Mountain drafts", type: :request do
     expect(response).to have_http_status(:ok)
     expect(response.parsed_body).to include(
       "progress" => "started", "baseline" => 280, "approved_candidacy_ids" => [ okafor.id ],
-      "unsaved_changes" => { "candidacy_ids" => [ okafor.id, lindqvist.id ], "baseline" => [ nil, 280 ] },
+      "unsaved_changes" => { "candidacy_ids" => [ okafor.id, lindqvist.id ], "baseline" => [ 200, 280 ] },
       "baseline_changes_left_today" => 5
     )
     expect(Rating.count).to eq(0)
@@ -28,13 +28,24 @@ RSpec.describe "Mountain drafts", type: :request do
 
     expect(response.media_type).to eq("text/vnd.turbo-stream.html")
     expect(response.body).to include('target="your-vote"', 'target="baseline-allowance"', 'target="mountain-save-bar"')
-    expect(response.body).to include("2 unsaved changes", "Ratings: Dana Okafor", "Baseline unset → 280", "Save mountain")
+    expect(response.body).to include("2 unsaved changes", "Ratings: Dana Okafor", "Baseline 200 → 280", "Save mountain")
   end
 
   it "shows the mountain with its mode strip, Your vote panel and list view" do
     get edit_mountain_path(race)
 
     expect(response.body).to include("Pretend vote", "Your vote", "All changes saved", "Rate Dana Okafor", "Follow race")
+    page = Nokogiri::HTML(response.body)
+    notice = page.at_css(".race-header .mode-pretend")
+    expect(notice.at_css(".mode-strip-text").text).to eq("counted separately")
+    expect(notice.css("a, button")).to be_empty
+    expect(page.at_css("input[name='baseline']")["value"]).to eq("200")
+    expect(page.css("[data-role='baseline-slider']").map { it["value"] }).to eq([ "200", "200" ])
+    expect(page.at_css(".baseline-label").text).to eq("Baseline: 200")
+    expect(page.css(".no-rating")).to be_empty
+    expect(page.at_css(".not-approved").text).not_to include("not rated")
+    expect(page.at_css(".mountain-aside #mountain-save-bar")).to be_present
+    expect(page.at_css(".mountain-footer .party-endorsements-toggle")).to be_present
   end
 
   it "saves the draft into the voter's mountain" do
@@ -53,7 +64,7 @@ RSpec.describe "Mountain drafts", type: :request do
 
     delete draft_mountain_path(race), as: :json
 
-    expect(response.parsed_body).to include("progress" => "not_started", "baseline" => nil)
+    expect(response.parsed_body).to include("progress" => "not_started", "baseline" => 200)
     expect(MountainDraft.count).to eq(0)
   end
 

@@ -16,6 +16,7 @@ class Jurisdiction < ApplicationRecord
 
   validates :jurisdictionable_id, uniqueness: { scope: :jurisdictionable_type }
   validate :parent_does_not_create_cycle
+  validate :county_fips_matches
 
   delegate :name, to: :jurisdictionable
 
@@ -103,6 +104,12 @@ class Jurisdiction < ApplicationRecord
   end
 
   private
+
+  def county_fips_matches
+    if jurisdictionable.is_a?(County) && jurisdictionable.fips && census_geoid && jurisdictionable.fips != census_geoid
+      errors.add(:census_geoid, "must match the county's FIPS")
+    end
+  end
 
   def parent_does_not_create_cycle
     ancestor = parent

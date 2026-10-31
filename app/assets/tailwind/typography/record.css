@@ -1,0 +1,77 @@
+.profile-portrait-placeholder {
+  @apply font-['Bricolage_Grotesque'] text-3xl sm:text-6xl font-bold;
+}
+
+.profile-portrait-credit {
+  @apply text-xs leading-snug;
+}
+
+.profile-channel .text-link {
+  overflow-wrap: anywhere;
+}
+
+.communication-title {
+  @apply font-['Bricolage_Grotesque'] text-xl font-bold leading-snug;
+}
+
+.communication-play {
+  @apply text-base font-semibold;
+}
+
+.communication-play-provider {
+  @apply text-xs font-normal;
+}
+
+.stance-group-title {
+  @apply font-['Martian_Mono'] text-xs font-semibold uppercase tracking-[0.08em];
+}
+
+.communication-link {
+  @apply text-[15px] font-semibold;
+}
+
+.communication-meta,
+.privacy-line {
+  @apply text-sm;
+}
+
+.candidacy-ratings .stat-value {
+  @apply text-xl sm:text-3xl leading-none;
+  font-variant-numeric: tabular-nums;
+}
+
+.candidacy-ratings .stat-label {
+  @apply font-['Martian_Mono'] text-xs font-semibold tracking-[0.06em];
+}
+
+.row-badge-priority {
+  text-transform: uppercase;
+}
+
+.policy-path-label {
+  @apply font-['Martian_Mono'] text-[10.5px] font-semibold uppercase tracking-[0.08em];
+}
+
+.policy-path-name {
+  @apply font-['Bricolage_Grotesque'] text-[15px] font-semibold leading-snug no-underline truncate;
+}
+
+.policy-path-hint {
+  @apply font-normal italic;
+}
+
+.issue-card-title {
+  @apply font-['Bricolage_Grotesque'] text-lg font-bold leading-snug;
+}
+
+.issue-card-approaches {
+  @apply text-sm;
+}
+
+.evidence-quote {
+  @apply text-[15px] italic leading-snug;
+}
+
+.code-text {
+  @apply font-['Martian_Mono'] text-[13px] leading-relaxed;
+}

@@ -22,6 +22,16 @@ RSpec.describe "Campaign communications" do
   end
 
   describe Communication do
+    it "recognizes provider URLs without accepting lookalike hosts or arbitrary embeds" do
+      %w[https://youtu.be/M7lc1UVf-VE https://www.youtube.com/watch?v=M7lc1UVf-VE https://youtube.com/shorts/M7lc1UVf-VE].each do |url|
+        expect(build(:communication, url: url).embed_url).to start_with("https://www.youtube-nocookie.com/embed/M7lc1UVf-VE?")
+      end
+      expect(build(:communication, url: "https://vimeo.com/123456").embed_url).to eq("https://player.vimeo.com/video/123456?autoplay=1")
+      expect(build(:communication, url: "https://youtube.com.example.org/watch?v=M7lc1UVf-VE").embed_url).to be_nil
+      expect(build(:communication, url: "https://youtube.com/embed/not-an-id").embed_url).to be_nil
+      expect(build(:communication, url: "https://youtu.be/M7lc1UVf-VE", availability: "removed").embed_url).to be_nil
+    end
+
     it "requires a web address and a known kind" do
       expect(build(:communication, url: "example.com/video")).not_to be_valid
       expect(build(:communication, kind: "podcast")).not_to be_valid

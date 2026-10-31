@@ -1,0 +1,108 @@
+.profile-portrait-placeholder,
+.communication-play {
+  background-color: var(--brand-lichen);
+  color: var(--brand-basalt);
+}
+
+.profile-portrait-credit,
+.communication-play-provider,
+.communication-unavailable {
+  color: var(--brand-slate);
+}
+
+.profile-channel,
+.communication-card {
+  border-color: var(--brand-mist);
+}
+
+.communication-card {
+  background-color: var(--brand-snow);
+}
+
+.stance-group-title,
+.communication-meta,
+.privacy-line,
+.candidacy-ratings .stat-label {
+  color: var(--brand-slate);
+}
+
+.communication-item {
+  border-color: var(--brand-contour);
+}
+
+.candidacy-ratings .stat-item {
+  background-color: var(--brand-lichen);
+}
+
+.candidacy-ratings .stat-value {
+  color: var(--brand-basalt);
+}
+
+.row-badge-priority {
+  border-color: var(--brand-basalt);
+  color: var(--brand-basalt);
+}
+
+.policy-path-step {
+  background-color: var(--brand-snow);
+  border-color: var(--brand-mist);
+}
+
+.policy-path-step.is-current {
+  background-color: var(--brand-basalt);
+  border-color: var(--brand-basalt);
+}
+
+.policy-path-step.is-below {
+  background-color: transparent;
+  border-style: dashed;
+}
+
+.policy-path-label,
+.policy-path-hint {
+  color: var(--brand-slate);
+}
+
+.policy-path-name {
+  color: var(--brand-basalt);
+}
+
+.policy-path-step.is-current .policy-path-label {
+  color: var(--brand-summit);
+}
+
+.policy-path-step.is-current .policy-path-name {
+  color: var(--brand-snow);
+}
+
+.issue-card {
+  background-color: var(--brand-lichen);
+  border-color: var(--brand-contour);
+}
+
+.issue-card-approaches .icon {
+  color: var(--brand-slate);
+}
+
+.evidence-quote {
+  border-color: var(--brand-summit);
+  color: var(--brand-basalt);
+}
+
+.code-text {
+  color: var(--brand-basalt);
+}
+
+/* Statuses of laws and sections of code, beside the race statuses. */
+.race-status-enacted {
+  background-color: var(--brand-summit);
+}
+
+.race-status-repealed,
+.race-status-superseded,
+.race-status-withdrawn,
+.race-status-disqualified {
+  border-color: var(--brand-pebble);
+  color: var(--brand-moss);
+  text-decoration: line-through;
+}

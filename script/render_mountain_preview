@@ -1,0 +1,6 @@
+require "vips"
+
+# This process reads only Ascent's generated SVG. Rails' upload decoder restrictions stay in its parent.
+Vips.block("VipsForeignLoadSvg", false)
+image = Vips::Image.svgload_buffer(STDIN.read)
+STDOUT.binmode.write(image.write_to_buffer(".png"))

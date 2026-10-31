@@ -1,0 +1,101 @@
+/* Record pages for people, candidacies and offices: stances by topic, communications, rating totals. */
+
+.profile-image-gallery {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+}
+
+.profile-image-gallery .profile-portrait-image {
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+}
+
+.profile-header {
+  @apply grid items-start;
+  grid-template-columns: minmax(0, 1fr) 12rem;
+}
+
+.profile-portrait-image,
+.profile-portrait-placeholder {
+  @apply w-full object-cover;
+  aspect-ratio: 4 / 5;
+}
+
+.profile-portrait-placeholder {
+  @apply flex items-center justify-center;
+}
+
+.profile-channel-list,
+.profile-channel,
+.communication-card-body {
+  @apply flex flex-col;
+}
+
+.communication-gallery {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+}
+
+.communication-card {
+  @apply min-w-0 overflow-hidden;
+}
+
+.communication-player,
+.communication-play {
+  @apply block w-full;
+  aspect-ratio: 16 / 9;
+}
+
+.communication-play {
+  @apply flex flex-col items-center justify-center;
+}
+
+.stance-groups,
+.stance-group,
+.communication-list,
+.communication-item {
+  @apply flex flex-col;
+}
+
+.stance-group-title,
+.privacy-line {
+  @apply flex items-center;
+}
+
+.candidacy-ratings .stat-item {
+  @apply flex flex-col items-start;
+}
+
+/* The path from a topic to the positions on it. */
+.policy-path-steps {
+  @apply grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.policy-path-step {
+  @apply relative flex flex-col min-w-0;
+}
+
+.issue-cards {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+}
+
+.issue-card,
+.issue-card-approaches {
+  @apply flex flex-col;
+}
+
+.issue-card-approaches li {
+  @apply flex items-center;
+}
+
+@media (max-width: 640px) {
+  .profile-header {
+    grid-template-columns: minmax(0, 1fr) 5rem;
+  }
+
+  .policy-path-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

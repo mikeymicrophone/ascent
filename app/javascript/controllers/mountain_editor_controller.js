@@ -1,8 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Interactive mountain ratings: drag within a candidate column, or slide a row in the list view, to
-// set 0–500, and drag or nudge the baseline to set the approval threshold. Every change autosaves to
-// the server draft, which answers with fresh Your vote, allowance and save bar panels.
+// set 0–500, and drag, slide or nudge the baseline to set the approval threshold. The mountain-range
+// controller on the chart draws and animates what changes. Every change autosaves to the server draft,
+// which answers with fresh Your vote, allowance and save bar panels.
 export default class extends Controller {
   static targets = ["form"]
   static values = {
@@ -36,6 +37,12 @@ export default class extends Controller {
     this.setView(event.params.view)
   }
 
+  togglePartyEndorsements(event) {
+    const visible = this.element.dataset.partyEndorsements !== "true"
+    this.element.dataset.partyEndorsements = String(visible)
+    event.currentTarget.setAttribute("aria-pressed", String(visible))
+  }
+
   // Phones get the list: sliders are easier to thumb than columns.
   isPhoneWidth() {
     return window.matchMedia("(max-width: 640px)").matches
@@ -58,8 +65,8 @@ export default class extends Controller {
   }
 
   nudgeBaseline(event) {
-    const current = this.baselineValue() ?? 250
-    this.applyBaselineUpdate(Math.max(0, Math.min(500, current + event.params.step)))
+    const current = this.baselineValue() ?? 200
+    this.applyBaselineUpdate(Math.max(0, Math.min(500, current + event.params.step)), { glide: true })
   }
 
   // Waits for any pending autosave so Save mountain publishes the latest edits.
@@ -239,10 +246,11 @@ export default class extends Controller {
     this.updateColumnDisplay(column, ratingValue)
     this.updateListRow(column.dataset.candidacyId, ratingValue)
     this.updateApprovalStates()
+    this.announceToChart("rated", { candidacyId: column.dataset.candidacyId, rating: ratingValue, glide: false })
     this.scheduleAutosave()
   }
 
-  applyBaselineUpdate(ratingValue) {
+  applyBaselineUpdate(ratingValue, { glide = false } = {}) {
     const input = this.baselineInput()
     if (!input) return
 
@@ -250,7 +258,13 @@ export default class extends Controller {
     this.updateBaselineIndicator(ratingValue)
     this.updateBaselineDisplays(ratingValue)
     this.updateApprovalStates()
+    this.announceToChart("baseline-moved", { baseline: ratingValue, glide })
     this.scheduleAutosave()
+  }
+
+  announceToChart(name, detail) {
+    const chart = this.chartElement()
+    if (chart) this.dispatch(name, { target: chart, detail })
   }
 
   updateListRow(candidacyId, ratingValue) {
@@ -265,8 +279,9 @@ export default class extends Controller {
     this.element.querySelectorAll("[data-role='baseline-value']").forEach((element) => {
       element.textContent = ratingValue
     })
-    const slider = this.element.querySelector("[data-role='baseline-slider']")
-    if (slider) slider.value = ratingValue
+    this.element.querySelectorAll("[data-role='baseline-slider']").forEach((slider) => {
+      slider.value = ratingValue
+    })
     const list = this.element.querySelector(".rating-list")
     if (list) list.style.setProperty("--baseline", `${ratingValue / 5}%`)
   }
@@ -274,20 +289,14 @@ export default class extends Controller {
   updateColumnDisplay(column, ratingValue) {
     const ratingDot = column.querySelector("[data-role='rating-dot']")
     if (ratingDot) {
-      ratingDot.style.top = `${this.positionFromRating(ratingValue)}px`
       ratingDot.title = `Rating: ${ratingValue} (${this.approvalLabel(ratingValue)})`
     }
 
     const ratingValueElement = column.querySelector("[data-role='rating-value']")
-    const noRatingElement = column.querySelector("[data-role='no-rating']")
 
     if (ratingValueElement) {
       ratingValueElement.textContent = `Rating: ${ratingValue}`
       ratingValueElement.hidden = false
-    }
-
-    if (noRatingElement) {
-      noRatingElement.hidden = true
     }
   }
 
@@ -295,7 +304,6 @@ export default class extends Controller {
     const baselineIndicator = this.baselineIndicator()
     if (!baselineIndicator) return
 
-    baselineIndicator.style.top = `${this.positionFromRating(ratingValue)}px`
     baselineIndicator.title = `Approval Baseline: ${ratingValue}`
     baselineIndicator.dataset.baselineSet = "true"
 
@@ -364,11 +372,6 @@ export default class extends Controller {
     const clampedY = Math.max(0, Math.min(relativeY, height))
     const rating = Math.round((1 - clampedY / height) * 500)
     return Math.max(0, Math.min(rating, 500))
-  }
-
-  positionFromRating(ratingValue) {
-    const height = this.maxHeightValue || 320
-    return Math.round(height - (ratingValue / 500.0) * height)
   }
 
   chartElement() {

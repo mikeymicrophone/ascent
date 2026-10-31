@@ -1,7 +1,14 @@
 /* Mountain Interface States & Interactions */
 
 .rating-dot {
-  @apply transition-all duration-200;
+  transition-property: background-color, border-color, box-shadow;
+  @apply duration-200;
+}
+
+/* Until the mountain-range controller has drawn the range, hide what it is about to move. */
+.mountain-chart[data-controller~="mountain-range"]:not([data-range-ready]) .mountain-peak,
+.mountain-chart[data-controller~="mountain-range"]:not([data-range-ready]) .rating-dot {
+  visibility: hidden;
 }
 
 .rating-dot:hover {
@@ -18,6 +25,58 @@
 .election-card:hover {
   @apply shadow-md;
   @apply border-gray-300;
+}
+
+.mountain-race-card {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.mountain-race-card:hover,
+.mountain-race-card:focus-within {
+  border-color: var(--brand-pebble);
+  box-shadow: 0 4px 6px rgba(21, 32, 27, 0.04), 0 20px 40px -20px rgba(21, 32, 27, 0.24);
+}
+
+.mountain-race-title a:hover {
+  color: var(--brand-rope-deep);
+}
+
+.mountain-race-link,
+.mountain-race-link .icon {
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.mountain-race-link:hover {
+  background: var(--brand-summit);
+  color: var(--brand-basalt);
+}
+
+.mountain-race-link:hover .icon {
+  transform: translate(2px, -2px);
+}
+
+.mountain-race-title a:focus-visible,
+.mountain-race-link:focus-visible {
+  outline: 2px solid var(--brand-rope-deep);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mountain-race-card:hover {
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mountain-race-card,
+  .mountain-race-link,
+  .mountain-race-link .icon {
+    transition: none;
+  }
+
+  .mountain-race-link:hover .icon {
+    transform: none;
+  }
 }
 
 .btn-primary:hover {
@@ -90,10 +149,6 @@
 
 .baseline-label.editable:hover {
   @apply shadow-md;
-}
-
-.rating-area.is-dragging {
-  @apply bg-gray-50;
 }
 
 .mountain-chart.baseline-dragging .baseline-line {

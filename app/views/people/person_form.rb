@@ -6,5 +6,6 @@ class Views::People::PersonForm < Views::Components::Forms::Base
     row field(:email).text
     row field(:birth_date).date
     row field(:bio).textarea(rows: 4)
+    ProfileImageFields(record: model)
   end
 end

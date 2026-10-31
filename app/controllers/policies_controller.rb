@@ -2,8 +2,11 @@ class PoliciesController < ApplicationController
   before_action :set_policy, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @policies = pagy(Policy.by_governing_body(params[:governing_body_id]))
-    render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy, parent: filtering_governing_body)
+    policies = Policy.includes(:governing_body, approach: :issue).by_governing_body(params[:governing_body_id]).order(enacted_date: :desc, title: :asc)
+    policies = policies.titled_like(filters["q"]) if filters["q"].present?
+    policies = policies.where(status: filters["status"]) if filters["status"].present?
+    @pagy, @policies = pagy(policies)
+    render Views::Policies::IndexView.new(policies: @policies, pagy: @pagy, parent: filtering_governing_body, filters: filters)
   end
 
   def show
@@ -43,6 +46,11 @@ class PoliciesController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q, :status).to_h
+  end
+
   def filtering_governing_body
     GoverningBody.find(params[:governing_body_id]) if params[:governing_body_id]
   end

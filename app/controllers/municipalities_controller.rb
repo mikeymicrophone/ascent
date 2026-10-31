@@ -2,20 +2,16 @@ class MunicipalitiesController < ApplicationController
   before_action :set_municipality, only: %i[ show edit update destroy ]
 
   def index
-    municipalities_scope = Municipality.with_office_data
-
-    # Filter by state if provided
-    if params[:state_id].present?
-      @state = State.find(params[:state_id])
-      municipalities_scope = municipalities_scope.in_state(@state)
-    end
-
+    municipalities_scope = Municipality.includes(:county, state: :country).order(:name, :id)
+    municipalities_scope = municipalities_scope.named_like(filters["q"]) if filters["q"].present?
+    municipalities_scope = municipalities_scope.in_state(State.find(filters["state_id"])) if filters["state_id"].present?
+    municipalities_scope = municipalities_scope.where(county_id: filters["county_id"]) if filters["county_id"].present?
+    counties = County.includes(:state).order(:name, :id)
+    counties = counties.where(state_id: filters["state_id"]) if filters["state_id"].present?
     @pagy, @municipalities = pagy(municipalities_scope)
-    render Views::Municipalities::IndexView.new(
-      municipalities: @municipalities,
-      pagy: @pagy,
-      filtered_state: @state
-    )
+    render Views::Municipalities::IndexView.new(municipalities: @municipalities, pagy: @pagy, filters: filters, states: State.order(:name),
+      counties: counties,
+      county: (County.includes(:state).find(filters["county_id"]) if filters["county_id"].present?))
   end
 
   def show
@@ -56,6 +52,14 @@ class MunicipalitiesController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q, :state_id, :county_id).to_h.tap do |values|
+      if values["state_id"].present? && values["county_id"].present?
+        values.delete("county_id") unless County.where(state_id: values["state_id"]).exists?(id: values["county_id"])
+      end
+    end
+  end
 
   def set_municipality
     @municipality = Municipality.find(params[:id])

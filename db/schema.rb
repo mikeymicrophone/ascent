@@ -10,11 +10,82 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
   enable_extension "postgis"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "ahoy_events", force: :cascade do |t|
+    t.bigint "visit_id"
+    t.bigint "user_id"
+    t.string "name"
+    t.jsonb "properties"
+    t.datetime "time"
+    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
+    t.index ["properties"], name: "index_ahoy_events_on_properties", opclass: :jsonb_path_ops, using: :gin
+    t.index ["user_id"], name: "index_ahoy_events_on_user_id"
+    t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
+  end
+
+  create_table "ahoy_visits", force: :cascade do |t|
+    t.string "visit_token"
+    t.string "visitor_token"
+    t.bigint "user_id"
+    t.string "ip"
+    t.text "user_agent"
+    t.text "referrer"
+    t.string "referring_domain"
+    t.text "landing_page"
+    t.string "browser"
+    t.string "os"
+    t.string "device_type"
+    t.string "country"
+    t.string "region"
+    t.string "city"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "utm_source"
+    t.string "utm_medium"
+    t.string "utm_term"
+    t.string "utm_content"
+    t.string "utm_campaign"
+    t.string "app_version"
+    t.string "os_version"
+    t.string "platform"
+    t.datetime "started_at"
+    t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
+    t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
+    t.index ["visitor_token", "started_at"], name: "index_ahoy_visits_on_visitor_token_and_started_at"
+  end
 
   create_table "approaches", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -123,7 +194,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
   end
 
   create_table "counties", force: :cascade do |t|
-    t.string "code"
+    t.string "fips"
     t.datetime "created_at", null: false
     t.string "entity_code"
     t.string "name", null: false
@@ -242,6 +313,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
     t.datetime "updated_at", null: false
     t.index ["governance_type_id"], name: "index_governing_bodies_on_governance_type_id"
     t.index ["jurisdiction_id"], name: "index_governing_bodies_on_jurisdiction_id"
+  end
+
+  create_table "image_placements", force: :cascade do |t|
+    t.string "entity_code"
+    t.bigint "image_id", null: false
+    t.string "subject_type", null: false
+    t.bigint "subject_id", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_image_placements_on_entity_code", unique: true
+    t.index ["image_id"], name: "index_image_placements_on_image_id"
+    t.index ["subject_type", "subject_id", "image_id"], name: "idx_on_subject_type_subject_id_image_id_6d95d58e71", unique: true
+    t.index ["subject_type", "subject_id"], name: "index_image_placements_on_subject"
+    t.check_constraint "\"position\" >= 0", name: "image_placements_position_nonnegative"
+  end
+
+  create_table "images", force: :cascade do |t|
+    t.string "entity_code"
+    t.string "url"
+    t.string "alt_text"
+    t.string "credit"
+    t.string "source_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["entity_code"], name: "index_images_on_entity_code", unique: true
+    t.index ["url"], name: "index_images_on_url", unique: true
   end
 
   create_table "issues", force: :cascade do |t|
@@ -420,6 +518,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.index ["entity_code"], name: "index_positions_on_entity_code", unique: true
+  end
+
+  create_table "public_mountains", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.bigint "race_id", null: false
+    t.jsonb "snapshot", null: false
+    t.binary "preview_png", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["race_id"], name: "index_public_mountains_on_race_id"
+    t.index ["voter_id", "race_id"], name: "index_public_mountains_on_voter_id_and_race_id", unique: true
+    t.index ["voter_id"], name: "index_public_mountains_on_voter_id"
   end
 
   create_table "races", force: :cascade do |t|
@@ -662,6 +772,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
     t.integer "year"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "approaches", "issues"
   add_foreign_key "ballot_lines", "candidacies"
   add_foreign_key "ballot_lines", "organizations", column: "party_id"
@@ -681,6 +793,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
   add_foreign_key "engagements", "voters"
   add_foreign_key "governing_bodies", "governance_types"
   add_foreign_key "governing_bodies", "jurisdictions"
+  add_foreign_key "image_placements", "images"
   add_foreign_key "issues", "topics"
   add_foreign_key "jurisdiction_boundaries", "jurisdictions"
   add_foreign_key "jurisdictions", "jurisdictions", column: "parent_id"
@@ -702,6 +815,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_27_090100) do
   add_foreign_key "policies", "approaches"
   add_foreign_key "policies", "area_of_concerns"
   add_foreign_key "policies", "governing_bodies"
+  add_foreign_key "public_mountains", "races"
+  add_foreign_key "public_mountains", "voters"
   add_foreign_key "races", "elections"
   add_foreign_key "races", "offices"
   add_foreign_key "rating_archives", "candidacies"

@@ -63,16 +63,11 @@ class Views::Elections::ShowView < Views::ApplicationView
   # Hero: the name and one action on the left, the date stub and countdown on the right.
   def election_hero
     section(class: "election-hero") do
-      div(class: "election-hero-text") do
-        Breadcrumb(trail: [ [ "Elections", elections_path ], [ place.name, place ] ], current: @election.name)
-        span(class: "eyebrow") { [ @election.kind&.humanize, "election", place.name ].compact.join(" · ") }
-        h1(class: "display-title") { @election.name }
-        p(class: "ballot-lede") { lede }
-        div(class: "place-actions") do
-          primary_action
-          remove_mock_action
-        end
-        ActionBar(record: @election)
+      PageHeader(title: @election.name, trail: [ [ "Elections", elections_path ], [ place.name, place ] ],
+        eyebrow: [ @election.kind&.humanize, "election", place.name ].compact.join(" · "), lede: lede, record: @election,
+        modifier: "election-hero-text") do
+        primary_action
+        remove_mock_action
       end
       date_stub
     end

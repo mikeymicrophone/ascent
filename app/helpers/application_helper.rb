@@ -22,4 +22,8 @@ module ApplicationHelper
       "Martian Mono" => "Martian+Mono:wdth,wght@75..112.5,300..700"
     }
   end
+
+  def umami_tracker
+    tag.script(defer: true, src: ENV["UMAMI_SCRIPT_URL"], data: { website_id: ENV["UMAMI_WEBSITE_ID"] }) if ENV["UMAMI_WEBSITE_ID"].present?
+  end
 end

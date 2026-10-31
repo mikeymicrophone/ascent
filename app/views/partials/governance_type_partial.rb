@@ -1,37 +1,23 @@
+# frozen_string_literal: true
+
+# A governance type's page body: how bodies of its kind decide, and the bodies of its kind.
 class Views::Partials::GovernanceTypePartial < Views::ApplicationView
-  def initialize(governance_type:)
-    @governance_type = governance_type
-  end
+  BODY_LIMIT = 5
 
-  def view_template(&)
-    div(id: dom_id(@governance_type), class: "governance_type-partial") do
-      # Header
-      div(class: "partial-header") do
-        h3(class: "partial-title") { @governance_type.name }
+  prop :governance_type, GovernanceType
+
+  def view_template
+    section(class: "place-section") do
+      section_heading("How it works")
+      p(class: "card-text") { @governance_type.description } if @governance_type.description.present?
+      dl(class: "place-facts-list") do
+        FactRow(label: "Decides by") { @governance_type.decision_making_process } if @governance_type.decision_making_process.present?
       end
-
-      # Hierarchical navigation (improved positioning)
-      div(class: "navigation-section") do
-        HierarchicalNavigation(current_object: @governance_type)
-      end
-
-      # Main content
-      div(class: "partial-content") do
-        # Description
-        if @governance_type.description.present?
-          div(class: "content-section") do
-            div(class: "content-description") { simple_format(@governance_type.description) }
-          end
-        end
-
-        # Governance information grid
-        div(class: "info-grid") do
-          div(class: "info-item") do
-            span(class: "info-label") { "Decision Making Process" }
-            span(class: "info-value") { @governance_type.decision_making_process }
-          end
-        end
-      end
+    end
+    bodies = @governance_type.governing_bodies.includes(:jurisdiction).order(:name)
+    RelatedList(heading: "Governing bodies", records: bodies.limit(BODY_LIMIT).to_a, total: bodies.count,
+      see_all: governance_type_governing_bodies_path(@governance_type), noun: "governing bodies") do |body|
+      ListRow(record: body, title: body.name, meta: body.jurisdiction&.name)
     end
   end
 end

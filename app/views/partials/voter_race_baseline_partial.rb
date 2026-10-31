@@ -1,21 +1,19 @@
+# frozen_string_literal: true
+
+# A baseline's page body, seen only by its voter or an admin: where they draw approval in one race, and
+# the baselines it replaced.
 class Views::Partials::VoterRaceBaselinePartial < Views::ApplicationView
-  def initialize(voter_race_baseline:)
-    @voter_race_baseline = voter_race_baseline
-  end
+  prop :voter_race_baseline, VoterRaceBaseline
 
-  def view_template(&)
-    div(id: dom_id(@voter_race_baseline), class: "voter_race_baseline-partial") do
-      h3 { "#{@voter_race_baseline.voter.name} had baseline of" }
-      div do
-        span { @voter_race_baseline.baseline }
-        span { " on " }
-        whitespace
-        link_to @voter_race_baseline.race.name, @voter_race_baseline.race, class: "link race"
-
+  def view_template
+    section(class: "place-section") do
+      section_heading("The baseline")
+      dl(class: "place-facts-list") do
+        FactRow(label: "Voter") { link_to @voter_race_baseline.voter.full_name, @voter_race_baseline.voter, class: "text-link" }
+        FactRow(label: "Race") { link_to @voter_race_baseline.race.name, @voter_race_baseline.race, class: "text-link" }
+        FactRow(label: "Baseline", value_class: "glance-value") { @voter_race_baseline.baseline.to_s }
         if @voter_race_baseline.has_archives?
-          span { " (After establishing prior baselines of: " }
-          @voter_race_baseline.baseline_history.map { it.baseline }.to_sentence
-          span { ")" }
+          FactRow(label: "Earlier") { @voter_race_baseline.baseline_history.map(&:baseline).to_sentence }
         end
       end
     end

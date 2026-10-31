@@ -1,0 +1,30 @@
+.auth-header { max-width: 1120px; margin: auto; min-height: 88px; padding: 1rem 2rem; }
+.auth-main { max-width: 1120px; margin: auto; padding: 1.5rem 2rem 3rem; }
+.auth-shell { border: 1px solid var(--auth-line); border-radius: 20px; }
+.auth-story { padding: 2.5rem; min-height: 660px; }
+.auth-story-copy { margin-top: 4rem; }
+.auth-story-copy h2 { margin: 1rem 0 1.5rem; }
+.auth-story-copy > p:last-child { max-width: 18rem; }
+.auth-landscape { padding-top: 2rem; }
+.auth-landscape .brand-mark { width: min(100%, 260px); height: auto; }
+.auth-story-footer { margin-top: 1rem; }
+.auth-card { padding: 2.5rem 3rem; }
+.auth-heading { margin-bottom: 1.75rem; }
+.auth-heading h1 { margin: .5rem 0 .65rem; }
+.auth-form { gap: 1rem; }
+.auth-page .auth-input { min-width: 0; min-height: 48px; padding: .75rem .9rem; border: 1px solid; border-radius: 8px; }
+.auth-google, .auth-submit { min-height: 48px; padding: .75rem 1rem; border: 1px solid; border-radius: 8px; cursor: pointer; }
+.auth-submit { width: 100%; }
+.auth-divider { margin: 1.25rem 0; }
+.auth-remember { min-height: 44px; cursor: pointer; }
+.auth-remember input { width: 18px; height: 18px; }
+.auth-options a, .auth-links a, .auth-back { min-height: 44px; display: inline-flex; align-items: center; }
+.auth-links { border-top: 1px solid var(--auth-line); margin-top: 1.5rem; padding-top: 1rem; }
+.auth-errors { border: 1px solid; border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem; }
+.auth-errors ul { list-style: disc; padding-left: 1.25rem; margin-top: .5rem; }
+.auth-main > .auth-credit { text-align: center; margin-top: 1.5rem; }
+@media (max-width: 760px) {
+  .auth-header { min-height: 72px; padding: .75rem 1.25rem; }
+  .auth-main { max-width: 520px; padding: .5rem 1rem 2rem; }
+  .auth-card { padding: 2rem 1.5rem; }
+}

@@ -1,0 +1,138 @@
+/* The shared kit for browsable pages: page header, list rows, related lists, index pages and the pager. */
+
+.record-page,
+.index-page {
+  @apply flex flex-col;
+}
+
+.page-header {
+  @apply flex flex-col items-start;
+}
+
+.page-header-chips {
+  @apply flex flex-wrap items-center;
+}
+
+.index-filters {
+  @apply flex flex-wrap items-center;
+}
+
+.filter-form {
+  @apply flex flex-wrap items-center flex-[1_1_640px] min-w-0;
+}
+
+.filter-field {
+  @apply flex flex-col;
+}
+
+.filter-field-search {
+  @apply flex-[1_1_260px] min-w-0;
+}
+
+.filter-actions {
+  @apply flex items-center;
+}
+
+.index-results {
+  @apply flex flex-col;
+}
+
+.list-rows {
+  @apply flex flex-col;
+}
+
+.list-row {
+  @apply relative flex items-center;
+}
+
+.list-row-icon,
+.list-row-chevron {
+  @apply inline-flex items-center justify-center shrink-0;
+}
+
+.list-row-main {
+  @apply flex flex-col flex-1 min-w-0;
+}
+
+.list-row-title::after {
+  content: "";
+  @apply absolute inset-0;
+}
+
+.list-row-badges {
+  @apply relative z-[1] flex flex-wrap items-center justify-end;
+}
+
+.related-list {
+  @apply flex flex-col;
+}
+
+.related-list-all {
+  @apply self-start;
+}
+
+.index-empty {
+  @apply flex flex-col items-start;
+}
+
+.index-empty-icon {
+  @apply inline-flex items-center justify-center;
+}
+
+.pagination {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.pagination-nav,
+.pagination-pages {
+  @apply flex items-center;
+}
+
+.pagination-step,
+.pagination-page,
+.pagination-gap {
+  @apply inline-flex items-center justify-center;
+}
+
+.pagination-compact {
+  @apply hidden;
+}
+
+@media (max-width: 640px) {
+  .list-row {
+    @apply flex-wrap;
+  }
+
+  .list-row-icon {
+    @apply hidden;
+  }
+
+  .list-row-badges {
+    @apply order-last basis-full justify-start;
+  }
+
+  .pagination-pages,
+  .pagination-step-label {
+    @apply hidden;
+  }
+
+  .pagination-compact {
+    @apply inline-flex;
+  }
+
+  .pagination {
+    @apply flex-col items-stretch;
+  }
+
+  .filter-field {
+    @apply flex-[1_1_140px];
+  }
+
+  .filter-field-search {
+    @apply basis-full;
+  }
+
+  .pagination-nav {
+    @apply justify-between;
+  }
+}

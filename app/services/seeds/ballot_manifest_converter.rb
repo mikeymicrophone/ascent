@@ -6,8 +6,9 @@ module Seeds
   # Ascent catalog, and reports the judgments conversion cannot settle on its own.
   #
   # Reads   races/2026/<state>/{federal,state,local}/*.yml, races/2026/<state>/conflicts.csv,
-  #         conversion/2026/<state>/rules.yml, and us_states.yml.
-  # Writes  manifests/foundation.yml, manifests/2026/<state>/**/*.yml, and
+  #         conversion/2026/<state>/{rules.yml,offices.yml}, us_states.yml, and the coded
+  #         Positions in manifests/foundation.yml.
+  # Writes  manifests/2026/<state>/**/*.yml and
   #         conversion/2026/<state>/{usernames.yml,name_spellings.yml,judgments.md}.
   #
   # Usernames already recorded in usernames.yml are reused, so a username never changes once issued,
@@ -33,7 +34,8 @@ module Seeds
     PILOT_CONTESTS_PER_OFFICE = 4
     CERTIFICATION_STATUSES = [ [ /tentative|subject to change/i, "tentative" ], [ /unofficial/i, "unofficial" ], [ /certified/i, "certified" ] ].freeze
     UNMAPPED_FIELDS = %w[incumbent fec_candidate_id county jurisdiction notes cross_check_url].freeze
-    LOCAL_POSITION_DESCRIPTION = "Office title as printed on 2026 official candidate lists.".freeze
+    LOCAL_OFFICE_KEYS = %w[position seat part body town term].freeze
+    TOWN_PREFIX = /\A(?:Town|City|Village) of /i
 
     attr_reader :summary
 
@@ -48,7 +50,8 @@ module Seeds
     def call
       load_inputs
       contests = selected_contests
-      races = contests.map { |key, rows| placement(key, rows) }.group_by { |placed| placed[:race_code] }.map do |_, placed|
+      races = contests.map { |key, rows| placement(key, rows) }.group_by { |placed| placed[:race_code] }.map do |race_code, placed|
+        refuse_merged_contests(race_code, placed)
         race_manifest(placed)
       end
 
@@ -79,12 +82,10 @@ module Seeds
       @usernames = (path = conversion_dir.join("usernames.yml")).exist? ? YAML.load_file(path) : {}
       @county_equivalents = (path = conversion_dir.join("county_equivalents.yml")).exist? ? load_county_equivalents(YAML.load_file(path)) : nil
       @place_codes = (path = conversion_dir.join("place_codes.yml")).exist? ? YAML.load_file(path) : {}
-      # Titles defined in positions.yml keep their curated description, so manifests only reference them.
-      @curated_titles = YAML.load_file(@root.join("positions.yml")).map { |position| position.fetch("title") }.to_set
-      @positions = existing_foundation.select { |record| record["type"] == "Position" }.to_h do |record|
-        record["attributes"].delete("description") if @curated_titles.include?(record["attributes"]["title"])
-        [ record["attributes"]["title"], record ]
-      end
+      # Manifests name the catalog's Positions by code and never define their own.
+      @positions = YAML.load_file(foundation_path).fetch("records").select { |record| record["type"] == "Position" }
+                       .to_h { |record| [ record["code"], record.dig("attributes", "title") ] }
+      @local_offices = load_local_offices((path = conversion_dir.join("offices.yml")).exist? ? YAML.load_file(path) : {})
       @places = {}
       @issued = {}
       @off_ballot = []
@@ -117,6 +118,28 @@ module Seeds
       end
     end
 
+    # A bare code names the Position; a mapping also carries the seat, special district, town, or term the title prints.
+    def load_local_offices(listing)
+      listing.to_h do |title, entry|
+        entry = { "position" => entry } if entry.is_a?(String)
+        unknown = entry.keys - LOCAL_OFFICE_KEYS
+        raise Error, "offices.yml gives #{title.inspect} unknown keys: #{unknown.join(", ")}" if unknown.any?
+
+        position(entry.fetch("position"))
+        [ title, entry ]
+      end
+    end
+
+    def local_office(title)
+      @local_offices.fetch(title) { raise Error, "#{title.inspect} is missing from #{conversion_dir.join("offices.yml")}" }
+    end
+
+    def position(code)
+      raise Error, "#{code} is not a Position in #{foundation_path}" unless @positions.key?(code)
+
+      code
+    end
+
     def conversion_dir
       @root.join("conversion", YEAR.to_s, @state_dir)
     end
@@ -127,10 +150,6 @@ module Seeds
 
     def foundation_path
       @root.join("manifests", "foundation.yml")
-    end
-
-    def existing_foundation
-      foundation_path.exist? ? YAML.load_file(foundation_path).fetch("records") : []
     end
 
     def local?(row)
@@ -171,24 +190,34 @@ module Seeds
       placed = local?(rows.first) ? local_placement(rows) : state_level_placement(rows)
       contest = "#{YEAR}_#{special?(rows) ? "SPECIAL" : "GENERAL"}"
       @specials << key if special?(rows)
+      # A race for part of a term, like an unexpired term, is its own race for the same office.
+      race_path = [ placed[:office_path], (token(placed[:term]) if placed[:term]) ].compact.join("-")
       placed.merge(
-        key: key, rows: rows, contest: contest,
+        key: key, rows: rows, contest: contest, race_path: race_path,
         election_code: "ELECTION-#{placed[:place][:path]}-#{contest}",
-        race_code: "RACE-#{placed[:office_path]}-#{contest}"
+        race_code: "RACE-#{race_path}-#{contest}"
       )
+    end
+
+    # Contests printed differently share a race only by mistake, such as a vacancy mapped without its term.
+    def refuse_merged_contests(race_code, placed)
+      printed = placed.map { |contest| contest[:key].first(2) }.uniq
+      return if printed.one?
+
+      raise Error, "#{printed.map { it.compact_blank.join(" ") }.join(" and ")} would share #{race_code}; give each its own seat or term in offices.yml"
     end
 
     def state_level_placement(rows)
       row = rows.first
-      position_title, district_kind = BallotRows::STATE_LEVEL_OFFICES.fetch(row.fetch("office")) do
+      position_code, district_kind = BallotRows::STATE_LEVEL_OFFICES.fetch(row.fetch("office")) do
         raise Error, "No position mapping for #{@state_code} office #{row.fetch("office").inspect}"
       end
-      position_token = token(position_title)
+      position_token = position(position_code).delete_prefix("POSITION-")
       retention = "Retention of #{row.fetch("candidate_name")}" if retention?(row)
       district = row.fetch("district")
       if district.empty?
         return {
-          position_code: position_code(position_title), place: state_place,
+          position_code: position_code, place: state_place,
           office_path: [ "#{@state_path}-#{position_token}", (token(retention) if retention) ].compact.join("-"),
           seat_code: (token(retention) if retention),
           file: "statewide"
@@ -207,19 +236,27 @@ module Seeds
         office_path = [ place[:path], position_token, (token(seat) if seat) ].compact.join("-")
         seat_code = [ district_token, (token(seat) if seat) ].compact.join("_")
       end
-      { position_code: position_code(position_title), place: place, office_path: office_path, seat_code: seat_code, file: file }
+      { position_code: position_code, place: place, office_path: office_path, seat_code: seat_code, file: file }
     end
 
-    # Local offices belong to the most specific single place the source names. Contests spanning
-    # several places, or naming none, get a District named for the office and what it covers.
+    # Local offices fill the Position offices.yml maps their printed title to, and belong to the most
+    # specific single place the source names. Contests spanning several places, or naming none, get a
+    # District named for the Position and what it covers.
     def local_placement(rows)
       row = rows.first
-      office_title = row.fetch("office")
-      localities = BallotRows.places(row["jurisdiction"])
+      office = local_office(row.fetch("office"))
+      title = @positions.fetch(office["position"])
+      localities = BallotRows.places(office["town"] || row["jurisdiction"])
       towns = localities.reject { |place| BallotRows.county_name?(place) }
+      district = row.fetch("district").presence
+      if district && names_place?(district, localities + BallotRows.places(row["county"]))
+        district = nil
+      elsif district&.match?(TOWN_PREFIX) && towns.empty?
+        towns, district = [ district ], nil
+      end
       counties = local_counties(row, localities, towns)
-      seat = row.fetch("district").presence
-      office_district = towns.many? || counties.many? || (towns.empty? && counties.empty?)
+      seat = [ office["body"], office["seat"] || district, office["part"] ].compact.join(" ").presence
+      office_district = towns.many? || (towns.empty? && !counties.one?)
 
       place = if towns.one?
                 municipality_place(BallotRows.title_case(towns.first), (county_place(counties.first) if counties.one?))
@@ -227,18 +264,26 @@ module Seeds
                 county_place(counties.first)
       elsif towns.empty? && counties.empty?
                 covered, seat = seat, nil
-                district_place("#{@state_path}-#{token(office_title)}-#{token(covered)}", "#{@state_name} #{office_title}: #{covered}", "#{office_title} district")
+                district_place("#{@state_path}-#{token(title)}-#{token(covered)}", "#{@state_name} #{title}: #{covered}", "#{title} district")
       else
                 covered = towns.any? ? towns.map { |name| BallotRows.title_case(name) } : counties.map { it[:name] }
-                district_place("#{@state_path}-#{token(office_title)}-#{token(covered.join(" "))}", "#{@state_name} #{office_title} (#{covered.join(", ")})", "#{office_title} district")
+                district_place("#{@state_path}-#{token(title)}-#{token(covered.join(" "))}", "#{@state_name} #{title} (#{covered.join(", ")})", "#{title} district")
       end
       # A district drawn for this office already carries its title.
-      office_path = [ place[:path], (token(office_title) unless office_district), (token(seat) if seat) ].compact.join("-")
+      office_path = [ place[:path], (token(title) unless office_district), (token(seat) if seat) ].compact.join("-")
       {
-        position_code: position_code(office_title, local: true), place: place, office_path: office_path,
-        seat_code: (token(seat) if seat),
+        position_code: office["position"], place: place, office_path: office_path,
+        seat_code: (token(seat) if seat), term: office["term"],
         file: "local/#{counties.one? ? counties.first[:file] : "multi_county"}"
       }
+    end
+
+    # A district column that prints the office's own town or county names its place, not a seat.
+    def names_place?(district, places)
+      places.any? do |place|
+        loose_place_name(district) == loose_place_name(place) ||
+          (BallotRows.county_name?(district) && BallotRows.county_name(district) == BallotRows.county_name(place))
+      end
     end
 
     def state_place
@@ -340,16 +385,6 @@ module Seeds
       @places[code] ||= definition
     end
 
-    def position_code(title, local: false)
-      @positions[title] ||= begin
-        base = "POSITION-#{token(title)}"
-        taken = @positions.values.map { |record| record["code"] }
-        code = taken.include?(base) ? "#{base}_#{(2..).find { |n| !taken.include?("#{base}_#{n}") }}" : base
-        record("Position", code, { "title" => title, "description" => (LOCAL_POSITION_DESCRIPTION if local && !@curated_titles.include?(title)) }.compact)
-      end
-      @positions[title]["code"]
-    end
-
     def race_manifest(placed)
       first = placed.first
       rows = placed.flat_map { |contest| contest[:rows] }
@@ -385,7 +420,7 @@ module Seeds
       lines = rows.filter_map { |row| ballot_line(row) }.uniq { |line| line["label"] }
       attributes = { "status" => "active", "participation" => participation }
       attributes["ballot_lines"] = lines if lines.any?
-      candidacy = record("Candidacy", "CANDIDACY-#{placed[:office_path]}-#{placed[:contest]}-#{username.upcase}", attributes,
+      candidacy = record("Candidacy", "CANDIDACY-#{placed[:race_path]}-#{placed[:contest]}-#{username.upcase}", attributes,
                          "race" => placed[:race_code], "person" => person["code"])
       [ person, candidacy ]
     end
@@ -496,7 +531,6 @@ module Seeds
 
     def write_manifests(races)
       FileUtils.rm_rf(manifest_dir)
-      write_foundation
       parties = @parties.map { |party| record("Party", "PARTY-#{@state_path}-#{party.fetch("code")}", { "name" => party.fetch("name") }) }
       places = @places.values.sort_by { |place| [ %w[County Municipality District].index(place["type"]), place["code"] ] }
       write_manifest(manifest_dir.join("foundation.yml"), "#{@state_name}: the state, its parties, and the places its contests belong to.",
@@ -509,13 +543,6 @@ module Seeds
                        "records" => elections,
                        "groups" => file_races.map { |race| { "records" => race[:records] } })
       end
-    end
-
-    # Shared across states: each conversion adds the positions it uses.
-    def write_foundation
-      country = existing_foundation.find { |entry| entry["type"] == "Country" } || record("Country", "COUNTRY-USA", { "code" => "US", "name" => "United States" })
-      write_manifest(foundation_path, "Records shared by every state's conversion: the country and the positions on its ballots.",
-                     "records" => [ country ] + @positions.values.sort_by { |entry| entry["code"] })
     end
 
     def write_manifest(path, description, body)

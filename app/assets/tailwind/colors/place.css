@@ -53,3 +53,8 @@
 .admin-card {
   border-style: dashed;
 }
+
+.place-chip-link,
+.place-race-link {
+  color: var(--brand-basalt);
+}

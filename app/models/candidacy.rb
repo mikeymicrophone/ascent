@@ -1,5 +1,6 @@
 class Candidacy < ApplicationRecord
   include Engageable
+  include Illustrated
 
   belongs_to :person
   belongs_to :race

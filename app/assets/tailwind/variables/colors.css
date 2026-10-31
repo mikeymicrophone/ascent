@@ -33,42 +33,38 @@
 }
 
 :root {
-  --nav-bg: var(--brand-snow);
   --nav-border: var(--brand-mist);
-  --nav-shadow: theme('colors.gray.100');
   --brand-color: var(--brand-ink);
   --brand-hover: var(--brand-rope-deep);
-  --nav-link-color: theme('colors.gray.600');
-  --nav-link-hover-bg: theme('colors.gray.50');
+  --nav-link-color: var(--brand-slate);
+  --nav-link-hover-bg: var(--brand-lichen);
   --nav-link-hover-color: var(--brand-rope-deep);
   --nav-link-active-bg: var(--brand-glacier);
   --nav-link-active-color: var(--brand-ink);
   --nav-group-label-color: var(--brand-ink);
-  --dropdown-bg: theme('colors.white');
-  --dropdown-border: theme('colors.gray.200');
-  --dropdown-shadow: theme('colors.gray.100');
+  --dropdown-bg: var(--brand-snow);
 }
 
 :root {
   /* Action bar colors */
-  --action-bg: theme('colors.white');
+  --action-bg: var(--brand-snow);
   --action-border: var(--brand-mist);
   --action-text: var(--brand-ink);
-  --action-muted-text: theme('colors.gray.500');
+  --action-muted-text: var(--brand-moss);
   --action-hover-bg: var(--brand-glacier);
-  --action-count-bg: theme('colors.gray.100');
+  --action-count-bg: var(--brand-contour);
   --action-marked-bg: var(--brand-summit-soft);
   --action-marked-hover-bg: var(--brand-summit-wash);
   --action-marked-border: var(--brand-summit);
   --action-marked-text: var(--brand-summit-deep);
 
   /* Flash message colors */
-  --flash-notice-bg: theme('colors.green.50');
-  --flash-notice-border: theme('colors.green.200');
-  --flash-notice-text: theme('colors.green.800');
-  --flash-alert-bg: theme('colors.red.50');
-  --flash-alert-border: theme('colors.red.200');
-  --flash-alert-text: theme('colors.red.800');
+  --flash-notice-bg: var(--brand-summit-wash);
+  --flash-notice-border: var(--brand-summit);
+  --flash-notice-text: var(--brand-summit-deep);
+  --flash-alert-bg: var(--brand-rope-wash);
+  --flash-alert-border: var(--brand-rope);
+  --flash-alert-text: var(--brand-rope-deep);
 
   /* Link colors */
   --link-color: var(--brand-link);
@@ -77,100 +73,56 @@
   /* Button colors */
   --btn-primary-bg: var(--brand-ink);
   --btn-primary-hover: var(--brand-slate);
-  --btn-secondary-bg: theme('colors.gray.600');
-  --btn-secondary-hover: theme('colors.gray.700');
-  --btn-danger-bg: theme('colors.red.600');
-  --btn-danger-hover: theme('colors.red.700');
+  --btn-secondary-bg: var(--brand-slate);
+  --btn-secondary-hover: var(--brand-basalt);
+  --btn-danger-bg: var(--brand-rope-deep);
+  --btn-danger-hover: var(--brand-basalt);
 
   /* Form colors */
-  --input-border: theme('colors.gray.300');
+  --input-border: var(--brand-pebble);
   --input-focus-border: var(--brand-rope);
   --input-focus-ring: var(--brand-rope);
-  --input-error-border: theme('colors.red.500');
+  --input-error-border: var(--brand-rope);
 
   /* Card colors */
-  --card-bg: theme('colors.white');
+  --card-bg: var(--brand-snow);
   --card-border: var(--brand-mist);
-  --card-shadow: theme('colors.gray.100');
 
   /* Expandable section colors */
-  --expandable-header-bg: theme('colors.gray.50');
-  --expandable-content-bg: theme('colors.white');
-  --expandable-border: theme('colors.gray.200');
+  --expandable-header-bg: var(--brand-lichen);
+  --expandable-content-bg: var(--brand-snow);
+  --expandable-border: var(--brand-mist);
   
   /* Page and text colors */
   --page-bg: var(--brand-paper);
   --page-text: var(--brand-ink);
-  --text-muted: theme('colors.gray.500');
+  --text-muted: var(--brand-moss);
 
   /* Status colors */
-  --status-bg: theme('colors.gray.100');
-  --status-text: theme('colors.gray.700');
-  --status-active-bg: theme('colors.green.100');
-  --status-active-text: theme('colors.green.800');
-  --status-upcoming-bg: theme('colors.blue.100');
-  --status-upcoming-text: theme('colors.blue.800');
-  --status-completed-bg: theme('colors.gray.100');
-  --status-completed-text: theme('colors.gray.600');
-  --status-participated-bg: theme('colors.purple.100');
-  --status-participated-text: theme('colors.purple.800');
-  --status-partial-bg: theme('colors.yellow.100');
-  --status-partial-text: theme('colors.yellow.800');
-  --status-baseline-only-bg: theme('colors.orange.100');
-  --status-baseline-only-text: theme('colors.orange.800');
-  --status-registered-bg: theme('colors.cyan.100');
-  --status-registered-text: theme('colors.cyan.800');
-  --status-executive-bg: theme('colors.purple.100');
-  --status-executive-text: theme('colors.purple.800');
-  --status-mock-bg: theme('colors.gray.200');
-  --status-mock-text: theme('colors.gray.700');
-  --status-historical-bg: theme('colors.amber.100');
-  --status-historical-text: theme('colors.amber.800');
-  --status-party-bg: theme('colors.indigo.100');
-  --status-party-text: theme('colors.indigo.800');
   
   /* Office holder colors */
-  --current-holder-bg: var(--brand-glacier);
-  --current-holder-border: var(--brand-mist);
-  --current-holder-party: theme('colors.gray.600');
   
   /* Election timeline colors */
-  --election-timeline-border: theme('colors.gray.200');
-  --election-meta: theme('colors.gray.500');
-  --winner-indicator: var(--brand-summit);
+  --election-meta: var(--brand-moss);
   
   /* Voter stats colors */
-  --stat-label: theme('colors.gray.600');
-  --stat-value: theme('colors.gray.900');
+  --stat-label: var(--brand-slate);
+  --stat-value: var(--brand-basalt);
   
   /* Information display colors */
-  --info-label-color: theme('colors.gray.600');
-  --info-value-color: theme('colors.gray.900');
-  --partial-title-color: theme('colors.gray.900');
-  --content-description-color: theme('colors.gray.700');
   
   /* Hierarchical navigation colors */
-  --breadcrumb-bg: theme('colors.gray.50');
-  --breadcrumb-border: theme('colors.gray.200');
+  --breadcrumb-bg: var(--brand-lichen);
+  --breadcrumb-border: var(--brand-mist);
   --breadcrumb-link: var(--brand-link);
   --breadcrumb-link-hover: var(--brand-ink);
-  --breadcrumb-current: var(--brand-ink);
-  --breadcrumb-separator: theme('colors.gray.400');
+  --breadcrumb-separator: var(--brand-pebble);
   
   /* Quick stats colors */
-  --quick-stats-bg: var(--brand-glacier);
-  --quick-stats-border: var(--brand-mist);
-  --quick-stats-value: var(--brand-ink);
-  --quick-stats-label: var(--brand-ink-soft);
   
   /* Geographic summary colors */
-  --geo-summary-bg: theme('colors.green.50');
-  --geo-summary-border: theme('colors.green.200');
-  --geo-summary-value: theme('colors.green.700');
-  --geo-summary-label: theme('colors.green.600');
 
   /* Enhanced shadow system for depth and 3D effects */
-  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -181,24 +133,20 @@
   --shadow-color-primary: rgba(59, 130, 246, 0.15);
   --shadow-color-secondary: rgba(107, 114, 128, 0.15);
   --shadow-color-success: rgba(34, 197, 94, 0.15);
-  --shadow-color-warning: rgba(245, 158, 11, 0.15);
-  --shadow-color-danger: rgba(239, 68, 68, 0.15);
 
   /* Entity type colors for visual distinction */
-  --entity-country: theme('colors.emerald.600');
-  --entity-country-bg: theme('colors.emerald.50');
-  --entity-state: theme('colors.blue.600');
-  --entity-state-bg: theme('colors.blue.50');
-  --entity-municipality: theme('colors.purple.600');
-  --entity-municipality-bg: theme('colors.purple.50');
-  --entity-election: theme('colors.orange.600');
-  --entity-election-bg: theme('colors.orange.50');
-  --entity-candidate: theme('colors.indigo.600');
-  --entity-candidate-bg: theme('colors.indigo.50');
-  --entity-topic: theme('colors.teal.600');
-  --entity-topic-bg: theme('colors.teal.50');
-  --entity-issue: theme('colors.cyan.600');
-  --entity-issue-bg: theme('colors.cyan.50');
-  --entity-office: theme('colors.amber.600');
-  --entity-office-bg: theme('colors.amber.50');
+  --entity-country: var(--brand-slate);
+  --entity-country-bg: var(--brand-contour);
+  --entity-state: var(--brand-slate);
+  --entity-state-bg: var(--brand-contour);
+  --entity-municipality: var(--brand-slate);
+  --entity-municipality-bg: var(--brand-contour);
+  --entity-election: var(--brand-slate);
+  --entity-election-bg: var(--brand-contour);
+  --entity-candidate: var(--brand-slate);
+  --entity-candidate-bg: var(--brand-contour);
+  --entity-topic: var(--brand-slate);
+  --entity-topic-bg: var(--brand-contour);
+  --entity-issue: var(--brand-slate);
+  --entity-issue-bg: var(--brand-contour);
 }

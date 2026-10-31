@@ -2,8 +2,8 @@ class AreaOfConcernsController < ApplicationController
   before_action :set_area_of_concern, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @area_of_concerns = pagy(AreaOfConcern.all)
-    render Views::AreaOfConcerns::IndexView.new(area_of_concerns: @area_of_concerns, pagy: @pagy)
+    @pagy, @area_of_concerns = pagy(AreaOfConcern.order(:name))
+    render Views::AreaOfConcerns::IndexView.new(area_of_concerns: @area_of_concerns, pagy: @pagy, policy_counts: Policy.where(area_of_concern: @area_of_concerns).group(:area_of_concern_id).count)
   end
 
   def show

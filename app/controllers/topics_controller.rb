@@ -3,8 +3,10 @@ class TopicsController < ApplicationController
 
   # GET /topics or /topics.json
   def index
-    @pagy, @topics = pagy(Topic.all)
-    render Views::Topics::IndexView.new(topics: @topics, pagy: @pagy)
+    @pagy, @topics = pagy(Topic.order(:title))
+    render Views::Topics::IndexView.new(topics: @topics, pagy: @pagy,
+      issue_counts: Issue.where(topic: @topics).group(:topic_id).count,
+      approach_counts: Approach.joins(:issue).where(issues: { topic_id: @topics }).group("issues.topic_id").count)
   end
 
   # GET /topics/1 or /topics/1.json

@@ -76,3 +76,8 @@
     transition: background-color 150ms ease, border-color 150ms ease;
   }
 }
+
+.save-bar:hover .save-bar-text,
+.save-bar:focus-within .save-bar-text {
+  @apply flex;
+}

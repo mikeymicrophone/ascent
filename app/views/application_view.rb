@@ -45,6 +45,63 @@ class Views::ApplicationView < Phlex::HTML
     render PhlexIcons::Lucide.const_get(name.to_s.camelize).new(class: "icon icon-#{name.to_s.dasherize}", aria: { hidden: true }, **attributes)
   end
 
+  # The Lucide icon that stands for each kind of record, wherever records are listed or titled.
+  ENTITY_ICONS = {
+    race: :vote, election: :calendar, candidacy: :badge_check, person: :user_round,
+    office: :landmark, position: :briefcase, country: :globe, state: :map, county: :map_pinned,
+    municipality: :building_2, district: :layout_grid, topic: :tag, issue: :circle_question_mark,
+    approach: :route, stance: :quote, governing_body: :columns_3, policy: :scroll_text, official_code: :file_text,
+    year: :calendar_range, governance_type: :network, area_of_concern: :target, voter: :user, residence: :house, rating: :gauge,
+    voter_race_baseline: :ruler_dimension_line, organization: :building_2, party: :flag, endorsement: :badge_check
+  }.freeze
+
+  def entity_icon(record_or_model)
+    icon(ENTITY_ICONS.fetch(record_or_model.model_name.element.to_sym, :circle))
+  end
+
+  # The links back up from a record to its section of the site, for a Breadcrumb's trail.
+  def trail_for(record)
+    case record
+    when Race then [ [ "Elections", elections_path ], [ record.election.name, record.election ] ]
+    when Candidacy then trail_for(record.race) + [ [ record.race.office.position.title, record.race ] ]
+    when Office then [ [ "Offices", offices_path ], [ record.jurisdiction.name, record.jurisdiction.jurisdictionable ] ]
+    when JurisdictionOwner then place_trail(record)
+    else chain_trail(record)
+    end
+  end
+
+  # The places a place sits within, from its country down, by the jurisdiction tree.
+  def place_trail(place)
+    above = []
+    jurisdiction = place.jurisdiction&.parent
+    while jurisdiction
+      above.unshift(jurisdiction)
+      jurisdiction = jurisdiction.parent
+    end
+    above.map { [ it.name, it.jurisdictionable ] }
+  end
+
+  # A record's parents in its own hierarchy, such as an approach's issue and topic, or else its section.
+  def chain_trail(record)
+    parents = record.build_hierarchy_chain[0...-1]
+    return parents.map { [ it.name, it ] } if parents.any?
+
+    [ [ record.model_name.human.pluralize, polymorphic_path(record.class) ] ]
+  end
+
+  # A race still to be decided: open for mountains, and its election day not yet past.
+  def ahead?(race)
+    race.election.open_to_rating? && race.election.election_date >= Date.current
+  end
+
+  # A section's heading, with a short note beside it such as a count.
+  def section_heading(title, subtitle = nil)
+    div(class: "place-section-heading") do
+      h2(class: "card-title") { title }
+      span(class: "place-section-subtitle") { subtitle } if subtitle
+    end
+  end
+
   def delimited(number)
     ActiveSupport::NumberHelper.number_to_delimited(number)
   end
@@ -70,36 +127,6 @@ class Views::ApplicationView < Phlex::HTML
 
   def jurisdiction_link(jurisdiction)
     link_to jurisdiction.name, jurisdiction.jurisdictionable, class: "link jurisdiction"
-  end
-
-  def expandable(context, collection_or_symbol, title: nil, &block)
-    # Handle array context (future expansion for complex where clauses)
-    if context.is_a?(Array)
-      raise NotImplementedError, "Array context not implemented yet - for future stances filtering by topic AND state"
-    end
-
-    # Determine the collection
-    if collection_or_symbol.is_a?(Symbol)
-      # Fetch collection from context object using symbol
-      if context.nil?
-        raise ArgumentError, "Context cannot be nil when using symbol for collection"
-      end
-      collection = context.send(collection_or_symbol)
-      section_title = title || collection_or_symbol.to_s.humanize
-    else
-      # Use provided collection directly
-      collection = collection_or_symbol
-      section_title = title || collection.first&.class&.name&.pluralize || "Items"
-    end
-
-    return unless collection.respond_to?(:any?) && collection.any?
-
-    ExpandableSection(
-      title: section_title,
-      count: collection.count
-    ) do
-      yield(collection) if block
-    end
   end
 
   # All views that inherit from this have access to methods on their namespace module, including Kits

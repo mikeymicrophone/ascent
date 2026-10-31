@@ -16,7 +16,7 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libgeos-c1t64 libjemalloc2 libvips postgresql-client && \
+    apt-get install --no-install-recommends -y curl fonts-dejavu-core libgeos-c1t64 libjemalloc2 libvips postgresql-client && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment

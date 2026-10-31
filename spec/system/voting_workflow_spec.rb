@@ -32,7 +32,7 @@ RSpec.describe "Voting Workflow", type: :system do
     it "shows race details with candidates" do
       visit race_path(race)
 
-      expect(page).to have_content("Mayor - Springfield")
+      expect(page).to have_content("Mayor of Springfield")
       expect(page).to have_text(:all, "Alice Johnson")
       expect(page).to have_text(:all, "Bob Smith")
     end

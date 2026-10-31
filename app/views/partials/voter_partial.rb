@@ -1,131 +1,46 @@
+# frozen_string_literal: true
+
+# A voter's page body, seen only by the voter or an admin: their account, and the races they have taken
+# part in, with how many candidates they rated and their baseline in each.
 class Views::Partials::VoterPartial < Views::ApplicationView
-  def initialize(voter:)
-    @voter = voter
-  end
+  RACE_LIMIT = 10
 
-  def view_template(&)
-    div(id: dom_id(@voter), class: "voter-partial") do
-      h3 { @voter.full_name }
-      if @voter.birth_date
-        div do
-          span { "Birth date:" }
-          whitespace
-          span { @voter.birth_date.to_fs(:display) }
-        end
-      end
-      div do
-        span { "Is verified:" }
-        whitespace
-        span { @voter.is_verified.to_s }
-      end
+  prop :voter, Voter
 
-      # Voting Activity expandable section
-      if @voter.ratings.any? || @voter.voter_race_baselines.any?
-        expandable(@voter, participated_races(@voter), title: "Voting Activity") do |activity|
-          voting_activity_preview(@voter)
-        end
+  def view_template
+    section(class: "place-section") do
+      section_heading("Account")
+      dl(class: "place-facts-list") do
+        FactRow(label: "Born") { @voter.birth_date.strftime("%b %-d, %Y") } if @voter.birth_date
+        FactRow(label: "Verified") { @voter.is_verified ? "Yes" : "No" }
+        FactRow(label: "Joined") { @voter.created_at.strftime("%b %-d, %Y") }
       end
     end
-  end
-
-  def voting_activity_preview(voter = @voter)
-    div(class: "voting-activity-preview") do
-      # Group activity by races
-      participated_races = participated_races(voter)
-
-      # Show first 5 races, sorted by date (most recent first)
-      participated_races.first(5).each do |race_data|
-        div(class: "voting-activity-item") do
-          voting_activity_item(race_data)
-        end
-      end
-
-      # Show "View All" link if there are more than 5 races
-      if participated_races.count > 5
-        div(class: "voting-activity-view-all") do
-          link_to "View all #{participated_races.count} races",
-                  ratings_path(voter_id: voter.id),
-                  class: "link view-all"
-        end
-      end
-    end
-  end
-
-  def voting_activity_item(race_data)
-    race = race_data[:race]
-    baseline = race_data[:baseline]
-    ratings_count = race_data[:ratings_count]
-
-    div(class: "voting-activity-header") do
-      link_to race.election.name, race, class: "link election"
-      span(class: "voting-office") { " for #{race.office.position.title}" }
-    end
-
-    div(class: "voting-activity-details") do
-      # Election date
-      span(class: "election-date") { race.election_date.to_fs(:display) }
-
-      # Voting participation info
-      span(class: "voting-participation") { "#{ratings_count} ratings" }
-
-      # Baseline info if set
-      if baseline
-        span(class: "voting-baseline") { "Baseline: #{baseline.baseline}" }
-      end
-
-      # Status indicator
-      status = determine_voting_status(race_data)
-      span(class: "status-indicator status-#{status}") { status.capitalize }
-    end
-  end
-
-  def voting_activity_count(voter = @voter)
-    voter.voter_race_baselines.count +
-    voter.ratings.joins(:candidacy).select("candidacies.race_id").distinct.count
-  end
-
-  def participated_races(voter = @voter)
-    # Use the with_voting_activity scope to pre-load all necessary associations
-    voter_with_activity = Voter.with_voting_activity.find(voter.id)
-
-    # Get races where voter has set baselines or made ratings
-    baseline_races = voter_with_activity.voter_race_baselines.map(&:race)
-    rating_races = voter_with_activity.ratings.map { |r| r.candidacy.race }.uniq
-
-    all_races = (baseline_races + rating_races).uniq
-
-    # Build race data with associated voting info
-    all_races.map do |race|
-      baseline = voter_with_activity.voter_race_baselines.find { |b| b.race_id == race.id }
-      ratings_count = voter_with_activity.ratings.count { |r| r.candidacy.race_id == race.id }
-
-      {
-        race: race,
-        baseline: baseline,
-        ratings_count: ratings_count
-      }
-    end.sort_by { |data| data[:race].election_date }.reverse
+    RelatedList(heading: "Races taken part in", records: races.first(RACE_LIMIT), total: races.size) { |race| race_row(race) }
   end
 
   private
 
-  def determine_voting_status(race_data)
-    race = race_data[:race]
-    baseline = race_data[:baseline]
-    ratings_count = race_data[:ratings_count]
+  def ratings_by_race
+    @ratings_by_race ||= @voter.ratings.includes(:candidacy).group_by { it.candidacy.race_id }
+  end
 
-    return "upcoming" if race.status == "upcoming"
-    return "active" if race.status == "active"
+  def baselines_by_race
+    @baselines_by_race ||= @voter.voter_race_baselines.index_by(&:race_id)
+  end
 
-    # For completed races
-    if baseline && ratings_count > 0
-      "participated"
-    elsif ratings_count > 0
-      "partial" # Rated but no baseline set
-    elsif baseline
-      "baseline-only" # Set baseline but no ratings
-    else
-      "registered" # Somehow involved but minimal participation
+  # Latest election first.
+  def races
+    @races ||= Race.where(id: ratings_by_race.keys | baselines_by_race.keys).includes(:election, office: :position)
+      .sort_by { -it.election.election_date.jd }
+  end
+
+  def race_row(race)
+    rated = ratings_by_race.fetch(race.id, []).size
+    baseline = baselines_by_race[race.id]
+    ListRow(record: race, title: race.office.name,
+      meta: [ race.election.name, pluralize(rated, "rating"), (baseline && "baseline #{baseline.baseline}") ].compact.join(" · ")) do
+      StatusChip(status: race.status)
     end
   end
 end

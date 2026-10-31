@@ -11,6 +11,12 @@ class District < ApplicationRecord
   validates :name, :kind, presence: true
 
   scope :of_chamber, ->(chamber) { where(kind: CHAMBER_KINDS.fetch(chamber)) }
+  # District 2 before District 10: shorter names first, then by name, which numbers names in order.
+  scope :in_natural_order, -> { order(Arel.sql("length(districts.name), districts.name")) }
+  # Districts drawn directly within a state.
+  scope :in_state, ->(state) {
+    state.jurisdiction ? where(id: state.jurisdiction.children.where(jurisdictionable_type: "District").select(:jurisdictionable_id)) : none
+  }
 
   def congressional?
     kind.include?("congressional")
@@ -18,5 +24,22 @@ class District < ApplicationRecord
 
   def chamber
     CHAMBER_KINDS.find { |_, kinds| kinds.include?(kind) }&.first
+  end
+
+  # The state the district is drawn in, when it sits directly within one.
+  def state
+    parent = jurisdiction&.parent&.jurisdictionable
+    parent if parent.is_a?(State)
+  end
+
+  # What sets the district apart within its state, without the state and kind its name repeats:
+  # "District 21", "Circuit 11", "At-Large", "Twenty-Third Middlesex", or the towns it covers.
+  def label
+    case name
+    when /: (.+)\z/, /\((.+)\)\z/ then Regexp.last_match(1)
+    when /(\d+)\z/ then "#{kind.include?("circuit") ? "Circuit" : "District"} #{Regexp.last_match(1)}"
+    when /\bAt-Large\b/i then "At-Large"
+    else name
+    end
   end
 end

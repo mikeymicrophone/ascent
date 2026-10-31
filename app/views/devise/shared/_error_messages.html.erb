@@ -1,0 +1,10 @@
+<% if resource.errors.any? %>
+  <div class="auth-errors" id="error_explanation" role="alert" tabindex="-1">
+    <h2>Please check the following</h2>
+    <ul>
+      <% resource.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

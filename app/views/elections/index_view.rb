@@ -22,7 +22,7 @@ class Views::Elections::IndexView < Views::ApplicationView
       listing_filters
       if @elections.any?
         ol(class: "day-groups") { @elections.group_by(&:election_date).each { |date, elections| day_group(date, elections) } }
-        Pagination(pagy: @pagy)
+        Pagination(pagy: @pagy, noun: "elections")
       else
         empty_state
       end

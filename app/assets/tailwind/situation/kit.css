@@ -1,0 +1,87 @@
+.list-row,
+.list-row-icon,
+.pagination-step,
+.pagination-page,
+.filter-select {
+  @apply transition-colors;
+}
+
+.list-row:hover {
+  background-color: var(--brand-lichen);
+}
+
+.list-row:hover .list-row-title {
+  color: var(--brand-rope-deep);
+}
+
+.list-row:hover .list-row-icon {
+  background-color: var(--brand-summit-wash);
+  color: var(--brand-summit-deep);
+}
+
+.list-row:hover .list-row-chevron {
+  color: var(--brand-basalt);
+}
+
+.pagination-step:not(.is-disabled):hover,
+.pagination-page:not(.is-current):hover,
+.filter-select:hover {
+  background-color: var(--brand-contour);
+}
+
+.pagination-step.is-disabled {
+  @apply cursor-default;
+}
+
+.list-row-title:focus-visible,
+.pagination-step:focus-visible,
+.pagination-page:focus-visible,
+.filter-select:focus-visible {
+  outline: 3px solid var(--brand-rope);
+  outline-offset: 2px;
+}
+
+.index-results:focus {
+  outline: none;
+}
+
+/* Motion: rows rise into place one after another, the chevron leans toward where the row goes, and
+   pages cross-fade. Nothing moves for visitors who ask for less motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .list-row-chevron {
+    @apply transition-transform duration-200;
+  }
+
+  .list-row:hover .list-row-chevron {
+    transform: translateX(3px);
+  }
+
+  [data-reveal] {
+    transition: opacity 320ms ease-out, transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: calc(var(--reveal-order, 0) * 28ms);
+  }
+
+  [data-reveal="pending"] {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 180ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

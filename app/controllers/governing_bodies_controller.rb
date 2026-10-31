@@ -2,8 +2,12 @@ class GoverningBodiesController < ApplicationController
   before_action :set_governing_body, only: %i[ show edit update destroy ]
 
   def index
-    @pagy, @governing_bodies = pagy(GoverningBody.by_governance_type(params[:governance_type_id]))
-    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy, parent: filtering_governance_type)
+    bodies = GoverningBody.includes(:governance_type, jurisdiction: :jurisdictionable).by_governance_type(params[:governance_type_id] || filters["governance_type_id"])
+      .order(:name)
+    bodies = bodies.named_like(filters["q"]) if filters["q"].present?
+    @pagy, @governing_bodies = pagy(bodies)
+    render Views::GoverningBodies::IndexView.new(governing_bodies: @governing_bodies, pagy: @pagy, parent: filtering_governance_type,
+      filters: filters, governance_types: GovernanceType.order(:name), policy_counts: Policy.where(governing_body: @governing_bodies).group(:governing_body_id).count)
   end
 
   def show
@@ -43,6 +47,11 @@ class GoverningBodiesController < ApplicationController
   end
 
   private
+
+  def filters
+    @filters ||= params.permit(:q, :governance_type_id).to_h
+  end
+
 
   def filtering_governance_type
     GovernanceType.find(params[:governance_type_id]) if params[:governance_type_id]

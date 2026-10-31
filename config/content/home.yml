@@ -1,0 +1,65 @@
+hero:
+  kicker: Civic simulation for approval voting and policy clarity
+  title: Ascent helps communities test richer ways to vote before changing the real world.
+  lead: >
+    The project models elections, expressive ratings, and issue positions in one
+    place so researchers, organizers, and donors can study how voter choice,
+    candidate coalitions, and policy responsibility actually interact.
+  mountains_link: Explore the Mountain Demo
+  approval_voting_link: About Approval Voting
+  supporters_link: For Philanthropic Partners
+
+metrics:
+  active_elections: Active elections
+  offices: Offices modeled
+  topics: Topics tracked
+  issues: Issues connected
+
+pillars:
+  kicker: Three Ways that
+  title: Expressive Voting turns elections into a collaboration.
+  items:
+    - title: Assent
+      copy: >
+        The process is focused on agreement, not compromise.  You can be specific about where you stand.
+    - title: Ascent
+      copy: >
+        Candidates who work hard can climb to the top, even without a head start.
+    - title: The Scent
+      copy: >
+        Politicians can finally see, almost in exact detail, which of their ideas are truly popular.
+        And with that reassurance, they are able to be precise when saying what they'd change.
+
+trust:
+  kicker: Designed for cross-partisan scrutiny
+  title: The framing stays civic and practical, not partisan.
+  items:
+    - title: Voter agency
+      copy: >
+        People can express layered preferences instead of being forced into a
+        single strategic choice.
+    - title: Institutional fit
+      copy: >
+        The system links policy claims back to real offices and jurisdictions,
+        which helps keep promises legible.
+    - title: Transparent experimentation
+      copy: >
+        Mock elections and simulation data let communities explore reforms without
+        pretending theory is enough.
+    - title: Local usefulness
+      copy: >
+        The data model is structured around places, offices, and residents, which
+        keeps the project grounded in administration.
+
+active_races:
+  kicker: Current workspace
+  title: Active election spaces ready for exploration.
+  mountain_link: Open Mountain
+  race_link: See Race Data
+  empty:
+    title: No active races are loaded yet.
+    copy: >
+      The supporting data model is already in place, so the next step is to seed
+      or model a live example and use the mountain interface to walk people through it.
+    elections_link: Browse Election Data
+    jurisdictions_link: Review Jurisdictions

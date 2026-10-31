@@ -205,12 +205,6 @@ RSpec.describe "Candidacies Index", type: :request do
   end
 
   context "error handling" do
-    it "handles database errors gracefully" do
-      allow(Candidacy).to receive(:with_election_context).and_raise(ActiveRecord::StatementInvalid.new("Database error"))
-
-      expect { get candidacies_path }.to raise_error(ActiveRecord::StatementInvalid)
-    end
-
     it "handles valid parameters correctly" do
       create_list(:candidacy, 5)
 

@@ -231,3 +231,8 @@
 .claim-districts dd {
   @apply text-sm;
 }
+
+.baseline-sweep-scale {
+  @apply text-xs;
+  font-family: var(--font-metric);
+}

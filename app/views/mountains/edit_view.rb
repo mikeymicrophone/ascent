@@ -12,32 +12,42 @@ class Views::Mountains::EditView < Views::ApplicationView
 
   def view_template
     div(class: "mountain-page", data: editor_data) do
-      ModeStrip(race: @race, voter: @voter)
+      ModeStrip(race: @race, voter: @voter) unless pretend_vote?
       div(class: "mountain-page-body") do
         race_header
         div(class: "mountain-layout") do
           section(class: "mountain-panel", aria: { label: "Your mountain" }) do
             mountain_toolbar
             @mountain_data.empty? ? render_empty_state : mountain_form
+            div(class: "mountain-footer") do
+              button(type: "button", class: "pill-button pill-button-outline party-endorsements-toggle", aria: { pressed: "false" },
+                data: { action: "mountain-editor#togglePartyEndorsements" }) { "Party endorsements" }
+            end
           end
           aside(class: "mountain-aside", aria: { label: "Your vote" }) do
+            Views::Mountains::SaveBar(mountain: @mountain)
+            Views::Mountains::Sharing(mountain: @mountain) if @voter == current_voter
             Views::Mountains::YourVote(mountain: @mountain)
             Views::Mountains::BaselineCard(mountain: @mountain)
             Views::Mountains::OfficialResults(race: @race) if @race.official_results_revealed_to?(@voter)
             rating_explainer
           end
         end
-        Views::Mountains::SaveBar(mountain: @mountain)
       end
     end
   end
 
   private
 
+  def pretend_vote?
+    @race.mode_for(@voter) == "pretend"
+  end
+
   def editor_data
     {
       controller: "mountain-editor",
       view: "mountain",
+      party_endorsements: "false",
       "mountain-editor-max-height-value": Views::Mountains.max_height,
       "mountain-editor-draft-url-value": draft_mountain_path(@race, voter_id: @voter.id)
     }
@@ -56,9 +66,12 @@ class Views::Mountains::EditView < Views::ApplicationView
         end
         p(class: "voter-on-behalf") { "Voter: #{@voter.name}" } unless @voter == current_voter
       end
-      div(class: "race-header-actions") do
-        follow_button if current_voter
-        PillLink(label: "Results", path: race_results_path(@race), icon: :chart_column, variant: "outline")
+      div(class: "mountain-header-side") do
+        ModeStrip(race: @race, voter: @voter) if pretend_vote?
+        div(class: "race-header-actions") do
+          follow_button if current_voter
+          PillLink(label: "Results", path: race_results_path(@race), icon: :chart_column, variant: "outline")
+        end
       end
     end
   end

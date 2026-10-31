@@ -1,0 +1,146 @@
+.profile-image-gallery {
+  @apply gap-5;
+}
+
+.profile-image-fields {
+  @apply border rounded-xl p-4 mb-4;
+}
+
+.profile-header {
+  @apply gap-5 sm:gap-8;
+}
+
+.profile-portrait {
+  @apply m-0;
+}
+
+.profile-portrait-image,
+.profile-portrait-placeholder {
+  @apply rounded-2xl;
+}
+
+.profile-portrait-credit {
+  @apply mt-2;
+}
+
+.profile-channel-list {
+  @apply list-none m-0 p-0 gap-3;
+}
+
+.profile-channel {
+  @apply gap-1 pb-3 border-b last:border-b-0 last:pb-0;
+}
+
+.communication-gallery {
+  @apply gap-5;
+}
+
+.communication-card {
+  @apply rounded-2xl border;
+}
+
+.communication-card-body {
+  @apply p-4 gap-2;
+}
+
+.communication-title {
+  @apply m-0;
+}
+
+.communication-player {
+  @apply border-0;
+  min-height: 200px;
+}
+
+.communication-play {
+  @apply gap-2 p-5 border-0;
+  min-height: 200px;
+}
+
+.communication-play .icon {
+  @apply w-10 h-10;
+}
+
+.stance-groups {
+  @apply gap-5;
+}
+
+.stance-group {
+  @apply gap-2.5;
+}
+
+.stance-group-title {
+  @apply gap-2 m-0;
+}
+
+.stance-group-title .icon {
+  @apply w-4.5 h-4.5;
+}
+
+.communication-list {
+  @apply gap-3 m-0 p-0 list-none;
+}
+
+.communication-item {
+  @apply gap-0.5 pb-3 border-b last:border-b-0 last:pb-0;
+}
+
+.communication-link .icon {
+  @apply w-3.5 h-3.5;
+}
+
+.candidacy-ratings .stats-grid {
+  @apply gap-2 sm:gap-4 mt-0;
+}
+
+.candidacy-ratings .stat-item {
+  @apply gap-1 p-3 sm:p-4 rounded-2xl text-left min-w-0;
+}
+
+.privacy-line {
+  @apply gap-2 m-0;
+}
+
+.privacy-line .icon {
+  @apply w-4 h-4;
+}
+
+.policy-path-steps {
+  @apply gap-1.5 m-0 p-0 list-none;
+}
+
+.policy-path-step {
+  @apply gap-1 px-4 py-3 rounded-2xl border;
+}
+
+.issue-cards {
+  @apply gap-3;
+}
+
+.issue-card {
+  @apply gap-2 p-4 rounded-2xl border;
+}
+
+.issue-card-title {
+  @apply m-0;
+}
+
+.issue-card-approaches {
+  @apply gap-1.5 m-0 p-0 list-none;
+}
+
+.issue-card-approaches li {
+  @apply gap-1.5;
+}
+
+.issue-card-approaches .icon {
+  @apply w-4 h-4 shrink-0;
+}
+
+.evidence-quote {
+  @apply my-1 pl-3 border-l-[3px];
+}
+
+.code-text p {
+  @apply mb-3 last:mb-0;
+}

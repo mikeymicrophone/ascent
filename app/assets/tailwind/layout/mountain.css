@@ -1,7 +1,83 @@
 /* Mountain Interface Layout */
 
+.mountain-sharing,
+.mountain-sharing-actions {
+  display: grid;
+}
+
+.public-mountain {
+  margin-inline: auto;
+  display: grid;
+}
+
+.public-mountain-preview {
+  display: block;
+}
+
+.public-mountain-ratings {
+  border-collapse: collapse;
+}
+
+.public-mountain-ratings caption {
+  text-align: left;
+}
+
+.public-mountain-ratings th,
+.public-mountain-ratings td {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
 .mountain-index {
   @apply container mx-auto px-4 py-8;
+}
+
+.mountain-race-grid {
+  @apply grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3;
+}
+
+.mountain-race-card {
+  @apply relative isolate flex min-w-0 flex-col overflow-hidden;
+}
+
+.mountain-race-card::before {
+  content: "";
+  @apply pointer-events-none absolute right-0 top-0 -z-10;
+}
+
+.mountain-race-card-body {
+  @apply flex flex-1 flex-col items-start;
+}
+
+.mountain-race-card-top {
+  @apply flex w-full items-center justify-between;
+}
+
+.mountain-race-mode,
+.mountain-race-details time,
+.mountain-race-details > span {
+  @apply inline-flex items-center;
+}
+
+.mountain-race-mode::before {
+  content: "";
+  @apply block shrink-0 rounded-full;
+}
+
+.mountain-race-details {
+  @apply flex flex-wrap items-center justify-between;
+}
+
+.mountain-race-actions {
+  @apply flex flex-col;
+}
+
+.mountain-race-link {
+  @apply flex items-center justify-between;
+}
+
+.mountain-race-simulate .resource-action {
+  @apply w-full justify-center;
 }
 
 .elections-grid {
@@ -38,7 +114,7 @@
 .mountain-chart {
   @apply relative w-full;
   @apply bg-white border rounded-lg;
-  height: 500px; /* Total chart height including padding */
+  /* Grows past its 500px minimum when long names wrap under fixed-height rating areas. */
 }
 
 .chart-content {
@@ -58,18 +134,28 @@
 }
 
 .rating-area {
-  @apply relative flex-1;
-  @apply border-l border-gray-200;
+  /* Every column shares one 0–500 scale, so the area never grows or shrinks with its name. */
+  @apply relative flex-none;
   height: 320px; /* Actual rating scale area */
   z-index: 2;
 }
 
+/* Reaches past the column's padding into the gap, so a long name wraps less and stays centered under its peak. */
 .candidate-info {
-  @apply mt-4 text-center;
+  @apply -mx-3 mt-4 text-center;
+}
+
+.party-endorsements {
+  @apply block;
+}
+
+.mountain-page[data-party-endorsements="false"] .party-endorsements {
+  @apply hidden;
 }
 
 .y-axis-labels {
-  @apply absolute left-0 top-4;
+  /* Level with the rating areas: the chart's padding plus each column's. */
+  @apply absolute left-0 top-8;
   @apply w-12 h-80;
 }
 
@@ -83,7 +169,7 @@
   @apply flex items-center;
   /* Never capture column clicks — only the label handle is interactive */
   @apply pointer-events-none;
-  z-index: 1;
+  z-index: 3;
 }
 
 .baseline-line {
@@ -104,9 +190,9 @@
 }
 
 .rating-dot {
-  @apply absolute rounded-full;
+  @apply absolute left-1/2 rounded-full;
   @apply border-2;
-  @apply -ml-1.5; /* Center on column */
+  @apply -translate-x-1/2 -translate-y-1/2; /* Centered on the rating, on the column's line */
   /* Let pointer events hit the rating-area so drag always starts */
   pointer-events: none;
   z-index: 2;
@@ -134,4 +220,16 @@
 .btn-secondary,
 .btn-tertiary {
   @apply inline-flex items-center justify-center;
+}
+
+.mountain-peak {
+  @apply absolute top-0 h-full overflow-visible pointer-events-none;
+  left: 50%;
+  width: calc(100% + 2rem);
+  z-index: 0;
+}
+
+.mountain-left-edge {
+  left: 0;
+  width: 50%;
 }
