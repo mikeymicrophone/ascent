@@ -9,7 +9,9 @@ State and layer selections are shareable URLs:
 - `/map` shows US states and DC recorded in the database.
 - `/map?state_id=ID` shows that state's counties.
 - `/map?state_id=ID&layer=congressional` shows its congressional districts. Other layer values are `counties`, `state_senate`, and `state_house`.
-- `/map/features` accepts the same parameters and returns the display GeoJSON. Unknown states, non-US states, and unsupported layers return 404.
+- `/map?state_id=ID&layers[]=counties&layers[]=congressional` overlays multiple layers on one state map. The single `layer` parameter remains supported.
+- `/map/features` accepts the same parameters and returns the display GeoJSON, including per-layer groups, a legend payload, and `unavailable_layers` when a selected layer has no geometry. Unknown states, non-US states, and unsupported layers return 404.
+
 
 ## Boundaries and dates
 
@@ -39,6 +41,11 @@ Place pages show a neighbor panel beside the individual outline. **Same-layer ne
 
 **Overlapping other types** use the existing `Jurisdiction.overlapping` rule (shared area beyond a digitizing sliver) and are listed separately from same-layer neighbors. The neighbor SVG draws peers in a muted style and the selected place highlighted, with links to each place page. County side lists prefer geometric adjacency when boundaries exist, and fall back to other counties in the state when they do not.
 
-Multiple simultaneous overlays, production caching, and broader export polish remain in ASC-116 and ASC-117.
+## State overlays (ASC-116)
+
+On a state map, checkboxes toggle counties and congressional / state legislative district layers together. Each selected layer uses a distinct stroke and fill. The accessible legend lists selected layers and marks unavailable ones. The GeoJSON response includes `layers`, `legend`, and `unavailable_layers`; feature properties carry `layer` and `layer_label` so overlapping shapes stay distinguishable. Selecting a shape brings it forward with a stronger highlight before navigation. Place-link lists are grouped by selected layer for no-JS use.
+
+Production caching and broader export polish remain in ASC-117.
+
 
 

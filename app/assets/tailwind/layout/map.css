@@ -26,3 +26,32 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
 }
+
+.map-layer-toggles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+}
+
+.map-layer-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.map-legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.map-legend-swatch {
+  display: inline-block;
+  border-style: solid;
+}
+

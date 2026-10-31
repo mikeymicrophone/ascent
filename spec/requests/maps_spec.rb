@@ -67,6 +67,27 @@ RSpec.describe "Map explorer", type: :request do
     expect(payload["outline"]["properties"]["name"]).to eq(state.name)
   end
 
+  it "overlays multiple selected layers, reports unavailable ones, and keeps an accessible legend" do
+    boundary(state.jurisdiction)
+    boundary(county.jurisdiction)
+    district = create(:district, name: "NY-10", kind: "congressional district")
+    jurisdiction = create(:jurisdiction, jurisdictionable: district, parent: state.jurisdiction)
+    boundary(jurisdiction)
+
+    get map_path(state_id: state.id, layers: %w[counties congressional state_senate])
+    page = Nokogiri::HTML(response.body)
+    expect(page.css('input[name="layers[]"][checked]').map { it["value"] }).to match_array(%w[counties congressional state_senate])
+    expect(page.at_css('.map-legend[aria-label="Map layer legend"]')).to be_present
+    expect(response.body).to include("Unavailable on this map: State senate districts")
+
+    get features_map_path(state_id: state.id, layers: %w[counties congressional state_senate])
+    expect(payload["layers"].map { it["key"] }).to eq(%w[counties congressional state_senate])
+    expect(payload["features"].map { it["properties"]["layer"] }.uniq).to match_array(%w[counties congressional])
+    expect(payload["unavailable_layers"].map { it["key"] }).to eq([ "state_senate" ])
+    expect(payload["legend"].map { it["key"] }).to include("counties", "congressional", "state_senate")
+  end
+
+
   it "selects each legislative chamber independently and links districts to their own pages" do
     kinds = { "congressional" => "congressional district", "state_senate" => "state senate district", "state_house" => "assembly district" }
     districts = kinds.to_h do |layer, kind|
@@ -103,14 +124,17 @@ RSpec.describe "Map explorer", type: :request do
     page = Nokogiri::HTML(response.body)
     expect(page.at_css(%(.map-place-links a[href="#{county_path(county)}"]))).to be_present
     expect(page.at_css('a[href="/map"]')).to be_present
-    expect(page.at_css('select[name="layer"] option[selected]')["value"]).to eq("counties")
+    expect(page.at_css('input[name="layers[]"][value="counties"]')["checked"]).to be_present
 
     get features_map_path(state_id: state.id)
     expect(payload).to include("features" => [], "outline" => nil, "vintages" => [])
+    expect(payload["unavailable_layers"].map { it["key"] }).to eq([ "counties" ])
 
     get map_path(state_id: state.id, layer: "state_senate")
     expect(response.body).to include("No state senate districts are recorded here yet.")
+    expect(response.body).to include("Unavailable on this map: State senate districts")
   end
+
 
   it "rejects unknown states, non-US states, and unknown layers" do
     canada = create(:country, code: "CA")

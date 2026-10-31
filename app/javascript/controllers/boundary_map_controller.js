@@ -1,12 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 import { Turbo } from "@hotwired/turbo-rails"
 
+const DEFAULT_STYLE = { color: "#6a765c", fillColor: "#dce7c8", fillOpacity: 0.55, weight: 1 }
+const SELECTED_STYLE = { color: "#17251e", fillColor: "#bccf55", fillOpacity: 1, weight: 3 }
+
 export default class extends Controller {
   static targets = ["canvas", "status", "vintage", "inset", "insets"]
   static values = { url: String, selectedState: Boolean }
 
   async connect() {
     this.maps = []
+    this.selectedLayer = null
     this.request = new AbortController()
     this.statusTarget.textContent = "Loading map. You can also use the place links below."
     const signal = this.request.signal
@@ -22,8 +26,9 @@ export default class extends Controller {
       this.canvasTarget.hidden = false
       if (this.hasInsetsTarget) this.insetsTarget.hidden = false
       this.draw(data)
-      this.statusTarget.textContent = data.features.length
-        ? `${data.features.length} ${this.selectedStateValue ? "areas" : "states"} mapped. Select a shape to explore.`
+      const count = data.features.length
+      this.statusTarget.textContent = count
+        ? `${count} ${this.selectedStateValue ? "areas" : "states"} mapped. Select a shape to explore.`
         : "No selectable boundaries are recorded for this view. Use the place links below."
       this.vintageTarget.textContent = data.vintages.length
         ? `Boundary ${data.vintages.length === 1 ? "vintage" : "vintages"}: ${data.vintages.join(", ")}`
@@ -39,6 +44,7 @@ export default class extends Controller {
     this.resizeObserver?.disconnect()
     this.maps.forEach(map => map.remove())
     this.maps = []
+    this.selectedLayer = null
     this.canvasTarget.hidden = true
     if (this.hasInsetsTarget) this.insetsTarget.hidden = true
   }
@@ -46,16 +52,27 @@ export default class extends Controller {
   draw(data) {
     const map = this.createMap(this.canvasTarget)
     map.attributionControl.addAttribution("U.S. Census Bureau · TIGER/Line")
-    const features = data.features.map(feature => this.unwrapAlaska(feature))
 
     if (this.selectedStateValue) {
       const outline = data.outline && this.unwrapAlaska(data.outline)
-      if (outline) this.leaflet.geoJSON(outline, { interactive: false, style: { color: "#17251e", weight: 2, fillOpacity: 0 } }).addTo(map)
-      const areas = this.addFeatures(map, features)
-      const bounds = outline ? this.leaflet.geoJSON(outline).getBounds() : areas.getBounds()
-      bounds.isValid() ? map.fitBounds(bounds, { padding: [24, 24] }) : map.setView([38, -97], 4)
+      if (outline) {
+        this.leaflet.geoJSON(outline, { interactive: false, style: { color: "#17251e", weight: 2, fillOpacity: 0 } }).addTo(map)
+      }
+
+      let bounds = outline ? this.leaflet.geoJSON(outline).getBounds() : null
+      const groups = (data.layers && data.layers.length) ? data.layers : [{ key: "default", style: DEFAULT_STYLE, features: data.features }]
+      groups.forEach(group => {
+        const features = (group.features || []).map(feature => this.unwrapAlaska(feature))
+        if (!features.length) return
+        const style = this.styleFor(group)
+        const layerGroup = this.addFeatures(map, features, style)
+        if (!bounds || !bounds.isValid()) bounds = layerGroup.getBounds()
+        else bounds.extend(layerGroup.getBounds())
+      })
+      bounds && bounds.isValid() ? map.fitBounds(bounds, { padding: [24, 24] }) : map.setView([38, -97], 4)
     } else {
-      this.addFeatures(map, features.filter(feature => !["AK", "HI"].includes(feature.properties.state_code)))
+      const features = data.features.map(feature => this.unwrapAlaska(feature))
+      this.addFeatures(map, features.filter(feature => !["AK", "HI"].includes(feature.properties.state_code)), DEFAULT_STYLE)
       map.fitBounds([[24, -125], [50, -66]], { padding: [12, 12] })
       this.insetTargets.forEach(element => {
         const shapes = features.filter(feature => feature.properties.state_code === element.dataset.stateCode)
@@ -64,13 +81,23 @@ export default class extends Controller {
           return
         }
         const inset = this.createMap(element, true)
-        const areas = this.addFeatures(inset, shapes)
+        const areas = this.addFeatures(inset, shapes, DEFAULT_STYLE)
         const bounds = element.dataset.stateCode === "HI" ? [[18.8, -160.5], [22.3, -154.7]] : areas.getBounds()
         inset.fitBounds(bounds, { padding: [8, 8] })
       })
     }
     this.resizeObserver = new ResizeObserver(() => this.maps.forEach(item => item.invalidateSize()))
     this.resizeObserver.observe(this.canvasTarget)
+  }
+
+  styleFor(group) {
+    const style = group.style || {}
+    return {
+      color: style.color || DEFAULT_STYLE.color,
+      fillColor: style.fill || style.fillColor || DEFAULT_STYLE.fillColor,
+      fillOpacity: 0.45,
+      weight: 1.25
+    }
   }
 
   createMap(element, inset = false) {
@@ -83,34 +110,65 @@ export default class extends Controller {
     return map
   }
 
-  addFeatures(map, features) {
-    const style = { color: "#6a765c", weight: 1, fillColor: "#dce7c8", fillOpacity: 0.85 }
-    const highlight = { color: "#17251e", weight: 2, fillColor: "#bccf55", fillOpacity: 1 }
+  addFeatures(map, features, baseStyle) {
     return this.leaflet.geoJSON(features, {
-      style,
+      style: () => ({ ...baseStyle }),
       onEachFeature: (feature, layer) => {
         const label = document.createElement("span")
-        label.textContent = feature.properties.name
+        const layerLabel = feature.properties.layer_label
+        label.textContent = layerLabel ? `${feature.properties.name} (${layerLabel})` : feature.properties.name
         layer.bindTooltip(label, { sticky: true })
-        layer.on("mouseover", () => layer.setStyle(highlight))
-        layer.on("mouseout", () => layer.setStyle(style))
-        layer.on("click", () => Turbo.visit(feature.properties.url))
+        layer.on("mouseover", () => {
+          if (this.selectedLayer === layer) return
+          layer.setStyle({ ...baseStyle, weight: 2, fillOpacity: 0.75 })
+          layer.bringToFront()
+        })
+        layer.on("mouseout", () => {
+          if (this.selectedLayer === layer) return
+          layer.setStyle(baseStyle)
+        })
+        layer.on("click", event => {
+          this.selectFeature(layer, baseStyle)
+          if (!event.originalEvent?.metaKey && !event.originalEvent?.ctrlKey) {
+            Turbo.visit(feature.properties.url)
+          }
+        })
         layer.on("add", () => {
           const path = layer.getElement()
           path.setAttribute("tabindex", "0")
           path.setAttribute("role", "link")
-          path.setAttribute("aria-label", feature.properties.name)
+          path.setAttribute("aria-label", label.textContent)
           path.addEventListener("keydown", event => {
             if (event.key === "Enter" || event.key === " ") {
               event.preventDefault()
+              this.selectFeature(layer, baseStyle)
               Turbo.visit(feature.properties.url)
             }
           })
-          path.addEventListener("focus", () => { layer.setStyle(highlight); layer.openTooltip() })
-          path.addEventListener("blur", () => { layer.setStyle(style); layer.closeTooltip() })
+          path.addEventListener("focus", () => {
+            this.selectFeature(layer, baseStyle)
+            layer.openTooltip()
+          })
+          path.addEventListener("blur", () => {
+            if (this.selectedLayer === layer) {
+              this.selectedLayer = null
+              layer.setStyle(baseStyle)
+            }
+            layer.closeTooltip()
+          })
         })
       }
     }).addTo(map)
+  }
+
+  selectFeature(layer, baseStyle) {
+    if (this.selectedLayer && this.selectedLayer !== layer) {
+      this.selectedLayer.setStyle(this.selectedLayer._ascentBaseStyle || DEFAULT_STYLE)
+    }
+    layer._ascentBaseStyle = baseStyle
+    this.selectedLayer = layer
+    layer.setStyle(SELECTED_STYLE)
+    layer.bringToFront()
   }
 
   unwrapAlaska(feature) {
