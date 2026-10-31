@@ -25,7 +25,7 @@ class Views::Mountains::ListView < Views::ApplicationView
       end
       input(type: "range", min: 0, max: 500, step: 5, value: @baseline, class: "rating-slider baseline-slider",
         aria: { label: "Baseline. Candidates rated above it are approved." },
-        data: { action: "input->mountain-editor#setBaselineFromSlider", role: "baseline-slider" })
+        data: { action: "input->mountain-editor#setBaselineFromSlider change->mountain-editor#finishBaselineSlider", role: "baseline-slider" })
       span(class: "rating-row-value", data: { role: "baseline-value" }) { @baseline.to_s }
     end
   end
@@ -42,7 +42,7 @@ class Views::Mountains::ListView < Views::ApplicationView
       end
       input(type: "range", min: 0, max: 500, step: 5, value: data[:rating_value], class: "rating-slider",
         aria: { label: "Rate #{candidacy.person.full_name}" },
-        data: { action: "input->mountain-editor#rateFromSlider", candidacy_id: candidacy.id, role: "rating-slider" })
+        data: { action: "input->mountain-editor#rateFromSlider change->mountain-editor#finishRatingSlider", candidacy_id: candidacy.id, role: "rating-slider" })
       span(class: "rating-row-value", data: { role: "row-value" }) { data[:has_rating] ? data[:rating_value].to_s : "—" }
     end
   end

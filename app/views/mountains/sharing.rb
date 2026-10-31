@@ -7,7 +7,8 @@ class Views::Mountains::Sharing < Views::ApplicationView
       h2(class: "card-heading") { "Sharing" }
       if publication
         p { "This mountain is public. Anyone with the link can see your name, saved ratings, and baseline. Saved changes update the public mountain." }
-        div(class: "mountain-sharing-actions", data: { controller: "share", share_url_value: public_mountain_url(publication), share_title_value: publication.title }) do
+        div(class: "mountain-sharing-actions", data: { controller: "share", share_url_value: public_mountain_url(publication), share_title_value: publication.title,
+          share_target_type_value: "public_mountain", share_target_id_value: publication.id }) do
           button(type: "button", class: "pill-button pill-button-summit", data: { action: "share#share" }) { "Share mountain" }
           span(role: "status", data: { share_target: "status" })
           link_to "View public mountain", public_mountain_path(publication), class: "text-link"

@@ -8,10 +8,14 @@ class InvitesController < ApplicationController
 
   def show
     response.headers["Cache-Control"] = "no-store"
+    inviter = Voter.find_by(invite_token: params[:token])
+    raise ActiveRecord::RecordNotFound unless inviter || voter_signed_in?
+
+    track_analytics "invite_opened", inviter_id: inviter.id, already_signed_in: voter_signed_in? if inviter
     if voter_signed_in?
       redirect_to root_path
     else
-      session["devise.inviter_id"] = Voter.find_by!(invite_token: params[:token]).id
+      session["devise.inviter_id"] = inviter.id
       redirect_to new_voter_registration_path
     end
   end
@@ -23,7 +27,11 @@ class InvitesController < ApplicationController
       return
     end
 
-    current_voter.received_invites.find_or_create_by!(inviter: inviter)
+    connection = current_voter.received_invites.find_or_create_by!(inviter: inviter)
+    if connection.previously_new_record?
+      track_analytics "connection_created", connection_id: connection.id, inviter_id: inviter.id,
+        source: params[:source] == "influencer" ? "influencer" : "leaderboard"
+    end
     destination = params[:source] == "influencer" ? influencer_path(token: inviter.invite_token) : invites_path
     redirect_to destination, notice: "You are now connected to this influencer.", status: :see_other
   end

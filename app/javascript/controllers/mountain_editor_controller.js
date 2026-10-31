@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { track } from "analytics"
 
 // Interactive mountain ratings: drag within a candidate column, or slide a row in the list view, to
 // set 0–500, and drag, slide or nudge the baseline to set the approval threshold. The mountain-range
@@ -20,6 +21,8 @@ export default class extends Controller {
     this.boundPointerMove = this.onPointerMove.bind(this)
     this.boundPointerUp = this.onPointerUp.bind(this)
     this.updateApprovalStates()
+    this.trackedRatings = new Map(this.candidateColumns().map(column => [column.dataset.candidacyId, document.getElementById(column.dataset.ratingInputId).value]))
+    this.trackedBaseline = this.baselineValue()
     if (this.isPhoneWidth()) this.setView("list")
   }
 
@@ -67,6 +70,47 @@ export default class extends Controller {
   nudgeBaseline(event) {
     const current = this.baselineValue() ?? 200
     this.applyBaselineUpdate(Math.max(0, Math.min(500, current + event.params.step)), { glide: true })
+    this.trackBaselineChange("button")
+  }
+
+  finishRatingSlider(event) {
+    this.trackRatingChange(this.candidateColumn(event.target.dataset.candidacyId), "slider")
+  }
+
+  finishBaselineSlider() {
+    this.trackBaselineChange("slider")
+  }
+
+  analyticsProperties() {
+    return { race_id: Number(this.element.dataset.analyticsRaceId), race_mode: this.element.dataset.analyticsRaceMode, view: this.element.dataset.view }
+  }
+
+  trackRatingChange(column, inputMethod) {
+    const id = column.dataset.candidacyId
+    const value = document.getElementById(column.dataset.ratingInputId).value
+    if (this.trackedRatings.get(id) === value) return
+
+    this.trackedRatings.set(id, value)
+    const ballotColumns = this.candidateColumns().filter(column => !column.classList.contains("off-ballot"))
+    track("rating_changed", {
+      ...this.analyticsProperties(), candidacy_id: Number(id), input_method: inputMethod,
+      rated_count: ballotColumns.filter(column => document.getElementById(column.dataset.ratingInputId).value !== "").length,
+      candidate_count: ballotColumns.length, off_ballot: column.classList.contains("off-ballot")
+    })
+  }
+
+  trackBaselineChange(inputMethod) {
+    const baseline = this.baselineValue()
+    if (baseline === this.trackedBaseline) return
+
+    const scores = this.candidateColumns().filter(column => !column.classList.contains("off-ballot"))
+      .map(column => document.getElementById(column.dataset.ratingInputId).value).filter(value => value !== "").map(Number)
+    track("baseline_changed", {
+      ...this.analyticsProperties(), input_method: inputMethod,
+      direction: baseline > this.trackedBaseline ? "raised" : "lowered",
+      approval_count_changed: scores.filter(value => value > baseline).length !== scores.filter(value => value > this.trackedBaseline).length
+    })
+    this.trackedBaseline = baseline
   }
 
   // Waits for any pending autosave so Save mountain publishes the latest edits.
@@ -192,9 +236,11 @@ export default class extends Controller {
 
   finishDrag() {
     if (this.draggingRating) {
+      this.trackRatingChange(this.closestCandidateColumn(this.activeRatingArea), "chart")
       this.toggleDraggingClass(this.activeRatingArea, false)
     }
     if (this.draggingBaseline) {
+      this.trackBaselineChange("chart")
       this.toggleBaselineDragging(false)
     }
 

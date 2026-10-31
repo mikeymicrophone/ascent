@@ -46,6 +46,8 @@ class Views::Mountains::EditView < Views::ApplicationView
   def editor_data
     {
       controller: "mountain-editor",
+      analytics_race_id: @race.id,
+      analytics_race_mode: @race.mode_for(@voter),
       view: "mountain",
       party_endorsements: "false",
       "mountain-editor-max-height-value": Views::Mountains.max_height,

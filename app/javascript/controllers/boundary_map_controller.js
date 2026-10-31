@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { Turbo } from "@hotwired/turbo-rails"
+import { cleanPath, track } from "analytics"
 
 export default class extends Controller {
   static targets = ["canvas", "status", "vintage", "inset", "insets"]
@@ -94,7 +95,7 @@ export default class extends Controller {
         layer.bindTooltip(label, { sticky: true })
         layer.on("mouseover", () => layer.setStyle(highlight))
         layer.on("mouseout", () => layer.setStyle(style))
-        layer.on("click", () => Turbo.visit(feature.properties.url))
+        layer.on("click", () => this.visitFeature(feature))
         layer.on("add", () => {
           const path = layer.getElement()
           path.setAttribute("tabindex", "0")
@@ -103,7 +104,7 @@ export default class extends Controller {
           path.addEventListener("keydown", event => {
             if (event.key === "Enter" || event.key === " ") {
               event.preventDefault()
-              Turbo.visit(feature.properties.url)
+              this.visitFeature(feature)
             }
           })
           path.addEventListener("focus", () => { layer.setStyle(highlight); layer.openTooltip() })
@@ -119,5 +120,10 @@ export default class extends Controller {
       ? [coordinates[0] > 0 ? coordinates[0] - 360 : coordinates[0], coordinates[1]]
       : coordinates.map(unwrap)
     return { ...feature, geometry: { ...feature.geometry, coordinates: unwrap(feature.geometry.coordinates) } }
+  }
+
+  visitFeature(feature) {
+    track("browse_refined", { method: "map_selection", destination: cleanPath(feature.properties.url), state_code: feature.properties.state_code })
+    Turbo.visit(feature.properties.url)
   }
 }

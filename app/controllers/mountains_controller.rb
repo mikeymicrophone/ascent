@@ -22,7 +22,9 @@ class MountainsController < ApplicationController
   end
 
   def share
+    previously_public = mountain.publication.present?
     mountain.share!
+    track_analytics "mountain_visibility_changed", mountain_event_properties.merge(previous_visibility: "private", visibility: "public") unless previously_public
     redirect_to mountain_path(@race), notice: "Your mountain is now public."
   rescue ActiveRecord::RecordInvalid => e
     redirect_to mountain_path(@race), alert: e.record.errors.full_messages.to_sentence
@@ -31,16 +33,21 @@ class MountainsController < ApplicationController
   end
 
   def unshare
+    previously_public = mountain.publication.present?
     mountain.unshare!
+    track_analytics "mountain_visibility_changed", mountain_event_properties.merge(previous_visibility: "public", visibility: "private") if previously_public
     redirect_to mountain_path(@race), notice: "Your mountain is now private."
   end
 
   def update
+    begin_save_tracking
     mountain.publish!(ratings: rating_params, baseline: params[:baseline].presence)
+    track_analytics "mountain_save", @save_event.merge(outcome: "succeeded")
 
     # Stay on the editable mountain so ratings remain draggable after save.
     redirect_to mountain_path(@race, voter_id: @voter.id), notice: "Mountain ratings updated."
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
+    track_analytics "mountain_save", @save_event.merge(outcome: "failed", error_type: e.class.name)
     redirect_to mountain_path(@race, voter_id: @voter.id),
                 alert: "Could not save mountain ratings: #{e.message}"
   end
@@ -57,14 +64,19 @@ class MountainsController < ApplicationController
   end
 
   def discard
+    discarded_changes = mountain.unsaved?
     mountain.discard!
+    track_analytics "mountain_save", mountain_event_properties.merge(outcome: "discarded") if discarded_changes
     respond_with_mountain notice: "Changes discarded."
   end
 
   def save
+    begin_save_tracking
     mountain.save!
+    track_analytics "mountain_save", @save_event.merge(outcome: "succeeded")
     respond_with_mountain notice: "Mountain saved."
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
+    track_analytics "mountain_save", @save_event.merge(outcome: "failed", error_type: e.class.name)
     respond_to do |format|
       format.html { redirect_to mountain_path(@race, voter_id: @voter.id), alert: "Could not save your mountain: #{e.message}" }
       format.json { render json: { errors: [ e.message ] }, status: :unprocessable_content }
@@ -158,6 +170,19 @@ class MountainsController < ApplicationController
   end
 
   private
+
+  def mountain_event_properties
+    { race_id: @race.id, race_mode: @race.mode_for(@voter) }
+  end
+
+  def begin_save_tracking
+    @save_event = mountain_event_properties.merge(
+      attempt_id: SecureRandom.uuid, first_save: mountain.saved_baseline_record.nil?,
+      rated_count: mountain.rated_count, candidate_count: mountain.ballot_candidacies_count,
+      seconds_since_first_edit: (Time.current - mountain.draft.created_at if mountain.draft.persisted?)
+    ).compact
+    track_analytics "mountain_save", @save_event.merge(outcome: "attempted")
+  end
 
   def mountain
     @mountain ||= Mountain.new(voter: @voter, race: @race)

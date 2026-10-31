@@ -25,7 +25,7 @@ class Views::Mountains::BaselineCard < Views::ApplicationView
     div(class: "baseline-sweep") do
       input(type: "range", min: 0, max: 500, step: 5, value: @mountain.baseline, class: "baseline-slider baseline-sweep-slider",
         aria: { label: "Baseline. Candidates rated above it are approved." },
-        data: { action: "input->mountain-editor#setBaselineFromSlider", role: "baseline-slider" })
+        data: { action: "input->mountain-editor#setBaselineFromSlider change->mountain-editor#finishBaselineSlider", role: "baseline-slider" })
       div(class: "baseline-sweep-scale", aria: { hidden: true }) do
         span { "0" }
         span { "500" }

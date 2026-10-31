@@ -57,7 +57,8 @@ class Views::Components::ActionBar < Views::ApplicationView
 
   def share_action
     button(type: "button", class: "action-button action-share",
-      data: { controller: "share", action: "share#share", share_url_value: polymorphic_url(@record), share_title_value: @record.name }) do
+      data: { controller: "share", action: "share#share", share_url_value: polymorphic_url(@record), share_title_value: @record.name,
+        share_target_type_value: @record.model_name.singular, share_target_id_value: @record.id }) do
       icon(:share_2)
       span(class: "action-label") { "Share" }
       span(class: "action-status", role: "status", data: { share_target: "status" })

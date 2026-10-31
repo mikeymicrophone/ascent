@@ -8,6 +8,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <meta name="view-transition" content="same-origin">
+    <%= tag.meta name: "ascent-analytics", content: analytics_context.to_json %>
 
     <%= yield :head %>
     <% if @public_mountain %>

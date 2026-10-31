@@ -9,6 +9,11 @@ class Views::Voters::EditView < Views::ApplicationView
           section_heading("Invite voters")
           p { "Share your invite link. Voters who register through it will be connected to you." }
           link_to invite_url(token: @voter.invite_token), invite_path(token: @voter.invite_token), class: "link"
+          div(data: { controller: "share", share_url_value: invite_url(token: @voter.invite_token), share_title_value: "Join me on Ascent",
+            share_target_type_value: "invite", share_target_id_value: @voter.id }) do
+            button(type: "button", class: "pill-button pill-button-outline", data: { action: "share#share" }) { "Share invite link" }
+            span(role: "status", data: { share_target: "status" })
+          end
           p { link_to "Invites leaderboard", invites_path, class: "link" }
           p { link_to "Edit influencer links and statements", influencer_profile_path, class: "link" }
           form_with(url: voter_path(@voter), method: :patch) do

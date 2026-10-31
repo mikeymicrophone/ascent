@@ -2,7 +2,7 @@ class Views::Maps::ShowView < Views::ApplicationView
   prop :explorer, MapExplorer
 
   def view_template
-    div(class: "record-page map-explorer") do
+    div(class: "record-page map-explorer", data: { analytics_result_count: @explorer.records.size }) do
       PageHeader(title: title, eyebrow: "Explore the map", lede: lede,
         trail: (@explorer.state ? [ [ "United States map", map_path ] ] : []), icon_for: ::State) do
         if @explorer.state

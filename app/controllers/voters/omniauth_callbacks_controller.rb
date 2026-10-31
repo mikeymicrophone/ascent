@@ -4,6 +4,7 @@ class Voters::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     voter = Voter.from_google(request.env["omniauth.auth"], inviter: inviting_voter)
 
     if voter.persisted?
+      track_signup(voter, method: "google") if voter.previously_new_record?
       sign_in_and_redirect voter, event: :authentication
       set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
     else

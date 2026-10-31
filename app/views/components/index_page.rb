@@ -28,7 +28,7 @@ class Views::Components::IndexPage < Views::ApplicationView
       @tabs&.call
       div(class: "index-filters") { @filters.call } if @filters
       turbo_frame_tag(@frame, target: "_top", class: "index-results", autoscroll: true,
-        data: { autoscroll_block: "start", controller: "paged-list", action: "turbo:frame-load->paged-list#settle" }) do
+        data: { analytics_result_count: @pagy&.count || @records.size, autoscroll_block: "start", controller: "paged-list", action: "turbo:frame-load->paged-list#settle" }) do
         @records.any? ? results(&row) : empty_state
       end
     end
