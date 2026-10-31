@@ -162,4 +162,23 @@ RSpec.describe "Map explorer", type: :request do
 
     expect(response).to have_http_status(:bad_request)
   end
+
+  it "caches display GeoJSON and refreshes after a boundary update" do
+    allow(Rails.cache).to receive(:fetch).and_call_original
+    first_boundary = boundary(state.jurisdiction)
+
+    get features_map_path
+    first = response.body
+    expect(response.headers["Cache-Control"]).to include("max-age=3600")
+
+    get features_map_path
+    expect(response.body).to eq(first)
+
+    first_boundary.update!(valid_until: Date.new(2025, 1, 1))
+    boundary(state.jurisdiction, from: Date.new(2025, 1, 1))
+    get features_map_path
+    expect(JSON.parse(response.body)["vintages"]).to eq([ 2025 ])
+  end
 end
+
+

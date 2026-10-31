@@ -45,7 +45,33 @@ Place pages show a neighbor panel beside the individual outline. **Same-layer ne
 
 On a state map, checkboxes toggle counties and congressional / state legislative district layers together. Each selected layer uses a distinct stroke and fill. The accessible legend lists selected layers and marks unavailable ones. The GeoJSON response includes `layers`, `legend`, and `unavailable_layers`; feature properties carry `layer` and `layer_label` so overlapping shapes stay distinguishable. Selecting a shape brings it forward with a stronger highlight before navigation. Place-link lists are grouped by selected layer for no-JS use.
 
-Production caching and broader export polish remain in ASC-117.
+## Caching, exports, and refresh (ASC-117)
+
+Production uses Solid Cache (`config.cache_store = :solid_cache_store`, `config/cache.yml`). Development uses the in-process memory store when caching is enabled.
+
+`MapExplorer#feature_collection` caches derived display GeoJSON for 12 hours under `map_explorer/v2/...`. The key includes the state, selected layers, effective date, and `JurisdictionBoundary.maximum(:updated_at)`, so any boundary write invalidates map payloads without mutating stored geometry. `BoundaryOutline` caches SVG path and viewBox parts under `boundary_outline/v1/...` keyed by boundary id, detail, and `updated_at`. `/map/features` and `/boundary_outlines/...` also send `Cache-Control` with a one-hour public max-age.
+
+SVG remains the preferred place-page and race-card display. PNG downloads use `script/render_svg_to_png` in a subprocess so Rails keeps the SVG upload decoder blocked. Measure local payload sizes with `bin/rails gis:map_payload_report STATE=NY` (feature counts and JSON/SVG/PNG byte sizes). Mobile rendering still relies on Leaflet fitBounds and the existing compact outline component; keep multi-layer selections modest on constrained networks.
+
+### Boundary refresh procedure
+
+1. Obtain Census TIGER/Line files for the desired vintage.
+2. Dry-run: `DRY_RUN=1 bin/rails 'gis:import_tiger[path-or-glob,YYYY]'`.
+3. Import: `bin/rails 'gis:import_tiger[path-or-glob,YYYY]'`.
+4. Optional residence check: `bin/rails gis:check_residences`.
+5. Confirm map vintages on `/map` and place-page outlines. Displaying a vintage does not verify it for a later election.
+6. Cache entries expire by `updated_at` in the key; no manual cache clear is required after import.
+
+### Production coverage audit note
+
+A read-only production audit was attempted via Railway for project `ascent` / environment `production`. Local `railway run` against that service did not establish the app database connection from this workstation (`Database not found: railway`), so production coverage counts were not verified here. Re-run the audit from a linked production shell with:
+
+```ruby
+JurisdictionBoundary.effective_on(Date.current).joins(:jurisdiction).group("jurisdictions.jurisdictionable_type").count
+```
+
+and compare US states, counties, and districts with and without effective boundaries. Report gaps only; do not write production data from that check.
+
 
 
 

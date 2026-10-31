@@ -43,14 +43,13 @@ class BoundaryOutline
   def path_data
     return @path_data if defined?(@path_data)
 
-    @path_data = geometry_value("ST_AsSVG(ST_SimplifyPreserveTopology(geometry, ?), 0, 4)")
+    @path_data = cached_geometry_parts[:path]
   end
 
   def view_box
     return @view_box if defined?(@view_box)
 
-    box = geometry_value("Box2D(ST_SimplifyPreserveTopology(geometry, ?))::text")
-    @view_box = box && view_box_for(box)
+    @view_box = cached_geometry_parts[:view_box]
   end
 
   def svg(title: name, css_class: "jurisdiction-outline-shape")
@@ -120,6 +119,26 @@ class BoundaryOutline
 
     @boundary = @jurisdiction &&
       JurisdictionBoundary.effective_on(@on).where(jurisdiction: @jurisdiction).order(:valid_from).first
+  end
+
+  def cached_geometry_parts
+    return @cached_geometry_parts if defined?(@cached_geometry_parts)
+    return @cached_geometry_parts = { path: nil, view_box: nil } unless boundary
+
+    @cached_geometry_parts = Rails.cache.fetch(outline_cache_key, expires_in: 12.hours) do
+      path = geometry_value("ST_AsSVG(ST_SimplifyPreserveTopology(geometry, ?), 0, 4)")
+      box = geometry_value("Box2D(ST_SimplifyPreserveTopology(geometry, ?))::text")
+      { path: path, view_box: box && view_box_for(box) }
+    end
+  end
+
+  def outline_cache_key
+    [
+      "boundary_outline/v1",
+      boundary.id,
+      @detail_key,
+      boundary.updated_at.utc.to_fs(:number)
+    ]
   end
 
   def geometry_value(expression, with_tolerance: true)

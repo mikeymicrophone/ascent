@@ -8,8 +8,10 @@ class MapsController < ApplicationController
 
   def features
     authorize! Jurisdiction, to: :index?
+    expires_in 1.hour, public: true, stale_while_revalidate: 5.minutes
     render json: explorer.feature_collection
   end
+
 
   private
 

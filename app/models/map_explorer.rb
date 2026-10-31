@@ -80,6 +80,33 @@ class MapExplorer
   end
 
   def feature_collection
+    Rails.cache.fetch(cache_key, expires_in: 12.hours) { build_feature_collection }
+  end
+
+  def cache_key
+    [
+      "map_explorer/v2",
+      state&.id || "us",
+      layers.join(","),
+      @on.iso8601,
+      JurisdictionBoundary.maximum(:updated_at)&.utc&.to_fs(:number)
+    ]
+  end
+
+
+  private
+
+  def normalize_layers(layer, layers)
+    values = Array(layers).flatten.compact_blank
+    values = [ layer.presence || "counties" ] if values.empty?
+    values = values.map(&:to_s).uniq
+    unknown = values - LAYERS.keys
+    raise ActiveRecord::RecordNotFound, "Unknown map layer" if unknown.any?
+
+    values
+  end
+
+  def build_feature_collection
     if state
       layer_groups = layers.map do |key|
         features = features_for(records_for(key), tolerance: 0.002, layer_key: key)
@@ -98,7 +125,9 @@ class MapExplorer
         features: features,
         layers: layer_groups,
         unavailable_layers: unavailable_layers.map { it.slice(:key, :label, :record_count, :feature_count) },
-        legend: layer_groups.map { it.slice(:key, :label, :style, :available, :features).merge(feature_count: it[:features].size) },
+        legend: layer_groups.map { |group|
+          group.slice(:key, :label, :style, :available).merge(feature_count: group[:features].size)
+        },
         outline: outline,
         vintages: (features + [ outline ].compact).map { it[:properties][:boundary_year] }.uniq.sort
       }
@@ -114,18 +143,6 @@ class MapExplorer
         vintages: features.map { it[:properties][:boundary_year] }.uniq.sort
       }
     end
-  end
-
-  private
-
-  def normalize_layers(layer, layers)
-    values = Array(layers).flatten.compact_blank
-    values = [ layer.presence || "counties" ] if values.empty?
-    values = values.map(&:to_s).uniq
-    unknown = values - LAYERS.keys
-    raise ActiveRecord::RecordNotFound, "Unknown map layer" if unknown.any?
-
-    values
   end
 
   def features_for(places, tolerance:, layer_key: nil)
