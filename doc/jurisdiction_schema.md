@@ -33,6 +33,8 @@ The database rejects invalid or empty geometry, reversed or empty date periods, 
 
 The models validate geometry and effective periods before saving. `Jurisdiction.covering(longitude, latitude, on: date)` returns all jurisdictions whose effective boundary covers the point. It includes points on the boundary and respects polygon holes and disconnected areas. `JurisdictionBoundary.effective_on(date)` uses an inclusive start and exclusive end date.
 
+The public [map explorer](map_explorer.md) displays simplified copies of effective boundaries, with US state drill-down into counties and legislative districts. It does not modify stored geometry or residence assignment.
+
 ## Database dependencies
 
 The Rails database adapter is `activerecord-postgis-adapter` 11.1 for Rails 8.1. PostgreSQL must have the PostGIS server package available before the migrations run. `EnablePostgis` enables `postgis` and `btree_gist`; the latter supports the boundary-period exclusion constraint.

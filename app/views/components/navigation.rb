@@ -57,6 +57,7 @@ class Views::Components::Navigation < Views::ApplicationView
 
   def render_data_navigation
     add_section("Jurisdictions") do |section|
+      section.link("Explore map", map_path, :map)
       section.link("Countries", countries_path, ENTITY_ICONS[:country])
       section.link("States", states_path, ENTITY_ICONS[:state])
       section.link("Counties", counties_path, ENTITY_ICONS[:county])

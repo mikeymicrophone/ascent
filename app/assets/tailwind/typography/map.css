@@ -1,0 +1,10 @@
+.map-status,
+.map-vintage {
+  font-size: 0.875rem;
+}
+
+.map-inset-title {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+}

@@ -1,0 +1,28 @@
+.map-panel {
+  display: grid;
+}
+
+.map-filters {
+  flex: none;
+}
+
+.map-canvas,
+.map-inset-canvas {
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+}
+
+.map-insets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.map-panel [hidden] {
+  display: none;
+}
+
+.map-place-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}

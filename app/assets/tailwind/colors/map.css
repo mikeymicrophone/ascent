@@ -1,0 +1,14 @@
+.map-panel {
+  background: #fffefa;
+  border-color: #dce2d7;
+}
+
+.map-canvas,
+.map-inset-canvas {
+  background: #edf2e7;
+}
+
+.map-panel .leaflet-interactive:focus {
+  outline: 3px solid #17251e;
+  outline-offset: 2px;
+}

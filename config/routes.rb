@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resource :map, only: :show, controller: "maps" do
+    get :features
+  end
   get "glossary" => "pages#glossary", as: :glossary
   get "supporters" => "pages#supporters", as: :supporters
   get "approval-voting" => "pages#approval_voting", as: :approval_voting
