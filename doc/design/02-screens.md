@@ -33,7 +33,13 @@ The heart of the product, at `/mountains/:race`. Only the signed-in voter whose 
 
 ## 2. Mountains, the race picker
 
-At `/mountains`. Cards for each active race: the race name (which links to its mountain), its election, candidate count, office, a View Mountain button and, for admins, Simulate Data. It has to help a voter find *their* races, by place, rather than list every active race.
+At `/mountains`. A ranked discovery list, with 25 cards per page. Each card shows the race name, election, current candidate count, saved mountain count, and number of voters active in the last seven days. The race name and View Mountain button open the mountain. Admins also see Simulate Data for mock races. Federal offices and governors receive a National prominence label and ranking boost.
+
+Only active races with at least two contenders still on the ballot qualify. Withdrawn, disqualified, inactive, off-ballot, and carried-over primary candidacies do not count toward that minimum. This filter affects discovery only; the race's own mountain remains accessible. A voter's hidden races stay out of that voter's listing. Ties use race ID in ascending order so pagination is stable.
+
+`MountainDiscovery` ranks races by `ln(1 + saved mountains) + 2 × ln(1 + recently active voters) + 2 × prominence`. Prominence is one for offices in `Office.national` or the coded Governor position, and zero otherwise. The logarithms let recent participation lift a smaller race above one with many older votes. The counts include residents and visitors, once per voter per race. A voter is recently active when their saved baseline or a saved rating was updated at or after the seven-day cutoff. Baseline and rating edits by the same voter count once. Drafts, ratings without a saved baseline, bookmarks, and hides do not contribute. The page exposes aggregate counts, not voters' names or private drafts.
+
+Closeness scoring for races with at least three competitive candidates is deferred. Production already uses Solid Cache. The future closeness calculation can refresh every one or two hours; the first discovery version does not calculate it. Finding races by place remains available in the Races list.
 
 ## 3. Home
 
@@ -42,6 +48,8 @@ At `/`. A hero ("Ascent helps communities test richer ways to vote before changi
 ## 4. Race
 
 At `/races/:id`. Today: "Showing race", then the office and status chips; election, office and election date; a collapsed Candidates section with a count; Results for completed races; a Vote button for active ones; the action bar. It has to lead with the candidates, their ballot labels and parties, and the way to rate them, and show off-ballot primary candidates as a distinct group. For completed races, the approval results.
+
+At `/races/:race_id/results`, two labeled breadcrumb rows place the results. Location follows the election's geographic ancestry and ends with a link to the Election. It uses county, state, and country associations, plus recorded district ancestry for district elections. It does not infer counties from electoral boundaries or invent missing parents. Jurisdiction follows Governance type → Position → Office → Race → Results. The governance type comes from the office's governing body and is omitted when that association is absent. Every ancestor links to its own record page; Results is the only entry marked as the current page. Residents and Pretend voters use the same rows.
 
 ## 5. Races list
 

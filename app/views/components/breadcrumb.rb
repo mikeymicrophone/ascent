@@ -5,15 +5,16 @@
 # A trail entry without a path is plain text.
 class Views::Components::Breadcrumb < Views::ApplicationView
   prop :trail, Array
-  prop :current, String
+  prop :current, _Nilable(String), default: nil
+  prop :label, String, default: "Breadcrumb"
 
   def view_template
-    nav(class: "breadcrumb", aria: { label: "Breadcrumb" }) do
-      @trail.each do |label, path|
+    nav(class: "breadcrumb", aria: { label: @label }) do
+      @trail.each_with_index do |(label, path), index|
         path ? link_to(label, path, class: "breadcrumb-link") : span { label }
-        span(class: "breadcrumb-separator", aria: { hidden: true }) { "/" }
+        span(class: "breadcrumb-separator", aria: { hidden: true }) { "/" } if index < @trail.size - 1 || @current
       end
-      span(aria: { current: "page" }) { @current }
+      span(aria: { current: "page" }) { @current } if @current
     end
   end
 end

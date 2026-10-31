@@ -40,7 +40,53 @@ RSpec.describe "Mountains", type: :request do
         expect(response.body).to include("Mock election")
         expect(response.body).to include("View Mountain")
         expect(response.body).to include("Simulate Data")
+        expect(response.body).to include("0 saved mountains")
+        expect(response.body).to include("0 voters active in the last 7 days")
       end
+    end
+
+    it "paginates the ranked races on the server, including the last page and an out-of-range page" do
+      races = Array.new(26) do
+        create(:race, :active).tap { create_list(:candidacy, 2, race: it) }
+      end
+      create(:voter_race_baseline, race: races.last)
+
+      get mountains_path
+      page = Nokogiri::HTML(response.body)
+      first_page_links = page.css(".mountain-race-title a").map { it["href"] }
+      expect(first_page_links.size).to eq(25)
+      expect(first_page_links.first).to eq(mountain_path(races.last))
+      expect(page.at_css('a[rel="next"]')["href"]).to include("page=2")
+
+      get mountains_path, params: { page: 2 }
+      last_page_links = Nokogiri::HTML(response.body).css(".mountain-race-title a").map { it["href"] }
+      expect(last_page_links).to eq([ mountain_path(races[-2]) ])
+      expect(first_page_links & last_page_links).to be_empty
+
+      get mountains_path, params: { page: 999 }
+      expect(response).to have_http_status(:ok)
+      expect(Nokogiri::HTML(response.body).css(".mountain-race-title a").map { it["href"] }).to eq(last_page_links)
+    end
+
+    it "respects a voter's hidden races and leaves single-candidate races accessible directly" do
+      hidden_race = create(:race, :active)
+      create_list(:candidacy, 2, race: hidden_race)
+      single_race = create(:race, :active)
+      create(:candidacy, race: single_race)
+      voter = create(:voter)
+      create(:engagement, voter: voter, engageable: hidden_race, kind: "hide")
+      sign_in voter
+
+      get mountains_path
+      expect(Nokogiri::HTML(response.body).css(".mountain-race-card")).to be_empty
+
+      get mountain_path(single_race)
+      expect(response).to have_http_status(:ok)
+
+      sign_out voter
+      get mountains_path
+      expect(Nokogiri::HTML(response.body).css(".mountain-race-title a").map { it["href"] })
+        .to eq([ mountain_path(hidden_race) ])
     end
   end
 

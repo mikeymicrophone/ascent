@@ -7,8 +7,10 @@ class MountainsController < ApplicationController
 
   def index
     authorize! :mountain
-    @races = Race.active.with_naming_details.includes(:candidacies)
-    render Views::Mountains::IndexView.new(races: @races)
+    races = MountainDiscovery.new(Race.active.visible_to(current_voter)).races.with_naming_details
+      .includes(office: [ :nominating_organization, { nominee_for: [ :position, { jurisdiction: :jurisdictionable } ] } ])
+    @pagy, @races = pagy(races)
+    render Views::Mountains::IndexView.new(races: @races, pagy: @pagy)
   end
 
   def show

@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
 class Views::Mountains::IndexView < Views::ApplicationView
-  def initialize(races:)
-    @races = races
-  end
+  prop :races, ActiveRecord::Relation
+  prop :pagy, _Nilable(Pagy)
 
   def view_template
     div(class: "mountain-index") do
       h1(class: "page-title") { "Mountain Visualizations" }
 
       p(class: "page-description") do
-        "Select a race to view the approval voting mountain interface, " \
-        "or simulate data for testing."
+        "Explore races with more saved mountains, more activity in the last seven days, " \
+        "and national prominence. Federal offices and governors receive a boost."
       end
 
       if @races.any?
@@ -20,11 +19,12 @@ class Views::Mountains::IndexView < Views::ApplicationView
             render_race_card(race)
           end
         end
+        Pagination(pagy: @pagy, noun: "races")
       else
         div(class: "mountain-empty-state") do
           h2(class: "subsection-title") { "No active races are ready for the mountain interface." }
           p(class: "content-text") do
-            "Load or create an active race to demonstrate how expressive ratings translate into approval outcomes."
+            "Races need at least two candidates still on the ballot to appear here. Browse all races to find another contest."
           end
           div(class: "election-actions") do
             link_to "Browse Races", races_path, class: "btn-secondary"
@@ -64,8 +64,14 @@ class Views::Mountains::IndexView < Views::ApplicationView
         end
         span do
           icon(:users_round)
-          plain pluralize(race.candidacies.size, "candidate")
+          plain pluralize(race.mountain_candidate_count, "candidate")
         end
+      end
+
+      div(class: "mountain-race-details") do
+        span { pluralize(race.saved_mountain_count, "saved mountain") }
+        span { "#{pluralize(race.recent_mountain_count, "voter")} active in the last 7 days" }
+        span { "National prominence" } if race.nationally_prominent
       end
 
       div(class: "mountain-race-actions") do

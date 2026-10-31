@@ -49,7 +49,14 @@ class Views::RaceResults::ShowView < Views::ApplicationView
   def results_header
     section(class: "results-header") do
       div(class: "results-heading") do
-        Breadcrumb(trail: [ [ @race.office.name, edit_mountain_path(@race) ] ], current: "Results")
+        div do
+          span(class: "eyebrow") { "Location" }
+          Breadcrumb(trail: location_trail + [ [ @race.election.name, @race.election ] ], label: "Location breadcrumb")
+        end
+        div do
+          span(class: "eyebrow") { "Jurisdiction" }
+          Breadcrumb(trail: governance_trail, current: "Results", label: "Jurisdiction breadcrumb")
+        end
         h1(class: "display-title") { "What #{place} approves" }
       end
       nav(class: "group-toggle", aria: { label: "Whose mountains" }) do
@@ -59,6 +66,34 @@ class Views::RaceResults::ShowView < Views::ApplicationView
         end
       end
     end
+  end
+
+  def jurisdictions
+    @jurisdictions ||= begin
+      chain = []
+      jurisdiction = @race.election.jurisdiction
+      while jurisdiction
+        chain.unshift(jurisdiction)
+        jurisdiction = jurisdiction.parent
+      end
+      chain
+    end
+  end
+
+  def location_trail
+    @location_trail ||= begin
+      location = jurisdictions.reverse.find { it.jurisdictionable_type != "District" }&.jurisdictionable
+      districts = jurisdictions.reverse.take_while { it.jurisdictionable_type == "District" }.reverse.map(&:jurisdictionable)
+      places = (location ? location.build_hierarchy_chain : []) + districts
+      places.map { [ it.name, it ] }
+    end
+  end
+
+  def governance_trail
+    office = @race.office
+    governance_type = office.governing_body&.governance_type
+    trail = governance_type ? [ [ governance_type.name, governance_type ] ] : []
+    trail + [ [ office.position.title, office.position ], [ office.name, office ], [ @race.name, @race ] ]
   end
 
   def stat_tiles
