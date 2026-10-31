@@ -35,3 +35,7 @@ body {
 .flash-messages {
   @apply flex flex-col;
 }
+
+.site-footer-inner {
+  @apply container mx-auto flex flex-wrap items-center justify-between;
+}

@@ -70,6 +70,21 @@
   color: var(--story-band-ink);
 }
 
+.story-code-block {
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid var(--story-dark-border);
+  color: rgb(226 232 240);
+}
+
+.story-code-filename {
+  color: rgb(148 163 184);
+}
+
+.story-code,
+.story-code code {
+  color: rgb(226 232 240);
+}
+
 .mountain-empty-state {
   @apply bg-slate-50 border-slate-200 text-slate-800;
 }

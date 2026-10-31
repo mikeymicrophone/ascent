@@ -104,3 +104,15 @@
 .place-chip-link {
   @apply inline-flex items-center;
 }
+.influencer-content-form,
+.influencer-content-item {
+  @apply flex flex-col items-start;
+}
+
+.influencer-disclosure {
+  @apply block;
+}
+
+.influencer-disclosure summary {
+  @apply cursor-pointer;
+}

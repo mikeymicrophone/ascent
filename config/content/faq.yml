@@ -1,0 +1,145 @@
+hero:
+  kicker: Seed data FAQ
+  title: How Ascent's public seed repository works, and how to contribute through a pull request.
+  lead: >
+    Reference election and policy data lives in a separate Git repository of
+    micharisma-seeds/v1 YAML and JSON manifests. Ascent imports that library;
+    contributors add records by opening a pull request against the seed repo.
+  actions:
+    - text: Open the seed repository
+      url: https://github.com/MICharisma/ascent_seed_data
+      style: primary
+    - text: Schema glossary
+      path: glossary
+      style: secondary
+    - text: Return to Overview
+      path: root
+      style: tertiary
+
+sections:
+  - type: faq
+    kicker: The repository
+    title: What the seed repo is for.
+    items:
+      - question: What is the seeds repository?
+        answer: >
+          MICharisma/ascent_seed_data holds sourced reference data for Ascent:
+          places, offices, elections, races, people, candidacies, the issue
+          library, campaign communications, and image metadata. Each file is a
+          micharisma-seeds/v1 manifest. Ascent loads that library as a Git
+          submodule under db/seeds/ascent_seed_data.
+      - question: What belongs there versus in the app?
+        answer: >
+          Factual geographic and election-calendar foundation data, plus the
+          issue library and sourced candidate material, belong in the seed repo.
+          Simulated demo people, voters, and generated scenarios stay in the
+          Ascent app and are never part of ordinary db:seed.
+      - question: Who can contribute?
+        answer: >
+          Anyone can open a pull request. Contributions are reviewed against the
+          published schema, entity-code rules, and source requirements in
+          CONTRIBUTING.md. Account and image workflows for verified workers are
+          documented in WORKERS.md.
+
+  - type: faq
+    surface: band
+    kicker: Submitting a PR
+    title: How data enters the library.
+    items:
+      - question: How do I submit data through a pull request?
+        answer: >
+          Fork MICharisma/ascent_seed_data, add a YAML or JSON manifest under
+          manifests/contributions/<your-organization>/, regenerate the catalog
+          if needed, and open a pull request. CI validates structure and codes.
+          After merge, Ascent can import the new records on the next seed load.
+      - question: Where should my files go?
+        answer: >
+          Put new place and election graphs, stances, communications, stance
+          evidence, party channels, and approaches under
+          manifests/contributions/<your-organization>/. Verified official Channel
+          records use candidate_accounts/; Image and ImagePlacement records use
+          profile_images/. Do not edit manifests/2026/ or conversion/; those are
+          generated from sourced ballot rows.
+      - question: How do codes and references work?
+        answer: >
+          Every record has a stable uppercase code such as TOPIC-EDUCATION or
+          CANDIDACY-USA-NY-.... Refer to other records by those codes, never by
+          database IDs. A Stance links one Candidacy to one Approach. An Issue
+          references its Topic; an Approach references its Issue. Recipes live in
+          Ascent's doc/entity_code_plan.md.
+      - question: How do I find existing records before inventing new ones?
+        answer: >
+          Browse catalog/ in the seed repo, or run tools/seed_contract.py lookup
+          after the Python setup in WORKERS.md. Reuse an existing Person,
+          Candidacy, Topic, Issue, or Approach code whenever the record already
+          exists.
+
+  - type: prose
+    kicker: Minimal example
+    title: Attach an issue to a topic, then a stance to a candidacy for one approach.
+    paragraphs:
+      - >
+        The chain is Topic → Issue → Approach → Stance. Topics and approaches
+        describe public problems without naming a candidate. A Stance is the
+        bridge: one candidacy's position on one approach. The example below uses
+        an uncontroversial parks topic and reuses the fixture candidacy code from
+        Ascent's communications examples.
+      - >
+        Drop a file like this under manifests/contributions/<your-organization>/,
+        point source at where you found the claim, and open a PR.
+        Replace the fixture candidacy with a sourced candidacy from the catalog,
+        and rebuild the Stance code to match that candidacy.
+
+  - type: code
+    language: yaml
+    filename: playgrounds_once_per_decade.yml
+    body: |
+      format: micharisma-seeds/v1
+      namespace: MIC
+      catalog: ASC
+      source:
+        contributor: Example Contributor
+        url: https://example.org/playground-plan
+        captured_on: "2026-10-15"
+      records:
+        - type: Topic
+          code: TOPIC-PARKS_AND_PLAY
+          attributes:
+            title: Parks and Play
+            description: Public parks, playgrounds, and casual outdoor recreation.
+        - type: Issue
+          code: ISSUE-PARKS_AND_PLAY-AGING_PLAYGROUNDS
+          attributes:
+            title: Aging Playgrounds
+            description: Neighborhood playgrounds wear out and need periodic replacement.
+          references:
+            topic: TOPIC-PARKS_AND_PLAY
+        - type: Approach
+          code: APPROACH-PARKS_AND_PLAY-AGING_PLAYGROUNDS-BUILD_ONE_NEW_PLAYGROUND_PER_DECADE
+          attributes:
+            title: Build One New Playground Per Decade
+            description: Add one additional playground every ten years so children keep a nearby place to play.
+          references:
+            issue: ISSUE-PARKS_AND_PLAY-AGING_PLAYGROUNDS
+        - type: Stance
+          code: STANCE-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AV_7K-PARKS_AND_PLAY-AGING_PLAYGROUNDS-BUILD_ONE_NEW_PLAYGROUND_PER_DECADE
+          attributes:
+            explanation: Supports building one extra playground once per decade.
+            priority_level: medium
+          references:
+            candidacy: CANDIDACY-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AV_7K
+            approach: APPROACH-PARKS_AND_PLAY-AGING_PLAYGROUNDS-BUILD_ONE_NEW_PLAYGROUND_PER_DECADE
+
+  - type: callout
+    title: Read the contributor guides before a large PR
+    copy: >
+      CONTRIBUTING.md covers fields, codes, sources, and import behavior.
+      examples/README.md has the minimum election graph. The entity catalog lists
+      codes already in the library so you can extend them instead of duplicating them.
+    actions:
+      - text: Seed repository on GitHub
+        url: https://github.com/MICharisma/ascent_seed_data
+        style: primary
+      - text: Browse topics in the app
+        path: topics
+        style: tertiary

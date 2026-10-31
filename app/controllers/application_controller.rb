@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def inviting_voter
+    @inviting_voter ||= Voter.find_by(id: session["devise.inviter_id"])
+  end
+
   def pagy(paginator = :offset, collection, **options)
     super
   rescue Pagy::RangeError => error

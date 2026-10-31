@@ -48,6 +48,22 @@ RSpec.describe "Pages", type: :request do
     end
   end
 
+  describe "GET /faq" do
+    it "renders the seed data FAQ with the playground contribution example" do
+      get faq_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("How Ascent&#39;s public seed repository works")
+      expect(response.body).to include("What is the seeds repository?")
+      expect(response.body).to include("How do I submit data through a pull request?")
+      expect(response.body).to include("playgrounds_once_per_decade.yml")
+      expect(response.body).to include("TOPIC-PARKS_AND_PLAY")
+      expect(response.body).to include("Build One New Playground Per Decade")
+      expect(response.body).to include("CANDIDACY-USA-NY-EXAMPLE-ED_1-2026_GENERAL-EXAMPLE_AV_7K")
+      expect(response.body).to include(%(href="https://github.com/MICharisma/ascent_seed_data"))
+    end
+  end
+
   describe "GET /approval-voting" do
     it "renders the case for approval voting from the content file" do
       get approval_voting_path
@@ -57,6 +73,18 @@ RSpec.describe "Pages", type: :request do
       expect(response.body).to include("The spoiler effect")
       expect(response.body).to include("Approval voting is almost embarrassingly simple.")
       expect(response.body).to include("This is a working thesis, not a finished proof.")
+    end
+  end
+
+  describe "GET /terms-of-service" do
+    it "renders the MICharisma Inc. terms of service and includes a footer link" do
+      get terms_of_service_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Terms of Service")
+      expect(response.body).to include("MICharisma Inc.")
+      expect(response.body).to include("European Union (EU)")
+      expect(response.body).to include(%(href="#{terms_of_service_path}"))
     end
   end
 end

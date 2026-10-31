@@ -49,6 +49,7 @@ class Views::Components::Navigation < Views::ApplicationView
       section.link("Overview", root_path, :layout_dashboard)
       section.link("About Approval Voting", approval_voting_path, :circle_check_big)
       section.link("Glossary", glossary_path, :book_open)
+      section.link("Seed data FAQ", faq_path, :git_pull_request)
       section.link("For Supporters", supporters_path, :heart_handshake)
       section.link("All Mountains", mountains_path, :mountain)
     end
@@ -94,6 +95,7 @@ class Views::Components::Navigation < Views::ApplicationView
     end
 
     add_section("Voting") do |section|
+      section.link("Invites leaderboard", invites_path, :users_round)
       section.link("Voters", voters_path, ENTITY_ICONS[:voter])
       section.link("Residences", residences_path, ENTITY_ICONS[:residence])
       section.link("Ratings", ratings_path, ENTITY_ICONS[:rating])

@@ -102,3 +102,18 @@
 .place-chip-link {
   @apply min-h-9 px-3 rounded-full;
 }
+.influencer-content-form {
+  @apply gap-3 w-full;
+}
+
+.influencer-content-form .text-input {
+  @apply w-full;
+}
+
+.influencer-content-item {
+  @apply gap-3 py-4 w-full;
+}
+
+.influencer-content-list {
+  @apply list-decimal pl-5 mt-4 space-y-4;
+}

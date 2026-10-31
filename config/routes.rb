@@ -3,8 +3,11 @@ Rails.application.routes.draw do
     get :features
   end
   get "glossary" => "pages#glossary", as: :glossary
+  get "faq" => "pages#faq", as: :faq
   get "supporters" => "pages#supporters", as: :supporters
   get "approval-voting" => "pages#approval_voting", as: :approval_voting
+  get "terms-of-service" => "pages#terms_of_service", as: :terms_of_service
+
   resources :engagements, only: [ :index, :create, :destroy ], path: "saved"
   resources :official_codes
   resources :policies do
@@ -28,7 +31,17 @@ Rails.application.routes.draw do
   resources :voter_race_baselines
   resources :ratings
 
-  devise_for :voters, controllers: { omniauth_callbacks: "voters/omniauth_callbacks" }
+  get "invite/:token", to: "invites#show", as: :invite
+  resources :invites, only: %i[index create]
+  get "influencers/:token", to: "influencers#show", as: :influencer
+  resource :influencer_profile, only: :show, path: "profile/influencer"
+  resources :voter_links, only: %i[create update] do
+    patch :move, on: :member
+  end
+  resources :voter_statements, only: %i[create update] do
+    patch :move, on: :member
+  end
+  devise_for :voters, controllers: { registrations: "voters/registrations", omniauth_callbacks: "voters/omniauth_callbacks" }
   resources :voters
   resources :residences
   resources :candidacies

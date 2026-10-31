@@ -79,4 +79,34 @@ RSpec.describe "Google sign-in", type: :request do
     expect(response.body).to include("Google sign-in did not finish. Please try again.")
     expect(Nokogiri::HTML(response.body).at_css(".auth-shell h1").text).to eq("Log in")
   end
+
+  it "records an invite for a new Google signup" do
+    inviter = create(:voter)
+    get invite_path(token: inviter.invite_token)
+
+    expect { sign_in_with(google_account) }.to change(Invite, :count).by(1)
+
+    expect(Voter.find_by!(email: "rosa.delgado@example.com").inviters).to contain_exactly(inviter)
+  end
+
+  it "does not attribute an existing Google account to a new inviter" do
+    inviter = create(:voter)
+    voter = create(:voter, email: "rosa.delgado@example.com")
+    get invite_path(token: inviter.invite_token)
+
+    expect { sign_in_with(google_account) }.not_to change(Invite, :count)
+
+    expect(voter.reload.received_invites).to be_empty
+    expect(response).to redirect_to(root_path)
+  end
+
+  it "retains an invite after Google authorization fails" do
+    inviter = create(:voter)
+    get invite_path(token: inviter.invite_token)
+    sign_in_with(:access_denied)
+
+    expect { sign_in_with(google_account) }.to change(Invite, :count).by(1)
+
+    expect(Voter.find_by!(email: "rosa.delgado@example.com").inviters).to contain_exactly(inviter)
+  end
 end

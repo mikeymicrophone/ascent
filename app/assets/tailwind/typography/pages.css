@@ -49,3 +49,12 @@
 .story-prose p {
   @apply font-['Bricolage_Grotesque'] text-lg leading-8;
 }
+
+.story-code-filename {
+  @apply font-['Martian_Mono'] text-sm uppercase tracking-[0.12em];
+}
+
+.story-code,
+.story-code code {
+  @apply font-['Martian_Mono'] text-sm leading-6 whitespace-pre;
+}

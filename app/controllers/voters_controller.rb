@@ -50,6 +50,8 @@ class VotersController < ApplicationController
   end
 
   def voter_params
-    params.require(:voter).permit(:first_name, :last_name, :birth_date, :is_verified)
+    keys = [ :first_name, :last_name, :birth_date, :is_verified ]
+    keys << :public_influencer if @voter == current_voter
+    params.require(:voter).permit(*keys)
   end
 end

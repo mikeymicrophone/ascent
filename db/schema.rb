@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_31_140000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -340,6 +340,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
     t.datetime "updated_at", null: false
     t.index ["entity_code"], name: "index_images_on_entity_code", unique: true
     t.index ["url"], name: "index_images_on_url", unique: true
+  end
+
+  create_table "invites", force: :cascade do |t|
+    t.bigint "inviter_id", null: false
+    t.bigint "invitee_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invitee_id"], name: "index_invites_on_invitee_id"
+    t.index ["inviter_id", "invitee_id"], name: "index_invites_on_inviter_id_and_invitee_id", unique: true
+    t.index ["inviter_id"], name: "index_invites_on_inviter_id"
+    t.check_constraint "inviter_id <> invitee_id", name: "invites_cannot_invite_self"
   end
 
   create_table "issues", force: :cascade do |t|
@@ -694,6 +705,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
     t.index ["entity_code"], name: "index_topics_on_entity_code", unique: true
   end
 
+  create_table "voter_links", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.string "label", null: false
+    t.string "url", null: false
+    t.boolean "active", default: true, null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["voter_id", "position", "id"], name: "index_voter_links_on_voter_id_and_position_and_id"
+  end
+
   create_table "voter_race_baseline_archives", force: :cascade do |t|
     t.datetime "archived_at", null: false
     t.integer "baseline", null: false
@@ -734,6 +756,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
     t.index ["voter_id", "race_id"], name: "index_voter_race_preferences_on_voter_id_and_race_id", unique: true
   end
 
+  create_table "voter_statements", force: :cascade do |t|
+    t.bigint "voter_id", null: false
+    t.text "body", null: false
+    t.boolean "active", default: true, null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["voter_id", "position", "id"], name: "index_voter_statements_on_voter_id_and_position_and_id"
+  end
+
   create_table "voters", force: :cascade do |t|
     t.boolean "admin", default: false, null: false
     t.date "birth_date"
@@ -758,7 +790,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
     t.datetime "updated_at", null: false
     t.string "provider"
     t.string "uid"
+    t.string "invite_token", null: false
+    t.boolean "public_influencer", default: false, null: false
     t.index ["email"], name: "index_voters_on_email", unique: true
+    t.index ["invite_token"], name: "index_voters_on_invite_token", unique: true
     t.index ["provider", "uid"], name: "index_voters_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_voters_on_reset_password_token", unique: true
   end
@@ -794,6 +829,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
   add_foreign_key "governing_bodies", "governance_types"
   add_foreign_key "governing_bodies", "jurisdictions"
   add_foreign_key "image_placements", "images"
+  add_foreign_key "invites", "voters", column: "invitee_id", on_delete: :cascade
+  add_foreign_key "invites", "voters", column: "inviter_id", on_delete: :cascade
   add_foreign_key "issues", "topics"
   add_foreign_key "jurisdiction_boundaries", "jurisdictions"
   add_foreign_key "jurisdictions", "jurisdictions", column: "parent_id"
@@ -836,12 +873,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_010000) do
   add_foreign_key "stances", "approaches"
   add_foreign_key "stances", "candidacies"
   add_foreign_key "states", "countries"
+  add_foreign_key "voter_links", "voters", on_delete: :cascade
   add_foreign_key "voter_race_baseline_archives", "races"
   add_foreign_key "voter_race_baseline_archives", "voters"
   add_foreign_key "voter_race_baselines", "races"
   add_foreign_key "voter_race_baselines", "voters"
   add_foreign_key "voter_race_preferences", "races", on_delete: :cascade
   add_foreign_key "voter_race_preferences", "voters", on_delete: :cascade
+  add_foreign_key "voter_statements", "voters", on_delete: :cascade
 
   create_view "mountain_ratings", sql_definition: <<-SQL
       SELECT ratings.id,

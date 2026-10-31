@@ -4,3 +4,14 @@ body {
   background-color: var(--page-bg);
   color: var(--page-text);
 }
+
+.site-footer {
+  border-color: rgba(148, 163, 184, 0.22);
+  color: rgb(100 116 139);
+}
+
+.site-footer-link {
+  color: var(--brand-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

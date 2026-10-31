@@ -1,7 +1,7 @@
 # Google sends a voter back here after they choose an account.
 class Voters::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def google_oauth2
-    voter = Voter.from_google(request.env["omniauth.auth"])
+    voter = Voter.from_google(request.env["omniauth.auth"], inviter: inviting_voter)
 
     if voter.persisted?
       sign_in_and_redirect voter, event: :authentication

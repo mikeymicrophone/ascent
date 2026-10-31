@@ -5,6 +5,14 @@ class Voter < ApplicationRecord
          :recoverable, :rememberable, :validatable, :trackable,
          :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
+  has_secure_token :invite_token, on: :initialize
+  has_many :invites, foreign_key: :inviter_id, inverse_of: :inviter, dependent: :destroy
+  has_many :invited_voters, through: :invites, source: :invitee
+  has_many :received_invites, class_name: "Invite", foreign_key: :invitee_id, inverse_of: :invitee, dependent: :destroy
+  has_many :inviters, through: :received_invites, source: :inviter
+  has_many :voter_links, -> { ordered }, dependent: :destroy, inverse_of: :voter
+  has_many :voter_statements, -> { ordered }, dependent: :destroy, inverse_of: :voter
+
   has_many :ahoy_visits, class_name: "Ahoy::Visit", foreign_key: :user_id, dependent: :nullify
   has_many :ahoy_events, class_name: "Ahoy::Event", foreign_key: :user_id, dependent: :nullify
   has_many :residences, dependent: :destroy
@@ -22,6 +30,11 @@ class Voter < ApplicationRecord
   validates :last_name, presence: true
   # validates :is_verified, inclusion: { in: [true, false] }
 
+  scope :influencers, -> { where(id: Invite.select(:inviter_id)) }
+  scope :with_invite_counts, -> {
+    select("voters.*, (SELECT COUNT(*) FROM invites WHERE invites.inviter_id = voters.id) AS invite_count")
+  }
+
   scope :with_voting_activity, -> {
     includes(:ratings, :voter_race_baselines,
              ratings: { candidacy: { race: [ :election, { office: :position } ] } },
@@ -36,8 +49,8 @@ class Voter < ApplicationRecord
   # The voter a Google account signs in as: the one already linked to it, else the one with its
   # verified email, which it then links, else a new confirmed voter with a random password.
   # Returns an unsaved voter with errors when none can be made.
-  def self.from_google(auth)
-    find_by(provider: auth.provider, uid: auth.uid) || link_google(auth) || create_from_google(auth)
+  def self.from_google(auth, inviter: nil)
+    find_by(provider: auth.provider, uid: auth.uid) || link_google(auth) || create_from_google(auth, inviter: inviter)
   end
 
   def self.link_google(auth)
@@ -50,7 +63,7 @@ class Voter < ApplicationRecord
     end
   end
 
-  def self.create_from_google(auth)
+  def self.create_from_google(auth, inviter: nil)
     voter = new(provider: auth.provider, uid: auth.uid, email: auth.info.email,
                 first_name: auth.info.first_name, last_name: auth.info.last_name,
                 password: Devise.friendly_token(32))
@@ -59,6 +72,7 @@ class Voter < ApplicationRecord
       return voter
     end
 
+    voter.received_invites.build(inviter: inviter) if inviter
     voter.skip_confirmation!
     voter.save
     voter

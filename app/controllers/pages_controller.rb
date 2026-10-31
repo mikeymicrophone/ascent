@@ -14,6 +14,12 @@ class PagesController < ApplicationController
     render Views::Pages::GlossaryView.new
   end
 
+  def faq
+    render Views::Pages::FaqView.new(
+      page: PageContent.load("faq")
+    )
+  end
+
   def supporters
     render Views::Pages::SupportersView.new(
       active_races: active_races,
@@ -26,6 +32,8 @@ class PagesController < ApplicationController
       page: PageContent.load("approval_voting")
     )
   end
+
+  def terms_of_service; end
 
   private
 

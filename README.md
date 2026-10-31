@@ -41,6 +41,24 @@ Google rejects `.test` callback hosts under its [redirect URI validation rules](
 
 Outbound account email uses PostShiba with `POSTSHIBA_API_KEY`. Production uses the sender `Ascent <no-reply@were.ascent.ing>`, reply-to `support@ascent.ing`, and `https://ascent.ing` for account links. The production key is managed in Doppler's `ascent` project, `prd` configuration, and must also be supplied to the Railway app service. Delivered email and account links need verification after DNS is configured. Automated account tests use the test mailer and mocked Google responses. See [ASC-112](https://linear.app/ascent-approval/issue/ASC-112/configure-transactional-email-for-account-confirmation-and-password).
 
+## Invite links
+
+Each voter has a generated invite URL, shown on their Profile edit page as `/invite/:token`. Existing voters receive tokens during migration. Run `bin/rails db:migrate` before serving the updated app.
+
+Opening a valid link stores the inviter in the visitor's browser session and redirects to signup. The most recently opened valid link wins. Email signup and new Google accounts create an `Invite` with `inviter_id` and `invitee_id` in the same transaction as the voter. Failed signup attempts retain the pending invite. Successful registration, sign-in, or sign-out clears it. Existing accounts do not gain or change an inviter through a link.
+
+Voters can connect to multiple influencers, once per influencer. `voter.invites` returns their outgoing connections, `voter.invited_voters` returns the voters connected to them, and `voter.received_invites` and `voter.inviters` return their incoming connections. Self-connections are rejected. Deleting either account removes the connection. Run the follow-up migration to replace the unique invitee index with a unique inviter and invitee pair index.
+
+The public `/invites` leaderboard lists influencers with at least one connected voter, ordered by connection count. Private influencers appear as "Anonymous influencer" with a count. Their names, account IDs, profile links, and connect controls are omitted. Signed-in voters can use **Connect** for currently public influencers on either a leaderboard row or a public influencer page. Existing connections to public influencers show **Connected**. Connecting always applies to the signed-in voter and preserves their other connections. Connection requests for private influencers are rejected, including requests from a page opened before they turned visibility off.
+
+Influencer visibility defaults to private. Only the voter can opt in through **Save visibility** on their Profile. Opting in shows their name on the leaderboard and enables `/influencers/:token` once they have at least one connection. Turning visibility off removes their name and disables that page. Public pages show a name, a connection count, and the connect control. They do not list connected voters. The leaderboard is linked from the Voting menu and Profile.
+
+Every voter can open **Edit influencer links and statements** from their Profile, even before inviting anyone or going public. The editor at `/profile/influencer` supports labelled HTTP or HTTPS links and plain-text statements. Each collection has its own order. New items appear last, **Move up** and **Move down** change their order, and the **Active** checkbox controls visibility. Inactive items remain editable in their saved position. Only the voter can edit or reorder their content. The two collections live in `voter_links` and `voter_statements`; run `bin/rails db:migrate` before using them.
+
+Public influencer pages show active links and statements inside collapsed **Links** and **Statements** sections below the heading and above Connect. Statements preserve line breaks and display HTML as text. Inactive content is excluded from the page HTML.
+
+Custom invite phrases, profile code entry, registration opt-out, profile unlinking, and further referral reports are deferred. Phrase matching must be case insensitive. Jev moderation must permit mild insults such as "trash those garbage idiots" while rejecting vulgar or violent phrases beyond the agreed threshold. This step does not call Jev or require a Jev API key.
+
 ## Seed Data
 
 The seed repository's [entity catalog](db/seeds/ascent_seed_data/catalog/README.md) lists existing codes by type and state. Its [contributor guide](db/seeds/ascent_seed_data/CONTRIBUTING.md#find-existing-records) documents offline lookup and catalog regeneration.

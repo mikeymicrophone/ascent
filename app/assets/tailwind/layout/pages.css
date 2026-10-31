@@ -42,6 +42,14 @@
   @apply flex flex-col gap-4 max-w-3xl;
 }
 
+.story-code-block {
+  @apply rounded-[1.5rem] p-5 flex flex-col gap-3 overflow-x-auto;
+}
+
+.story-code {
+  @apply overflow-x-auto m-0;
+}
+
 .story-metric-grid,
 .story-card-grid,
 .story-election-grid,

@@ -62,5 +62,11 @@
       <%= render Views::Components::FlashMessages.new %>
       <%= yield %>
     </main>
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <span>&copy; <%= Time.current.year %> MICharisma Inc.</span>
+        <%= link_to "Terms of Service", terms_of_service_path, class: "site-footer-link" %>
+      </div>
+    </footer>
   </body>
 </html>
