@@ -46,4 +46,23 @@ RSpec.describe GubernatorialRaceSeeder do
     expect(races.map { |race| race.election.jurisdiction.jurisdictionable }).to all(be_a(State))
     expect(races.map { |race| race.candidacies.count }).to all(eq(0))
   end
+
+  it "reuses a governor office whose notes are already filled in instead of creating a second one" do
+    country = Country.find_or_create_by!(code: "US") { |record| record.name = "United States" }
+    Year.create!(year: 2026, is_even_year: true, is_presidential_year: false)
+    position = Position.find_or_create_by!(title: "Governor") do |record|
+      record.description = "State executive"
+      record.branch = :executive
+      record.term_length_years = 4
+    end
+    path = paths.find { |candidate| YAML.load_file(candidate).fetch("race").fetch("state_code") == "MI" }
+    michigan = State.create!(country: country, code: "MI", name: "Michigan")
+    jurisdiction = SeedJurisdictions.ensure(michigan, parent: country.jurisdiction)
+    existing = Office.create!(position: position, jurisdiction: jurisdiction, is_active: true, entity_code: "OFFICE-MI-GOVERNOR",
+                              notes: "Sourced from the Michigan ballot manifest")
+
+    expect { described_class.seed([ path ]) }.not_to change(Office, :count)
+
+    expect(Race.where(office: existing).count).to eq(1)
+  end
 end
