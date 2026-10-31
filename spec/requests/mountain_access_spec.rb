@@ -60,7 +60,7 @@ RSpec.describe "Mountain access", type: :request do
     get mountains_path
     expect(response.body).not_to include("Simulate Data")
 
-    create(:candidacy, race: create(:race, :active, :mock))
+    create_list(:candidacy, 2, race: create(:race, :active, :mock))
     get mountains_path
     expect(response.body).to include("Simulate Data")
   end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# A voter's page body, seen only by the voter or an admin: their account, and the races they have taken
-# part in, with how many candidates they rated and their baseline in each.
 class Views::Partials::VoterPartial < Views::ApplicationView
   RACE_LIMIT = 10
 
@@ -14,9 +12,24 @@ class Views::Partials::VoterPartial < Views::ApplicationView
         FactRow(label: "Born") { @voter.birth_date.strftime("%b %-d, %Y") } if @voter.birth_date
         FactRow(label: "Verified") { @voter.is_verified ? "Yes" : "No" }
         FactRow(label: "Joined") { @voter.created_at.strftime("%b %-d, %Y") }
+        if current_voter&.can_moderate? && current_voter != @voter
+          FactRow(label: "Role") { @voter.role&.capitalize || "Voter" }
+          FactRow(label: "Profile visibility") { @voter.profile_hidden? ? "Hidden" : "Visible" }
+        end
+      end
+      if current_voter&.can_moderate? && current_voter != @voter
+        div(class: "place-actions") do
+          button_to(@voter.profile_hidden? ? "Unhide profile" : "Hide profile",
+            hide_profile_voter_path(@voter),
+            method: :patch,
+            params: { voter: { profile_hidden: !@voter.profile_hidden? } },
+            class: "secondary")
+        end
       end
     end
-    RelatedList(heading: "Races taken part in", records: races.first(RACE_LIMIT), total: races.size) { |race| race_row(race) }
+    if allowed_to?(:view_voting_activity?, @voter, context: { voter: current_voter })
+      RelatedList(heading: "Races taken part in", records: races.first(RACE_LIMIT), total: races.size) { |race| race_row(race) }
+    end
   end
 
   private

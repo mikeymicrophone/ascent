@@ -25,11 +25,20 @@ class Voter < ApplicationRecord
   has_many :mountain_drafts, dependent: :delete_all
   has_many :public_mountains, dependent: :destroy
   has_many :created_elections, class_name: "Election", foreign_key: :creator_id, inverse_of: :creator, dependent: :nullify
+  has_many :reviewed_channels, class_name: "Channel", foreign_key: :reviewed_by_id, dependent: :nullify
+
+  ROLES = %w[admin moderator reviewer].freeze
+
+  enum :role, ROLES.index_with(&:itself), validate: { allow_nil: true }
 
   validates :first_name, presence: true
   validates :last_name, presence: true
   # validates :is_verified, inclusion: { in: [true, false] }
 
+  scope :publicly_visible, -> { where(profile_hidden: false) }
+  scope :visible_to, ->(viewer) {
+    viewer ? where(profile_hidden: false).or(where(id: viewer.id)) : publicly_visible
+  }
   scope :influencers, -> { where(id: Invite.select(:inviter_id)) }
   scope :with_invite_counts, -> {
     select("voters.*, (SELECT COUNT(*) FROM invites WHERE invites.inviter_id = voters.id) AS invite_count")
@@ -83,8 +92,20 @@ class Voter < ApplicationRecord
   end
   private_class_method :link_google, :create_from_google, :google_email_verified?
 
-  def admin?
-    admin
+  def admin=(value)
+    self.role = ActiveModel::Type::Boolean.new.cast(value) ? "admin" : (admin? ? nil : role)
+  end
+
+  def can_moderate?
+    admin? || moderator?
+  end
+
+  def can_review?
+    admin? || moderator? || reviewer?
+  end
+
+  def publicly_visible_to?(viewer)
+    !profile_hidden? || viewer == self
   end
 
   def full_name

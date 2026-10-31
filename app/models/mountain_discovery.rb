@@ -17,14 +17,16 @@ class MountainDiscovery
     activity = VoterRaceBaseline.from("mountain_recent_activity AS voter_race_baselines").group(:race_id)
       .select(:race_id, "COUNT(DISTINCT voter_id) AS voter_count")
     prominent_offices = Office.national.or(Office.where(position_id: Position.where(entity_code: "POSITION-GOVERNOR")))
-    prominence = "CASE WHEN races.office_id IN (#{prominent_offices.select(:id).to_sql}) THEN 1 ELSE 0 END"
+    prominence = "CASE WHEN mountain_prominent_offices.id IS NOT NULL THEN 1 ELSE 0 END"
     score = "LN(1 + COALESCE(mountain_votes.vote_count, 0)) + 2 * LN(1 + COALESCE(mountain_activity.voter_count, 0)) + 2 * (#{prominence})"
 
     @races.with(mountain_candidates: candidates, mountain_votes: votes,
-      mountain_recent_activity: [ recent_saves, recent_ratings ], mountain_activity: activity)
+      mountain_recent_activity: [ recent_saves, recent_ratings ], mountain_activity: activity,
+      mountain_prominent_offices: prominent_offices.select(:id))
       .joins("INNER JOIN mountain_candidates ON mountain_candidates.race_id = races.id")
       .joins("LEFT JOIN mountain_votes ON mountain_votes.race_id = races.id")
       .joins("LEFT JOIN mountain_activity ON mountain_activity.race_id = races.id")
+      .joins("LEFT JOIN mountain_prominent_offices ON mountain_prominent_offices.id = races.office_id")
       .select("races.*, mountain_candidates.candidate_count AS mountain_candidate_count",
         "COALESCE(mountain_votes.vote_count, 0) AS saved_mountain_count",
         "COALESCE(mountain_activity.voter_count, 0) AS recent_mountain_count",

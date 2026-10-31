@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_31_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_31_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -158,9 +158,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_140000) do
     t.string "platform", null: false
     t.datetime "updated_at", null: false
     t.string "url"
+    t.string "review_status", default: "pending", null: false
+    t.bigint "reviewed_by_id"
+    t.datetime "reviewed_at"
     t.index ["entity_code"], name: "index_channels_on_entity_code", unique: true
     t.index ["owner_type", "owner_id"], name: "index_channels_on_owner"
     t.index ["platform", "handle"], name: "index_channels_on_platform_and_handle", unique: true
+    t.index ["review_status"], name: "index_channels_on_review_status"
+    t.index ["reviewed_by_id"], name: "index_channels_on_reviewed_by_id"
   end
 
   create_table "communication_features", force: :cascade do |t|
@@ -767,7 +772,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_140000) do
   end
 
   create_table "voters", force: :cascade do |t|
-    t.boolean "admin", default: false, null: false
     t.date "birth_date"
     t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
@@ -792,10 +796,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_140000) do
     t.string "uid"
     t.string "invite_token", null: false
     t.boolean "public_influencer", default: false, null: false
+    t.string "role"
+    t.boolean "profile_hidden", default: false, null: false
     t.index ["email"], name: "index_voters_on_email", unique: true
     t.index ["invite_token"], name: "index_voters_on_invite_token", unique: true
+    t.index ["profile_hidden"], name: "index_voters_on_profile_hidden"
     t.index ["provider", "uid"], name: "index_voters_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_voters_on_reset_password_token", unique: true
+    t.index ["role"], name: "index_voters_on_role"
   end
 
   create_table "years", force: :cascade do |t|
@@ -816,6 +824,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_31_140000) do
   add_foreign_key "candidacies", "people"
   add_foreign_key "candidacies", "races"
   add_foreign_key "chambers", "governing_bodies"
+  add_foreign_key "channels", "voters", column: "reviewed_by_id"
   add_foreign_key "communication_features", "candidacies"
   add_foreign_key "communication_features", "communications"
   add_foreign_key "communications", "channels"

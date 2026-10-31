@@ -12,7 +12,7 @@ class Views::Invites::IndexView < Views::ApplicationView
       li(class: "list-row") do
         span(class: "list-row-icon", aria: { label: "Rank #{rank}" }) { rank.to_s }
         div(class: "list-row-main") do
-          if influencer.public_influencer?
+          if influencer.public_influencer? && influencer.publicly_visible_to?(current_voter)
             link_to influencer.full_name, influencer_path(token: influencer.invite_token), class: "list-row-title"
           else
             span(class: "list-row-title") { "Anonymous influencer" }

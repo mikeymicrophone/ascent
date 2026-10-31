@@ -2,10 +2,14 @@
 
 class VoterPolicy < ApplicationRecordPolicy
   def index?
-    admin?
+    moderator?
   end
 
   def show?
+    moderator? || own_record?
+  end
+
+  def view_voting_activity?
     admin? || own_record?
   end
 
@@ -15,6 +19,10 @@ class VoterPolicy < ApplicationRecordPolicy
 
   def update?
     edit?
+  end
+
+  def hide_profile?
+    moderator? && !own_record?
   end
 
   def destroy?
