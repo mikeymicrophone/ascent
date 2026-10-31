@@ -25,8 +25,10 @@ class Views::States::ShowView < Views::ApplicationView
         end
         aside(class: "place-aside", aria: { label: "Around #{@state.name}" }) do
           where_it_is
+          boundary_side_card
           admin_actions
         end
+
       end
     end
   end

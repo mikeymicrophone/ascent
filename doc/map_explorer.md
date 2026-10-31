@@ -27,4 +27,11 @@ The `boundary-map` Stimulus controller loads vendored Leaflet 1.9.4 on demand th
 
 Run the usual Tailwind build after changing map styles. The request coverage is `spec/requests/maps_spec.rb`; it needs the app's PostGIS test database. Existing boundary imports are prerequisites for seeing shapes in development or production. Missing geometry leaves the place links usable and requires no seed changes for this feature.
 
-Standalone shape previews, neighboring jurisdiction context, multiple simultaneous overlays, exports, and production caching are tracked separately in ASC-114 through ASC-117.
+## Individual jurisdiction outlines (ASC-114)
+
+Place pages for states, counties, districts, and municipalities show a boundary outline in the side column when an effective `JurisdictionBoundary` exists. Race cards on those pages show a compact outline for the race's office jurisdiction. Missing geometry renders a clear empty state instead of a blank map.
+
+Outlines prefer inline SVG built with PostGIS `ST_AsSVG` on a simplified copy (`ST_SimplifyPreserveTopology`). Holes and separate MultiPolygon parts remain in the path. The panel shows the boundary vintage year and states that displaying that vintage does not verify shapes for a later election. SVG and PNG downloads are available at `/boundary_outlines/:place_type/:place_id.svg` and `.png` (optional `detail=panel|compact`). PNG is rasterized from the same SVG via libvips. Responses include only public outline bytes; voter and residence data are excluded. Stored geometry is never modified.
+
+Neighboring jurisdiction context, multiple simultaneous overlays, production caching, and broader export polish remain in ASC-115 through ASC-117.
+

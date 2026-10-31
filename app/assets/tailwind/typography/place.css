@@ -3,9 +3,21 @@
 .timeline-date,
 .seat-count,
 .place-chip,
-.place-race-seat {
+.place-race-seat,
+.jurisdiction-outline-vintage,
+.jurisdiction-outline-empty {
   @apply font-['Martian_Mono'] text-xs tracking-[0.04em];
 }
+
+.jurisdiction-outline-heading {
+  @apply font-['Bricolage_Grotesque'] text-lg font-semibold m-0;
+}
+
+.jurisdiction-outline-note,
+.jurisdiction-outline-exports {
+  @apply text-sm leading-6;
+}
+
 
 .races-above-label {
   @apply font-semibold uppercase tracking-[0.08em];

@@ -110,20 +110,30 @@ module Views::PlaceSections
 
   def place_race(race)
     article(class: "place-race") do
-      div(class: "place-race-heading") do
-        h3(class: "place-race-office") { link_to race.office.position.title, race, class: "place-race-link" }
-        span(class: "place-race-seat") { race.office.seat_label } if race.office.seat_code.present?
-      end
-      span(class: "race-card-meta") { "#{pluralize(race.candidacies.size, "candidate")} · #{race.status.humanize}" }
-      div(class: "race-card-actions") do
-        link_to("Results", race_results_path(race), class: "race-card-link")
-        link_to edit_mountain_path(race), class: "pill-button race-card-cta" do
-          plain(resident? ? "Build your mountain" : "Pretend vote")
-          icon(:chevron_right)
+      div(class: "place-race-body") do
+        div(class: "place-race-heading") do
+          h3(class: "place-race-office") { link_to race.office.position.title, race, class: "place-race-link" }
+          span(class: "place-race-seat") { race.office.seat_label } if race.office.seat_code.present?
+        end
+        span(class: "race-card-meta") { "#{pluralize(race.candidacies.size, "candidate")} · #{race.status.humanize}" }
+        div(class: "race-card-actions") do
+          link_to("Results", race_results_path(race), class: "race-card-link")
+          link_to edit_mountain_path(race), class: "pill-button race-card-cta" do
+            plain(resident? ? "Build your mountain" : "Pretend vote")
+            icon(:chevron_right)
+          end
         end
       end
+      JurisdictionOutline(place: race, detail: :compact)
     end
   end
+
+  def boundary_side_card
+    return unless jurisdiction
+
+    JurisdictionOutline(place: place, heading: "Boundary outline")
+  end
+
 
   def more_races_link
     link_to races_path(election_id: next_election.id), class: "text-link" do

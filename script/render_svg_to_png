@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "vips"
+
+# Reads trusted Ascent-generated SVG from STDIN and writes PNG bytes to STDOUT.
+# Runs outside the Rails process so upload-decoder blocks stay in the parent.
+Vips.block("VipsForeignLoadSvg", false)
+image = Vips::Image.svgload_buffer(STDIN.read)
+STDOUT.binmode.write(image.write_to_buffer(".png"))

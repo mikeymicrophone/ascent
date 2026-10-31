@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   resource :map, only: :show, controller: "maps" do
     get :features
   end
+  get "boundary_outlines/:place_type/:place_id(.:format)", to: "boundary_outlines#show",
+    as: :boundary_outline, constraints: { format: /svg|png/ }, defaults: { format: "svg" }
+
   get "glossary" => "pages#glossary", as: :glossary
   get "supporters" => "pages#supporters", as: :supporters
   get "approval-voting" => "pages#approval_voting", as: :approval_voting

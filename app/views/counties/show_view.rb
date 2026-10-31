@@ -23,9 +23,11 @@ class Views::Counties::ShowView < Views::ApplicationView
         end
         aside(class: "place-aside", aria: { label: "Around #{@county.name}" }) do
           where_it_is
+          boundary_side_card
           nearby
           admin_actions
         end
+
       end
     end
   end
