@@ -39,4 +39,12 @@ class ApplicationRecordPolicy < ApplicationPolicy
   def admin?
     voter&.admin?
   end
+
+  def moderator?
+    voter&.can_moderate?
+  end
+
+  def reviewer?
+    voter&.can_review?
+  end
 end

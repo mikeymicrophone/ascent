@@ -17,7 +17,7 @@ class InvitesController < ApplicationController
   end
 
   def create
-    inviter = Voter.influencers.where(public_influencer: true).find_by!(invite_token: params[:token])
+    inviter = Voter.influencers.where(public_influencer: true).visible_to(current_voter).find_by!(invite_token: params[:token])
     if inviter == current_voter
       redirect_to invites_path, alert: "You cannot connect to yourself.", status: :see_other
       return

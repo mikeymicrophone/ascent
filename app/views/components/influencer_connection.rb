@@ -4,7 +4,7 @@ class Views::Components::InfluencerConnection < Views::ApplicationView
   prop :source, String
 
   def view_template
-    return unless @influencer.public_influencer?
+    return unless @influencer.public_influencer? && @influencer.publicly_visible_to?(current_voter)
 
     if @influencer == current_voter
       span(class: "row-badge") { "You" }

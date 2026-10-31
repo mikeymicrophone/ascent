@@ -54,6 +54,11 @@ class Views::Components::Navigation < Views::ApplicationView
       section.link("All Mountains", mountains_path, :mountain)
     end
     render_data_navigation
+    if current_voter&.can_review?
+      add_section("Moderation") do |section|
+        section.link("Channel reviews", channels_path, :circle_check_big)
+      end
+    end
   end
 
   def render_data_navigation

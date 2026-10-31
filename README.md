@@ -41,6 +41,16 @@ Google rejects `.test` callback hosts under its [redirect URI validation rules](
 
 Outbound account email uses PostShiba with `POSTSHIBA_API_KEY`. Production uses the sender `Ascent <no-reply@were.ascent.ing>`, reply-to `support@ascent.ing`, and `https://ascent.ing` for account links. The production key is managed in Doppler's `ascent` project, `prd` configuration, and must also be supplied to the Railway app service. Delivered email and account links need verification after DNS is configured. Automated account tests use the test mailer and mocked Google responses. See [ASC-112](https://linear.app/ascent-approval/issue/ASC-112/configure-transactional-email-for-account-confirmation-and-password).
 
+## Staff roles and moderation
+
+Voters have no staff role by default. The `role` field accepts `admin`, `moderator`, or `reviewer`. The migration preserves existing admins when it replaces the `admin` boolean. Staff roles cannot be assigned through signup or profile forms.
+
+Admins retain access to account management and reference-data edits. Moderators can list voters and hide or unhide other voters' influencer profiles. Private voting activity, ratings, and baselines remain visible only to their voter and admins. Hidden profiles stay visible to their owner, while their ratings and baselines still count in race results.
+
+Reviewers, moderators, and admins can open **Moderation > Channel reviews** to approve or reject social account links. Approval marks a channel as official. Rejection removes it from public official-channel lists. Deleting a reviewer account preserves its channel decisions and review timestamps, and clears the reviewer reference.
+
+Run `bin/rails db:migrate` before serving these changes. The Docker entrypoint runs `db:prepare` before the default Rails server command starts.
+
 ## Invite links
 
 Each voter has a generated invite URL, shown on their Profile edit page as `/invite/:token`. Existing voters receive tokens during migration. Run `bin/rails db:migrate` before serving the updated app.

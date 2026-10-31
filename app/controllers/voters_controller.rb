@@ -1,5 +1,5 @@
 class VotersController < ApplicationController
-  before_action :set_voter, only: %i[ show edit update destroy ]
+  before_action :set_voter, only: %i[ show edit update hide_profile destroy ]
 
   def index
     voters_scope = Voter.order(:last_name, :first_name, :id)
@@ -36,6 +36,13 @@ class VotersController < ApplicationController
     else
       render Views::Voters::EditView.new(voter: @voter), status: :unprocessable_entity
     end
+  end
+
+  def hide_profile
+    hidden = ActiveModel::Type::Boolean.new.cast(params.dig(:voter, :profile_hidden))
+    @voter.update!(profile_hidden: hidden)
+    notice = @voter.profile_hidden? ? "Voter profile is now hidden." : "Voter profile is now visible."
+    redirect_to @voter, notice: notice, status: :see_other
   end
 
   def destroy

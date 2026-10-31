@@ -48,7 +48,19 @@ FactoryBot.define do
     trait :admin do
       first_name { "Admin" }
       last_name { "User" }
-      admin { true }
+      role { "admin" }
+    end
+
+    trait :moderator do
+      first_name { "Mod" }
+      last_name { "User" }
+      role { "moderator" }
+    end
+
+    trait :reviewer do
+      first_name { "Reviewer" }
+      last_name { "User" }
+      role { "reviewer" }
     end
 
     # Named factories for common scenarios
@@ -58,5 +70,7 @@ FactoryBot.define do
     factory :student_voter, traits: [ :student ]
     factory :mobile_voter, traits: [ :mobile ]
     factory :admin_voter, traits: [ :admin ]
+    factory :moderator_voter, traits: [ :moderator ]
+    factory :reviewer_voter, traits: [ :reviewer ]
   end
 end
