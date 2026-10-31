@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# A list's filters on one line: a search box, dropdowns, then Apply and Clear. Hidden fields carry
+# Dropdown filters submit on change by default. Search uses Enter or Apply. Hidden fields carry
 # whatever the list is already narrowed to, such as a tab or a parent record.
 #   FilterForm(url: races_path, label: "Filter races", placeholder: "Office, election or candidate", values: @filters,
 #     clear_path: races_path, selects: [ [ :state_id, "State", states.map { [ it.name, it.id ] }, "All states" ] ])
@@ -12,7 +12,7 @@ class Views::Components::FilterForm < Views::ApplicationView
   prop :clear_path, String
   prop :selects, Array, default: -> { [] }
   prop :hidden, Hash, default: -> { {} }
-  prop :submit_on_change, _Boolean, default: false
+  prop :submit_on_change, _Boolean, default: true
 
   def view_template
     form_with url: @url, method: :get, class: "filter-form", local: true, aria: { label: @label },

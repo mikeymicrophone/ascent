@@ -68,8 +68,8 @@ RSpec.describe Seeds::BallotManifestConverter do
 
   after { FileUtils.rm_rf(root) }
 
-  def convert(random: Random.new)
-    described_class.new(state_dir: "new_york", selection: :all, root: root, random: random).call
+  def convert
+    described_class.new(state_dir: "new_york", selection: :all, root: root).call
   end
 
   # A username is the surname, the given name's first letter and next consonant, and a disambiguator.
@@ -117,12 +117,12 @@ RSpec.describe Seeds::BallotManifestConverter do
     judgments = root.join("conversion/2026/new_york/judgments.md").read
     expect(judgments).to include("Paul Mailhot (Governor)", "- designation: Speak The Truth", "- party: Democratic, Working Families")
 
-    usernames["Representative in Congress|15|Ritchie J. Torres"] = "ritchietorres"
+    usernames["Representative in Congress|15|Ritchie J. Torres"] = "torres_rt_9z"
     root.join("conversion/2026/new_york/usernames.yml").write(usernames.to_yaml)
     summary = convert
 
     expect(summary[:usernames_issued]).to eq(0)
-    expect(root.join("manifests/2026/new_york/congress.yml").read).to include("PERSON-RITCHIETORRES")
+    expect(root.join("manifests/2026/new_york/congress.yml").read).to include("PERSON-TORRES_RT_9Z")
   end
 
   it "places local contests in their town, county, or a district for several places" do
@@ -327,16 +327,11 @@ RSpec.describe Seeds::BallotManifestConverter do
 
   # Usernames name no state, so a disambiguator already issued in another state is never reissued.
   it "skips a username another state has already issued" do
-    write("conversion/2026/florida/usernames.yml", { "Governor||Kathy Hochul" => "hochul_kt_2a" }.to_yaml)
-    # Draws the first disambiguator twice, then the last one.
-    exhausted = Class.new do
-      def initialize = @calls = 0
-      def rand(max) = (@calls += 1) <= 2 ? 0 : max - 1
-    end.new
+    write("conversion/2026/florida/usernames.yml", { "Governor||Kathy Hochul" => "hochul_kt_9a" }.to_yaml)
 
-    convert(random: exhausted)
+    convert
 
     usernames = YAML.load_file(root.join("conversion/2026/new_york/usernames.yml"))
-    expect(usernames.fetch("Governor||Kathy Hochul")).to eq("hochul_kt_9z")
+    expect(usernames.fetch("Governor||Kathy Hochul")).to eq("hochul_kt_9b")
   end
 end

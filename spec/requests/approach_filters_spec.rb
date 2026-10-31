@@ -34,10 +34,11 @@ RSpec.describe "Approach filters", type: :request do
     expect(form.at_css('input[name="q"]')["data-action"]).to be_nil
   end
 
-  it "keeps other list filters on their existing manual submission behavior" do
+  it "submits other lists' dropdowns on change while keeping text search manual" do
     get issues_path
-    expect(page.at_css("form.filter-form")["data-controller"]).to be_nil
-    expect(page.at_css('select[name="topic_id"]')["data-action"]).to be_nil
+    expect(page.at_css("form.filter-form")["data-controller"]).to eq("form-submit")
+    expect(page.at_css('select[name="topic_id"]')["data-action"]).to eq("change->form-submit#submit")
+    expect(page.at_css('input[name="q"]')["data-action"]).to be_nil
   end
 
   it "filters by topic across its issues and keeps the controls selected" do

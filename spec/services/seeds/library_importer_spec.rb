@@ -16,8 +16,8 @@ RSpec.describe Seeds::LibraryImporter do
   it "imports one candidacy with a ballot line and a party endorsement for each printed line" do
     report = importer.call([ manifest ])
 
-    candidacy = Candidacy.find_by!(entity_code: "CANDIDACY-USA-NY-ASSEMBLY-AD_125-2024_GENERAL-KELLES_ANNA_NY_AD_125")
-    expect(candidacy.person).to have_attributes(username: "kelles_anna_ny_ad_125", username_status: "provisional", email: nil)
+    candidacy = Candidacy.find_by!(entity_code: "CANDIDACY-USA-NY-ASSEMBLY-AD_125-2024_GENERAL-KELLES_AN_2R")
+    expect(candidacy.person).to have_attributes(username: "kelles_an_2r", username_status: "provisional", email: nil)
     expect(candidacy.ballot_lines.map { |line| [ line.label, line.kind, line.party.entity_code ] }).to eq([
       [ "Democratic", "party", "PARTY-USA-NY-DEMOCRATIC" ],
       [ "Working Families", "party", "PARTY-USA-NY-WORKING_FAMILIES" ]
@@ -38,7 +38,7 @@ RSpec.describe Seeds::LibraryImporter do
     expect(report[:created].size).to eq(11)
     expect(report[:ballot_lines_added].size).to eq(2)
     expect(EntityCode.where(catalog: "ASC").count).to eq(11)
-    expect(EntityCode.find_by!(code: "PERSON-KELLES_ANNA_NY_AD_125").record).to eq(candidacy.person)
+    expect(EntityCode.find_by!(code: "PERSON-KELLES_AN_2R").record).to eq(candidacy.person)
   end
 
   it "changes nothing when the same manifest is imported again" do
@@ -194,6 +194,32 @@ RSpec.describe Seeds::LibraryImporter do
       expect { importer.resolve_code("Person", "PERSON-JAMES_LT") }
         .to raise_error(described_class::Error, "PERSON-JAMES_LT could be PERSON-JAMES_LT_4K or PERSON-JAMES_LT_6J; use the full code")
     end
+
+    it "rejects a bare name code on a Person definition instead of silently merging" do
+      importer.call([ people("JAMES_LT_6J") ])
+
+      expect { importer.validate([ people("JAMES_LT") ]) }
+        .to raise_error(described_class::Error, /Person definition PERSON-JAMES_LT requires a disambiguator; bare name codes are allowed only as references/)
+      expect { importer.call([ people("JAMES_LT") ]) }
+        .to raise_error(described_class::Error, /Person definition PERSON-JAMES_LT requires a disambiguator/)
+    end
+
+    it "holds only a provisional username to its code" do
+      person = ->(status) do
+        write_manifest("person.yml", <<~YAML)
+          format: micharisma-seeds/v1
+          namespace: MIC
+          catalog: ASC
+          records:
+            - {type: Person, code: PERSON-JAMES_LT_6J, attributes: {username: tishjames, username_status: #{status}, first_name: Letitia, last_name: James}}
+        YAML
+      end
+
+      expect { importer.validate([ person.call("provisional") ]) }
+        .to raise_error(described_class::Error, /Person PERSON-JAMES_LT_6J provisional username "tishjames" does not match its code/)
+      importer.call([ person.call("verified") ])
+      expect(Person.find_by!(entity_code: "PERSON-JAMES_LT_6J")).to have_attributes(username: "tishjames", username_status: "verified")
+    end
   end
 
   describe "nominations and organizations" do
@@ -265,13 +291,13 @@ RSpec.describe Seeds::LibraryImporter do
       end
 
       let(:field) do
-        write_manifest("field.yml", <<~YAML + candidacy_record("BELL_TS", "RACE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY") + candidacy_record("ODOM_RN", "RACE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY") + candidacy_record("BELL_TS", race))
+        write_manifest("field.yml", <<~YAML + candidacy_record("BELL_TS_2A", "RACE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY") + candidacy_record("ODOM_RN_3B", "RACE-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY") + candidacy_record("BELL_TS_2A", race))
           format: micharisma-seeds/v1
           namespace: MIC
           catalog: ASC
           records:
-            - {type: Person, code: PERSON-BELL_TS, attributes: {username: bell_ts, username_status: provisional, first_name: Tasha, last_name: Bell}}
-            - {type: Person, code: PERSON-ODOM_RN, attributes: {username: odom_rn, username_status: provisional, first_name: Ronan, last_name: Odom}}
+            - {type: Person, code: PERSON-BELL_TS_2A, attributes: {username: bell_ts_2a, username_status: provisional, first_name: Tasha, last_name: Bell}}
+            - {type: Person, code: PERSON-ODOM_RN_3B, attributes: {username: odom_rn_3b, username_status: provisional, first_name: Ronan, last_name: Odom}}
             - type: Election
               code: ELECTION-USA-GA-2026_GENERAL
               attributes: {name: Georgia General Election 2026, kind: general, election_date: "2026-11-03", status: upcoming, is_mock: false, is_historical: false}
@@ -299,17 +325,17 @@ RSpec.describe Seeds::LibraryImporter do
       it "lets the data place a primary candidate on the general's ballot, keeping their candidacy" do
         importer.call([ primary, field ])
         off_ballot = Candidacy.find_by!(race: Race.find_by!(entity_code: race), person: Person.find_by!(last_name: "Odom"))
-        independent = write_manifest("independent.yml", "format: micharisma-seeds/v1\nnamespace: MIC\ncatalog: ASC\nrecords:\n" + candidacy_record("ODOM_RN", race))
+        independent = write_manifest("independent.yml", "format: micharisma-seeds/v1\nnamespace: MIC\ncatalog: ASC\nrecords:\n" + candidacy_record("ODOM_RN_3B", race))
 
         report = described_class.new.call([ primary, field, independent ])
 
-        expect(off_ballot.reload).to have_attributes(entity_code: "CANDIDACY-USA-GA-CONGRESS-CD_5-2026_GENERAL-ODOM_RN", participation: "active", primary_candidacy: nil)
+        expect(off_ballot.reload).to have_attributes(entity_code: "CANDIDACY-USA-GA-CONGRESS-CD_5-2026_GENERAL-ODOM_RN_3B", participation: "active", primary_candidacy: nil)
         expect(report[:conflicts]).to be_empty
         expect(report[:primary_candidates_added]).to be_empty
       end
 
       it "does not take a primary candidacy from a manifest" do
-        bad = write_manifest("bad.yml", File.read(field).sub("references: {race: #{race}, person: PERSON-BELL_TS}", "references: {race: #{race}, person: PERSON-BELL_TS, primary_candidacy: CANDIDACY-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY-BELL_TS}"))
+        bad = write_manifest("bad.yml", File.read(field).sub("references: {race: #{race}, person: PERSON-BELL_TS_2A}", "references: {race: #{race}, person: PERSON-BELL_TS_2A, primary_candidacy: CANDIDACY-USA-GA-CONGRESS-CD_5-NOMINEE_DEMOCRATIC-2026_PRIMARY-BELL_TS_2A}"))
 
         expect { importer.call([ primary, bad ]) }.to raise_error(described_class::Error, /unsupported Candidacy reference primary_candidacy/)
       end
@@ -337,14 +363,14 @@ RSpec.describe Seeds::LibraryImporter do
       catalog: ASC
       records:
         - type: Person
-          code: PERSON-KELLES_ANNA_NY_AD_125
-          aliases: [PERSON-KELLES_ANNA]
+          code: PERSON-KELLES_AN_2R
+          aliases: [PERSON-KELLES_ANNA_NY_AD_125]
     YAML
 
     importer.call([ aliased ])
 
-    expect(importer.report[:aliases_added]).to eq([ "PERSON-KELLES_ANNA" ])
-    expect(importer.resolve_code("Person", "MIC-ASC-PERSON-KELLES_ANNA")).to eq(Person.find_by!(username: "kelles_anna_ny_ad_125"))
+    expect(importer.report[:aliases_added]).to eq([ "PERSON-KELLES_ANNA_NY_AD_125" ])
+    expect(importer.resolve_code("Person", "MIC-ASC-PERSON-KELLES_ANNA_NY_AD_125")).to eq(Person.find_by!(username: "kelles_an_2r"))
   end
 
   it "writes nothing for a record until its dependencies exist" do
@@ -405,7 +431,7 @@ RSpec.describe Seeds::LibraryImporter do
       entity_sequence: "10_01"
       records:
         - type: Person
-          code: PERSON-EXAMPLE
+          code: PERSON-EXAMPLE_2A
     YAML
 
     expect { importer.validate([ sequenced ]) }.to raise_error(StandardError, /sequence/i)

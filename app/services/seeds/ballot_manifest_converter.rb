@@ -1,4 +1,5 @@
 require "csv"
+require "digest"
 require Rails.root.join("db", "seeds", "data_paths").to_s
 
 module Seeds
@@ -42,9 +43,25 @@ module Seeds
     # Disambiguators skip look-alike characters: 0 and 1, I and O.
     DISAMBIGUATOR_DIGITS = ("2".."9").to_a.freeze
     DISAMBIGUATOR_LETTERS = (("A".."Z").to_a - %w[I O]).map(&:downcase).freeze
+    DISAMBIGUATORS = DISAMBIGUATOR_DIGITS.product(DISAMBIGUATOR_LETTERS).map(&:join).freeze
 
-    def initialize(state_dir:, selection: :pilot, root: SeedDataPaths.primary_root, random: Random.new)
-      @state_dir, @selection, @root, @random = state_dir, selection, Pathname.new(root), random
+    def self.first_appearance_facts(state:, election_date:, printed_name:, printed_office:)
+      state_code = state.to_s.strip.upcase.delete_prefix("STATE-USA-")
+      [ state_code, election_date, printed_name, printed_office ].map { it.to_s.squish }.join(" | ")
+    end
+
+    def self.mint_username(base:, state:, election_date:, printed_name:, printed_office:, taken: Set.new)
+      facts = first_appearance_facts(state: state, election_date: election_date, printed_name: printed_name, printed_office: printed_office)
+      start = Digest::SHA256.hexdigest(facts).to_i(16) % DISAMBIGUATORS.size
+      DISAMBIGUATORS.size.times do |offset|
+        candidate = "#{base}_#{DISAMBIGUATORS[(start + offset) % DISAMBIGUATORS.size]}"
+        return candidate unless taken.include?(candidate)
+      end
+      raise Error, "All #{DISAMBIGUATORS.size} disambiguators are taken for PERSON-#{base.upcase}"
+    end
+
+    def initialize(state_dir:, selection: :pilot, root: SeedDataPaths.primary_root)
+      @state_dir, @selection, @root = state_dir, selection, Pathname.new(root)
     end
 
     def call
@@ -414,7 +431,7 @@ module Seeds
 
     def candidate_records(name, rows, key, placed, participation)
       parts = BallotRows.name_parts(name)
-      username = username_for(key, parts)
+      username = username_for(key, parts, placed, name)
       person = record("Person", "PERSON-#{username.upcase}",
                       { "username" => username, "username_status" => "provisional" }.merge(parts.transform_keys(&:to_s).compact))
       lines = rows.filter_map { |row| ballot_line(row) }.uniq { |line| line["label"] }
@@ -478,16 +495,17 @@ module Seeds
       mapped.uniq.one? ? mapped.first : nil
     end
 
-    # A person's username is a version of their name and a disambiguator issued once at random,
-    # like Letitia James's james_lt_6j. It names no state or office, so it outlasts any one race.
-    def username_for(key, parts)
+    def username_for(key, parts, placed, name)
       return @usernames.fetch(key) if @usernames.key?(key)
 
-      base = name_code(parts)
-      username = loop do
-        candidate = "#{base}_#{DISAMBIGUATOR_DIGITS.sample(random: @random)}#{DISAMBIGUATOR_LETTERS.sample(random: @random)}"
-        break candidate unless taken_usernames.include?(candidate)
-      end
+      username = self.class.mint_username(
+        base: name_code(parts),
+        state: @state_code,
+        election_date: placed[:rows].first.fetch("election_date"),
+        printed_name: name,
+        printed_office: placed[:key].first(2).compact_blank.join(" "),
+        taken: taken_usernames
+      )
       taken_usernames << username
       @issued[key] = @usernames[key] = username
     end
@@ -510,8 +528,8 @@ module Seeds
     def taken_usernames
       @taken_usernames ||= begin
         issued = Dir.glob(@root.join("conversion", "*", "*", "usernames.yml").to_s).flat_map { |path| YAML.load_file(path).values }
-        contributed = Dir.glob(@root.join("manifests", "contributions", "**", "*.{yml,yaml}").to_s).flat_map do |path|
-          File.read(path).scan(/code: PERSON-([A-Z0-9_]+)/).flatten.map(&:downcase)
+        contributed = Dir.glob(@root.join("manifests", "contributions", "**", "*.{yml,yaml,json}").to_s).flat_map do |path|
+          File.read(path).scan(/(?:code|"[Cc]ode")\s*:\s*"?PERSON-([A-Z0-9_]+)/).flatten.map(&:downcase)
         end
         (issued + contributed + @usernames.values).to_set
       end

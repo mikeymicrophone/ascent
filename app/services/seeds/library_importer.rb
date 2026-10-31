@@ -52,8 +52,8 @@ module Seeds
     UNSEEDED_ATTRIBUTES = { "Person" => %w[fictional], "Race" => %w[decided_by] }.freeze
     EMPTY_REPORT = { created: [], unchanged: [], conflicts: [], aliases_added: [], ballot_lines_added: [], features_added: [], primary_candidates_added: [] }.freeze
 
-    # A Person's code ends in a disambiguator issued once, like PERSON-JAMES_LT_6J; a submission may leave it off.
     PERSON_DISAMBIGUATOR = /_[2-9][A-HJ-NP-Z]\z/
+    FULL_PERSON_CODE = /\APERSON-[A-Z0-9]+(?:_[A-Z0-9]+)*#{PERSON_DISAMBIGUATOR.source}/
 
     attr_reader :report
 
@@ -116,7 +116,7 @@ module Seeds
       @bindings = @records = nil
     end
 
-    def resolve_code(type, code)
+    def resolve_code(type, code, allow_name_code: true)
       model = MODELS.fetch(type) { raise Error, "Unsupported entity type #{type}" }
       binding = binding_for(local_code(code))
       if binding
@@ -129,7 +129,7 @@ module Seeds
           return target
         end
       end
-      model.find_by(entity_code: local_code(code)) || (person_by_name_code(local_code(code)) if type == "Person")
+      model.find_by(entity_code: local_code(code)) || (person_by_name_code(local_code(code)) if type == "Person" && allow_name_code)
     end
 
 
@@ -233,6 +233,15 @@ module Seeds
           raise Error, "#{record.location}: invalid local entity code #{code.inspect}"
         end
       end
+      if record.type == "Person"
+        unless record.code.match?(FULL_PERSON_CODE)
+          raise Error, "#{record.location}: Person definition #{record.code} requires a disambiguator; bare name codes are allowed only as references"
+        end
+        username = record.attributes["username"]
+        if record.attributes["username_status"] == "provisional" && username != record.code.delete_prefix("PERSON-").downcase
+          raise Error, "#{record.location}: Person #{record.code} provisional username #{username.inspect} does not match its code"
+        end
+      end
       record.attributes.each_key do |key|
         next if NESTED_ATTRIBUTES.fetch(record.type, []).include?(key)
 
@@ -281,7 +290,7 @@ module Seeds
       bindings.each do |binding|
         raise Error, "#{binding.code} already identifies #{binding.record_type}" unless same_kind?(binding.record_type, model)
       end
-      targets = codes.filter_map { |code| resolve_code(record.type, code) }.uniq(&:id)
+      targets = codes.filter_map { |code| resolve_code(record.type, code, allow_name_code: false) }.uniq(&:id)
       raise Error, "#{record.location}: aliases identify different #{record.type} records" if targets.length > 1
 
       target = targets.first || natural_target(model, desired)

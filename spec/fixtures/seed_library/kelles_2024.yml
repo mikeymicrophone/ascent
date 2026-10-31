@@ -43,9 +43,9 @@ groups:
         attributes:
           name: Working Families
       - type: Person
-        code: PERSON-KELLES_ANNA_NY_AD_125
+        code: PERSON-KELLES_AN_2R
         attributes:
-          username: kelles_anna_ny_ad_125
+          username: kelles_an_2r
           username_status: provisional
           first_name: Anna
           last_name: Kelles
@@ -78,7 +78,7 @@ groups:
           election: ELECTION-USA-NY-ASSEMBLY-AD_125-2024_GENERAL
           office: OFFICE-USA-NY-ASSEMBLY-AD_125
       - type: Candidacy
-        code: CANDIDACY-USA-NY-ASSEMBLY-AD_125-2024_GENERAL-KELLES_ANNA_NY_AD_125
+        code: CANDIDACY-USA-NY-ASSEMBLY-AD_125-2024_GENERAL-KELLES_AN_2R
         attributes:
           status: active
           participation: active
@@ -89,4 +89,4 @@ groups:
               party: PARTY-USA-NY-WORKING_FAMILIES
         references:
           race: RACE-USA-NY-ASSEMBLY-AD_125-2024_GENERAL
-          person: PERSON-KELLES_ANNA_NY_AD_125
+          person: PERSON-KELLES_AN_2R

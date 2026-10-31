@@ -106,3 +106,5 @@ gem "active_median", "~> 1.0"
 gem "rgeo-geojson", "~> 2.2"
 
 gem "ahoy_matey", "~> 5.5"
+
+gem "postshiba", git: "https://github.com/postshiba/postshiba-ruby.git"

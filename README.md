@@ -39,7 +39,7 @@ Register the exact callback URL in the Google OAuth web client's authorized redi
 
 Google rejects `.test` callback hosts under its [redirect URI validation rules](https://developers.google.com/identity/protocols/oauth2/web-server#uri-validation). For local OAuth, run Rails on `localhost` and start sign-in on that same origin, or use a registered public development hostname. Ordinary page previews can still use `https://ascent.test`.
 
-Outbound account email is pending [ASC-112](https://linear.app/ascent-approval/issue/ASC-112/configure-transactional-email-for-account-confirmation-and-password). Production still needs a sender, a transport, and the correct mailer host before email signup confirmation and password reset work through delivered messages. Provider candidates are Cloudflare and Mailgun, with PostShiba preferred if a free plan becomes available. Automated account tests use the test mailer and mocked Google responses.
+Outbound account email uses PostShiba with `POSTSHIBA_API_KEY`. Production uses the sender `Ascent <no-reply@were.ascent.ing>`, reply-to `support@ascent.ing`, and `https://ascent.ing` for account links. The production key is managed in Doppler's `ascent` project, `prd` configuration, and must also be supplied to the Railway app service. Delivered email and account links need verification after DNS is configured. Automated account tests use the test mailer and mocked Google responses. See [ASC-112](https://linear.app/ascent-approval/issue/ASC-112/configure-transactional-email-for-account-confirmation-and-password).
 
 ## Seed Data
 

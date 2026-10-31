@@ -47,6 +47,8 @@ At `/races/:id`. Today: "Showing race", then the office and status chips; electi
 
 At `/races`. Filters for search text, state, election year, status and election kind, with Apply and Clear and a count (about 4,700 races today), then one card per race and a pager. It has to make filtering by place quick; most visitors want the races on their own ballot.
 
+Directory dropdown filters apply immediately by default. Text search uses Enter or Apply. Filter submissions use Turbo Drive page navigation, which refreshes dependent dropdown options and result counts.
+
 ## 6. Candidacy and person
 
 - **Candidacy** (`/candidacies/:id`): the person's name, status and ballot labels, the race and election, policy positions, and rating totals: how many voters rated the candidate, the average rating, and how many approve. Ratings are private, so this page must never show which voter rated the candidate or how.
