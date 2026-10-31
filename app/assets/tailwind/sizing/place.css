@@ -60,6 +60,52 @@
   @apply gap-3 p-4 rounded-2xl border-[1.5px];
 }
 
+.place-race-body {
+  @apply gap-3;
+}
+
+.jurisdiction-outline-panel {
+  @apply gap-3 p-4 rounded-[20px];
+}
+
+.jurisdiction-outline-compact {
+  @apply gap-1 w-[5.5rem];
+}
+
+.jurisdiction-outline-frame {
+  @apply w-full;
+}
+
+.jurisdiction-outline-panel .jurisdiction-outline-frame {
+  @apply min-h-[10rem] p-2 rounded-xl;
+}
+
+.jurisdiction-outline-compact .jurisdiction-outline-frame {
+  @apply min-h-[4.5rem] p-1 rounded-lg;
+}
+
+.jurisdiction-outline-shape {
+  max-height: 14rem;
+}
+
+.jurisdiction-outline-shape.is-compact {
+  max-height: 4.5rem;
+}
+
+.jurisdiction-outline-exports {
+  @apply gap-x-2 gap-y-1;
+}
+
+.jurisdiction-neighborhood {
+  @apply gap-3 p-4 rounded-[20px];
+}
+
+.jurisdiction-neighborhood-frame {
+  @apply min-h-[12rem];
+}
+
+
+
 .place-race-heading {
   @apply gap-0.5;
 }
@@ -122,19 +168,4 @@
 
 .place-chip-link {
   @apply min-h-9 px-3 rounded-full;
-}
-.influencer-content-form {
-  @apply gap-3 w-full;
-}
-
-.influencer-content-form .text-input {
-  @apply w-full;
-}
-
-.influencer-content-item {
-  @apply gap-3 py-4 w-full;
-}
-
-.influencer-content-list {
-  @apply list-decimal pl-5 mt-4 space-y-4;
 }
