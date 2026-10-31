@@ -1,0 +1,16 @@
+<% if @resource.pending_reconfirmation? %>
+  <p style="margin: 0 0 16px;">You asked to change the email on your Ascent account to this address. Confirm it and we'll switch over.</p>
+
+  <%= render "devise/mailer/button", url: confirmation_url(@resource, confirmation_token: @token), label: "Confirm new email" %>
+
+  <p style="margin: 0;">Didn't ask for this? Ignore it. Your account keeps its current address.</p>
+<% else %>
+  <p style="margin: 0 0 16px;">Welcome to Ascent.</p>
+  <p style="margin: 0 0 16px;">One quick step: confirm this is your email address and your account is ready.</p>
+
+  <%= render "devise/mailer/button", url: confirmation_url(@resource, confirmation_token: @token), label: "Confirm my email" %>
+
+  <p style="margin: 0 0 16px;">Once you're in, you can rank every politician in the country and vote for as many as you'd like. Afterwards, be sure to send me some thoughts and invite others to try as well.</p>
+  <p style="margin: 0 0 16px;">Didn't sign up? You can ignore this email. Nothing happens unless you click.</p>
+  <p style="margin: 0;">Questions? Just reply. A real person reads these.</p>
+<% end %>

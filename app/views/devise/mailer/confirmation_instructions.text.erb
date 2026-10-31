@@ -1,0 +1,19 @@
+<% if @resource.pending_reconfirmation? %>
+You asked to change the email on your Ascent account to this address. Confirm it and we'll switch over.
+
+Confirm new email: <%= confirmation_url(@resource, confirmation_token: @token) %>
+
+Didn't ask for this? Ignore it. Your account keeps its current address.
+<% else %>
+Welcome to Ascent.
+
+One quick step: confirm this is your email address and your account is ready.
+
+Confirm my email: <%= confirmation_url(@resource, confirmation_token: @token) %>
+
+Once you're in, you can rank every politician in the country and vote for as many as you'd like. Afterwards, be sure to send me some thoughts and invite others to try as well.
+
+Didn't sign up? You can ignore this email. Nothing happens unless you click.
+
+Questions? Just reply. A real person reads these.
+<% end %>
