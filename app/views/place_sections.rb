@@ -221,7 +221,8 @@ module Views::PlaceSections
     return unless current_voter&.admin?
 
     SideCard(heading: "Admin", modifier: "admin-card") do
-      Ui::ResourceActions(resource: place)
+      render Views::Components::Ui::ResourceActions.new(resource: place)
     end
+
   end
 end
