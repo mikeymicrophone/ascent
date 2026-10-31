@@ -18,6 +18,11 @@
   @apply text-sm leading-6;
 }
 
+.jurisdiction-neighborhood-subheading {
+  @apply font-['Bricolage_Grotesque'] text-base font-semibold m-0;
+}
+
+
 
 .races-above-label {
   @apply font-semibold uppercase tracking-[0.08em];

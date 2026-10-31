@@ -20,6 +20,19 @@
   stroke-linejoin: round;
 }
 
+.jurisdiction-neighborhood-shape path.is-neighbor {
+  fill: #e8eee0;
+  stroke: #9aa58c;
+  stroke-width: 0.012;
+}
+
+.jurisdiction-neighborhood-shape path.is-selected {
+  fill: #bccf55;
+  stroke: #17251e;
+  stroke-width: 0.02;
+}
+
+
 .jurisdiction-outline-empty,
 .jurisdiction-outline-note,
 .jurisdiction-outline-vintage {

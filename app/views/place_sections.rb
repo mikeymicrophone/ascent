@@ -132,7 +132,9 @@ module Views::PlaceSections
     return unless jurisdiction
 
     JurisdictionOutline(place: place, heading: "Boundary outline")
+    JurisdictionNeighborhood(place: place)
   end
+
 
 
   def more_races_link

@@ -75,6 +75,15 @@
   @apply gap-x-2 gap-y-1;
 }
 
+.jurisdiction-neighborhood {
+  @apply gap-3 p-4 rounded-[20px];
+}
+
+.jurisdiction-neighborhood-frame {
+  @apply min-h-[12rem];
+}
+
+
 
 .place-race-heading {
   @apply gap-0.5;

@@ -75,6 +75,11 @@
   @apply flex flex-wrap;
 }
 
+.jurisdiction-neighborhood {
+  @apply flex flex-col border;
+}
+
+
 
 .races-above {
   @apply flex flex-wrap items-center;
