@@ -179,4 +179,26 @@ RSpec.describe "Map explorer", type: :request do
     get features_map_path
     expect(JSON.parse(response.body)["vintages"]).to eq([ 2025 ])
   end
+
+  it "refreshes cached geometry after subsecond updates and deletion of a nonlatest boundary" do
+    previous_cache = Rails.cache
+    Rails.cache = ActiveSupport::Cache::MemoryStore.new
+    first_boundary = boundary(state.jurisdiction)
+    second_boundary = boundary(other_state.jurisdiction)
+    first_boundary.update_columns(updated_at: Time.current + 0.1)
+    second_boundary.update_columns(updated_at: Time.current + 0.2)
+    get features_map_path
+    first_geometry = payload.fetch("features").find { it["id"] == "state-#{state.id}" }.fetch("geometry")
+    replacement = RGeo::Geos.factory(srid: 4326).parse_wkt("MULTIPOLYGON(((-74 42,-72 42,-72 44,-74 44,-74 42)))")
+
+    first_boundary.update!(geometry: replacement, updated_at: Time.current + 0.3)
+    get features_map_path
+    expect(payload.fetch("features").find { it["id"] == "state-#{state.id}" }.fetch("geometry")).not_to eq(first_geometry)
+
+    second_boundary.destroy!
+    get features_map_path
+    expect(payload.fetch("features").map { it["id"] }).to eq([ "state-#{state.id}" ])
+  ensure
+    Rails.cache = previous_cache
+  end
 end

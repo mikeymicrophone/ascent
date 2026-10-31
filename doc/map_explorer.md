@@ -39,7 +39,7 @@ Outlines prefer inline SVG built with PostGIS `ST_AsSVG` on a simplified copy (`
 
 Place pages show a neighbor panel beside the individual outline. **Same-layer neighbors** are jurisdictions of the same type (and, for districts, the same `kind`) whose effective boundaries `ST_Touches` the selected shape. That includes edge contact and point-touching corners. Interiors that only overlap do not count as same-layer neighbors. An island with no touching peer has an empty same-layer list.
 
-**Overlapping other types** use the existing `Jurisdiction.overlapping` rule (shared area beyond a digitizing sliver) and are listed separately from same-layer neighbors. The neighbor SVG draws peers in a muted style and the selected place highlighted, with links to each place page. County side lists prefer geometric adjacency when boundaries exist, and fall back to other counties in the state when they do not.
+**Overlapping other types** use the existing `Jurisdiction.overlapping` rule (shared area beyond a digitizing sliver) and are listed separately from same-layer neighbors. The neighbor SVG draws peers in a muted style and the selected place highlighted, with links to each place page. County side lists use touching counties when any are found, otherwise other counties in the state. The dedicated same-layer neighbor panel remains empty for islands without touching peers.
 
 ## State overlays (ASC-116)
 
@@ -49,7 +49,7 @@ On a state map, checkboxes toggle counties and congressional / state legislative
 
 Production uses Solid Cache (`config.cache_store = :solid_cache_store`, `config/cache.yml`). Development uses the in-process memory store when caching is enabled.
 
-`MapExplorer#feature_collection` caches derived display GeoJSON for 12 hours under `map_explorer/v2/...`. The key includes the state, selected layers, effective date, and `JurisdictionBoundary.maximum(:updated_at)`, so any boundary write invalidates map payloads without mutating stored geometry. `BoundaryOutline` caches SVG path and viewBox parts under `boundary_outline/v1/...` keyed by boundary id, detail, and `updated_at`. `/map/features` and `/boundary_outlines/...` also send `Cache-Control` with a one-hour public max-age.
+`MapExplorer#feature_collection` caches derived display GeoJSON for 12 hours under `map_explorer/v2/...`. The key includes the state, selected layers, effective date, boundary count, and maximum boundary `updated_at` with microsecond precision. Inserts and deletions change the count; timestamped updates change the maximum timestamp. `BoundaryOutline` caches SVG path and viewBox parts under `boundary_outline/v1/...` keyed by boundary id, detail, and `updated_at` with microsecond precision. These caches contain derived display geometry and do not modify stored boundaries. `/map/features` and `/boundary_outlines/...` also send `Cache-Control` with a one-hour public max-age.
 
 SVG remains the preferred place-page and race-card display. PNG downloads use `script/render_svg_to_png` in a subprocess so Rails keeps the SVG upload decoder blocked. Measure local payload sizes with `bin/rails gis:map_payload_report STATE=NY` (feature counts and JSON/SVG/PNG byte sizes). Mobile rendering still relies on Leaflet fitBounds and the existing compact outline component; keep multi-layer selections modest on constrained networks.
 
@@ -60,7 +60,7 @@ SVG remains the preferred place-page and race-card display. PNG downloads use `s
 3. Import: `bin/rails 'gis:import_tiger[path-or-glob,YYYY]'`.
 4. Optional residence check: `bin/rails gis:check_residences`.
 5. Confirm map vintages on `/map` and place-page outlines. Displaying a vintage does not verify it for a later election.
-6. Cache entries expire by `updated_at` in the key; no manual cache clear is required after import.
+6. Imports that create, remove, or timestamp boundary records change the application cache keys. Browser and proxy copies can remain cached for their one-hour public max-age.
 
 ### Production coverage audit note
 

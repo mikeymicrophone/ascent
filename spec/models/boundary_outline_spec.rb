@@ -39,6 +39,21 @@ RSpec.describe BoundaryOutline do
     expect(png.byteslice(0, 8)).to eq("\x89PNG\r\n\x1A\n".b)
   end
 
+  it "refreshes cached paths when a boundary changes within the same second" do
+    previous_cache = Rails.cache
+    Rails.cache = ActiveSupport::Cache::MemoryStore.new
+    original = boundary(state.jurisdiction)
+    original.update_columns(updated_at: Time.current + 0.1)
+    first_path = described_class.for(state).path_data
+    replacement = RGeo::Geos.factory(srid: 4326).parse_wkt("MULTIPOLYGON(((-74 42,-72 42,-72 44,-74 44,-74 42)))")
+
+    original.update!(geometry: replacement, updated_at: Time.current + 0.2)
+
+    expect(described_class.for(state).path_data).not_to eq(first_path)
+  ensure
+    Rails.cache = previous_cache
+  end
+
   it "reports missing geometry clearly" do
     outline = described_class.for(state)
 

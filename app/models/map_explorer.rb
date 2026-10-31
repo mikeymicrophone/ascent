@@ -89,7 +89,8 @@ class MapExplorer
       state&.id || "us",
       layers.join(","),
       @on.iso8601,
-      JurisdictionBoundary.maximum(:updated_at)&.utc&.to_fs(:number)
+      JurisdictionBoundary.count,
+      JurisdictionBoundary.maximum(:updated_at)&.utc&.iso8601(6)
     ]
   end
 

@@ -137,7 +137,7 @@ class BoundaryOutline
       "boundary_outline/v1",
       boundary.id,
       @detail_key,
-      boundary.updated_at.utc.to_fs(:number)
+      boundary.updated_at.utc.iso8601(6)
     ]
   end
 
